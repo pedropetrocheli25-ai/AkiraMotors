@@ -8,31 +8,18 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Segoe UI', sans-serif; background: #f5f5f5; color: #333; min-height: 100vh; }
         .admin-header {
-            background: #dc3545;
-            color: white;
-            padding: 1rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 1rem;
+            background: #dc3545; color: white; padding: 1rem 2rem;
+            display: flex; justify-content: space-between; align-items: center;
+            flex-wrap: wrap; gap: 1rem;
         }
         .admin-title { font-size: 1.5rem; font-weight: bold; }
-        .btn {
-            padding: 0.7rem 1.2rem; border: none; border-radius: 5px;
-            cursor: pointer; font-size: 0.9rem; font-weight: 600;
-        }
+        .btn { padding: 0.7rem 1.2rem; border: none; border-radius: 5px; cursor: pointer; font-size: 0.9rem; font-weight: 600; }
         .btn-primary { background: white; color: #dc3545; }
-        .btn-primary:hover { background: #f0f0f0; }
-        .btn-secondary { background: transparent; color: white; border: 2px solid white; }
         .btn-danger { background: #dc3545; color: white; }
         .btn-small { padding: 0.4rem 0.8rem; font-size: 0.8rem; }
         .container { max-width: 1200px; margin: 0 auto; padding: 2rem; }
-        .section-title {
-            color: #dc3545; font-size: 1.5rem; margin-bottom: 1rem;
-            border-bottom: 2px solid #dc3545; padding-bottom: 0.5rem;
-        }
-        .admin-section { margin-bottom: 3rem; background: white; padding: 1.5rem; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+        .section-title { color: #dc3545; font-size: 1.5rem; margin-bottom: 1rem; border-bottom: 2px solid #dc3545; padding-bottom: 0.5rem; }
+        .admin-section { margin-bottom: 2rem; background: white; padding: 1.5rem; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
         .admin-item {
             display: flex; justify-content: space-between; align-items: center;
             padding: 1rem; background: #f8f8f8; margin-bottom: 0.8rem;
@@ -41,8 +28,7 @@
         .admin-info { display: flex; align-items: center; gap: 1rem; flex: 1; }
         .admin-thumb {
             width: 60px; height: 60px; background: #ddd; border-radius: 5px;
-            overflow: hidden; display: flex; align-items: center; justify-content: center;
-            flex-shrink: 0;
+            overflow: hidden; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
         }
         .admin-thumb img { width: 100%; height: 100%; object-fit: cover; }
         .admin-actions { display: flex; gap: 0.5rem; flex-wrap: wrap; }
@@ -84,6 +70,10 @@
             background: #e3f2fd; border: 1px solid #90caf9; color: #1565c0;
             padding: 0.8rem; border-radius: 5px; margin-bottom: 1rem; font-size: 0.85rem;
         }
+        .alert-warning {
+            background: #fff3cd; border: 1px solid #ffc107; color: #856404;
+            padding: 0.8rem; border-radius: 5px; margin-bottom: 1rem; font-size: 0.85rem;
+        }
         .login-container {
             max-width: 400px; margin: 4rem auto; padding: 2rem;
             background: white; border-radius: 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.1);
@@ -92,25 +82,39 @@
         .hidden { display: none !important; }
         .back-link { display: inline-block; margin-top: 1rem; color: #dc3545; text-decoration: none; }
         .rate-display {
-            background: #fff5f5;
-            padding: 1rem;
-            border-radius: 8px;
-            border-left: 4px solid #dc3545;
-            margin-bottom: 1rem;
+            background: #fff5f5; padding: 1rem; border-radius: 8px;
+            border-left: 4px solid #dc3545; margin-bottom: 1rem;
         }
         .rate-display .current { font-size: 1.5rem; font-weight: bold; color: #dc3545; }
+        .banner-preview-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem; margin-top: 1rem;
+        }
+        .banner-preview-item {
+            position: relative; background: #f8f8f8; border-radius: 8px;
+            overflow: hidden; border: 2px solid #ddd;
+        }
+        .banner-preview-item img { width: 100%; height: 120px; object-fit: cover; }
+        .banner-preview-item .remove-btn {
+            position: absolute; top: 5px; right: 5px;
+            background: #dc3545; color: white; border: none;
+            width: 28px; height: 28px; border-radius: 50%;
+            cursor: pointer; font-weight: bold;
+        }
+        .size-info {
+            background: #f0f8ff; border: 1px solid #87ceeb; color: #0066cc;
+            padding: 1rem; border-radius: 5px; margin-bottom: 1rem; font-size: 0.85rem;
+        }
+        .size-info strong { color: #004085; }
         @media (max-width: 600px) { .form-row, .form-row-3 { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
     <div id="loginScreen">
         <div class="login-container">
-            <h2> Acceso Administrador</h2>
+            <h2>🔒 Acceso Administrador</h2>
             <form onsubmit="adminLogin(event)">
-                <div class="form-group">
-                    <label>Contraseña</label>
-                    <input type="password" id="adminPassword" required>
-                </div>
+                <div class="form-group"><label>Contraseña</label><input type="password" id="adminPassword" required></div>
                 <button type="submit" class="btn btn-danger" style="width:100%">Ingresar</button>
             </form>
             <a href="index.html" class="back-link">← Volver a la tienda</a>
@@ -119,10 +123,11 @@
 
     <div id="adminPanel" class="hidden">
         <div class="admin-header">
-            <div class="admin-title">🔧 AKIRA MOTORS - Admin</div>
+            <div class="admin-title"> AKIRA MOTORS - Admin</div>
             <div>
                 <button class="btn btn-primary" onclick="openAddProductModal()">+ Agregar Producto</button>
-                <button class="btn btn-secondary" onclick="logoutAdmin()">Salir</button>
+                <button class="btn btn-primary" onclick="openBannerModal()">🖼️ Gestionar Banners</button>
+                <button class="btn btn-primary" style="background:#28a745;color:white;" onclick="logoutAdmin()">Salir</button>
             </div>
         </div>
 
@@ -130,24 +135,32 @@
             <!-- Tasa BCV -->
             <div class="admin-section">
                 <h3 class="section-title">💱 Tasa BCV (Dólar)</h3>
-                <div class="rate-display">
-                    <div>Tasa actual:</div>
-                    <div class="current" id="currentRate">Cargando...</div>
-                </div>
+                <div class="rate-display"><div>Tasa actual:</div><div class="current" id="currentRate">Cargando...</div></div>
                 <div class="form-row">
-                    <div class="form-group">
-                        <label>Nueva tasa (Bs por $)</label>
-                        <input type="number" id="bcvRateInput" step="0.01" placeholder="Ej: 36.50">
-                    </div>
-                    <div class="form-group" style="display:flex; align-items:flex-end;">
-                        <button class="btn btn-danger" onclick="updateBcvRate()" style="width:100%;">Actualizar Tasa</button>
+                    <div class="form-group"><label>Nueva tasa (Bs por $)</label><input type="number" id="bcvRateInput" step="0.01" placeholder="Ej: 36.50"></div>
+                    <div class="form-group" style="display:flex; align-items:flex-end;"><button class="btn btn-danger" onclick="updateBcvRate()" style="width:100%;">Actualizar Tasa</button></div>
+                </div>
+            </div>
+
+            <!-- Pickup Maps -->
+            <div class="admin-section">
+                <h3 class="section-title">📍 Ubicación Pickup en Tienda</h3>
+                <div class="alert-info">
+                    ️ Pega aquí el link de Google Maps de tu tienda. Cuando el cliente seleccione "Pickup en tienda" en el checkout, podrá hacer click para ver la ubicación.
+                </div>
+                <div class="form-group">
+                    <label>Link de Google Maps</label>
+                    <input type="url" id="pickupMapsInput" placeholder="https://maps.google.com/?q=...">
+                    <div class="hint" style="font-size:0.8rem;color:#666;margin-top:0.3rem;">
+                        Para obtener el link: Abre Google Maps → busca tu ubicación → clic en "Compartir" → copiar enlace
                     </div>
                 </div>
+                <button class="btn btn-danger" onclick="updatePickupMaps()">Guardar Ubicación</button>
             </div>
 
             <!-- Logo -->
             <div class="admin-section">
-                <h3 class="section-title">🖼️ Logo de la Empresa</h3>
+                <h3 class="section-title">️ Logo de la Empresa</h3>
                 <div class="admin-item">
                     <div class="admin-info">
                         <div class="admin-thumb" id="adminLogoPreview"></div>
@@ -160,6 +173,21 @@
                 </div>
             </div>
 
+            <!-- Banners -->
+            <div class="admin-section">
+                <h3 class="section-title">️ Banners de Portada (Carrusel)</h3>
+                <div class="size-info">
+                    <strong>📐 Tamaños recomendados:</strong><br>
+                    • <strong>Web (escritorio):</strong> 1400 x 500 píxeles (horizontal)<br>
+                    • <strong>Móvil:</strong> 750 x 1000 píxeles (vertical) o 1200 x 600 (horizontal adaptable)<br>
+                    • <strong>Formato:</strong> JPG o WebP (más ligero)<br>
+                    • <strong>Peso máximo:</strong> 1MB por imagen<br>
+                    • Las imágenes se muestran rotando cada 5 segundos
+                </div>
+                <button class="btn btn-danger" onclick="openBannerModal()">+ Agregar Banner</button>
+                <div class="banner-preview-grid" id="bannerPreviewGrid"></div>
+            </div>
+
             <!-- Productos -->
             <div class="admin-section">
                 <h3 class="section-title">📦 Productos</h3>
@@ -168,7 +196,7 @@
 
             <!-- Marcas -->
             <div class="admin-section">
-                <h3 class="section-title">🏷️ Marcas</h3>
+                <h3 class="section-title">️ Marcas</h3>
                 <div id="adminBrandsList"></div>
             </div>
 
@@ -176,11 +204,11 @@
         </div>
     </div>
 
+    <!-- Modal Producto -->
     <div class="modal" id="productModal">
         <div class="modal-content">
             <h2 id="productModalTitle">Agregar Producto</h2>
-            <div class="alert-info">ℹ️ Los campos con * son obligatorios. Los demás pueden dejarse en blanco.</div>
-            
+            <div class="alert-info">ℹ️ Los campos con * son obligatorios.</div>
             <form onsubmit="saveProduct(event)">
                 <div class="form-section">
                     <h3>📋 Información Básica</h3>
@@ -193,29 +221,23 @@
                     <div class="form-group"><label>Descripción *</label><textarea id="productDescription" required></textarea></div>
                     <div class="checkbox-group">
                         <input type="checkbox" id="productRecommended">
-                        <label for="productRecommended" style="margin:0;">⭐ Marcar como RECOMENDADO (aparece en página principal)</label>
+                        <label for="productRecommended" style="margin:0;">⭐ Marcar como RECOMENDADO</label>
                     </div>
                 </div>
-
                 <div class="form-section">
-                    <h3>🗂️ Categoría y Compatibilidad</h3>
+                    <h3>️ Categoría y Compatibilidad</h3>
                     <div class="form-row">
                         <div class="form-group">
                             <label>Categoría *</label>
-                            <select id="productCategory" required onchange="updateSubcategoryOptions()">
-                                <option value="">Seleccionar...</option>
-                            </select>
+                            <select id="productCategory" required onchange="updateSubcategoryOptions()"><option value="">Seleccionar...</option></select>
                         </div>
                         <div class="form-group">
                             <label>Subcategoría *</label>
-                            <select id="productSubcategory" required>
-                                <option value="">Seleccionar categoría primero...</option>
-                            </select>
+                            <select id="productSubcategory" required><option value="">Seleccionar categoría primero...</option></select>
                         </div>
                     </div>
                     <div class="form-group"><label>Vehículo Compatible</label><input type="text" id="productVehicle" placeholder="Ej: Toyota Corolla 2015-2020"></div>
                 </div>
-
                 <div class="form-section">
                     <h3>💰 Precio y Oferta</h3>
                     <div class="form-row">
@@ -224,7 +246,6 @@
                     </div>
                     <div class="form-group"><label>Stock *</label><input type="number" id="productStock" required></div>
                 </div>
-
                 <div class="form-section">
                     <h3>🔧 Especificaciones Técnicas</h3>
                     <div class="form-row-3">
@@ -243,25 +264,42 @@
                         <div class="form-group"><label>Rosca</label><input type="text" id="specThread"></div>
                     </div>
                 </div>
-
                 <div class="form-section">
-                    <h3> Imagen</h3>
+                    <h3>📷 Imagen</h3>
                     <div class="form-group">
                         <label>Foto (máx. 1MB)</label>
                         <input type="file" id="productImage" accept="image/*" onchange="previewImage(event)">
                         <div class="image-preview" id="productImagePreview"><div style="color:#999;">📷 Selecciona una imagen</div></div>
                     </div>
                 </div>
-
                 <input type="hidden" id="editProductId">
                 <input type="hidden" id="currentProductImageData">
-                
                 <button type="submit" class="btn btn-danger" style="width:100%;padding:1rem;" id="saveProductBtn">Guardar Producto</button>
-                <button type="button" class="btn btn-secondary" style="width:100%;margin-top:0.8rem;background:#666;color:white;" onclick="closeModal('productModal')">Cancelar</button>
+                <button type="button" class="btn" style="width:100%;margin-top:0.8rem;background:#666;color:white;" onclick="closeModal('productModal')">Cancelar</button>
             </form>
         </div>
     </div>
 
+    <!-- Modal Banners -->
+    <div class="modal" id="bannerModal">
+        <div class="modal-content">
+            <h2>🖼️ Gestionar Banners</h2>
+            <div class="size-info">
+                <strong>📐 Tamaños recomendados:</strong><br>
+                • <strong>Web:</strong> 1400 x 500 px<br>
+                • <strong>Móvil:</strong> 750 x 1000 px o 1200 x 600 px<br>
+                • <strong>Formato:</strong> JPG o WebP (máx. 1MB)
+            </div>
+            <div class="form-group">
+                <label>Agregar nuevo banner</label>
+                <input type="file" id="bannerImageInput" accept="image/*" onchange="addBanner(event)">
+            </div>
+            <div class="banner-preview-grid" id="bannerModalGrid"></div>
+            <button type="button" class="btn" style="width:100%;margin-top:1rem;background:#666;color:white;" onclick="closeModal('bannerModal')">Cerrar</button>
+        </div>
+    </div>
+
+    <!-- Modal Marca -->
     <div class="modal" id="brandModal">
         <div class="modal-content">
             <h2 id="brandModalTitle">Imagen de Marca</h2>
@@ -274,7 +312,7 @@
                 <input type="hidden" id="editBrandId">
                 <input type="hidden" id="currentBrandImageData">
                 <button type="submit" class="btn btn-danger" style="width:100%">Guardar</button>
-                <button type="button" class="btn btn-secondary" style="width:100%;margin-top:0.8rem;background:#666;color:white;" onclick="closeModal('brandModal')">Cancelar</button>
+                <button type="button" class="btn" style="width:100%;margin-top:0.8rem;background:#666;color:white;" onclick="closeModal('brandModal')">Cancelar</button>
             </form>
         </div>
     </div>
@@ -307,6 +345,7 @@
 
         let products = [];
         let brands = [];
+        let banners = [];
         let bcvRate = 36.5;
         const ADMIN_PASSWORD = 'fjat21';
 
@@ -355,6 +394,8 @@
         async function loadAll() {
             await loadBcvRate();
             await loadLogo();
+            await loadPickupMaps();
+            await loadBanners();
             await loadBrands();
             await loadProducts();
         }
@@ -362,9 +403,7 @@
         async function loadBcvRate() {
             try {
                 const rateDoc = await getDoc(doc(db, 'settings', 'bcvRate'));
-                if (rateDoc.exists()) {
-                    bcvRate = rateDoc.data().value;
-                }
+                if (rateDoc.exists()) bcvRate = rateDoc.data().value;
                 document.getElementById('currentRate').textContent = `Bs. ${bcvRate} por $1`;
             } catch (error) { console.log('Error tasa:', error); }
         }
@@ -381,6 +420,27 @@
             } catch (error) { alert('Error: ' + error.message); }
         };
 
+        async function loadPickupMaps() {
+            try {
+                const pickupDoc = await getDoc(doc(db, 'settings', 'pickupMaps'));
+                if (pickupDoc.exists()) {
+                    document.getElementById('pickupMapsInput').value = pickupDoc.data().url || '';
+                }
+            } catch (error) { console.log('Error pickup:', error); }
+        }
+
+        window.updatePickupMaps = async function() {
+            const url = document.getElementById('pickupMapsInput').value.trim();
+            if (!url) { alert('Ingresa un link válido'); return; }
+            if (!url.includes('maps.google.com') && !url.includes('goo.gl') && !url.includes('google.com/maps')) {
+                if (!confirm('El link no parece ser de Google Maps. ¿Guardar de todos modos?')) return;
+            }
+            try {
+                await setDoc(doc(db, 'settings', 'pickupMaps'), { url: url, updatedAt: new Date().toISOString() });
+                alert('✅ Ubicación de pickup actualizada');
+            } catch (error) { alert('Error: ' + error.message); }
+        };
+
         async function loadLogo() {
             try {
                 const logoDoc = await getDoc(doc(db, 'settings', 'logo'));
@@ -389,6 +449,64 @@
                 }
             } catch (error) { console.log('Logo:', error); }
         }
+
+        async function loadBanners() {
+            try {
+                const bannersDoc = await getDoc(doc(db, 'settings', 'banners'));
+                if (bannersDoc.exists()) {
+                    banners = bannersDoc.data().images || [];
+                }
+                renderBannerPreviews();
+            } catch (error) { console.log('Banners:', error); }
+        }
+
+        function renderBannerPreviews() {
+            const grid = document.getElementById('bannerPreviewGrid');
+            const modalGrid = document.getElementById('bannerModalGrid');
+            const html = banners.length === 0 
+                ? '<p style="color:#666;text-align:center;grid-column:1/-1;">No hay banners. Agrega el primero.</p>'
+                : banners.map((banner, i) => `
+                    <div class="banner-preview-item">
+                        <img src="${banner}" alt="Banner ${i+1}">
+                        <button class="remove-btn" onclick="removeBanner(${i})">×</button>
+                        <div style="padding:0.5rem;font-size:0.8rem;text-align:center;">Banner ${i+1}</div>
+                    </div>
+                `).join('');
+            if (grid) grid.innerHTML = html;
+            if (modalGrid) modalGrid.innerHTML = html;
+        }
+
+        window.openBannerModal = function() {
+            renderBannerPreviews();
+            document.getElementById('bannerModal').classList.add('active');
+        };
+
+        window.addBanner = async function(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            if (file.size > 1 * 1024 * 1024) { alert('⚠️ Máximo 1MB'); event.target.value = ''; return; }
+            const reader = new FileReader();
+            reader.onload = async function(e) {
+                banners.push(e.target.result);
+                try {
+                    await setDoc(doc(db, 'settings', 'banners'), { images: banners, updatedAt: new Date().toISOString() });
+                    renderBannerPreviews();
+                    alert('✅ Banner agregado');
+                } catch (error) { alert('Error: ' + error.message); }
+            };
+            reader.readAsDataURL(file);
+            event.target.value = '';
+        };
+
+        window.removeBanner = async function(index) {
+            if (!confirm('¿Eliminar este banner?')) return;
+            banners.splice(index, 1);
+            try {
+                await setDoc(doc(db, 'settings', 'banners'), { images: banners, updatedAt: new Date().toISOString() });
+                renderBannerPreviews();
+                alert('✅ Banner eliminado');
+            } catch (error) { alert('Error: ' + error.message); }
+        };
 
         async function loadBrands() {
             try {
@@ -482,7 +600,7 @@
             document.getElementById('productRecommended').checked = false;
             document.getElementById('productImage').value = '';
             document.getElementById('currentProductImageData').value = '';
-            document.getElementById('productImagePreview').innerHTML = '<div style="color:#999;">📷 Selecciona una imagen</div>';
+            document.getElementById('productImagePreview').innerHTML = '<div style="color:#999;"> Selecciona una imagen</div>';
             document.getElementById('productModal').classList.add('active');
         };
 
@@ -517,7 +635,7 @@
             if (product.image) {
                 document.getElementById('productImagePreview').innerHTML = `<img src="${product.image}">`;
             } else {
-                document.getElementById('productImagePreview').innerHTML = '<div style="color:#999;"> Selecciona una imagen</div>';
+                document.getElementById('productImagePreview').innerHTML = '<div style="color:#999;">📷 Selecciona una imagen</div>';
             }
             document.getElementById('productImage').value = '';
             document.getElementById('productModal').classList.add('active');
@@ -537,121 +655,4 @@
         };
 
         window.previewBrandImage = function(event) {
-            const file = event.target.files[0];
-            if (file) {
-                if (file.size > 1 * 1024 * 1024) { alert('⚠️ Máximo 1MB'); event.target.value = ''; return; }
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    document.getElementById('currentBrandImageData').value = e.target.result;
-                    document.getElementById('brandImagePreview').innerHTML = `<img src="${e.target.result}">`;
-                };
-                reader.readAsDataURL(file);
-            }
-        };
-
-        window.saveProduct = async function(event) {
-            event.preventDefault();
-            const saveBtn = document.getElementById('saveProductBtn');
-            saveBtn.disabled = true;
-            saveBtn.textContent = 'Guardando...';
-
-            const editId = document.getElementById('editProductId').value;
-            const imageData = document.getElementById('currentProductImageData').value;
-            const discount = parseFloat(document.getElementById('productDiscount').value) || 0;
-
-            const productData = {
-                code: document.getElementById('productCode').value,
-                brand: document.getElementById('productBrand').value,
-                name: document.getElementById('productName').value,
-                partNumber: document.getElementById('productPartNumber').value,
-                description: document.getElementById('productDescription').value,
-                price: parseFloat(document.getElementById('productPrice').value),
-                discount: discount,
-                stock: parseInt(document.getElementById('productStock').value),
-                category: document.getElementById('productCategory').value,
-                subcategory: document.getElementById('productSubcategory').value,
-                vehicle: document.getElementById('productVehicle').value,
-                recommended: document.getElementById('productRecommended').checked,
-                diameter: document.getElementById('specDiameter').value,
-                length: document.getElementById('specLength').value,
-                width: document.getElementById('specWidth').value,
-                height: document.getElementById('specHeight').value,
-                weight: document.getElementById('specWeight').value,
-                material: document.getElementById('specMaterial').value,
-                voltage: document.getElementById('specVoltage').value,
-                power: document.getElementById('specPower').value,
-                thread: document.getElementById('specThread').value,
-                image: imageData || null,
-                updatedAt: new Date().toISOString()
-            };
-
-            try {
-                if (editId) {
-                    await updateDoc(doc(db, 'products', editId), productData);
-                } else {
-                    productData.createdAt = new Date().toISOString();
-                    await addDoc(collection(db, 'products'), productData);
-                }
-                await loadProducts();
-                closeModal('productModal');
-                alert('✅ Producto guardado');
-            } catch (error) { alert('❌ Error: ' + error.message); }
-
-            saveBtn.disabled = false;
-            saveBtn.textContent = 'Guardar Producto';
-        };
-
-        window.deleteProduct = async function(productId) {
-            if (!confirm('¿Eliminar este producto?')) return;
-            try {
-                await deleteDoc(doc(db, 'products', productId));
-                await loadProducts();
-                alert('✅ Producto eliminado');
-            } catch (error) { alert('Error: ' + error.message); }
-        };
-
-        window.editBrandImage = function(brandId) {
-            const brand = brands.find(b => b.id === brandId);
-            document.getElementById('brandModalTitle').textContent = `Imagen: ${brand.name}`;
-            document.getElementById('editBrandId').value = brandId;
-            document.getElementById('currentBrandImageData').value = brand.image || '';
-            if (brand.image) {
-                document.getElementById('brandImagePreview').innerHTML = `<img src="${brand.image}">`;
-            } else {
-                document.getElementById('brandImagePreview').innerHTML = '<div style="color:#999;"> Selecciona una imagen</div>';
-            }
-            document.getElementById('brandImageInput').value = '';
-            document.getElementById('brandModal').classList.add('active');
-        };
-
-        window.saveBrandImage = async function(event) {
-            event.preventDefault();
-            const brandId = document.getElementById('editBrandId').value;
-            const imageData = document.getElementById('currentBrandImageData').value;
-            try {
-                await updateDoc(doc(db, 'brands', brandId), { image: imageData || null });
-                await loadBrands();
-                closeModal('brandModal');
-                alert('✅ Imagen guardada');
-            } catch (error) { alert('❌ Error: ' + error.message); }
-        };
-
-        window.uploadAdminLogo = async function(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-            if (file.size > 1 * 1024 * 1024) { alert('Máximo 1MB'); return; }
-            const reader = new FileReader();
-            reader.onload = async function(e) {
-                try {
-                    await setDoc(doc(db, 'settings', 'logo'), { image: e.target.result, updatedAt: new Date().toISOString() });
-                    document.getElementById('adminLogoPreview').innerHTML = `<img src="${e.target.result}">`;
-                    alert('✅ Logo actualizado');
-                } catch (error) { alert('Error: ' + error.message); }
-            };
-            reader.readAsDataURL(file);
-        };
-
-        window.closeModal = function(id) { document.getElementById(id).classList.remove('active'); };
-    </script>
-</body>
-</html>
+            const file = event.targ
