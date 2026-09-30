@@ -82,15 +82,10 @@
             background-size: cover; background-position: center;
         }
         .hero-content { z-index: 2; padding: 2rem; max-width: 1200px; }
-        .hero h1 {
-            font-size: 3.5rem; margin-bottom: 1rem; text-transform: uppercase;
-        }
+        .hero h1 { font-size: 3.5rem; margin-bottom: 1rem; text-transform: uppercase; }
         .hero h1 .highlight { color: #e63946; }
         .hero p { font-size: 1.2rem; margin-bottom: 2rem; color: #ccc; }
-        .hero-info-boxes {
-            display: flex; gap: 2rem; justify-content: center;
-            margin-top: 2rem; flex-wrap: wrap;
-        }
+        .hero-info-boxes { display: flex; gap: 2rem; justify-content: center; margin-top: 2rem; flex-wrap: wrap; }
         .info-box {
             background: rgba(0,0,0,0.85); border: 1px solid #e63946;
             padding: 1.5rem; border-radius: 10px; min-width: 280px; text-align: left;
@@ -99,24 +94,18 @@
         .info-box p { margin-bottom: 0.5rem; font-size: 0.95rem; color: #ddd; }
         .info-box strong { color: white; }
         .brands-section { padding: 3rem 2rem; background: #111; }
-        .brands-slider {
-            display: flex; gap: 2rem; justify-content: center;
-            align-items: center; flex-wrap: wrap;
-        }
+        .brands-slider { display: flex; gap: 2rem; justify-content: center; align-items: center; flex-wrap: wrap; }
         .brand-item { text-align: center; transition: transform 0.3s; }
         .brand-item:hover { transform: scale(1.05); }
         .brand-logo {
             width: 90px; height: 90px; background: white; border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
-            font-size: 1.8rem; margin: 0 auto 0.5rem; overflow: hidden;
+            margin: 0 auto 0.5rem; overflow: hidden;
         }
         .brand-logo img { width: 100%; height: 100%; object-fit: contain; padding: 10px; }
         .brand-name { font-size: 0.8rem; text-transform: uppercase; color: #aaa; font-weight: 600; }
         .services-section { padding: 4rem 2rem; background: #0a0a0a; }
-        .section-title {
-            text-align: center; font-size: 2.2rem; margin-bottom: 3rem;
-            text-transform: uppercase;
-        }
+        .section-title { text-align: center; font-size: 2.2rem; margin-bottom: 3rem; text-transform: uppercase; }
         .section-title span { color: #e63946; }
         .services-grid {
             display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -130,8 +119,21 @@
         .service-icon { font-size: 3rem; margin-bottom: 1rem; }
         .service-card h3 { font-size: 1.1rem; text-transform: uppercase; }
         .products-section { padding: 4rem 2rem; background: #111; }
+        .search-container {
+            max-width: 600px; margin: 0 auto 2rem; position: relative;
+        }
+        .search-input {
+            width: 100%; padding: 1rem 1.5rem; padding-left: 3rem;
+            background: #1a1a1a; border: 2px solid #333; border-radius: 50px;
+            color: white; font-size: 1rem; transition: border-color 0.3s;
+        }
+        .search-input:focus { outline: none; border-color: #e63946; }
+        .search-icon {
+            position: absolute; left: 1.2rem; top: 50%; transform: translateY(-50%);
+            font-size: 1.2rem; color: #666;
+        }
         .products-grid {
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            display: grid; grid-template-columns: repeat(4, 1fr);
             gap: 1.5rem; max-width: 1200px; margin: 0 auto;
         }
         .product-card {
@@ -146,12 +148,28 @@
         .product-image img { width: 100%; height: 100%; object-fit: cover; }
         .product-image .no-image { font-size: 4rem; color: #555; }
         .product-info { padding: 1.2rem; }
-        .product-name { font-size: 1.2rem; font-weight: bold; margin-bottom: 0.5rem; color: white; }
+        .product-name { font-size: 1.1rem; font-weight: bold; margin-bottom: 0.5rem; color: white; }
         .product-description { color: #aaa; margin-bottom: 1rem; font-size: 0.85rem; }
         .product-price { font-size: 1.4rem; color: #e63946; font-weight: bold; margin-bottom: 0.8rem; }
         .product-stock { font-size: 0.8rem; color: #28a745; margin-bottom: 1rem; }
         .product-stock.low { color: #ffc107; }
         .product-stock.out { color: #dc3545; }
+        .pagination {
+            display: flex; justify-content: center; gap: 0.5rem;
+            margin-top: 2rem; flex-wrap: wrap;
+        }
+        .pagination button {
+            background: #1a1a1a; color: white; border: 2px solid #333;
+            padding: 0.6rem 1rem; border-radius: 5px; cursor: pointer;
+            font-weight: 600; transition: all 0.3s;
+        }
+        .pagination button:hover { border-color: #e63946; }
+        .pagination button.active { background: #e63946; border-color: #e63946; }
+        .pagination button:disabled { opacity: 0.4; cursor: not-allowed; }
+        .no-results {
+            text-align: center; padding: 3rem; color: #666;
+            grid-column: 1 / -1;
+        }
         .cart-sidebar {
             position: fixed; right: -450px; top: 0; width: 400px; max-width: 100%;
             height: 100vh; background: #1a1a1a; border-left: 2px solid #e63946;
@@ -202,40 +220,6 @@
         }
         .form-group input:focus, .form-group textarea:focus { outline: none; border-color: #e63946; }
         .form-group textarea { resize: vertical; min-height: 80px; }
-        .image-preview {
-            width: 100%; height: 130px; background: #222; border: 2px dashed #444;
-            border-radius: 5px; display: flex; align-items: center; justify-content: center;
-            margin-top: 0.5rem; overflow: hidden;
-        }
-        .image-preview img { max-width: 100%; max-height: 100%; object-fit: contain; }
-        .image-preview .placeholder { color: #666; text-align: center; font-size: 0.9rem; }
-        .admin-panel { display: none; padding: 3rem 2rem; background: #0a0a0a; }
-        .admin-panel.active { display: block; }
-        .admin-header {
-            display: flex; justify-content: space-between; align-items: center;
-            margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;
-        }
-        .admin-product-list, .admin-brands-list { max-width: 1200px; margin: 0 auto 2rem; }
-        .admin-section-title {
-            color: #e63946; font-size: 1.5rem; margin-bottom: 1rem;
-            text-transform: uppercase; border-bottom: 2px solid #e63946;
-            padding-bottom: 0.5rem;
-        }
-        .admin-product-item, .admin-brand-item {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 1rem; background: #1a1a1a; margin-bottom: 0.8rem;
-            border-radius: 5px; border: 1px solid #333; flex-wrap: wrap; gap: 1rem;
-        }
-        .admin-product-info, .admin-brand-info { display: flex; align-items: center; gap: 1rem; flex: 1; }
-        .admin-product-thumb, .admin-brand-thumb {
-            width: 60px; height: 60px; background: #222; border-radius: 5px;
-            overflow: hidden; display: flex; align-items: center; justify-content: center;
-            flex-shrink: 0;
-        }
-        .admin-product-thumb img, .admin-brand-thumb img { width: 100%; height: 100%; object-fit: cover; }
-        .admin-actions { display: flex; gap: 0.5rem; }
-        .btn-small { padding: 0.4rem 0.8rem; font-size: 0.8rem; }
-        .btn-danger { background: #dc3545; color: white; }
         .close-btn { background: none; border: none; color: white; font-size: 1.8rem; cursor: pointer; }
         .overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -262,9 +246,7 @@
             z-index: 999; transition: transform 0.3s;
         }
         .whatsapp-btn:hover { transform: scale(1.1); }
-        .loading {
-            text-align: center; padding: 3rem; color: #666; font-size: 1.1rem;
-        }
+        .loading { text-align: center; padding: 3rem; color: #666; font-size: 1.1rem; }
         .loading::after {
             content: ''; display: inline-block; width: 20px; height: 20px;
             border: 3px solid #e63946; border-top-color: transparent;
@@ -272,22 +254,18 @@
             margin-left: 10px; vertical-align: middle;
         }
         @keyframes spin { to { transform: rotate(360deg); } }
-        .alert-info {
-            background: #1a3a5c; border: 1px solid #2a5a8c; color: #8ab4f8;
-            padding: 0.8rem; border-radius: 5px; margin-bottom: 1rem; font-size: 0.85rem;
+        @media (max-width: 1024px) {
+            .products-grid { grid-template-columns: repeat(3, 1fr); }
         }
-        .admin-hint {
-            position: fixed; bottom: 90px; right: 20px; background: #1a1a1a;
-            border: 1px solid #e63946; color: white; padding: 0.8rem 1rem;
-            border-radius: 5px; font-size: 0.8rem; z-index: 998;
-            display: none; max-width: 250px;
-        }
-        .admin-hint.show { display: block; }
         @media (max-width: 768px) {
             .hero h1 { font-size: 2.2rem; }
             nav { display: none; }
             .cart-sidebar { width: 100%; right: -100%; }
             .top-bar { justify-content: center; }
+            .products-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 480px) {
+            .products-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -350,15 +328,20 @@
 
     <section class="products-section" id="productos">
         <h2 class="section-title">Nuestros <span>Productos</span></h2>
+        <div class="search-container">
+            <span class="search-icon">🔍</span>
+            <input type="text" class="search-input" id="searchInput" placeholder="Buscar producto por nombre...">
+        </div>
         <div id="productsContainer">
             <div class="loading">Cargando productos</div>
         </div>
+        <div class="pagination" id="pagination"></div>
     </section>
 
     <div class="overlay" id="overlay" onclick="closeAll()"></div>
     <div class="cart-sidebar" id="cartSidebar">
         <div class="cart-header">
-            <h3>🛒 Tu Carrito</h3>
+            <h3> Tu Carrito</h3>
             <button class="close-btn" onclick="toggleCart()">×</button>
         </div>
         <div class="cart-items" id="cartItems">
@@ -385,93 +368,6 @@
         </div>
     </div>
 
-    <div class="modal" id="adminLoginModal">
-        <div class="modal-content">
-            <h2>Acceso Administrador</h2>
-            <form onsubmit="adminLogin(event)">
-                <div class="form-group"><label>Contraseña</label><input type="password" id="adminPassword" required></div>
-                <button type="submit" class="btn btn-primary" style="width:100%">Ingresar</button>
-                <button type="button" class="btn btn-secondary" style="width:100%;margin-top:0.8rem" onclick="closeModal('adminLoginModal')">Cancelar</button>
-            </form>
-        </div>
-    </div>
-
-    <div class="admin-panel" id="adminPanel">
-        <div class="admin-header">
-            <h2 class="section-title" style="margin:0">Panel de <span>Administración</span></h2>
-            <div>
-                <button class="btn btn-primary" onclick="openAddProductModal()">+ Agregar Producto</button>
-                <button class="btn btn-secondary" onclick="logoutAdmin()">Salir</button>
-            </div>
-        </div>
-
-        <div class="admin-product-list">
-            <h3 class="admin-section-title">📦 Productos</h3>
-            <div id="adminProductList"></div>
-        </div>
-
-        <div class="admin-brands-list">
-            <h3 class="admin-section-title">🏷️ Marcas (Imágenes)</h3>
-            <div id="adminBrandsList"></div>
-        </div>
-
-        <div class="admin-brands-list">
-            <h3 class="admin-section-title">️ Logo de la Empresa</h3>
-            <div class="admin-product-item">
-                <div class="admin-product-info">
-                    <div class="admin-product-thumb" id="adminLogoPreview">🔧</div>
-                    <div>
-                        <strong>Logo Akira Motors</strong><br>
-                        <small style="color:#aaa">Se mostrará a todos los visitantes</small>
-                    </div>
-                </div>
-                <div class="admin-actions">
-                    <input type="file" id="adminLogoUpload" accept="image/*" style="display:none" onchange="uploadAdminLogo(event)">
-                    <button class="btn btn-small btn-primary" onclick="document.getElementById('adminLogoUpload').click()">Cambiar Logo</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal" id="addProductModal">
-        <div class="modal-content">
-            <h2 id="modalTitle">Agregar Producto</h2>
-            <div class="alert-info">ℹ️ Las imágenes se guardan en la base de datos. Máximo 1MB por imagen.</div>
-            <form onsubmit="saveProduct(event)">
-                <div class="form-group"><label>Nombre del Producto</label><input type="text" id="productName" required></div>
-                <div class="form-group"><label>Descripción</label><textarea id="productDescription" required></textarea></div>
-                <div class="form-group"><label>Precio ($)</label><input type="number" id="productPrice" step="0.01" required></div>
-                <div class="form-group"><label>Stock Disponible</label><input type="number" id="productStock" required></div>
-                <div class="form-group">
-                    <label>Foto del Producto (máx. 1MB)</label>
-                    <input type="file" id="productImage" accept="image/*" onchange="previewImage(event, 'imagePreview', 'currentImageData')">
-                    <div class="image-preview" id="imagePreview"><div class="placeholder">📷 Selecciona una imagen</div></div>
-                </div>
-                <input type="hidden" id="editProductId">
-                <input type="hidden" id="currentImageData">
-                <button type="submit" class="btn btn-primary" style="width:100%" id="saveBtn">Guardar</button>
-                <button type="button" class="btn btn-secondary" style="width:100%;margin-top:0.8rem" onclick="closeModal('addProductModal')">Cancelar</button>
-            </form>
-        </div>
-    </div>
-
-    <div class="modal" id="brandImageModal">
-        <div class="modal-content">
-            <h2 id="brandModalTitle">Imagen de Marca</h2>
-            <form onsubmit="saveBrandImage(event)">
-                <div class="form-group">
-                    <label>Imagen de la marca (máx. 1MB)</label>
-                    <input type="file" id="brandImageInput" accept="image/*" onchange="previewImage(event, 'brandImagePreview', 'currentBrandImageData')">
-                    <div class="image-preview" id="brandImagePreview"><div class="placeholder">📷 Selecciona una imagen</div></div>
-                </div>
-                <input type="hidden" id="editBrandId">
-                <input type="hidden" id="currentBrandImageData">
-                <button type="submit" class="btn btn-primary" style="width:100%" id="saveBrandBtn">Guardar</button>
-                <button type="button" class="btn btn-secondary" style="width:100%;margin-top:0.8rem" onclick="closeModal('brandImageModal')">Cancelar</button>
-            </form>
-        </div>
-    </div>
-
     <footer id="contacto">
         <div class="footer-content">
             <div class="footer-section">
@@ -492,7 +388,7 @@
             <div class="footer-section">
                 <h3>Síguenos</h3>
                 <p>📘 Facebook</p>
-                <p>📷 Instagram</p>
+                <p> Instagram</p>
             </div>
         </div>
         <div class="footer-bottom">
@@ -502,13 +398,9 @@
 
     <a href="https://wa.me/584148700616" class="whatsapp-btn" target="_blank">💬</a>
 
-    <div class="admin-hint" id="adminHint">
-        💡 <strong>Tip Admin:</strong> Toca 3 veces el logo para acceder al panel de administración.
-    </div>
-
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs, updateDoc, deleteDoc, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+        import { getFirestore, collection, getDocs, addDoc, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyAU77yzh7Tm3RPuuvVcxlCt26u2LjmsBK0",
@@ -523,21 +415,12 @@
         const db = getFirestore(app);
 
         let products = [];
-        let brands = [];
+        let filteredProducts = [];
         let cart = JSON.parse(localStorage.getItem('akira_cart')) || [];
-        let isAdmin = false;
-        const ADMIN_PASSWORD = 'admin123';
+        let currentPage = 1;
+        const PRODUCTS_PER_PAGE = 8;
 
-        // Marcas predeterminadas
-        const defaultBrands = [
-            { id: 'mitsubishi', name: 'Mitsubishi', image: null },
-            { id: 'ford', name: 'Ford', image: null },
-            { id: 'kia', name: 'Kia', image: null },
-            { id: 'hyundai', name: 'Hyundai', image: null },
-            { id: 'chevrolet', name: 'Chevrolet', image: null }
-        ];
-
-        // Triple clic para acceder al admin (discreto)
+        // Triple clic en logo para ir al admin
         let logoClickCount = 0;
         let logoClickTimer;
         document.getElementById('logoContainer').addEventListener('click', function() {
@@ -548,7 +431,7 @@
             if (logoClickCount >= 3) {
                 clearTimeout(logoClickTimer);
                 logoClickCount = 0;
-                openAdminLogin();
+                window.location.href = 'admin.html';
             }
         });
 
@@ -556,86 +439,70 @@
             try {
                 const logoDoc = await getDoc(doc(db, 'settings', 'logo'));
                 if (logoDoc.exists()) {
-                    const logoData = logoDoc.data().image;
-                    document.getElementById('logoDisplay').innerHTML = `<img src="${logoData}">`;
-                    const adminPreview = document.getElementById('adminLogoPreview');
-                    if (adminPreview) adminPreview.innerHTML = `<img src="${logoData}">`;
+                    document.getElementById('logoDisplay').innerHTML = `<img src="${logoDoc.data().image}">`;
                 }
-            } catch (error) {
-                console.log('Logo no cargado:', error);
-            }
+            } catch (error) { console.log('Logo no cargado:', error); }
         }
 
         async function loadBrands() {
             try {
                 const snapshot = await getDocs(collection(db, 'brands'));
-                if (snapshot.empty) {
-                    brands = defaultBrands;
-                    for (const brand of defaultBrands) {
-                        await setDoc(doc(db, 'brands', brand.id), brand);
-                    }
+                let brands = [];
+                snapshot.forEach(docSnap => brands.push({ id: docSnap.id, ...docSnap.data() }));
+                const slider = document.getElementById('brandsSlider');
+                if (brands.length === 0) {
+                    slider.innerHTML = '<p style="color:#666">Próximamente</p>';
                 } else {
-                    brands = [];
-                    snapshot.forEach(docSnap => {
-                        brands.push({ id: docSnap.id, ...docSnap.data() });
-                    });
+                    slider.innerHTML = brands.map(brand => {
+                        const logoHtml = brand.image 
+                            ? `<img src="${brand.image}" alt="${brand.name}">`
+                            : `<span style="font-size:2rem;color:#666">🚗</span>`;
+                        return `<div class="brand-item"><div class="brand-logo">${logoHtml}</div><div class="brand-name">${brand.name}</div></div>`;
+                    }).join('');
                 }
-                renderBrands();
-                if (isAdmin) renderAdminBrands();
-            } catch (error) {
-                console.error('Error cargando marcas:', error);
-                brands = defaultBrands;
-                renderBrands();
-            }
-        }
-
-        function renderBrands() {
-            const slider = document.getElementById('brandsSlider');
-            slider.innerHTML = brands.map(brand => {
-                const logoHtml = brand.image 
-                    ? `<img src="${brand.image}" alt="${brand.name}">`
-                    : `<span style="font-size:2rem;color:#666">🚗</span>`;
-                return `
-                    <div class="brand-item">
-                        <div class="brand-logo">${logoHtml}</div>
-                        <div class="brand-name">${brand.name}</div>
-                    </div>
-                `;
-            }).join('');
+            } catch (error) { console.error('Error marcas:', error); }
         }
 
         async function loadProducts() {
             try {
                 const snapshot = await getDocs(collection(db, 'products'));
                 products = [];
-                snapshot.forEach(docSnap => {
-                    products.push({ id: docSnap.id, ...docSnap.data() });
-                });
+                snapshot.forEach(docSnap => products.push({ id: docSnap.id, ...docSnap.data() }));
+                filteredProducts = [...products];
+                currentPage = 1;
                 renderProducts();
-                if (isAdmin) renderAdminProducts();
             } catch (error) {
-                console.error('Error cargando productos:', error);
-                document.getElementById('productsContainer').innerHTML = 
-                    '<p style="text-align:center;color:#dc3545;padding:2rem">Error al cargar productos.</p>';
+                console.error('Error:', error);
+                document.getElementById('productsContainer').innerHTML = '<p style="text-align:center;color:#dc3545;padding:2rem">Error al cargar productos.</p>';
             }
         }
 
         function renderProducts() {
             const container = document.getElementById('productsContainer');
-            if (products.length === 0) {
-                container.innerHTML = '<p style="text-align:center;color:#666;padding:2rem">No hay productos disponibles aún. Vuelve pronto.</p>';
+            const pagination = document.getElementById('pagination');
+
+            if (filteredProducts.length === 0) {
+                container.innerHTML = '<div class="no-results"> No se encontraron productos</div>';
+                pagination.innerHTML = '';
                 return;
             }
+
+            const totalPages = Math.ceil(filteredProducts.length / PRODUCTS_PER_PAGE);
+            if (currentPage > totalPages) currentPage = totalPages;
+
+            const start = (currentPage - 1) * PRODUCTS_PER_PAGE;
+            const end = start + PRODUCTS_PER_PAGE;
+            const pageProducts = filteredProducts.slice(start, end);
+
             const grid = document.createElement('div');
             grid.className = 'products-grid';
-            grid.innerHTML = products.map(product => {
-                let stockClass = '';
-                let stockText = `Stock: ${product.stock} unidades`;
+            grid.innerHTML = pageProducts.map(product => {
+                let stockClass = '', stockText = `Stock: ${product.stock} unidades`;
                 if (product.stock === 0) { stockClass = 'out'; stockText = 'Agotado'; }
                 else if (product.stock < 10) { stockClass = 'low'; stockText = `¡Últimas ${product.stock}!`; }
                 const imageHtml = product.image 
                     ? `<img src="${product.image}" alt="${product.name}" loading="lazy">`
-                    : `<div class="no-image"></div>`;
+                    : `<div class="no-image">🔧</div>`;
                 return `
                     <div class="product-card">
                         <div class="product-image">${imageHtml}</div>
@@ -653,7 +520,37 @@
             }).join('');
             container.innerHTML = '';
             container.appendChild(grid);
+
+            // Paginación
+            if (totalPages <= 1) {
+                pagination.innerHTML = '';
+                return;
+            }
+            let paginationHtml = `<button ${currentPage === 1 ? 'disabled' : ''} onclick="changePage(${currentPage - 1})"> Anterior</button>`;
+            for (let i = 1; i <= totalPages; i++) {
+                paginationHtml += `<button class="${i === currentPage ? 'active' : ''}" onclick="changePage(${i})">${i}</button>`;
+            }
+            paginationHtml += `<button ${currentPage === totalPages ? 'disabled' : ''} onclick="changePage(${currentPage + 1})">Siguiente ▶</button>`;
+            pagination.innerHTML = paginationHtml;
         }
+
+        window.changePage = function(page) {
+            currentPage = page;
+            renderProducts();
+            document.getElementById('productos').scrollIntoView({ behavior: 'smooth' });
+        };
+
+        // Búsqueda
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            const query = e.target.value.toLowerCase().trim();
+            if (query === '') {
+                filteredProducts = [...products];
+            } else {
+                filteredProducts = products.filter(p => p.name.toLowerCase().includes(query));
+            }
+            currentPage = 1;
+            renderProducts();
+        });
 
         window.addToCart = function(productId) {
             const product = products.find(p => p.id === productId);
@@ -662,9 +559,7 @@
             if (existingItem) {
                 if (existingItem.quantity < product.stock) existingItem.quantity++;
                 else { alert('No hay más stock disponible'); return; }
-            } else {
-                cart.push({ ...product, quantity: 1 });
-            }
+            } else { cart.push({ ...product, quantity: 1 }); }
             updateCartUI();
             saveCart();
         };
@@ -693,8 +588,7 @@
             const cartItems = document.getElementById('cartItems');
             const cartCount = document.getElementById('cartCount');
             const cartTotal = document.getElementById('cartTotal');
-            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-            cartCount.textContent = totalItems;
+            cartCount.textContent = cart.reduce((sum, item) => sum + item.quantity, 0);
             if (cart.length === 0) {
                 cartItems.innerHTML = '<p style="text-align:center;color:#999">Tu carrito está vacío</p>';
                 cartTotal.textContent = 'Total: $0.00';
@@ -757,253 +651,13 @@
                 alert('¡Cotización enviada! Te contactaremos al 0414-8700616');
                 closeModal('quoteModal');
                 event.target.reset();
-            } catch (error) {
-                alert('Error al enviar. Por favor llámanos al 0414-8700616');
-            }
-        };
-
-        function openAdminLogin() {
-            if (isAdmin) {
-                document.getElementById('adminPanel').classList.add('active');
-                renderAdminProducts();
-                renderAdminBrands();
-                document.getElementById('adminPanel').scrollIntoView({ behavior: 'smooth' });
-            } else {
-                document.getElementById('adminLoginModal').classList.add('active');
-            }
-        }
-        window.openAdminLogin = openAdminLogin;
-
-        window.adminLogin = function(event) {
-            event.preventDefault();
-            if (document.getElementById('adminPassword').value === ADMIN_PASSWORD) {
-                isAdmin = true;
-                closeModal('adminLoginModal');
-                document.getElementById('adminPanel').classList.add('active');
-                renderAdminProducts();
-                renderAdminBrands();
-                document.getElementById('adminPanel').scrollIntoView({ behavior: 'smooth' });
-                document.getElementById('adminPassword').value = '';
-            } else { alert('Contraseña incorrecta'); }
-        };
-
-        window.logoutAdmin = function() {
-            isAdmin = false;
-            document.getElementById('adminPanel').classList.remove('active');
-        };
-
-        function renderAdminProducts() {
-            const list = document.getElementById('adminProductList');
-            if (products.length === 0) {
-                list.innerHTML = '<p style="text-align:center;color:#666;padding:1rem">No hay productos. Agrega el primero.</p>';
-                return;
-            }
-            list.innerHTML = products.map(product => {
-                const thumbHtml = product.image 
-                    ? `<img src="${product.image}" alt="${product.name}">`
-                    : '🔧';
-                return `
-                    <div class="admin-product-item">
-                        <div class="admin-product-info">
-                            <div class="admin-product-thumb">${thumbHtml}</div>
-                            <div>
-                                <strong>${product.name}</strong><br>
-                                <small style="color:#aaa">Precio: $${Number(product.price).toFixed(2)} | Stock: ${product.stock}</small>
-                            </div>
-                        </div>
-                        <div class="admin-actions">
-                            <button class="btn btn-small btn-primary" onclick="editProduct('${product.id}')">Editar</button>
-                            <button class="btn btn-small btn-danger" onclick="deleteProduct('${product.id}')">Eliminar</button>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        function renderAdminBrands() {
-            const list = document.getElementById('adminBrandsList');
-            list.innerHTML = brands.map(brand => {
-                const thumbHtml = brand.image 
-                    ? `<img src="${brand.image}" alt="${brand.name}">`
-                    : '🚗';
-                return `
-                    <div class="admin-brand-item">
-                        <div class="admin-brand-info">
-                            <div class="admin-brand-thumb">${thumbHtml}</div>
-                            <div>
-                                <strong>${brand.name}</strong><br>
-                                <small style="color:#aaa">${brand.image ? 'Imagen cargada' : 'Sin imagen'}</small>
-                            </div>
-                        </div>
-                        <div class="admin-actions">
-                            <button class="btn btn-small btn-primary" onclick="editBrandImage('${brand.id}')">
-                                ${brand.image ? 'Cambiar Imagen' : 'Agregar Imagen'}
-                            </button>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        window.openAddProductModal = function() {
-            document.getElementById('modalTitle').textContent = 'Agregar Producto';
-            document.getElementById('editProductId').value = '';
-            document.getElementById('productName').value = '';
-            document.getElementById('productDescription').value = '';
-            document.getElementById('productPrice').value = '';
-            document.getElementById('productStock').value = '';
-            document.getElementById('productImage').value = '';
-            document.getElementById('currentImageData').value = '';
-            document.getElementById('imagePreview').innerHTML = '<div class="placeholder">📷 Selecciona una imagen</div>';
-            document.getElementById('addProductModal').classList.add('active');
-        };
-
-        window.editProduct = function(productId) {
-            const product = products.find(p => p.id === productId);
-            document.getElementById('modalTitle').textContent = 'Editar Producto';
-            document.getElementById('editProductId').value = product.id;
-            document.getElementById('productName').value = product.name;
-            document.getElementById('productDescription').value = product.description;
-            document.getElementById('productPrice').value = product.price;
-            document.getElementById('productStock').value = product.stock;
-            document.getElementById('currentImageData').value = product.image || '';
-            if (product.image) {
-                document.getElementById('imagePreview').innerHTML = `<img src="${product.image}">`;
-            } else {
-                document.getElementById('imagePreview').innerHTML = '<div class="placeholder">📷 Selecciona una imagen</div>';
-            }
-            document.getElementById('productImage').value = '';
-            document.getElementById('addProductModal').classList.add('active');
-        };
-
-        window.previewImage = function(event, previewId, dataId) {
-            const file = event.target.files[0];
-            if (file) {
-                if (file.size > 1 * 1024 * 1024) {
-                    alert('⚠️ La imagen es muy grande. Máximo 1MB.');
-                    event.target.value = '';
-                    return;
-                }
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    document.getElementById(dataId).value = e.target.result;
-                    document.getElementById(previewId).innerHTML = `<img src="${e.target.result}">`;
-                };
-                reader.readAsDataURL(file);
-            }
-        };
-
-        window.saveProduct = async function(event) {
-            event.preventDefault();
-            const saveBtn = document.getElementById('saveBtn');
-            saveBtn.disabled = true;
-            saveBtn.textContent = 'Guardando...';
-
-            const editId = document.getElementById('editProductId').value;
-            const imageData = document.getElementById('currentImageData').value;
-
-            const productData = {
-                name: document.getElementById('productName').value,
-                description: document.getElementById('productDescription').value,
-                price: parseFloat(document.getElementById('productPrice').value),
-                stock: parseInt(document.getElementById('productStock').value),
-                image: imageData || null,
-                updatedAt: new Date().toISOString()
-            };
-
-            try {
-                if (editId) {
-                    await updateDoc(doc(db, 'products', editId), productData);
-                } else {
-                    productData.createdAt = new Date().toISOString();
-                    await addDoc(collection(db, 'products'), productData);
-                }
-                await loadProducts();
-                closeModal('addProductModal');
-                alert('✅ Producto guardado exitosamente');
-            } catch (error) {
-                console.error('Error:', error);
-                alert(' Error al guardar: ' + error.message);
-            }
-
-            saveBtn.disabled = false;
-            saveBtn.textContent = 'Guardar';
-        };
-
-        window.deleteProduct = async function(productId) {
-            if (!confirm('¿Eliminar este producto?')) return;
-            try {
-                await deleteDoc(doc(db, 'products', productId));
-                await loadProducts();
-                alert('✅ Producto eliminado');
-            } catch (error) {
-                alert('Error al eliminar: ' + error.message);
-            }
-        };
-
-        window.editBrandImage = function(brandId) {
-            const brand = brands.find(b => b.id === brandId);
-            document.getElementById('brandModalTitle').textContent = `Imagen: ${brand.name}`;
-            document.getElementById('editBrandId').value = brandId;
-            document.getElementById('currentBrandImageData').value = brand.image || '';
-            if (brand.image) {
-                document.getElementById('brandImagePreview').innerHTML = `<img src="${brand.image}">`;
-            } else {
-                document.getElementById('brandImagePreview').innerHTML = '<div class="placeholder">📷 Selecciona una imagen</div>';
-            }
-            document.getElementById('brandImageInput').value = '';
-            document.getElementById('brandImageModal').classList.add('active');
-        };
-
-        window.saveBrandImage = async function(event) {
-            event.preventDefault();
-            const saveBtn = document.getElementById('saveBrandBtn');
-            saveBtn.disabled = true;
-            saveBtn.textContent = 'Guardando...';
-
-            const brandId = document.getElementById('editBrandId').value;
-            const imageData = document.getElementById('currentBrandImageData').value;
-
-            try {
-                await updateDoc(doc(db, 'brands', brandId), { image: imageData || null });
-                await loadBrands();
-                closeModal('brandImageModal');
-                alert('✅ Imagen de marca guardada');
-            } catch (error) {
-                alert('❌ Error: ' + error.message);
-            }
-
-            saveBtn.disabled = false;
-            saveBtn.textContent = 'Guardar';
-        };
-
-        window.uploadAdminLogo = async function(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-            if (file.size > 1 * 1024 * 1024) { alert('Imagen muy grande. Máximo 1MB'); return; }
-            
-            const reader = new FileReader();
-            reader.onload = async function(e) {
-                const imgData = e.target.result;
-                try {
-                    await setDoc(doc(db, 'settings', 'logo'), { image: imgData, updatedAt: new Date().toISOString() });
-                    document.getElementById('logoDisplay').innerHTML = `<img src="${imgData}">`;
-                    document.getElementById('adminLogoPreview').innerHTML = `<img src="${imgData}">`;
-                    alert('✅ Logo actualizado. Todos los visitantes lo verán.');
-                } catch (error) {
-                    alert('Error al guardar logo: ' + error.message);
-                }
-            };
-            reader.readAsDataURL(file);
+            } catch (error) { alert('Error al enviar. Por favor llámanos al 0414-8700616'); }
         };
 
         window.closeModal = function(id) { document.getElementById(id).classList.remove('active'); };
         window.closeAll = function() {
             document.getElementById('cartSidebar').classList.remove('active');
             document.getElementById('overlay').classList.remove('active');
-        };
-        window.scrollToProducts = function() {
-            document.getElementById('productos').scrollIntoView({ behavior: 'smooth' });
         };
 
         document.addEventListener('keydown', function(e) {
@@ -1013,21 +667,10 @@
             }
         });
 
-        // Iniciar
         loadLogo();
         loadBrands();
         loadProducts();
         updateCartUI();
-
-        // Mostrar hint de admin después de 5 segundos (solo la primera vez)
-        if (!localStorage.getItem('adminHintShown')) {
-            setTimeout(() => {
-                const hint = document.getElementById('adminHint');
-                hint.classList.add('show');
-                setTimeout(() => hint.classList.remove('show'), 8000);
-                localStorage.setItem('adminHintShown', 'true');
-            }, 5000);
-        }
     </script>
 </body>
 </html>
