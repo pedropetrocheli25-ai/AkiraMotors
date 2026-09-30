@@ -90,6 +90,24 @@
             border: 2px solid #dc3545; border-radius: 20px;
             font-size: 0.9rem; outline: none;
         }
+        .vehicle-filter {
+            padding: 1rem;
+            border-bottom: 1px solid #eee;
+            background: #f9f9f9;
+        }
+        .vehicle-filter h4 {
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            color: #dc3545;
+        }
+        .vehicle-filter select {
+            width: 100%;
+            padding: 0.5rem;
+            margin-bottom: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 0.85rem;
+        }
         .category-list { padding: 0.5rem 0; }
         .category-item { border-bottom: 1px solid #f0f0f0; }
         .category-header {
@@ -232,9 +250,17 @@
         .product-detail { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; padding: 2rem; }
         .product-detail-image {
             background: #f8f8f8; border-radius: 16px;
-            display: flex; align-items: center; justify-content: center; min-height: 300px;
+            display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 300px;
         }
         .product-detail-image img { max-width: 100%; max-height: 400px; object-fit: contain; }
+        .gallery-dots {
+            display: flex; gap: 8px; margin-top: 1rem;
+        }
+        .gallery-dot {
+            width: 10px; height: 10px; border-radius: 50%;
+            background: #ddd; cursor: pointer;
+        }
+        .gallery-dot.active { background: #dc3545; }
         .product-detail-info h2 { color: #333; margin-bottom: 0.5rem; }
         .product-detail-code { color: #dc3545; font-size: 0.9rem; margin-bottom: 1rem; }
         .detail-price-box {
@@ -260,6 +286,46 @@
         .detail-actions {
             padding: 1.5rem 2rem; border-top: 1px solid #eee;
             display: flex; gap: 1rem; flex-wrap: wrap;
+        }
+        
+        .reviews-section {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid #eee;
+        }
+        .review-item {
+            background: #f8f8f8;
+            padding: 1rem;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+        }
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+        .review-author { font-weight: bold; }
+        .review-date { color: #999; font-size: 0.85rem; }
+        .review-stars { color: #FFC107; margin-bottom: 0.5rem; }
+        .review-text { color: #555; font-size: 0.9rem; }
+        .add-review-form {
+            background: #f8f8f8;
+            padding: 1rem;
+            border-radius: 12px;
+            margin-top: 1rem;
+        }
+        .star-rating {
+            display: flex;
+            gap: 0.5rem;
+            margin: 0.5rem 0;
+        }
+        .star-rating span {
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #ddd;
+        }
+        .star-rating span.active {
+            color: #FFC107;
         }
         
         .cart-sidebar {
@@ -331,11 +397,11 @@
         .auth-modal h2 { color: #dc3545; margin-bottom: 1.5rem; text-align: center; }
         .form-group { margin-bottom: 1rem; }
         .form-group label { display: block; margin-bottom: 0.4rem; font-weight: 600; color: #333; font-size: 0.9rem; }
-        .form-group input {
+        .form-group input, .form-group textarea, .form-group select {
             width: 100%; padding: 0.7rem;
             border: 1px solid #ddd; border-radius: 12px; font-size: 0.95rem;
         }
-        .form-group input:focus { outline: none; border-color: #dc3545; }
+        .form-group input:focus, .form-group textarea:focus, .form-group select:focus { outline: none; border-color: #dc3545; }
         .auth-btn {
             width: 100%; background: #dc3545; color: white;
             border: none; padding: 0.9rem; border-radius: 25px;
@@ -388,6 +454,48 @@
         .search-result-info { padding: 1rem; }
         .search-result-name { font-weight: 600; margin-bottom: 0.5rem; }
         .search-result-price { color: #dc3545; font-weight: bold; font-size: 1.1rem; }
+        
+        .whatsapp-float {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #25d366;
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            text-decoration: none;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            z-index: 999;
+            transition: transform 0.3s;
+        }
+        .whatsapp-float:hover { transform: scale(1.1); }
+        
+        .orders-modal .modal-content { max-width: 700px; }
+        .order-item {
+            background: #f8f8f8;
+            padding: 1rem;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+        }
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+        .order-status {
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        .order-status.pending { background: #FFC107; color: #333; }
+        .order-status.shipped { background: #2196F3; color: white; }
+        .order-status.delivered { background: #4CAF50; color: white; }
         
         footer {
             background: #1a1a1a; color: white; padding: 3rem 2rem 1rem; margin-top: 3rem;
@@ -443,11 +551,11 @@
         </div>
         <div class="header-right">
             <button class="header-btn" id="accountBtn" onclick="handleAccount()">
-                <span class="icon" id="accountIcon">👤</span>
+                <span class="icon" id="accountIcon"></span>
                 <span id="accountText">Cuenta</span>
             </button>
             <button class="header-btn" onclick="toggleCart()">
-                <span class="icon">🛒</span>
+                <span class="icon"></span>
                 <span>Carrito</span>
                 <span class="cart-badge" id="cartCount">0</span>
             </button>
@@ -462,6 +570,15 @@
         </div>
         <div class="sidebar-search">
             <input type="text" id="searchInput" placeholder="Buscar por nombre o código...">
+        </div>
+        <div class="vehicle-filter">
+            <h4>Filtrar por vehículo</h4>
+            <select id="vehicleBrand" onchange="updateVehicleModels()">
+                <option value="">Todas las marcas</option>
+            </select>
+            <select id="vehicleModel" onchange="applyVehicleFilter()">
+                <option value="">Todos los modelos</option>
+            </select>
         </div>
         <div class="category-list" id="categoryList"></div>
     </aside>
@@ -541,6 +658,14 @@
         </div>
     </div>
     
+    <div class="modal orders-modal" id="ordersModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal('ordersModal')">×</button>
+            <h2 style="color:#dc3545; text-align:center; margin-bottom:1.5rem;">Mis Pedidos</h2>
+            <div id="ordersList"></div>
+        </div>
+    </div>
+    
     <div class="cart-sidebar" id="cartSidebar">
         <div class="cart-header">
             <h3>Tu Carrito</h3>
@@ -567,9 +692,11 @@
         <div class="footer-bottom" id="footerBottom"></div>
     </footer>
 
+    <a href="https://wa.me/584148700616" class="whatsapp-float" target="_blank"></a>
+
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-        import { getFirestore, collection, getDocs, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+        import { getFirestore, collection, getDocs, doc, getDoc, updateDoc, addDoc, query, where, orderBy } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyAU77yzh7Tm3RPuuvVcxlCt26u2LjmsBK0",
@@ -593,6 +720,16 @@
             "Inyección y Combustible": ["Bombas de Gasolina", "Filtros de Gasolina"]
         };
 
+        const VEHICLES = {
+            "Toyota": ["Corolla", "Hilux", "Yaris", "Fortuner"],
+            "Nissan": ["Versa", "Sentra", "Frontier", "X-Trail"],
+            "Chevrolet": ["Aveo", "Cruze", "Captiva", "Silverado"],
+            "Ford": ["Fiesta", "Focus", "Ranger", "Explorer"],
+            "Hyundai": ["Tucson", "Creta", "Accent", "Santa Fe"],
+            "Kia": ["Rio", "Sportage", "Picanto", "Seltos"],
+            "Mitsubishi": ["L200", "Outlander", "Montero", "ASX"]
+        };
+
         let products = [];
         let cart = JSON.parse(localStorage.getItem('akira_cart')) || [];
         let currentUser = null;
@@ -606,6 +743,7 @@
         let activeCategory = null;
         let activeSubcategory = null;
         let searchQuery = '';
+        let selectedVehicle = { brand: '', model: '' };
         
         let siteConfig = {
             companyName: 'AKIRA MOTORS',
@@ -658,13 +796,40 @@
                 `;
             }
             list.innerHTML = html;
+            
+            const brandSelect = document.getElementById('vehicleBrand');
+            brandSelect.innerHTML = '<option value="">Todas las marcas</option>';
+            for (const brand of Object.keys(VEHICLES)) {
+                brandSelect.innerHTML += `<option value="${brand}">${brand}</option>`;
+            }
         }
+
+        window.updateVehicleModels = function() {
+            const brand = document.getElementById('vehicleBrand').value;
+            const modelSelect = document.getElementById('vehicleModel');
+            modelSelect.innerHTML = '<option value="">Todos los modelos</option>';
+            if (brand && VEHICLES[brand]) {
+                VEHICLES[brand].forEach(model => {
+                    modelSelect.innerHTML += `<option value="${model}">${model}</option>`;
+                });
+            }
+            applyVehicleFilter();
+        };
+
+        window.applyVehicleFilter = function() {
+            selectedVehicle.brand = document.getElementById('vehicleBrand').value;
+            selectedVehicle.model = document.getElementById('vehicleModel').value;
+            applyFilters();
+        };
 
         window.showAllProductsFromMenu = function() {
             searchQuery = '';
             activeCategory = null;
             activeSubcategory = null;
+            selectedVehicle = { brand: '', model: '' };
             document.getElementById('searchInput').value = '';
+            document.getElementById('vehicleBrand').value = '';
+            document.getElementById('vehicleModel').value = '';
             document.getElementById('searchResultsContainer').style.display = 'none';
             document.getElementById('recommendedSection').style.display = 'block';
             toggleSidebar();
@@ -698,15 +863,7 @@
         };
 
         function showFilteredProducts() {
-            let filtered = products;
-            if (activeCategory) filtered = filtered.filter(p => p.category === activeCategory);
-            if (activeSubcategory) filtered = filtered.filter(p => p.subcategory === activeSubcategory);
-            
-            document.getElementById('recommendedSection').style.display = 'none';
-            document.getElementById('searchResultsContainer').style.display = 'block';
-            document.getElementById('searchResultsTitle').textContent = activeSubcategory || activeCategory || 'Productos';
-            
-            renderSearchResults(filtered);
+            applyFilters();
         }
 
         document.getElementById('searchInput').addEventListener('input', function(e) {
@@ -716,21 +873,48 @@
                 document.getElementById('recommendedSection').style.display = 'block';
                 return;
             }
-            applySearch();
+            applyFilters();
         });
 
-        function applySearch() {
-            const filtered = products.filter(p => 
-                p.name.toLowerCase().includes(searchQuery) || 
-                (p.code && p.code.toLowerCase().includes(searchQuery)) ||
-                (p.description && p.description.toLowerCase().includes(searchQuery))
-            );
+        function applyFilters() {
+            let filtered = products;
             
-            document.getElementById('recommendedSection').style.display = 'none';
-            document.getElementById('searchResultsContainer').style.display = 'block';
-            document.getElementById('searchResultsTitle').textContent = `Resultados para "${searchQuery}" (${filtered.length})`;
+            if (searchQuery) {
+                filtered = filtered.filter(p => 
+                    p.name.toLowerCase().includes(searchQuery) || 
+                    (p.code && p.code.toLowerCase().includes(searchQuery)) ||
+                    (p.description && p.description.toLowerCase().includes(searchQuery))
+                );
+            }
+            if (activeCategory) filtered = filtered.filter(p => p.category === activeCategory);
+            if (activeSubcategory) filtered = filtered.filter(p => p.subcategory === activeSubcategory);
+            if (selectedVehicle.brand) {
+                filtered = filtered.filter(p => {
+                    if (!p.vehicle) return false;
+                    return p.vehicle.toLowerCase().includes(selectedVehicle.brand.toLowerCase()) &&
+                           (selectedVehicle.model === '' || p.vehicle.toLowerCase().includes(selectedVehicle.model.toLowerCase()));
+                });
+            }
             
-            renderSearchResults(filtered);
+            const hasFilter = searchQuery || activeCategory || activeSubcategory || selectedVehicle.brand;
+            
+            if (hasFilter) {
+                document.getElementById('recommendedSection').style.display = 'none';
+                document.getElementById('searchResultsContainer').style.display = 'block';
+                
+                let title = 'Resultados';
+                if (searchQuery) title = `Búsqueda: "${searchQuery}"`;
+                if (activeSubcategory) title = activeSubcategory;
+                else if (activeCategory) title = activeCategory;
+                if (selectedVehicle.brand) title += ` - ${selectedVehicle.brand} ${selectedVehicle.model}`;
+                title += ` (${filtered.length})`;
+                
+                document.getElementById('searchResultsTitle').textContent = title;
+                renderSearchResults(filtered);
+            } else {
+                document.getElementById('searchResultsContainer').style.display = 'none';
+                document.getElementById('recommendedSection').style.display = 'block';
+            }
         }
 
         function renderSearchResults(filteredProducts) {
@@ -741,7 +925,7 @@
             }
             grid.innerHTML = filteredProducts.map(p => {
                 const { finalPrice, priceBs } = formatPrices(p.price, p.discount);
-                const imageHtml = p.image ? `<img src="${p.image}" alt="${p.name}">` : '';
+                const imageHtml = p.images && p.images.length > 0 ? `<img src="${p.images[0]}" alt="${p.name}">` : (p.image ? `<img src="${p.image}" alt="${p.name}">` : '');
                 return `
                     <div class="search-result-card" onclick="openProductDetail('${p.id}')">
                         <div class="search-result-image">${imageHtml}</div>
@@ -872,7 +1056,7 @@
             
             container.innerHTML = recommended.map((p, i) => {
                 const { finalPrice, priceBs, hasDiscount } = formatPrices(p.price, p.discount);
-                const imageHtml = p.image ? `<img src="${p.image}" alt="${p.name}">` : '';
+                const imageHtml = p.images && p.images.length > 0 ? `<img src="${p.images[0]}" alt="${p.name}">` : (p.image ? `<img src="${p.image}" alt="${p.name}">` : '');
                 let priceHtml = '';
                 if (hasDiscount) {
                     priceHtml = `<span class="featured-price-original">$${Number(p.price).toFixed(2)}</span><span class="featured-discount">-${p.discount}%</span><div class="featured-price">$${finalPrice.toFixed(2)}</div><div class="featured-price-bs">Bs. ${priceBs.toFixed(2)}</div>`;
@@ -903,17 +1087,32 @@
             }).join('');
         }
 
-        window.openProductDetail = function(productId) {
+        window.openProductDetail = async function(productId) {
             const product = products.find(p => p.id === productId);
             if (!product) return;
+            
+            const images = product.images || (product.image ? [product.image] : []);
+            const currentImage = images.length > 0 ? images[0] : null;
+            
             const { finalPrice, priceBs, hasDiscount } = formatPrices(product.price, product.discount);
-            const imageHtml = product.image ? `<img src="${product.image}" alt="${product.name}">` : '';
+            const imageHtml = currentImage ? `<img src="${currentImage}" alt="${product.name}" id="mainProductImage">` : '';
+            
+            let galleryDots = '';
+            if (images.length > 1) {
+                galleryDots = '<div class="gallery-dots">';
+                images.forEach((_, i) => {
+                    galleryDots += `<div class="gallery-dot ${i === 0 ? 'active' : ''}" onclick="changeProductImage('${productId}', ${i})"></div>`;
+                });
+                galleryDots += '</div>';
+            }
+            
             let priceBox = '';
             if (hasDiscount) {
                 priceBox = `<div class="detail-price-box"><div class="detail-offer-badge">OFERTA -${product.discount}%</div><div class="detail-price-original">Antes: $${Number(product.price).toFixed(2)}</div><div class="detail-price-usd">$${finalPrice.toFixed(2)}</div><div class="detail-price-bs">Bs. ${priceBs.toFixed(2)} (Tasa BCV: ${bcvRate})</div></div>`;
             } else {
                 priceBox = `<div class="detail-price-box"><div class="detail-price-usd">$${finalPrice.toFixed(2)}</div><div class="detail-price-bs">Bs. ${priceBs.toFixed(2)} (Tasa BCV: ${bcvRate})</div></div>`;
             }
+            
             const specs = [];
             if (product.code) specs.push(['Código', product.code]);
             if (product.brand) specs.push(['Marca', product.brand]);
@@ -932,10 +1131,14 @@
             if (product.thread) specs.push(['Rosca', product.thread]);
             specs.push(['Stock', `${product.stock} unidades`]);
             const specsHtml = specs.length > 0 ? `<h3 style="color:#dc3545; margin:1rem 0 0.5rem;">Ficha Técnica</h3><table class="specs-table">${specs.map(s => `<tr><td>${s[0]}</td><td>${s[1]}</td></tr>`).join('')}</table>` : '';
+            
             document.getElementById('productDetailContent').innerHTML = `
                 <button class="modal-close" onclick="closeModal('productDetailModal')">×</button>
                 <div class="product-detail">
-                    <div class="product-detail-image">${imageHtml}</div>
+                    <div class="product-detail-image">
+                        ${imageHtml}
+                        ${galleryDots}
+                    </div>
                     <div class="product-detail-info">
                         ${product.code ? `<div class="product-detail-code">Código: ${product.code}</div>` : ''}
                         <h2>${product.name}</h2>
@@ -947,6 +1150,26 @@
                         ${specsHtml}
                     </div>
                 </div>
+                <div class="reviews-section" id="reviewsSection-${productId}">
+                    <h3 style="color:#dc3545; margin-bottom:1rem;">Reseñas de clientes</h3>
+                    <div id="reviewsList-${productId}">Cargando reseñas...</div>
+                    ${currentUser ? `
+                        <div class="add-review-form">
+                            <h4 style="margin-bottom:0.5rem;">Deja tu reseña</h4>
+                            <div class="star-rating" id="starRating-${productId}">
+                                <span onclick="setRating(${productId}, 1)">★</span>
+                                <span onclick="setRating(${productId}, 2)">★</span>
+                                <span onclick="setRating(${productId}, 3)">★</span>
+                                <span onclick="setRating(${productId}, 4)">★</span>
+                                <span onclick="setRating(${productId}, 5)">★</span>
+                            </div>
+                            <div class="form-group">
+                                <textarea id="reviewText-${productId}" placeholder="Escribe tu opinión..." rows="3"></textarea>
+                            </div>
+                            <button class="auth-btn" onclick="submitReview('${productId}')">Enviar reseña</button>
+                        </div>
+                    ` : '<p style="color:#666;">Inicia sesión para dejar una reseña</p>'}
+                </div>
                 <div class="detail-actions">
                     <button class="featured-add-btn" style="flex:1; padding:1rem;" onclick="addToCart('${product.id}'); closeModal('productDetailModal')" ${product.stock === 0 ? 'disabled' : ''}>
                         ${product.stock === 0 ? 'No disponible' : 'Agregar al carrito'}
@@ -954,6 +1177,91 @@
                 </div>
             `;
             document.getElementById('productDetailModal').classList.add('active');
+            
+            loadReviews(productId);
+        };
+
+        window.changeProductImage = function(productId, index) {
+            const product = products.find(p => p.id === productId);
+            if (!product || !product.images) return;
+            
+            const img = document.getElementById('mainProductImage');
+            if (img && product.images[index]) {
+                img.src = product.images[index];
+            }
+            
+            document.querySelectorAll('.gallery-dot').forEach((dot, i) => {
+                dot.classList.toggle('active', i === index);
+            });
+        };
+
+        let currentRating = 0;
+        window.setRating = function(productId, rating) {
+            currentRating = rating;
+            const stars = document.querySelectorAll(`#starRating-${productId} span`);
+            stars.forEach((star, index) => {
+                star.classList.toggle('active', index < rating);
+            });
+        };
+
+        async function loadReviews(productId) {
+            try {
+                const reviewsSnap = await getDocs(collection(db, 'reviews'));
+                const reviews = [];
+                reviewsSnap.forEach(doc => {
+                    const data = doc.data();
+                    if (data.productId === productId) {
+                        reviews.push({ id: doc.id, ...data });
+                    }
+                });
+                
+                const reviewsList = document.getElementById(`reviewsList-${productId}`);
+                if (reviews.length === 0) {
+                    reviewsList.innerHTML = '<p style="color:#666;">Aún no hay reseñas</p>';
+                } else {
+                    reviewsList.innerHTML = reviews.map(r => `
+                        <div class="review-item">
+                            <div class="review-header">
+                                <span class="review-author">${r.userName}</span>
+                                <span class="review-date">${new Date(r.date).toLocaleDateString()}</span>
+                            </div>
+                            <div class="review-stars">${'★'.repeat(r.rating)}${'☆'.repeat(5-r.rating)}</div>
+                            <div class="review-text">${r.text}</div>
+                        </div>
+                    `).join('');
+                }
+            } catch (error) {
+                console.error('Error cargando reseñas:', error);
+            }
+        }
+
+        window.submitReview = async function(productId) {
+            if (currentRating === 0) {
+                alert('Por favor selecciona una calificación');
+                return;
+            }
+            const text = document.getElementById(`reviewText-${productId}`).value.trim();
+            if (!text) {
+                alert('Por favor escribe tu opinión');
+                return;
+            }
+            
+            try {
+                await addDoc(collection(db, 'reviews'), {
+                    productId: productId,
+                    userId: currentUser.name,
+                    userName: currentUser.name,
+                    rating: currentRating,
+                    text: text,
+                    date: new Date().toISOString()
+                });
+                alert('Reseña enviada');
+                currentRating = 0;
+                loadReviews(productId);
+                document.getElementById(`reviewText-${productId}`).value = '';
+            } catch (error) {
+                alert('Error: ' + error.message);
+            }
         };
 
         window.addToCart = function(productId) {
@@ -965,7 +1273,7 @@
                 if (existingItem.quantity < product.stock) existingItem.quantity++;
                 else { alert('No hay más stock disponible'); return; }
             } else {
-                cart.push({ id: product.id, name: product.name, price: finalPrice, priceBs: priceBs, image: product.image, quantity: 1 });
+                cart.push({ id: product.id, name: product.name, price: finalPrice, priceBs: priceBs, image: product.images?.[0] || product.image, quantity: 1 });
             }
             updateCartUI();
             saveCart();
@@ -1065,7 +1373,10 @@
 
         window.handleAccount = function() {
             if (currentUser) {
-                if (confirm(`Hola ${currentUser.name}! ¿Cerrar sesión?`)) {
+                const action = prompt(`Hola ${currentUser.name}!\n\n1. Ver mis pedidos\n2. Cerrar sesión\n\nIngresa el número:`);
+                if (action === '1') {
+                    showMyOrders();
+                } else if (action === '2') {
                     currentUser = null;
                     localStorage.removeItem('akira_guest');
                     updateHeaderButtons();
@@ -1074,6 +1385,44 @@
                 document.getElementById('authModal').classList.add('active');
             }
         };
+
+        async function showMyOrders() {
+            if (!currentUser) return;
+            
+            try {
+                const ordersSnap = await getDocs(collection(db, 'orders'));
+                const myOrders = [];
+                ordersSnap.forEach(doc => {
+                    const data = doc.data();
+                    if (data.userId === currentUser.name || data.userPhone === currentUser.phone) {
+                        myOrders.push({ id: doc.id, ...data });
+                    }
+                });
+                
+                const ordersList = document.getElementById('ordersList');
+                if (myOrders.length === 0) {
+                    ordersList.innerHTML = '<p style="text-align:center;color:#666;padding:2rem;">No tienes pedidos aún</p>';
+                } else {
+                    ordersList.innerHTML = myOrders.sort((a,b) => new Date(b.date) - new Date(a.date)).map(order => `
+                        <div class="order-item">
+                            <div class="order-header">
+                                <strong>Pedido #${order.id.slice(-6)}</strong>
+                                <span class="order-status ${order.status}">${order.status === 'pending' ? 'Pendiente' : order.status === 'shipped' ? 'En camino' : 'Entregado'}</span>
+                            </div>
+                            <div style="font-size:0.85rem;color:#666;margin-bottom:0.5rem;">${new Date(order.date).toLocaleDateString()}</div>
+                            <div style="margin-bottom:0.5rem;">
+                                ${order.items.map(item => `<div>${item.name} x${item.quantity}</div>`).join('')}
+                            </div>
+                            <div style="font-weight:bold;color:#dc3545;">Total: $${order.total.toFixed(2)}</div>
+                        </div>
+                    `).join('');
+                }
+                
+                document.getElementById('ordersModal').classList.add('active');
+            } catch (error) {
+                alert('Error cargando pedidos: ' + error.message);
+            }
+        }
 
         window.loginAsGuest = function() {
             const name = document.getElementById('guestName').value.trim();
@@ -1097,7 +1446,7 @@
                 accountIcon.textContent = initial;
             } else {
                 accountText.textContent = 'Cuenta';
-                accountIcon.textContent = '👤';
+                accountIcon.textContent = '';
             }
         }
 
@@ -1145,7 +1494,43 @@
                 if (!address && !lat) { alert('Por favor ingresa una dirección o obtén tu ubicación GPS'); return; }
             }
             
-            // Reducir stock de cada producto
+            const subtotalUsd = cart.reduce((sum, item) => sum + (Number(item.price) * item.quantity), 0);
+            const ivaUsd = subtotalUsd * 0.16;
+            const deliveryFee = checkoutDeliveryMode === 'delivery' ? 5 : 0;
+            const totalUsd = subtotalUsd + ivaUsd + deliveryFee;
+            const totalBs = totalUsd * bcvRate;
+            
+            const orderData = {
+                userId: currentUser.name,
+                userName: currentUser.name,
+                userPhone: currentUser.phone,
+                items: cart.map(item => ({
+                    id: item.id,
+                    name: item.name,
+                    quantity: item.quantity,
+                    price: item.price
+                })),
+                subtotal: subtotalUsd,
+                iva: ivaUsd,
+                deliveryFee: deliveryFee,
+                total: totalUsd,
+                deliveryMode: checkoutDeliveryMode,
+                status: 'pending',
+                date: new Date().toISOString()
+            };
+            
+            if (checkoutDeliveryMode === 'delivery') {
+                orderData.address = document.getElementById('deliveryAddressInput').value;
+                orderData.gpsLat = document.getElementById('gpsLat').value;
+                orderData.gpsLng = document.getElementById('gpsLng').value;
+            }
+            
+            try {
+                await addDoc(collection(db, 'orders'), orderData);
+            } catch (error) {
+                console.error('Error guardando pedido:', error);
+            }
+            
             for (const item of cart) {
                 const product = products.find(p => p.id === item.id);
                 if (product) {
@@ -1159,11 +1544,6 @@
                 }
             }
             
-            const subtotalUsd = cart.reduce((sum, item) => sum + (Number(item.price) * item.quantity), 0);
-            const ivaUsd = subtotalUsd * 0.16;
-            const deliveryFee = checkoutDeliveryMode === 'delivery' ? 5 : 0;
-            const totalUsd = subtotalUsd + ivaUsd + deliveryFee;
-            const totalBs = totalUsd * bcvRate;
             let message = `Hola ${siteConfig.companyName}! Soy ${currentUser?.name || 'cliente'}.%0A%0A`;
             message += `MI PEDIDO:%0A`;
             cart.forEach(item => { message += `- ${item.name} x${item.quantity} = $${(Number(item.price) * item.quantity).toFixed(2)}%0A`; });
@@ -1181,14 +1561,12 @@
             }
             window.open(`https://wa.me/584148700616?text=${message}`, '_blank');
             
-            // Vaciar carrito
             cart = [];
             updateCartUI();
             saveCart();
             closeModal('checkoutModal');
             alert('✅ Pedido enviado por WhatsApp. El stock ha sido actualizado.');
             
-            // Recargar productos para mostrar stock actualizado
             await loadData();
         };
 
