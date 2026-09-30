@@ -8,36 +8,22 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Segoe UI', sans-serif; background: #f5f5f5; color: #333; min-height: 100vh; display: flex; }
         
-        /* Admin sidebar drawer */
         .admin-sidebar {
-            width: 260px;
-            background: #1a1a1a;
-            color: white;
-            height: 100vh;
-            position: sticky;
-            top: 0;
-            overflow-y: auto;
-            flex-shrink: 0;
+            width: 260px; background: #1a1a1a; color: white;
+            height: 100vh; position: sticky; top: 0;
+            overflow-y: auto; flex-shrink: 0;
         }
-        .admin-sidebar-header {
-            background: #dc3545;
-            padding: 1.2rem;
-            text-align: center;
-        }
+        .admin-sidebar-header { background: #dc3545; padding: 1.2rem; text-align: center; }
         .admin-sidebar-header h2 { font-size: 1.2rem; }
         .admin-menu { padding: 1rem 0; }
         .admin-menu-item {
-            padding: 0.9rem 1.2rem;
-            cursor: pointer;
-            transition: all 0.3s;
-            border-left: 3px solid transparent;
+            padding: 0.9rem 1.2rem; cursor: pointer;
+            transition: all 0.3s; border-left: 3px solid transparent;
             font-size: 0.9rem;
         }
         .admin-menu-item:hover { background: #2a2a2a; border-left-color: #dc3545; }
         .admin-menu-item.active { background: #dc3545; border-left-color: white; }
-        .admin-menu-item .icon { margin-right: 0.5rem; }
         
-        /* Admin content */
         .admin-content { flex: 1; padding: 2rem; overflow-y: auto; }
         .admin-section { display: none; }
         .admin-section.active { display: block; }
@@ -167,27 +153,24 @@
     </div>
 
     <div id="adminPanel" class="hidden" style="display:flex; width:100%;">
-        <!-- Sidebar admin -->
         <aside class="admin-sidebar">
             <div class="admin-sidebar-header">
                 <h2>AKIRA MOTORS</h2>
                 <small>Panel de Administración</small>
             </div>
             <div class="admin-menu">
-                <div class="admin-menu-item active" onclick="showSection('dashboard', event)"><span class="icon">📊</span>Dashboard</div>
-                <div class="admin-menu-item" onclick="showSection('appearance', event)"><span class="icon">🎨</span>Apariencia</div>
-                <div class="admin-menu-item" onclick="showSection('products', event)"><span class="icon">📦</span>Productos</div>
-                <div class="admin-menu-item" onclick="showSection('brands', event)"><span class="icon">🏷️</span>Marcas</div>
-                <div class="admin-menu-item" onclick="showSection('banners', event)"><span class="icon">🖼️</span>Banners</div>
-                <div class="admin-menu-item" onclick="showSection('footer', event)"><span class="icon">📄</span>Pie de página</div>
-                <div class="admin-menu-item" onclick="showSection('settings', event)"><span class="icon">⚙️</span>Configuración</div>
-                <div class="admin-menu-item" onclick="logoutAdmin()" style="margin-top:2rem; background:#dc3545;"><span class="icon">🚪</span>Salir</div>
+                <div class="admin-menu-item active" onclick="showSection('dashboard', event)">Dashboard</div>
+                <div class="admin-menu-item" onclick="showSection('appearance', event)">Apariencia</div>
+                <div class="admin-menu-item" onclick="showSection('products', event)">Productos</div>
+                <div class="admin-menu-item" onclick="showSection('brands', event)">Marcas</div>
+                <div class="admin-menu-item" onclick="showSection('banners', event)">Banners</div>
+                <div class="admin-menu-item" onclick="showSection('footer', event)">Pie de página</div>
+                <div class="admin-menu-item" onclick="showSection('settings', event)">Configuración</div>
+                <div class="admin-menu-item" onclick="logoutAdmin()" style="margin-top:2rem; background:#dc3545;">Salir</div>
             </div>
         </aside>
 
-        <!-- Contenido -->
         <div class="admin-content">
-            <!-- Dashboard -->
             <div class="admin-section active" id="section-dashboard">
                 <h2 class="section-title">Dashboard</h2>
                 <div class="admin-card">
@@ -213,18 +196,17 @@
                 </div>
             </div>
 
-            <!-- Apariencia -->
             <div class="admin-section" id="section-appearance">
                 <h2 class="section-title">Apariencia</h2>
                 <div class="admin-card">
                     <h3>Colores de la web</h3>
-                    <div class="alert-info">Cambia los colores principales de tu tienda. Los cambios se aplican al recargar.</div>
+                    <div class="alert-info">Cambia los colores principales de tu tienda.</div>
                     <div class="color-picker-row">
-                        <label style="flex:1;">Color primario (botones, header):</label>
+                        <label style="flex:1;">Color primario:</label>
                         <input type="color" id="colorPrimary" value="#dc3545">
                     </div>
                     <div class="color-picker-row">
-                        <label style="flex:1;">Color de acento (ofertas):</label>
+                        <label style="flex:1;">Color de acento:</label>
                         <input type="color" id="colorAccent" value="#FFC107">
                     </div>
                     <div class="color-picker-row">
@@ -248,7 +230,6 @@
                 </div>
             </div>
 
-            <!-- Productos -->
             <div class="admin-section" id="section-products">
                 <h2 class="section-title">Productos</h2>
                 <div class="admin-card">
@@ -263,7 +244,6 @@
                 </div>
             </div>
 
-            <!-- Marcas -->
             <div class="admin-section" id="section-brands">
                 <h2 class="section-title">Marcas</h2>
                 <div class="admin-card">
@@ -272,17 +252,15 @@
                 </div>
             </div>
 
-            <!-- Banners -->
             <div class="admin-section" id="section-banners">
                 <h2 class="section-title">Banners de portada</h2>
                 <div class="admin-card">
                     <div class="size-info">
                         <strong>Tamaños recomendados:</strong><br>
-                        <strong>Web (PC):</strong> 1400 x 400 píxeles (horizontal)<br>
-                        <strong>Móvil:</strong> 750 x 1000 píxeles (vertical) o 1200 x 600 (horizontal)<br>
-                        <strong>Formato:</strong> JPG o WebP (más ligero)<br>
-                        <strong>Peso máximo:</strong> 1MB por imagen<br>
-                        Las imágenes rotan cada 5 segundos en la portada
+                        <strong>Web (PC):</strong> 1400 x 400 píxeles<br>
+                        <strong>Móvil:</strong> 750 x 1000 píxeles o 1200 x 600<br>
+                        <strong>Formato:</strong> JPG o WebP<br>
+                        <strong>Peso máximo:</strong> 1MB por imagen
                     </div>
                     <div class="form-group">
                         <label>Agregar nuevo banner</label>
@@ -292,7 +270,6 @@
                 </div>
             </div>
 
-            <!-- Footer -->
             <div class="admin-section" id="section-footer">
                 <h2 class="section-title">Pie de página</h2>
                 <div class="admin-card">
@@ -309,23 +286,21 @@
                 </div>
                 <div class="admin-card">
                     <h3>Redes sociales (deja vacío para ocultar)</h3>
-                    <div class="form-group"><label>Facebook (link completo)</label><input type="url" id="cfgFacebook" placeholder="https://facebook.com/tupagina"></div>
-                    <div class="form-group"><label>Instagram (link completo)</label><input type="url" id="cfgInstagram" placeholder="https://instagram.com/tupagina"></div>
-                    <div class="form-group"><label>TikTok (link completo)</label><input type="url" id="cfgTiktok" placeholder="https://tiktok.com/@tupagina"></div>
+                    <div class="form-group"><label>Facebook</label><input type="url" id="cfgFacebook" placeholder="https://facebook.com/tupagina"></div>
+                    <div class="form-group"><label>Instagram</label><input type="url" id="cfgInstagram" placeholder="https://instagram.com/tupagina"></div>
+                    <div class="form-group"><label>TikTok</label><input type="url" id="cfgTiktok" placeholder="https://tiktok.com/@tupagina"></div>
                 </div>
-                <button class="btn btn-primary" onclick="saveSiteConfig()" style="width:100%; padding:1rem;">Guardar cambios del pie de página</button>
+                <button class="btn btn-primary" onclick="saveSiteConfig()" style="width:100%; padding:1rem;">Guardar cambios</button>
             </div>
 
-            <!-- Configuración -->
             <div class="admin-section" id="section-settings">
                 <h2 class="section-title">Configuración</h2>
                 <div class="admin-card">
                     <h3>Ubicación Pickup en tienda</h3>
-                    <div class="alert-info">Pega el link de Google Maps. Los clientes podrán hacer click para ver la ubicación.</div>
+                    <div class="alert-info">Pega el link de Google Maps de tu tienda.</div>
                     <div class="form-group">
                         <label>Link de Google Maps</label>
                         <input type="url" id="pickupMapsInput" placeholder="https://maps.google.com/?q=...">
-                        <div class="hint">Abre Google Maps → busca tu ubicación → Compartir → copiar enlace</div>
                     </div>
                     <button class="btn btn-primary" onclick="updatePickupMaps()">Guardar ubicación</button>
                 </div>
@@ -333,28 +308,27 @@
         </div>
     </div>
 
-    <!-- Modal Producto -->
     <div class="modal" id="productModal">
         <div class="modal-content">
             <h2 id="productModalTitle">Agregar Producto</h2>
-            <div class="alert-info">Los campos con * son obligatorios. El precio de venta se calcula automáticamente: Precio Compra + % Ganancia.</div>
+            <div class="alert-info">Los campos con * son obligatorios. El precio de venta se calcula: Compra + % Ganancia.</div>
             <form onsubmit="saveProduct(event)">
                 <div class="form-section">
                     <h3>Información Básica</h3>
                     <div class="form-row">
                         <div class="form-group"><label>Código *</label><input type="text" id="productCode" required></div>
-                        <div class="form-group"><label>Marca del Repuesto</label><input type="text" id="productBrand" placeholder="Ej: Bosch, SKF"></div>
+                        <div class="form-group"><label>Marca del Repuesto</label><input type="text" id="productBrand"></div>
                     </div>
                     <div class="form-group"><label>Nombre *</label><input type="text" id="productName" required></div>
-                    <div class="form-group"><label>Número de Parte / OEM</label><input type="text" id="productPartNumber"></div>
+                    <div class="form-group"><label>Número de Parte</label><input type="text" id="productPartNumber"></div>
                     <div class="form-group"><label>Descripción *</label><textarea id="productDescription" required></textarea></div>
                     <div class="checkbox-group">
                         <input type="checkbox" id="productRecommended">
-                        <label for="productRecommended" style="margin:0;">Marcar como RECOMENDADO (aparece en portada)</label>
+                        <label for="productRecommended" style="margin:0;">Marcar como RECOMENDADO</label>
                     </div>
                 </div>
                 <div class="form-section">
-                    <h3>Categoría y Compatibilidad</h3>
+                    <h3>Categoría</h3>
                     <div class="form-row">
                         <div class="form-group">
                             <label>Categoría *</label>
@@ -362,28 +336,27 @@
                         </div>
                         <div class="form-group">
                             <label>Subcategoría *</label>
-                            <select id="productSubcategory" required><option value="">Seleccionar categoría primero...</option></select>
+                            <select id="productSubcategory" required><option value="">Seleccionar...</option></select>
                         </div>
                     </div>
-                    <div class="form-group"><label>Vehículo Compatible</label><input type="text" id="productVehicle" placeholder="Ej: Toyota Corolla 2015-2020"></div>
+                    <div class="form-group"><label>Vehículo Compatible</label><input type="text" id="productVehicle"></div>
                 </div>
                 <div class="form-section">
                     <h3>Precio y Ganancia</h3>
                     <div class="alert-warning">
                         <strong>Fórmula:</strong> Precio Venta = Precio Compra × (1 + Margen/100)<br>
-                        Ejemplo: Compra $100 + 30% ganancia = Venta $130
+                        Ejemplo: Compra $100 + 30% = Venta $130
                     </div>
                     <div class="form-row">
-                        <div class="form-group"><label>Precio de Compra ($) *</label><input type="number" id="productCostPrice" step="0.01" required placeholder="Lo que te cuesta"></div>
-                        <div class="form-group"><label>Margen de Ganancia (%) *</label><input type="number" id="productMargin" step="1" required placeholder="Ej: 30" oninput="calculateSalePrice()"></div>
+                        <div class="form-group"><label>Precio de Compra ($) *</label><input type="number" id="productCostPrice" step="0.01" required oninput="calculateSalePrice()"></div>
+                        <div class="form-group"><label>Margen de Ganancia (%) *</label><input type="number" id="productMargin" step="1" required oninput="calculateSalePrice()"></div>
                     </div>
                     <div class="form-row">
                         <div class="form-group">
-                            <label>Precio de Venta Calculado ($)</label>
+                            <label>Precio de Venta ($)</label>
                             <input type="number" id="productPrice" step="0.01" required readonly style="background:#f0f0f0; font-weight:bold; color:#dc3545;">
-                            <div class="hint">Se calcula automáticamente</div>
                         </div>
-                        <div class="form-group"><label>% de Descuento (Oferta)</label><input type="number" id="productDiscount" min="0" max="100" placeholder="0 = sin oferta"></div>
+                        <div class="form-group"><label>% Descuento (Oferta)</label><input type="number" id="productDiscount" min="0" max="100" placeholder="0"></div>
                     </div>
                     <div class="form-group"><label>Stock *</label><input type="number" id="productStock" required></div>
                 </div>
@@ -421,7 +394,6 @@
         </div>
     </div>
 
-    <!-- Modal Marca -->
     <div class="modal" id="brandModal">
         <div class="modal-content">
             <h2 id="brandModalTitle">Imagen de Marca</h2>
@@ -519,20 +491,23 @@
         window.adminLogin = function(event) {
             event.preventDefault();
             const password = document.getElementById('adminPassword').value;
+            console.log('Intentando login con:', password);
             if (password === ADMIN_PASSWORD) {
-                document.getElementById('loginScreen').classList.add('hidden');
+                console.log('Login exitoso');
+                document.getElementById('loginScreen').style.display = 'none';
                 document.getElementById('adminPanel').classList.remove('hidden');
                 document.getElementById('adminPanel').style.display = 'flex';
                 document.getElementById('adminPassword').value = '';
                 loadAll();
             } else { 
-                alert('Contraseña incorrecta'); 
+                alert('Contraseña incorrecta. Intenta con: fjat21'); 
             }
         };
 
         window.logoutAdmin = function() {
+            document.getElementById('adminPanel').style.display = 'none';
             document.getElementById('adminPanel').classList.add('hidden');
-            document.getElementById('loginScreen').classList.remove('hidden');
+            document.getElementById('loginScreen').style.display = 'block';
         };
 
         window.showSection = function(sectionId, event) {
@@ -606,7 +581,7 @@
         function renderBannerPreviews() {
             const grid = document.getElementById('bannerPreviewGrid');
             const html = banners.length === 0 
-                ? '<p style="color:#666;text-align:center;grid-column:1/-1;">No hay banners. Agrega el primero.</p>'
+                ? '<p style="color:#666;text-align:center;grid-column:1/-1;">No hay banners.</p>'
                 : banners.map((banner, i) => `
                     <div class="banner-preview-item">
                         <img src="${banner}" alt="Banner ${i+1}">
@@ -622,4 +597,355 @@
             if (!file) return;
             if (file.size > 1 * 1024 * 1024) { alert('Máximo 1MB'); event.target.value = ''; return; }
             const reader = new FileReader();
-            reader.onload = async fun
+            reader.onload = async function(e) {
+                banners.push(e.target.result);
+                try {
+                    await setDoc(doc(db, 'settings', 'banners'), { images: banners, updatedAt: new Date().toISOString() });
+                    renderBannerPreviews();
+                    alert('Banner agregado');
+                } catch (error) { alert('Error: ' + error.message); }
+            };
+            reader.readAsDataURL(file);
+            event.target.value = '';
+        };
+
+        window.removeBanner = async function(index) {
+            if (!confirm('¿Eliminar este banner?')) return;
+            banners.splice(index, 1);
+            try {
+                await setDoc(doc(db, 'settings', 'banners'), { images: banners, updatedAt: new Date().toISOString() });
+                renderBannerPreviews();
+                alert('Banner eliminado');
+            } catch (error) { alert('Error: ' + error.message); }
+        };
+
+        async function loadSiteConfig() {
+            try {
+                const configDoc = await getDoc(doc(db, 'settings', 'siteConfig'));
+                if (configDoc.exists()) siteConfig = { ...siteConfig, ...configDoc.data() };
+                document.getElementById('cfgCompanyName').value = siteConfig.companyName;
+                document.getElementById('cfgSlogan').value = siteConfig.slogan;
+                document.getElementById('cfgDescription').value = siteConfig.description;
+                document.getElementById('cfgAddress').value = siteConfig.address;
+                document.getElementById('cfgPhone').value = siteConfig.phone;
+                document.getElementById('cfgSchedule').value = siteConfig.schedule;
+                document.getElementById('cfgFacebook').value = siteConfig.facebook || '';
+                document.getElementById('cfgInstagram').value = siteConfig.instagram || '';
+                document.getElementById('cfgTiktok').value = siteConfig.tiktok || '';
+            } catch (error) { console.log('Config:', error); }
+        }
+
+        window.saveSiteConfig = async function() {
+            const config = {
+                companyName: document.getElementById('cfgCompanyName').value,
+                slogan: document.getElementById('cfgSlogan').value,
+                description: document.getElementById('cfgDescription').value,
+                address: document.getElementById('cfgAddress').value,
+                phone: document.getElementById('cfgPhone').value,
+                schedule: document.getElementById('cfgSchedule').value,
+                facebook: document.getElementById('cfgFacebook').value,
+                instagram: document.getElementById('cfgInstagram').value,
+                tiktok: document.getElementById('cfgTiktok').value,
+                updatedAt: new Date().toISOString()
+            };
+            try {
+                await setDoc(doc(db, 'settings', 'siteConfig'), config);
+                siteConfig = { ...siteConfig, ...config };
+                alert('Configuración guardada');
+            } catch (error) { alert('Error: ' + error.message); }
+        };
+
+        async function loadBrands() {
+            try {
+                const snapshot = await getDocs(collection(db, 'brands'));
+                if (snapshot.empty) {
+                    brands = defaultBrands;
+                    for (const brand of defaultBrands) await setDoc(doc(db, 'brands', brand.id), brand);
+                } else {
+                    brands = [];
+                    snapshot.forEach(docSnap => brands.push({ id: docSnap.id, ...docSnap.data() }));
+                }
+                renderAdminBrands();
+            } catch (error) { console.error('Marcas:', error); }
+        }
+
+        async function loadProducts() {
+            try {
+                const snapshot = await getDocs(collection(db, 'products'));
+                products = [];
+                snapshot.forEach(docSnap => products.push({ id: docSnap.id, ...docSnap.data() }));
+                document.getElementById('dashProducts').textContent = products.length;
+                document.getElementById('dashBrands').textContent = brands.length;
+                renderAdminProducts();
+            } catch (error) { console.error('Productos:', error); }
+        }
+
+        function renderAdminProducts(filter = '') {
+            const list = document.getElementById('adminProductList');
+            let filtered = products;
+            if (filter) {
+                const q = filter.toLowerCase();
+                filtered = products.filter(p => 
+                    p.name.toLowerCase().includes(q) || 
+                    (p.code && p.code.toLowerCase().includes(q))
+                );
+            }
+            if (filtered.length === 0) {
+                list.innerHTML = '<p style="text-align:center;color:#666;padding:1rem">No hay productos.</p>';
+                return;
+            }
+            list.innerHTML = filtered.map(product => {
+                const thumbHtml = product.image ? `<img src="${product.image}">` : '';
+                const offerText = product.discount && product.discount > 0 ? ` | -${product.discount}%` : '';
+                const recText = product.recommended ? ' | RECOMENDADO' : '';
+                const marginText = product.costPrice && product.margin ? ` | Compra: $${Number(product.costPrice).toFixed(2)} + ${product.margin}%` : '';
+                return `
+                    <div class="admin-item">
+                        <div class="admin-info">
+                            <div class="admin-thumb">${thumbHtml}</div>
+                            <div>
+                                <strong>${product.name}</strong>${recText}<br>
+                                <small style="color:#dc3545">Código: ${product.code || 'Sin código'}</small><br>
+                                <small style="color:#666">Venta: $${Number(product.price).toFixed(2)}${offerText}${marginText} | Stock: ${product.stock}</small>
+                            </div>
+                        </div>
+                        <div class="admin-actions">
+                            <button class="btn btn-small btn-primary" onclick="editProduct('${product.id}')">Editar</button>
+                            <button class="btn btn-small btn-secondary" onclick="deleteProduct('${product.id}')">Eliminar</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        window.filterAdminProducts = function() {
+            const q = document.getElementById('adminProductSearch').value;
+            renderAdminProducts(q);
+        };
+
+        function renderAdminBrands() {
+            const list = document.getElementById('adminBrandsList');
+            list.innerHTML = brands.map(brand => {
+                const thumbHtml = brand.image ? `<img src="${brand.image}">` : '';
+                return `
+                    <div class="admin-item">
+                        <div class="admin-info">
+                            <div class="admin-thumb">${thumbHtml}</div>
+                            <div>
+                                <strong>${brand.name}</strong><br>
+                                <small style="color:#666">${brand.image ? 'Imagen cargada' : 'Sin imagen'}</small>
+                            </div>
+                        </div>
+                        <div class="admin-actions">
+                            <button class="btn btn-small btn-primary" onclick="editBrandImage('${brand.id}')">
+                                ${brand.image ? 'Cambiar' : 'Agregar Imagen'}
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        window.openAddProductModal = function() {
+            populateCategorySelect();
+            document.getElementById('productModalTitle').textContent = 'Agregar Producto';
+            document.getElementById('editProductId').value = '';
+            ['productCode','productBrand','productName','productPartNumber','productDescription',
+             'productCostPrice','productMargin','productPrice','productDiscount','productStock','productVehicle',
+             'specDiameter','specLength','specWidth','specHeight','specWeight',
+             'specMaterial','specVoltage','specPower','specThread'].forEach(id => {
+                document.getElementById(id).value = '';
+            });
+            document.getElementById('productCategory').value = '';
+            document.getElementById('productSubcategory').value = '';
+            document.getElementById('productRecommended').checked = false;
+            document.getElementById('productImage').value = '';
+            document.getElementById('currentProductImageData').value = '';
+            document.getElementById('productImagePreview').innerHTML = '<div style="color:#999;">Selecciona una imagen</div>';
+            document.getElementById('productModal').classList.add('active');
+        };
+
+        window.editProduct = function(productId) {
+            const product = products.find(p => p.id === productId);
+            populateCategorySelect();
+            document.getElementById('productModalTitle').textContent = 'Editar Producto';
+            document.getElementById('editProductId').value = product.id;
+            document.getElementById('productCode').value = product.code || '';
+            document.getElementById('productBrand').value = product.brand || '';
+            document.getElementById('productName').value = product.name;
+            document.getElementById('productPartNumber').value = product.partNumber || '';
+            document.getElementById('productDescription').value = product.description || '';
+            document.getElementById('productCostPrice').value = product.costPrice || '';
+            document.getElementById('productMargin').value = product.margin || '';
+            document.getElementById('productPrice').value = product.price;
+            document.getElementById('productDiscount').value = product.discount || '';
+            document.getElementById('productStock').value = product.stock;
+            document.getElementById('productCategory').value = product.category || '';
+            updateSubcategoryOptions();
+            document.getElementById('productSubcategory').value = product.subcategory || '';
+            document.getElementById('productVehicle').value = product.vehicle || '';
+            document.getElementById('productRecommended').checked = product.recommended || false;
+            document.getElementById('specDiameter').value = product.diameter || '';
+            document.getElementById('specLength').value = product.length || '';
+            document.getElementById('specWidth').value = product.width || '';
+            document.getElementById('specHeight').value = product.height || '';
+            document.getElementById('specWeight').value = product.weight || '';
+            document.getElementById('specMaterial').value = product.material || '';
+            document.getElementById('specVoltage').value = product.voltage || '';
+            document.getElementById('specPower').value = product.power || '';
+            document.getElementById('specThread').value = product.thread || '';
+            document.getElementById('currentProductImageData').value = product.image || '';
+            if (product.image) {
+                document.getElementById('productImagePreview').innerHTML = `<img src="${product.image}">`;
+            } else {
+                document.getElementById('productImagePreview').innerHTML = '<div style="color:#999;">Selecciona una imagen</div>';
+            }
+            document.getElementById('productImage').value = '';
+            document.getElementById('productModal').classList.add('active');
+        };
+
+        window.previewImage = function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                if (file.size > 1 * 1024 * 1024) { alert('Máximo 1MB'); event.target.value = ''; return; }
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('currentProductImageData').value = e.target.result;
+                    document.getElementById('productImagePreview').innerHTML = `<img src="${e.target.result}">`;
+                };
+                reader.readAsDataURL(file);
+            }
+        };
+
+        window.previewBrandImage = function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                if (file.size > 1 * 1024 * 1024) { alert('Máximo 1MB'); event.target.value = ''; return; }
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('currentBrandImageData').value = e.target.result;
+                    document.getElementById('brandImagePreview').innerHTML = `<img src="${e.target.result}">`;
+                };
+                reader.readAsDataURL(file);
+            }
+        };
+
+        window.saveProduct = async function(event) {
+            event.preventDefault();
+            const saveBtn = document.getElementById('saveProductBtn');
+            saveBtn.disabled = true;
+            saveBtn.textContent = 'Guardando...';
+            const editId = document.getElementById('editProductId').value;
+            const imageData = document.getElementById('currentProductImageData').value;
+            const costPrice = parseFloat(document.getElementById('productCostPrice').value) || 0;
+            const margin = parseFloat(document.getElementById('productMargin').value) || 0;
+            const salePrice = parseFloat(document.getElementById('productPrice').value) || 0;
+            const discount = parseFloat(document.getElementById('productDiscount').value) || 0;
+            const productData = {
+                code: document.getElementById('productCode').value,
+                brand: document.getElementById('productBrand').value,
+                name: document.getElementById('productName').value,
+                partNumber: document.getElementById('productPartNumber').value,
+                description: document.getElementById('productDescription').value,
+                costPrice: costPrice,
+                margin: margin,
+                price: salePrice,
+                discount: discount,
+                stock: parseInt(document.getElementById('productStock').value),
+                category: document.getElementById('productCategory').value,
+                subcategory: document.getElementById('productSubcategory').value,
+                vehicle: document.getElementById('productVehicle').value,
+                recommended: document.getElementById('productRecommended').checked,
+                diameter: document.getElementById('specDiameter').value,
+                length: document.getElementById('specLength').value,
+                width: document.getElementById('specWidth').value,
+                height: document.getElementById('specHeight').value,
+                weight: document.getElementById('specWeight').value,
+                material: document.getElementById('specMaterial').value,
+                voltage: document.getElementById('specVoltage').value,
+                power: document.getElementById('specPower').value,
+                thread: document.getElementById('specThread').value,
+                image: imageData || null,
+                updatedAt: new Date().toISOString()
+            };
+            try {
+                if (editId) {
+                    await updateDoc(doc(db, 'products', editId), productData);
+                } else {
+                    productData.createdAt = new Date().toISOString();
+                    await addDoc(collection(db, 'products'), productData);
+                }
+                await loadProducts();
+                closeModal('productModal');
+                alert('Producto guardado');
+            } catch (error) { alert('Error: ' + error.message); }
+            saveBtn.disabled = false;
+            saveBtn.textContent = 'Guardar Producto';
+        };
+
+        window.deleteProduct = async function(productId) {
+            if (!confirm('¿Eliminar este producto?')) return;
+            try {
+                await deleteDoc(doc(db, 'products', productId));
+                await loadProducts();
+                alert('Producto eliminado');
+            } catch (error) { alert('Error: ' + error.message); }
+        };
+
+        window.editBrandImage = function(brandId) {
+            const brand = brands.find(b => b.id === brandId);
+            document.getElementById('brandModalTitle').textContent = `Imagen: ${brand.name}`;
+            document.getElementById('editBrandId').value = brandId;
+            document.getElementById('currentBrandImageData').value = brand.image || '';
+            if (brand.image) {
+                document.getElementById('brandImagePreview').innerHTML = `<img src="${brand.image}">`;
+            } else {
+                document.getElementById('brandImagePreview').innerHTML = '<div style="color:#999;">Selecciona una imagen</div>';
+            }
+            document.getElementById('brandImageInput').value = '';
+            document.getElementById('brandModal').classList.add('active');
+        };
+
+        window.saveBrandImage = async function(event) {
+            event.preventDefault();
+            const brandId = document.getElementById('editBrandId').value;
+            const imageData = document.getElementById('currentBrandImageData').value;
+            try {
+                await updateDoc(doc(db, 'brands', brandId), { image: imageData || null });
+                await loadBrands();
+                closeModal('brandModal');
+                alert('Imagen guardada');
+            } catch (error) { alert('Error: ' + error.message); }
+        };
+
+        window.uploadAdminLogo = async function(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            if (file.size > 1 * 1024 * 1024) { alert('Máximo 1MB'); return; }
+            const reader = new FileReader();
+            reader.onload = async function(e) {
+                try {
+                    await setDoc(doc(db, 'settings', 'logo'), { image: e.target.result, updatedAt: new Date().toISOString() });
+                    document.getElementById('adminLogoPreview').innerHTML = `<img src="${e.target.result}">`;
+                    alert('Logo actualizado');
+                } catch (error) { alert('Error: ' + error.message); }
+            };
+            reader.readAsDataURL(file);
+        };
+
+        window.saveColors = async function() {
+            const colors = {
+                primary: document.getElementById('colorPrimary').value,
+                accent: document.getElementById('colorAccent').value,
+                background: document.getElementById('colorBg').value
+            };
+            try {
+                await setDoc(doc(db, 'settings', 'colors'), colors);
+                alert('Colores guardados');
+            } catch (error) { alert('Error: ' + error.message); }
+        };
+
+        window.closeModal = function(id) { document.getElementById(id).classList.remove('active'); };
+    </script>
+</body>
+</html>
