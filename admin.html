@@ -6,51 +6,41 @@
     <title>Admin - Akira Motors</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #121212;
-            color: #ffffff;
-            line-height: 1.6;
-            min-height: 100vh;
-        }
+        body { font-family: 'Segoe UI', sans-serif; background: #f5f5f5; color: #333; min-height: 100vh; }
         .admin-header {
-            background: #1a1a1a;
+            background: #dc3545;
+            color: white;
             padding: 1rem 2rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 2px solid #FFC107;
             flex-wrap: wrap;
             gap: 1rem;
         }
-        .admin-title { color: #FFC107; font-size: 1.5rem; font-weight: bold; }
-        .admin-title span { color: white; }
+        .admin-title { font-size: 1.5rem; font-weight: bold; }
         .btn {
             padding: 0.7rem 1.2rem; border: none; border-radius: 5px;
-            cursor: pointer; font-size: 0.9rem; transition: all 0.3s;
-            font-weight: 600; text-transform: uppercase;
+            cursor: pointer; font-size: 0.9rem; font-weight: 600;
         }
-        .btn-primary { background: #FFC107; color: #121212; }
-        .btn-primary:hover { background: #FFD54F; }
-        .btn-secondary { background: transparent; color: white; border: 2px solid #FFC107; }
-        .btn-secondary:hover { background: #FFC107; color: #121212; }
+        .btn-primary { background: white; color: #dc3545; }
+        .btn-primary:hover { background: #f0f0f0; }
+        .btn-secondary { background: transparent; color: white; border: 2px solid white; }
         .btn-danger { background: #dc3545; color: white; }
         .btn-small { padding: 0.4rem 0.8rem; font-size: 0.8rem; }
         .container { max-width: 1200px; margin: 0 auto; padding: 2rem; }
         .section-title {
-            color: #FFC107; font-size: 1.5rem; margin-bottom: 1rem;
-            text-transform: uppercase; border-bottom: 2px solid #FFC107;
-            padding-bottom: 0.5rem;
+            color: #dc3545; font-size: 1.5rem; margin-bottom: 1rem;
+            border-bottom: 2px solid #dc3545; padding-bottom: 0.5rem;
         }
-        .admin-section { margin-bottom: 3rem; }
-        .admin-product-item, .admin-brand-item {
+        .admin-section { margin-bottom: 3rem; background: white; padding: 1.5rem; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+        .admin-item {
             display: flex; justify-content: space-between; align-items: center;
-            padding: 1rem; background: #1a1a1a; margin-bottom: 0.8rem;
-            border-radius: 5px; border: 1px solid #2D3748; flex-wrap: wrap; gap: 1rem;
+            padding: 1rem; background: #f8f8f8; margin-bottom: 0.8rem;
+            border-radius: 5px; flex-wrap: wrap; gap: 1rem;
         }
         .admin-info { display: flex; align-items: center; gap: 1rem; flex: 1; }
         .admin-thumb {
-            width: 60px; height: 60px; background: #2D3748; border-radius: 5px;
+            width: 60px; height: 60px; background: #ddd; border-radius: 5px;
             overflow: hidden; display: flex; align-items: center; justify-content: center;
             flex-shrink: 0;
         }
@@ -58,62 +48,58 @@
         .admin-actions { display: flex; gap: 0.5rem; flex-wrap: wrap; }
         .modal {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.9); z-index: 3000;
+            background: rgba(0,0,0,0.8); z-index: 3000;
             align-items: center; justify-content: center; padding: 1rem;
         }
         .modal.active { display: flex; }
         .modal-content {
-            background: #1a1a1a; padding: 2rem; border-radius: 10px;
+            background: white; padding: 2rem; border-radius: 10px;
             max-width: 800px; width: 100%; max-height: 90vh; overflow-y: auto;
-            border: 2px solid #FFC107;
         }
-        .modal-content h2 { color: #FFC107; margin-bottom: 1.5rem; text-transform: uppercase; font-size: 1.5rem; }
-        .form-group { margin-bottom: 1.2rem; }
-        .form-group label { display: block; margin-bottom: 0.4rem; font-weight: 600; color: #fff; font-size: 0.9rem; }
-        .form-group label .required { color: #dc3545; }
+        .modal-content h2 { color: #dc3545; margin-bottom: 1.5rem; }
+        .form-group { margin-bottom: 1rem; }
+        .form-group label { display: block; margin-bottom: 0.4rem; font-weight: 600; font-size: 0.9rem; }
         .form-group input, .form-group textarea, .form-group select {
-            width: 100%; padding: 0.7rem; background: #121212; border: 1px solid #2D3748;
-            border-radius: 5px; font-size: 0.95rem; color: white;
+            width: 100%; padding: 0.7rem; border: 1px solid #ddd;
+            border-radius: 5px; font-size: 0.95rem;
         }
-        .form-group input:focus, .form-group textarea:focus, .form-group select:focus { outline: none; border-color: #FFC107; }
+        .form-group input:focus, .form-group textarea:focus, .form-group select:focus { outline: none; border-color: #dc3545; }
         .form-group textarea { resize: vertical; min-height: 80px; }
-        .form-group .hint { font-size: 0.8rem; color: #888; margin-top: 0.3rem; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+        .form-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; }
+        .form-section {
+            background: #f8f8f8; padding: 1.5rem; border-radius: 8px;
+            margin-bottom: 1.5rem; border: 1px solid #eee;
+        }
+        .form-section h3 { color: #dc3545; margin-bottom: 1rem; font-size: 1.1rem; }
+        .checkbox-group { display: flex; align-items: center; gap: 0.5rem; }
+        .checkbox-group input { width: auto; }
         .image-preview {
-            width: 100%; height: 150px; background: #121212; border: 2px dashed #2D3748;
+            width: 100%; height: 150px; background: #f0f0f0; border: 2px dashed #ddd;
             border-radius: 5px; display: flex; align-items: center; justify-content: center;
             margin-top: 0.5rem; overflow: hidden;
         }
         .image-preview img { max-width: 100%; max-height: 100%; object-fit: contain; }
-        .image-preview .placeholder { color: #666; text-align: center; font-size: 0.9rem; }
         .alert-info {
-            background: #1a3a5c; border: 1px solid #2a5a8c; color: #8ab4f8;
+            background: #e3f2fd; border: 1px solid #90caf9; color: #1565c0;
             padding: 0.8rem; border-radius: 5px; margin-bottom: 1rem; font-size: 0.85rem;
         }
-        .close-btn { background: none; border: none; color: white; font-size: 1.8rem; cursor: pointer; }
         .login-container {
             max-width: 400px; margin: 4rem auto; padding: 2rem;
-            background: #1a1a1a; border-radius: 10px; border: 2px solid #FFC107;
+            background: white; border-radius: 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.1);
         }
-        .login-container h2 { color: #FFC107; margin-bottom: 1.5rem; text-align: center; }
-        .back-link {
-            display: inline-block; margin-top: 1rem; color: #FFC107;
-            text-decoration: none; font-size: 0.9rem;
-        }
-        .back-link:hover { text-decoration: underline; }
+        .login-container h2 { color: #dc3545; margin-bottom: 1.5rem; text-align: center; }
         .hidden { display: none !important; }
-        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-        .form-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; }
-        .form-section {
-            background: #121212; padding: 1.5rem; border-radius: 8px;
-            margin-bottom: 1.5rem; border: 1px solid #2D3748;
+        .back-link { display: inline-block; margin-top: 1rem; color: #dc3545; text-decoration: none; }
+        .rate-display {
+            background: #fff5f5;
+            padding: 1rem;
+            border-radius: 8px;
+            border-left: 4px solid #dc3545;
+            margin-bottom: 1rem;
         }
-        .form-section h3 {
-            color: #FFC107; margin-bottom: 1rem; font-size: 1.1rem;
-            border-bottom: 1px solid #2D3748; padding-bottom: 0.5rem;
-        }
-        @media (max-width: 600px) {
-            .form-row, .form-row-3 { grid-template-columns: 1fr; }
-        }
+        .rate-display .current { font-size: 1.5rem; font-weight: bold; color: #dc3545; }
+        @media (max-width: 600px) { .form-row, .form-row-3 { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
@@ -125,7 +111,7 @@
                     <label>Contraseña</label>
                     <input type="password" id="adminPassword" required>
                 </div>
-                <button type="submit" class="btn btn-primary" style="width:100%">Ingresar</button>
+                <button type="submit" class="btn btn-danger" style="width:100%">Ingresar</button>
             </form>
             <a href="index.html" class="back-link">← Volver a la tienda</a>
         </div>
@@ -133,7 +119,7 @@
 
     <div id="adminPanel" class="hidden">
         <div class="admin-header">
-            <div class="admin-title"> AKIRA <span>MOTORS</span> - Admin</div>
+            <div class="admin-title">🔧 AKIRA MOTORS - Admin</div>
             <div>
                 <button class="btn btn-primary" onclick="openAddProductModal()">+ Agregar Producto</button>
                 <button class="btn btn-secondary" onclick="logoutAdmin()">Salir</button>
@@ -141,30 +127,48 @@
         </div>
 
         <div class="container">
+            <!-- Tasa BCV -->
             <div class="admin-section">
-                <h3 class="section-title">🖼️ Logo de la Empresa</h3>
-                <div class="admin-product-item">
-                    <div class="admin-info">
-                        <div class="admin-thumb" id="adminLogoPreview"></div>
-                        <div>
-                            <strong>Logo Akira Motors</strong><br>
-                            <small style="color:#aaa">Se mostrará a todos los visitantes</small>
-                        </div>
+                <h3 class="section-title">💱 Tasa BCV (Dólar)</h3>
+                <div class="rate-display">
+                    <div>Tasa actual:</div>
+                    <div class="current" id="currentRate">Cargando...</div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Nueva tasa (Bs por $)</label>
+                        <input type="number" id="bcvRateInput" step="0.01" placeholder="Ej: 36.50">
                     </div>
-                    <div class="admin-actions">
-                        <input type="file" id="adminLogoUpload" accept="image/*" style="display:none" onchange="uploadAdminLogo(event)">
-                        <button class="btn btn-small btn-primary" onclick="document.getElementById('adminLogoUpload').click()">Cambiar Logo</button>
+                    <div class="form-group" style="display:flex; align-items:flex-end;">
+                        <button class="btn btn-danger" onclick="updateBcvRate()" style="width:100%;">Actualizar Tasa</button>
                     </div>
                 </div>
             </div>
 
+            <!-- Logo -->
+            <div class="admin-section">
+                <h3 class="section-title">🖼️ Logo de la Empresa</h3>
+                <div class="admin-item">
+                    <div class="admin-info">
+                        <div class="admin-thumb" id="adminLogoPreview"></div>
+                        <div><strong>Logo Akira Motors</strong></div>
+                    </div>
+                    <div class="admin-actions">
+                        <input type="file" id="adminLogoUpload" accept="image/*" style="display:none" onchange="uploadAdminLogo(event)">
+                        <button class="btn btn-small btn-danger" onclick="document.getElementById('adminLogoUpload').click()">Cambiar Logo</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Productos -->
             <div class="admin-section">
                 <h3 class="section-title">📦 Productos</h3>
                 <div id="adminProductList"></div>
             </div>
 
+            <!-- Marcas -->
             <div class="admin-section">
-                <h3 class="section-title">️ Marcas</h3>
+                <h3 class="section-title">🏷️ Marcas</h3>
                 <div id="adminBrandsList"></div>
             </div>
 
@@ -175,147 +179,85 @@
     <div class="modal" id="productModal">
         <div class="modal-content">
             <h2 id="productModalTitle">Agregar Producto</h2>
-            <div class="alert-info">
-                ℹ️ Los campos con <span style="color:#dc3545">*</span> son obligatorios. Los demás pueden dejarse en blanco si no aplican.
-            </div>
+            <div class="alert-info">ℹ️ Los campos con * son obligatorios. Los demás pueden dejarse en blanco.</div>
             
             <form onsubmit="saveProduct(event)">
-                <!-- Información Básica -->
                 <div class="form-section">
                     <h3>📋 Información Básica</h3>
                     <div class="form-row">
-                        <div class="form-group">
-                            <label>Código del Producto <span class="required">*</span></label>
-                            <input type="text" id="productCode" required placeholder="Ej: AM-001">
-                        </div>
-                        <div class="form-group">
-                            <label>Marca del Repuesto</label>
-                            <input type="text" id="productBrand" placeholder="Ej: Bosch, SKF, Monroe">
-                        </div>
+                        <div class="form-group"><label>Código *</label><input type="text" id="productCode" required></div>
+                        <div class="form-group"><label>Marca del Repuesto</label><input type="text" id="productBrand" placeholder="Ej: Bosch, SKF"></div>
                     </div>
-                    <div class="form-group">
-                        <label>Nombre del Producto <span class="required">*</span></label>
-                        <input type="text" id="productName" required placeholder="Ej: Kit de Embrague Completo">
-                    </div>
-                    <div class="form-group">
-                        <label>Número de Parte / OEM</label>
-                        <input type="text" id="productPartNumber" placeholder="Ej: OEM-12345">
-                        <div class="hint">Número original del fabricante (opcional)</div>
-                    </div>
-                    <div class="form-group">
-                        <label>Descripción <span class="required">*</span></label>
-                        <textarea id="productDescription" required placeholder="Descripción detallada del producto..."></textarea>
+                    <div class="form-group"><label>Nombre *</label><input type="text" id="productName" required></div>
+                    <div class="form-group"><label>Número de Parte / OEM</label><input type="text" id="productPartNumber"></div>
+                    <div class="form-group"><label>Descripción *</label><textarea id="productDescription" required></textarea></div>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="productRecommended">
+                        <label for="productRecommended" style="margin:0;">⭐ Marcar como RECOMENDADO (aparece en página principal)</label>
                     </div>
                 </div>
 
-                <!-- Categoría y Compatibilidad -->
                 <div class="form-section">
                     <h3>🗂️ Categoría y Compatibilidad</h3>
                     <div class="form-row">
                         <div class="form-group">
-                            <label>Categoría <span class="required">*</span></label>
+                            <label>Categoría *</label>
                             <select id="productCategory" required onchange="updateSubcategoryOptions()">
                                 <option value="">Seleccionar...</option>
                             </select>
                         </div>
                         <div class="form-group">
-                            <label>Subcategoría <span class="required">*</span></label>
+                            <label>Subcategoría *</label>
                             <select id="productSubcategory" required>
                                 <option value="">Seleccionar categoría primero...</option>
                             </select>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label>Vehículo Compatible</label>
-                        <input type="text" id="productVehicle" placeholder="Ej: Toyota Corolla 2015-2020, Nissan Versa, Universal">
-                        <div class="hint">Indica para qué vehículos es compatible</div>
-                    </div>
+                    <div class="form-group"><label>Vehículo Compatible</label><input type="text" id="productVehicle" placeholder="Ej: Toyota Corolla 2015-2020"></div>
                 </div>
 
-                <!-- Precio y Oferta -->
                 <div class="form-section">
                     <h3>💰 Precio y Oferta</h3>
                     <div class="form-row">
-                        <div class="form-group">
-                            <label>Precio Regular ($) <span class="required">*</span></label>
-                            <input type="number" id="productPrice" step="0.01" required placeholder="0.00">
-                        </div>
-                        <div class="form-group">
-                            <label>% de Descuento (Oferta)</label>
-                            <input type="number" id="productDiscount" min="0" max="100" step="1" placeholder="0">
-                            <div class="hint">Ej: 10 = 10% de descuento. Dejar en 0 si no hay oferta</div>
-                        </div>
+                        <div class="form-group"><label>Precio Regular ($) *</label><input type="number" id="productPrice" step="0.01" required></div>
+                        <div class="form-group"><label>% de Descuento</label><input type="number" id="productDiscount" min="0" max="100" placeholder="0 = sin oferta"></div>
                     </div>
-                    <div class="form-group">
-                        <label>Stock Disponible <span class="required">*</span></label>
-                        <input type="number" id="productStock" required placeholder="0">
-                    </div>
+                    <div class="form-group"><label>Stock *</label><input type="number" id="productStock" required></div>
                 </div>
 
-                <!-- Especificaciones Técnicas -->
                 <div class="form-section">
                     <h3>🔧 Especificaciones Técnicas</h3>
-                    <p style="color:#888;font-size:0.85rem;margin-bottom:1rem">Complete solo los campos que apliquen al producto</p>
                     <div class="form-row-3">
-                        <div class="form-group">
-                            <label>Diámetro</label>
-                            <input type="text" id="specDiameter" placeholder="Ej: 50mm">
-                        </div>
-                        <div class="form-group">
-                            <label>Largo</label>
-                            <input type="text" id="specLength" placeholder="Ej: 120mm">
-                        </div>
-                        <div class="form-group">
-                            <label>Ancho</label>
-                            <input type="text" id="specWidth" placeholder="Ej: 80mm">
-                        </div>
+                        <div class="form-group"><label>Diámetro</label><input type="text" id="specDiameter"></div>
+                        <div class="form-group"><label>Largo</label><input type="text" id="specLength"></div>
+                        <div class="form-group"><label>Ancho</label><input type="text" id="specWidth"></div>
                     </div>
                     <div class="form-row-3">
-                        <div class="form-group">
-                            <label>Alto</label>
-                            <input type="text" id="specHeight" placeholder="Ej: 60mm">
-                        </div>
-                        <div class="form-group">
-                            <label>Peso</label>
-                            <input type="text" id="specWeight" placeholder="Ej: 2.5kg">
-                        </div>
-                        <div class="form-group">
-                            <label>Material</label>
-                            <input type="text" id="specMaterial" placeholder="Ej: Acero, Aluminio">
-                        </div>
+                        <div class="form-group"><label>Alto</label><input type="text" id="specHeight"></div>
+                        <div class="form-group"><label>Peso</label><input type="text" id="specWeight"></div>
+                        <div class="form-group"><label>Material</label><input type="text" id="specMaterial"></div>
                     </div>
                     <div class="form-row-3">
-                        <div class="form-group">
-                            <label>Voltaje</label>
-                            <input type="text" id="specVoltage" placeholder="Ej: 12V">
-                            <div class="hint">Para partes eléctricas</div>
-                        </div>
-                        <div class="form-group">
-                            <label>Potencia</label>
-                            <input type="text" id="specPower" placeholder="Ej: 100W">
-                        </div>
-                        <div class="form-group">
-                            <label>Rosca</label>
-                            <input type="text" id="specThread" placeholder="Ej: M12x1.5">
-                        </div>
+                        <div class="form-group"><label>Voltaje</label><input type="text" id="specVoltage"></div>
+                        <div class="form-group"><label>Potencia</label><input type="text" id="specPower"></div>
+                        <div class="form-group"><label>Rosca</label><input type="text" id="specThread"></div>
                     </div>
                 </div>
 
-                <!-- Imagen -->
                 <div class="form-section">
-                    <h3> Imagen del Producto</h3>
+                    <h3> Imagen</h3>
                     <div class="form-group">
-                        <label>Foto del Producto (máx. 1MB)</label>
-                        <input type="file" id="productImage" accept="image/*" onchange="previewImage(event, 'productImagePreview', 'currentProductImageData')">
-                        <div class="image-preview" id="productImagePreview"><div class="placeholder"> Selecciona una imagen</div></div>
+                        <label>Foto (máx. 1MB)</label>
+                        <input type="file" id="productImage" accept="image/*" onchange="previewImage(event)">
+                        <div class="image-preview" id="productImagePreview"><div style="color:#999;">📷 Selecciona una imagen</div></div>
                     </div>
                 </div>
 
                 <input type="hidden" id="editProductId">
                 <input type="hidden" id="currentProductImageData">
                 
-                <button type="submit" class="btn btn-primary" style="width:100%" id="saveProductBtn">Guardar Producto</button>
-                <button type="button" class="btn btn-secondary" style="width:100%;margin-top:0.8rem" onclick="closeModal('productModal')">Cancelar</button>
+                <button type="submit" class="btn btn-danger" style="width:100%;padding:1rem;" id="saveProductBtn">Guardar Producto</button>
+                <button type="button" class="btn btn-secondary" style="width:100%;margin-top:0.8rem;background:#666;color:white;" onclick="closeModal('productModal')">Cancelar</button>
             </form>
         </div>
     </div>
@@ -325,14 +267,14 @@
             <h2 id="brandModalTitle">Imagen de Marca</h2>
             <form onsubmit="saveBrandImage(event)">
                 <div class="form-group">
-                    <label>Imagen de la marca (máx. 1MB)</label>
-                    <input type="file" id="brandImageInput" accept="image/*" onchange="previewImage(event, 'brandImagePreview', 'currentBrandImageData')">
-                    <div class="image-preview" id="brandImagePreview"><div class="placeholder">📷 Selecciona una imagen</div></div>
+                    <label>Imagen (máx. 1MB)</label>
+                    <input type="file" id="brandImageInput" accept="image/*" onchange="previewBrandImage(event)">
+                    <div class="image-preview" id="brandImagePreview"><div style="color:#999;">📷 Selecciona una imagen</div></div>
                 </div>
                 <input type="hidden" id="editBrandId">
                 <input type="hidden" id="currentBrandImageData">
-                <button type="submit" class="btn btn-primary" style="width:100%" id="saveBrandBtn">Guardar</button>
-                <button type="button" class="btn btn-secondary" style="width:100%;margin-top:0.8rem" onclick="closeModal('brandModal')">Cancelar</button>
+                <button type="submit" class="btn btn-danger" style="width:100%">Guardar</button>
+                <button type="button" class="btn btn-secondary" style="width:100%;margin-top:0.8rem;background:#666;color:white;" onclick="closeModal('brandModal')">Cancelar</button>
             </form>
         </div>
     </div>
@@ -365,7 +307,7 @@
 
         let products = [];
         let brands = [];
-        let isAdmin = false;
+        let bcvRate = 36.5;
         const ADMIN_PASSWORD = 'fjat21';
 
         const defaultBrands = [
@@ -398,7 +340,6 @@
         window.adminLogin = function(event) {
             event.preventDefault();
             if (document.getElementById('adminPassword').value === ADMIN_PASSWORD) {
-                isAdmin = true;
                 document.getElementById('loginScreen').classList.add('hidden');
                 document.getElementById('adminPanel').classList.remove('hidden');
                 document.getElementById('adminPassword').value = '';
@@ -407,16 +348,38 @@
         };
 
         window.logoutAdmin = function() {
-            isAdmin = false;
             document.getElementById('adminPanel').classList.add('hidden');
             document.getElementById('loginScreen').classList.remove('hidden');
         };
 
         async function loadAll() {
+            await loadBcvRate();
             await loadLogo();
             await loadBrands();
             await loadProducts();
         }
+
+        async function loadBcvRate() {
+            try {
+                const rateDoc = await getDoc(doc(db, 'settings', 'bcvRate'));
+                if (rateDoc.exists()) {
+                    bcvRate = rateDoc.data().value;
+                }
+                document.getElementById('currentRate').textContent = `Bs. ${bcvRate} por $1`;
+            } catch (error) { console.log('Error tasa:', error); }
+        }
+
+        window.updateBcvRate = async function() {
+            const newRate = parseFloat(document.getElementById('bcvRateInput').value);
+            if (!newRate || newRate <= 0) { alert('Ingresa una tasa válida'); return; }
+            try {
+                await setDoc(doc(db, 'settings', 'bcvRate'), { value: newRate, updatedAt: new Date().toISOString() });
+                bcvRate = newRate;
+                document.getElementById('currentRate').textContent = `Bs. ${bcvRate} por $1`;
+                document.getElementById('bcvRateInput').value = '';
+                alert('✅ Tasa BCV actualizada');
+            } catch (error) { alert('Error: ' + error.message); }
+        };
 
         async function loadLogo() {
             try {
@@ -455,25 +418,26 @@
         function renderAdminProducts() {
             const list = document.getElementById('adminProductList');
             if (products.length === 0) {
-                list.innerHTML = '<p style="text-align:center;color:#666;padding:1rem">No hay productos. Agrega el primero.</p>';
+                list.innerHTML = '<p style="text-align:center;color:#666;padding:1rem">No hay productos.</p>';
                 return;
             }
             list.innerHTML = products.map(product => {
                 const thumbHtml = product.image ? `<img src="${product.image}">` : '';
                 const offerText = product.discount && product.discount > 0 ? ` | 🔥 -${product.discount}%` : '';
+                const recText = product.recommended ? ' | ⭐ Recomendado' : '';
                 return `
-                    <div class="admin-product-item">
+                    <div class="admin-item">
                         <div class="admin-info">
                             <div class="admin-thumb">${thumbHtml}</div>
                             <div>
-                                <strong>${product.name}</strong><br>
-                                <small style="color:#FFC107">Código: ${product.code || 'Sin código'}</small><br>
-                                <small style="color:#aaa">$${Number(product.price).toFixed(2)}${offerText} | Stock: ${product.stock} | ${product.category || 'Sin categoría'}</small>
+                                <strong>${product.name}</strong>${recText}<br>
+                                <small style="color:#dc3545">Código: ${product.code || 'Sin código'}</small><br>
+                                <small style="color:#666">$${Number(product.price).toFixed(2)}${offerText} | Stock: ${product.stock}</small>
                             </div>
                         </div>
                         <div class="admin-actions">
-                            <button class="btn btn-small btn-primary" onclick="editProduct('${product.id}')">Editar</button>
-                            <button class="btn btn-small btn-danger" onclick="deleteProduct('${product.id}')">Eliminar</button>
+                            <button class="btn btn-small btn-danger" onclick="editProduct('${product.id}')">Editar</button>
+                            <button class="btn btn-small" style="background:#999;color:white;" onclick="deleteProduct('${product.id}')">Eliminar</button>
                         </div>
                     </div>
                 `;
@@ -485,17 +449,17 @@
             list.innerHTML = brands.map(brand => {
                 const thumbHtml = brand.image ? `<img src="${brand.image}">` : '';
                 return `
-                    <div class="admin-brand-item">
+                    <div class="admin-item">
                         <div class="admin-info">
                             <div class="admin-thumb">${thumbHtml}</div>
                             <div>
                                 <strong>${brand.name}</strong><br>
-                                <small style="color:#aaa">${brand.image ? 'Imagen cargada' : 'Sin imagen'}</small>
+                                <small style="color:#666">${brand.image ? 'Imagen cargada' : 'Sin imagen'}</small>
                             </div>
                         </div>
                         <div class="admin-actions">
-                            <button class="btn btn-small btn-primary" onclick="editBrandImage('${brand.id}')">
-                                ${brand.image ? 'Cambiar Imagen' : 'Agregar Imagen'}
+                            <button class="btn btn-small btn-danger" onclick="editBrandImage('${brand.id}')">
+                                ${brand.image ? 'Cambiar' : 'Agregar Imagen'}
                             </button>
                         </div>
                     </div>
@@ -507,29 +471,18 @@
             populateCategorySelect();
             document.getElementById('productModalTitle').textContent = 'Agregar Producto';
             document.getElementById('editProductId').value = '';
-            document.getElementById('productCode').value = '';
-            document.getElementById('productBrand').value = '';
-            document.getElementById('productName').value = '';
-            document.getElementById('productPartNumber').value = '';
-            document.getElementById('productDescription').value = '';
-            document.getElementById('productPrice').value = '';
-            document.getElementById('productDiscount').value = '';
-            document.getElementById('productStock').value = '';
+            ['productCode','productBrand','productName','productPartNumber','productDescription',
+             'productPrice','productDiscount','productStock','productVehicle',
+             'specDiameter','specLength','specWidth','specHeight','specWeight',
+             'specMaterial','specVoltage','specPower','specThread'].forEach(id => {
+                document.getElementById(id).value = '';
+            });
             document.getElementById('productCategory').value = '';
             document.getElementById('productSubcategory').value = '';
-            document.getElementById('productVehicle').value = '';
-            document.getElementById('specDiameter').value = '';
-            document.getElementById('specLength').value = '';
-            document.getElementById('specWidth').value = '';
-            document.getElementById('specHeight').value = '';
-            document.getElementById('specWeight').value = '';
-            document.getElementById('specMaterial').value = '';
-            document.getElementById('specVoltage').value = '';
-            document.getElementById('specPower').value = '';
-            document.getElementById('specThread').value = '';
+            document.getElementById('productRecommended').checked = false;
             document.getElementById('productImage').value = '';
             document.getElementById('currentProductImageData').value = '';
-            document.getElementById('productImagePreview').innerHTML = '<div class="placeholder"> Selecciona una imagen</div>';
+            document.getElementById('productImagePreview').innerHTML = '<div style="color:#999;">📷 Selecciona una imagen</div>';
             document.getElementById('productModal').classList.add('active');
         };
 
@@ -550,6 +503,7 @@
             updateSubcategoryOptions();
             document.getElementById('productSubcategory').value = product.subcategory || '';
             document.getElementById('productVehicle').value = product.vehicle || '';
+            document.getElementById('productRecommended').checked = product.recommended || false;
             document.getElementById('specDiameter').value = product.diameter || '';
             document.getElementById('specLength').value = product.length || '';
             document.getElementById('specWidth').value = product.width || '';
@@ -563,24 +517,33 @@
             if (product.image) {
                 document.getElementById('productImagePreview').innerHTML = `<img src="${product.image}">`;
             } else {
-                document.getElementById('productImagePreview').innerHTML = '<div class="placeholder">📷 Selecciona una imagen</div>';
+                document.getElementById('productImagePreview').innerHTML = '<div style="color:#999;"> Selecciona una imagen</div>';
             }
             document.getElementById('productImage').value = '';
             document.getElementById('productModal').classList.add('active');
         };
 
-        window.previewImage = function(event, previewId, dataId) {
+        window.previewImage = function(event) {
             const file = event.target.files[0];
             if (file) {
-                if (file.size > 1 * 1024 * 1024) {
-                    alert('⚠️ La imagen es muy grande. Máximo 1MB.');
-                    event.target.value = '';
-                    return;
-                }
+                if (file.size > 1 * 1024 * 1024) { alert('⚠️ Máximo 1MB'); event.target.value = ''; return; }
                 const reader = new FileReader();
                 reader.onload = function(e) {
-                    document.getElementById(dataId).value = e.target.result;
-                    document.getElementById(previewId).innerHTML = `<img src="${e.target.result}">`;
+                    document.getElementById('currentProductImageData').value = e.target.result;
+                    document.getElementById('productImagePreview').innerHTML = `<img src="${e.target.result}">`;
+                };
+                reader.readAsDataURL(file);
+            }
+        };
+
+        window.previewBrandImage = function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                if (file.size > 1 * 1024 * 1024) { alert('⚠️ Máximo 1MB'); event.target.value = ''; return; }
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('currentBrandImageData').value = e.target.result;
+                    document.getElementById('brandImagePreview').innerHTML = `<img src="${e.target.result}">`;
                 };
                 reader.readAsDataURL(file);
             }
@@ -608,6 +571,7 @@
                 category: document.getElementById('productCategory').value,
                 subcategory: document.getElementById('productSubcategory').value,
                 vehicle: document.getElementById('productVehicle').value,
+                recommended: document.getElementById('productRecommended').checked,
                 diameter: document.getElementById('specDiameter').value,
                 length: document.getElementById('specLength').value,
                 width: document.getElementById('specWidth').value,
@@ -630,10 +594,8 @@
                 }
                 await loadProducts();
                 closeModal('productModal');
-                alert('✅ Producto guardado exitosamente');
-            } catch (error) {
-                alert('❌ Error: ' + error.message);
-            }
+                alert('✅ Producto guardado');
+            } catch (error) { alert('❌ Error: ' + error.message); }
 
             saveBtn.disabled = false;
             saveBtn.textContent = 'Guardar Producto';
@@ -656,7 +618,7 @@
             if (brand.image) {
                 document.getElementById('brandImagePreview').innerHTML = `<img src="${brand.image}">`;
             } else {
-                document.getElementById('brandImagePreview').innerHTML = '<div class="placeholder">📷 Selecciona una imagen</div>';
+                document.getElementById('brandImagePreview').innerHTML = '<div style="color:#999;"> Selecciona una imagen</div>';
             }
             document.getElementById('brandImageInput').value = '';
             document.getElementById('brandModal').classList.add('active');
@@ -664,35 +626,25 @@
 
         window.saveBrandImage = async function(event) {
             event.preventDefault();
-            const saveBtn = document.getElementById('saveBrandBtn');
-            saveBtn.disabled = true;
-            saveBtn.textContent = 'Guardando...';
-
             const brandId = document.getElementById('editBrandId').value;
             const imageData = document.getElementById('currentBrandImageData').value;
-
             try {
                 await updateDoc(doc(db, 'brands', brandId), { image: imageData || null });
                 await loadBrands();
                 closeModal('brandModal');
-                alert('✅ Imagen de marca guardada');
+                alert('✅ Imagen guardada');
             } catch (error) { alert('❌ Error: ' + error.message); }
-
-            saveBtn.disabled = false;
-            saveBtn.textContent = 'Guardar';
         };
 
         window.uploadAdminLogo = async function(event) {
             const file = event.target.files[0];
             if (!file) return;
-            if (file.size > 1 * 1024 * 1024) { alert('Imagen muy grande. Máximo 1MB'); return; }
-            
+            if (file.size > 1 * 1024 * 1024) { alert('Máximo 1MB'); return; }
             const reader = new FileReader();
             reader.onload = async function(e) {
-                const imgData = e.target.result;
                 try {
-                    await setDoc(doc(db, 'settings', 'logo'), { image: imgData, updatedAt: new Date().toISOString() });
-                    document.getElementById('adminLogoPreview').innerHTML = `<img src="${imgData}">`;
+                    await setDoc(doc(db, 'settings', 'logo'), { image: e.target.result, updatedAt: new Date().toISOString() });
+                    document.getElementById('adminLogoPreview').innerHTML = `<img src="${e.target.result}">`;
                     alert('✅ Logo actualizado');
                 } catch (error) { alert('Error: ' + error.message); }
             };
@@ -700,12 +652,6 @@
         };
 
         window.closeModal = function(id) { document.getElementById(id).classList.remove('active'); };
-
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                document.querySelectorAll('.modal.active').forEach(m => m.classList.remove('active'));
-            }
-        });
     </script>
 </body>
 </html>
