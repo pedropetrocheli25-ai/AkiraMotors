@@ -8,49 +8,49 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #0a0a0a;
+            background: #121212;
             color: #ffffff;
             line-height: 1.6;
             min-height: 100vh;
         }
         .admin-header {
-            background: #000;
+            background: #1a1a1a;
             padding: 1rem 2rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 2px solid #e63946;
+            border-bottom: 2px solid #FFC107;
             flex-wrap: wrap;
             gap: 1rem;
         }
-        .admin-title { color: #e63946; font-size: 1.5rem; font-weight: bold; }
+        .admin-title { color: #FFC107; font-size: 1.5rem; font-weight: bold; }
         .admin-title span { color: white; }
         .btn {
             padding: 0.7rem 1.2rem; border: none; border-radius: 5px;
             cursor: pointer; font-size: 0.9rem; transition: all 0.3s;
             font-weight: 600; text-transform: uppercase;
         }
-        .btn-primary { background: #e63946; color: white; }
-        .btn-primary:hover { background: #ff4d5a; }
-        .btn-secondary { background: transparent; color: white; border: 2px solid #e63946; }
-        .btn-secondary:hover { background: #e63946; }
+        .btn-primary { background: #FFC107; color: #121212; }
+        .btn-primary:hover { background: #FFD54F; }
+        .btn-secondary { background: transparent; color: white; border: 2px solid #FFC107; }
+        .btn-secondary:hover { background: #FFC107; color: #121212; }
         .btn-danger { background: #dc3545; color: white; }
         .btn-small { padding: 0.4rem 0.8rem; font-size: 0.8rem; }
         .container { max-width: 1200px; margin: 0 auto; padding: 2rem; }
         .section-title {
-            color: #e63946; font-size: 1.5rem; margin-bottom: 1rem;
-            text-transform: uppercase; border-bottom: 2px solid #e63946;
+            color: #FFC107; font-size: 1.5rem; margin-bottom: 1rem;
+            text-transform: uppercase; border-bottom: 2px solid #FFC107;
             padding-bottom: 0.5rem;
         }
         .admin-section { margin-bottom: 3rem; }
         .admin-product-item, .admin-brand-item {
             display: flex; justify-content: space-between; align-items: center;
             padding: 1rem; background: #1a1a1a; margin-bottom: 0.8rem;
-            border-radius: 5px; border: 1px solid #333; flex-wrap: wrap; gap: 1rem;
+            border-radius: 5px; border: 1px solid #2D3748; flex-wrap: wrap; gap: 1rem;
         }
         .admin-info { display: flex; align-items: center; gap: 1rem; flex: 1; }
         .admin-thumb {
-            width: 60px; height: 60px; background: #222; border-radius: 5px;
+            width: 60px; height: 60px; background: #2D3748; border-radius: 5px;
             overflow: hidden; display: flex; align-items: center; justify-content: center;
             flex-shrink: 0;
         }
@@ -58,26 +58,26 @@
         .admin-actions { display: flex; gap: 0.5rem; flex-wrap: wrap; }
         .modal {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.85); z-index: 3000;
+            background: rgba(0,0,0,0.9); z-index: 3000;
             align-items: center; justify-content: center; padding: 1rem;
         }
         .modal.active { display: flex; }
         .modal-content {
             background: #1a1a1a; padding: 2rem; border-radius: 10px;
-            max-width: 600px; width: 100%; max-height: 90vh; overflow-y: auto;
-            border: 1px solid #e63946;
+            max-width: 700px; width: 100%; max-height: 90vh; overflow-y: auto;
+            border: 2px solid #FFC107;
         }
-        .modal-content h2 { color: #e63946; margin-bottom: 1.5rem; text-transform: uppercase; font-size: 1.5rem; }
+        .modal-content h2 { color: #FFC107; margin-bottom: 1.5rem; text-transform: uppercase; font-size: 1.5rem; }
         .form-group { margin-bottom: 1.2rem; }
         .form-group label { display: block; margin-bottom: 0.4rem; font-weight: 600; color: #fff; font-size: 0.9rem; }
-        .form-group input, .form-group textarea {
-            width: 100%; padding: 0.7rem; background: #222; border: 1px solid #444;
+        .form-group input, .form-group textarea, .form-group select {
+            width: 100%; padding: 0.7rem; background: #121212; border: 1px solid #2D3748;
             border-radius: 5px; font-size: 0.95rem; color: white;
         }
-        .form-group input:focus, .form-group textarea:focus { outline: none; border-color: #e63946; }
+        .form-group input:focus, .form-group textarea:focus, .form-group select:focus { outline: none; border-color: #FFC107; }
         .form-group textarea { resize: vertical; min-height: 80px; }
         .image-preview {
-            width: 100%; height: 130px; background: #222; border: 2px dashed #444;
+            width: 100%; height: 150px; background: #121212; border: 2px dashed #2D3748;
             border-radius: 5px; display: flex; align-items: center; justify-content: center;
             margin-top: 0.5rem; overflow: hidden;
         }
@@ -90,15 +90,19 @@
         .close-btn { background: none; border: none; color: white; font-size: 1.8rem; cursor: pointer; }
         .login-container {
             max-width: 400px; margin: 4rem auto; padding: 2rem;
-            background: #1a1a1a; border-radius: 10px; border: 1px solid #e63946;
+            background: #1a1a1a; border-radius: 10px; border: 2px solid #FFC107;
         }
-        .login-container h2 { color: #e63946; margin-bottom: 1.5rem; text-align: center; }
+        .login-container h2 { color: #FFC107; margin-bottom: 1.5rem; text-align: center; }
         .back-link {
-            display: inline-block; margin-top: 1rem; color: #e63946;
+            display: inline-block; margin-top: 1rem; color: #FFC107;
             text-decoration: none; font-size: 0.9rem;
         }
         .back-link:hover { text-decoration: underline; }
         .hidden { display: none !important; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+        @media (max-width: 600px) {
+            .form-row { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
@@ -127,7 +131,7 @@
 
         <div class="container">
             <div class="admin-section">
-                <h3 class="section-title">🖼️ Logo de la Empresa</h3>
+                <h3 class="section-title">️ Logo de la Empresa</h3>
                 <div class="admin-product-item">
                     <div class="admin-info">
                         <div class="admin-thumb" id="adminLogoPreview"></div>
@@ -144,7 +148,7 @@
             </div>
 
             <div class="admin-section">
-                <h3 class="section-title"> Productos</h3>
+                <h3 class="section-title">📦 Productos</h3>
                 <div id="adminProductList"></div>
             </div>
 
@@ -160,12 +164,35 @@
     <div class="modal" id="productModal">
         <div class="modal-content">
             <h2 id="productModalTitle">Agregar Producto</h2>
-            <div class="alert-info">ℹ️ Imágenes máximo 1MB. Se guardan en la base de datos.</div>
+            <div class="alert-info">ℹ️ Imágenes máximo 1MB. Complete todos los campos para mejor organización.</div>
             <form onsubmit="saveProduct(event)">
-                <div class="form-group"><label>Nombre del Producto</label><input type="text" id="productName" required></div>
-                <div class="form-group"><label>Descripción</label><textarea id="productDescription" required></textarea></div>
-                <div class="form-group"><label>Precio ($)</label><input type="number" id="productPrice" step="0.01" required></div>
-                <div class="form-group"><label>Stock Disponible</label><input type="number" id="productStock" required></div>
+                <div class="form-row">
+                    <div class="form-group"><label>Código del Producto *</label><input type="text" id="productCode" required placeholder="Ej: AM-001"></div>
+                    <div class="form-group"><label>Precio ($) *</label><input type="number" id="productPrice" step="0.01" required></div>
+                </div>
+                <div class="form-group"><label>Nombre del Producto *</label><input type="text" id="productName" required></div>
+                <div class="form-group"><label>Descripción *</label><textarea id="productDescription" required></textarea></div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Categoría *</label>
+                        <select id="productCategory" required onchange="updateSubcategoryOptions()">
+                            <option value="">Seleccionar...</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Subcategoría *</label>
+                        <select id="productSubcategory" required>
+                            <option value="">Seleccionar categoría primero...</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Marca/Modelo de Vehículo Compatible</label>
+                    <input type="text" id="productVehicle" placeholder="Ej: Toyota Corolla 2020, Nissan Versa, Universal...">
+                </div>
+                <div class="form-row">
+                    <div class="form-group"><label>Stock Disponible *</label><input type="number" id="productStock" required></div>
+                </div>
                 <div class="form-group">
                     <label>Foto del Producto (máx. 1MB)</label>
                     <input type="file" id="productImage" accept="image/*" onchange="previewImage(event, 'productImagePreview', 'currentProductImageData')">
@@ -212,6 +239,16 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
+        const CATEGORIES = {
+            "Tren delantero y Dirección": ["Rotulas", "Muñones", "Terminales"],
+            "Amortiguadores y Suspensión": ["Amortiguadores", "Bases Amortiguador", "Mesetas", "Espirales"],
+            "Trasmisión": ["Puntas de tripoide", "Tricetas", "Embragues", "Bombines", "Crucetas"],
+            "Motor y componentes": ["Empacaduras", "Pistones y Anillos", "Kits de tiempo", "Válvulas y Taquetes", "Bomba de Aceite"],
+            "Sistema de Refrigeración": ["Bomba de agua", "Envases de refrigerantes"],
+            "Encendido y Sistema Eléctrico": ["Bujías y Cables de bujías", "Bobinas de encendido", "Sensores", "Relay y fusibles"],
+            "Inyección y Combustible": ["Bombas de Gasolina", "Filtros de Gasolina"]
+        };
+
         let products = [];
         let brands = [];
         let isAdmin = false;
@@ -224,6 +261,25 @@
             { id: 'hyundai', name: 'Hyundai', image: null },
             { id: 'chevrolet', name: 'Chevrolet', image: null }
         ];
+
+        function populateCategorySelect() {
+            const select = document.getElementById('productCategory');
+            select.innerHTML = '<option value="">Seleccionar...</option>';
+            for (const category of Object.keys(CATEGORIES)) {
+                select.innerHTML += `<option value="${category}">${category}</option>`;
+            }
+        }
+
+        window.updateSubcategoryOptions = function() {
+            const category = document.getElementById('productCategory').value;
+            const subSelect = document.getElementById('productSubcategory');
+            subSelect.innerHTML = '<option value="">Seleccionar subcategoría...</option>';
+            if (category && CATEGORIES[category]) {
+                CATEGORIES[category].forEach(sub => {
+                    subSelect.innerHTML += `<option value="${sub}">${sub}</option>`;
+                });
+            }
+        };
 
         window.adminLogin = function(event) {
             event.preventDefault();
@@ -252,8 +308,7 @@
             try {
                 const logoDoc = await getDoc(doc(db, 'settings', 'logo'));
                 if (logoDoc.exists()) {
-                    const imgData = logoDoc.data().image;
-                    document.getElementById('adminLogoPreview').innerHTML = `<img src="${imgData}">`;
+                    document.getElementById('adminLogoPreview').innerHTML = `<img src="${logoDoc.data().image}">`;
                 }
             } catch (error) { console.log('Logo:', error); }
         }
@@ -297,7 +352,8 @@
                             <div class="admin-thumb">${thumbHtml}</div>
                             <div>
                                 <strong>${product.name}</strong><br>
-                                <small style="color:#aaa">Precio: $${Number(product.price).toFixed(2)} | Stock: ${product.stock}</small>
+                                <small style="color:#FFC107">Código: ${product.code || 'Sin código'}</small><br>
+                                <small style="color:#aaa">$${Number(product.price).toFixed(2)} | Stock: ${product.stock} | ${product.category || 'Sin categoría'}</small>
                             </div>
                         </div>
                         <div class="admin-actions">
@@ -312,7 +368,7 @@
         function renderAdminBrands() {
             const list = document.getElementById('adminBrandsList');
             list.innerHTML = brands.map(brand => {
-                const thumbHtml = brand.image ? `<img src="${brand.image}">` : '🚗';
+                const thumbHtml = brand.image ? `<img src="${brand.image}">` : '';
                 return `
                     <div class="admin-brand-item">
                         <div class="admin-info">
@@ -333,12 +389,17 @@
         }
 
         window.openAddProductModal = function() {
+            populateCategorySelect();
             document.getElementById('productModalTitle').textContent = 'Agregar Producto';
             document.getElementById('editProductId').value = '';
+            document.getElementById('productCode').value = '';
             document.getElementById('productName').value = '';
             document.getElementById('productDescription').value = '';
             document.getElementById('productPrice').value = '';
             document.getElementById('productStock').value = '';
+            document.getElementById('productCategory').value = '';
+            document.getElementById('productSubcategory').value = '';
+            document.getElementById('productVehicle').value = '';
             document.getElementById('productImage').value = '';
             document.getElementById('currentProductImageData').value = '';
             document.getElementById('productImagePreview').innerHTML = '<div class="placeholder">📷 Selecciona una imagen</div>';
@@ -347,12 +408,18 @@
 
         window.editProduct = function(productId) {
             const product = products.find(p => p.id === productId);
+            populateCategorySelect();
             document.getElementById('productModalTitle').textContent = 'Editar Producto';
             document.getElementById('editProductId').value = product.id;
+            document.getElementById('productCode').value = product.code || '';
             document.getElementById('productName').value = product.name;
-            document.getElementById('productDescription').value = product.description;
+            document.getElementById('productDescription').value = product.description || '';
             document.getElementById('productPrice').value = product.price;
             document.getElementById('productStock').value = product.stock;
+            document.getElementById('productCategory').value = product.category || '';
+            updateSubcategoryOptions();
+            document.getElementById('productSubcategory').value = product.subcategory || '';
+            document.getElementById('productVehicle').value = product.vehicle || '';
             document.getElementById('currentProductImageData').value = product.image || '';
             if (product.image) {
                 document.getElementById('productImagePreview').innerHTML = `<img src="${product.image}">`;
@@ -367,7 +434,7 @@
             const file = event.target.files[0];
             if (file) {
                 if (file.size > 1 * 1024 * 1024) {
-                    alert('️ La imagen es muy grande. Máximo 1MB.');
+                    alert('⚠️ La imagen es muy grande. Máximo 1MB.');
                     event.target.value = '';
                     return;
                 }
@@ -390,10 +457,14 @@
             const imageData = document.getElementById('currentProductImageData').value;
 
             const productData = {
+                code: document.getElementById('productCode').value,
                 name: document.getElementById('productName').value,
                 description: document.getElementById('productDescription').value,
                 price: parseFloat(document.getElementById('productPrice').value),
                 stock: parseInt(document.getElementById('productStock').value),
+                category: document.getElementById('productCategory').value,
+                subcategory: document.getElementById('productSubcategory').value,
+                vehicle: document.getElementById('productVehicle').value,
                 image: imageData || null,
                 updatedAt: new Date().toISOString()
             };
