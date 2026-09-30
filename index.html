@@ -138,22 +138,52 @@
         .product-card {
             background: #2D3748; border-radius: 10px; overflow: hidden;
             border: 1px solid #3a4a5c; transition: all 0.3s; cursor: pointer;
+            display: flex; flex-direction: column; height: 100%;
         }
         .product-card:hover { transform: translateY(-5px); border-color: #FFC107; }
         .product-image {
             width: 100%; height: 200px; background: #1a1a1a;
             display: flex; align-items: center; justify-content: center; overflow: hidden;
+            flex-shrink: 0;
         }
         .product-image img { width: 100%; height: 100%; object-fit: contain; padding: 10px; }
         .product-image .no-image { font-size: 4rem; color: #555; }
-        .product-info { padding: 1.2rem; }
+        .product-info { 
+            padding: 1.2rem; 
+            display: flex; 
+            flex-direction: column; 
+            flex: 1;
+        }
         .product-code { font-size: 0.75rem; color: #FFC107; margin-bottom: 0.3rem; font-weight: bold; }
-        .product-name { font-size: 1.1rem; font-weight: bold; margin-bottom: 0.5rem; color: white; }
-        .product-description { color: #aaa; margin-bottom: 1rem; font-size: 0.85rem; }
-        .product-price { font-size: 1.4rem; color: #FFC107; font-weight: bold; margin-bottom: 0.8rem; }
+        .product-name { font-size: 1.1rem; font-weight: bold; margin-bottom: 0.5rem; color: white; min-height: 2.6rem; }
+        .product-description { color: #aaa; margin-bottom: 1rem; font-size: 0.85rem; flex: 1; }
+        .product-price-container { margin-bottom: 0.8rem; }
+        .product-price { font-size: 1.4rem; color: #FFC107; font-weight: bold; }
+        .product-price-original { 
+            font-size: 0.9rem; 
+            color: #888; 
+            text-decoration: line-through; 
+            margin-right: 0.5rem;
+        }
+        .product-discount { 
+            font-size: 0.85rem; 
+            color: #28a745; 
+            font-weight: bold;
+        }
+        .offer-badge {
+            background: #dc3545;
+            color: white;
+            padding: 0.3rem 0.6rem;
+            border-radius: 3px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 0.5rem;
+        }
         .product-stock { font-size: 0.8rem; color: #28a745; margin-bottom: 1rem; }
         .product-stock.low { color: #ffc107; }
         .product-stock.out { color: #dc3545; }
+        .product-card .btn-primary { margin-top: auto; }
         .pagination {
             display: flex; justify-content: center; gap: 0.5rem;
             margin-top: 2rem; flex-wrap: wrap;
@@ -255,7 +285,6 @@
         }
         @keyframes spin { to { transform: rotate(360deg); } }
         
-        /* Dropdown de categorías */
         .dropdown { position: relative; }
         .dropdown-menu {
             position: absolute;
@@ -299,9 +328,8 @@
             transition: color 0.3s;
         }
         .dropdown-subcategory:hover { color: #FFC107; }
-        .dropdown-subcategory.active { color: #FFC107; font-weight: bold; }
         
-        /* Modal detalle producto */
+        /* Modal detalle producto - Ficha técnica */
         .product-detail-modal {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.95); z-index: 3000;
@@ -313,8 +341,16 @@
             max-width: 900px; width: 100%; max-height: 90vh; overflow-y: auto;
             border: 2px solid #FFC107;
         }
+        .product-detail-close {
+            position: absolute; top: 1rem; right: 1rem;
+            background: #FFC107; color: #121212; border: none;
+            width: 40px; height: 40px; border-radius: 50%;
+            font-size: 1.5rem; cursor: pointer; font-weight: bold;
+            z-index: 3001;
+        }
         .product-detail-header {
             display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; padding: 2rem;
+            position: relative;
         }
         .product-detail-gallery {
             background: #121212; border-radius: 10px; overflow: hidden;
@@ -326,21 +362,46 @@
         }
         .product-detail-info h2 { color: #FFC107; margin-bottom: 0.5rem; }
         .product-detail-code { color: #FFC107; font-size: 0.9rem; margin-bottom: 1rem; font-weight: bold; }
-        .product-detail-price { font-size: 2rem; color: #FFC107; font-weight: bold; margin: 1rem 0; }
+        .product-detail-price-container { margin: 1rem 0; }
+        .product-detail-price { font-size: 2rem; color: #FFC107; font-weight: bold; }
+        .product-detail-price-original { 
+            font-size: 1.2rem; 
+            color: #888; 
+            text-decoration: line-through; 
+            margin-right: 1rem;
+        }
+        .product-detail-offer-badge {
+            background: #dc3545;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: bold;
+            display: inline-block;
+            margin: 0.5rem 0;
+        }
         .product-detail-stock { font-size: 1rem; margin-bottom: 1rem; }
-        .product-detail-description { color: #aaa; margin: 1rem 0; line-height: 1.8; }
+        .product-detail-description { 
+            color: #aaa; 
+            margin: 1rem 0; 
+            line-height: 1.8;
+            background: #121212;
+            padding: 1rem;
+            border-radius: 8px;
+            border-left: 4px solid #FFC107;
+        }
         .product-detail-specs {
             background: #121212; padding: 1.5rem; border-radius: 8px; margin: 1rem 0;
         }
-        .product-detail-specs h3 { color: #FFC107; margin-bottom: 1rem; }
+        .product-detail-specs h3 { color: #FFC107; margin-bottom: 1rem; font-size: 1.3rem; }
         .spec-row {
-            display: flex; justify-content: space-between; padding: 0.5rem 0;
+            display: flex; justify-content: space-between; padding: 0.7rem 0;
             border-bottom: 1px solid #2D3748;
         }
         .spec-row:last-child { border-bottom: none; }
         .spec-label { color: #aaa; }
         .spec-value { color: white; font-weight: bold; }
-        .product-detail-actions { padding: 1.5rem 2rem; display: flex; gap: 1rem; flex-wrap: wrap; }
+        .product-detail-actions { padding: 1.5rem 2rem; display: flex; gap: 1rem; flex-wrap: wrap; border-top: 1px solid #2D3748; }
         
         @media (max-width: 1024px) {
             .products-grid { grid-template-columns: repeat(3, 1fr); }
@@ -375,7 +436,7 @@
         <div class="nav-buttons">
             <button class="btn btn-secondary" onclick="openQuoteModal()">Cotizar</button>
             <button class="cart-icon" onclick="toggleCart()">
-                 <span class="cart-count" id="cartCount">0</span>
+                🛒 <span class="cart-count" id="cartCount">0</span>
             </button>
         </div>
     </header>
@@ -404,8 +465,8 @@
         <div class="services-grid">
             <div class="service-card"><div class="service-icon">🔩</div><h3>Suspensión</h3></div>
             <div class="service-card"><div class="service-icon">⚙️</div><h3>Embragues</h3></div>
-            <div class="service-card"><div class="service-icon"></div><h3>Frenos</h3></div>
-            <div class="service-card"><div class="service-icon">⚡</div><h3>Partes Eléctricas</h3></div>
+            <div class="service-card"><div class="service-icon">🛑</div><h3>Frenos</h3></div>
+            <div class="service-card"><div class="service-icon"></div><h3>Partes Eléctricas</h3></div>
         </div>
     </section>
 
@@ -435,7 +496,7 @@
     <div class="overlay" id="overlay" onclick="closeAll()"></div>
     <div class="cart-sidebar" id="cartSidebar">
         <div class="cart-header">
-            <h3> Tu Carrito</h3>
+            <h3>🛒 Tu Carrito</h3>
             <button class="close-btn" onclick="toggleCart()">×</button>
         </div>
         <div class="cart-items" id="cartItems">
@@ -462,8 +523,9 @@
         </div>
     </div>
 
-    <!-- Modal Detalle Producto -->
+    <!-- Modal Detalle Producto - Ficha Técnica -->
     <div class="product-detail-modal" id="productDetailModal">
+        <button class="product-detail-close" onclick="closeModal('productDetailModal')">×</button>
         <div class="product-detail-content" id="productDetailContent"></div>
     </div>
 
@@ -621,6 +683,11 @@
             renderProducts();
         }
 
+        function calculateDiscountedPrice(price, discount) {
+            if (!discount || discount <= 0) return price;
+            return price - (price * discount / 100);
+        }
+
         async function loadLogo() {
             try {
                 const logoDoc = await getDoc(doc(db, 'settings', 'logo'));
@@ -687,21 +754,42 @@
                 let stockClass = '', stockText = `Stock: ${product.stock} unidades`;
                 if (product.stock === 0) { stockClass = 'out'; stockText = 'Agotado'; }
                 else if (product.stock < 10) { stockClass = 'low'; stockText = `¡Últimas ${product.stock}!`; }
+                
                 const imageHtml = product.image 
                     ? `<img src="${product.image}" alt="${product.name}" loading="lazy">`
                     : `<div class="no-image">🔧</div>`;
+                
                 const codeHtml = product.code ? `<div class="product-code">Código: ${product.code}</div>` : '';
+                
+                // Manejo de ofertas
+                let priceHtml = '';
+                let offerBadge = '';
+                if (product.discount && product.discount > 0) {
+                    const discountedPrice = calculateDiscountedPrice(product.price, product.discount);
+                    offerBadge = `<div class="offer-badge">🔥 OFERTA -${product.discount}%</div>`;
+                    priceHtml = `
+                        <div class="product-price-container">
+                            <span class="product-price-original">$${Number(product.price).toFixed(2)}</span>
+                            <span class="product-price">$${discountedPrice.toFixed(2)}</span>
+                            <div class="product-discount">AHORA</div>
+                        </div>
+                    `;
+                } else {
+                    priceHtml = `<div class="product-price-container"><div class="product-price">$${Number(product.price).toFixed(2)}</div></div>`;
+                }
+                
                 return `
                     <div class="product-card" onclick="openProductDetail('${product.id}')">
                         <div class="product-image">${imageHtml}</div>
                         <div class="product-info">
+                            ${offerBadge}
                             ${codeHtml}
                             <div class="product-name">${product.name}</div>
-                            <div class="product-description">${product.description || ''}</div>
-                            <div class="product-price">$${Number(product.price).toFixed(2)}</div>
+                            <div class="product-description">${product.description || 'Repuesto automotriz de calidad'}</div>
+                            ${priceHtml}
                             <div class="product-stock ${stockClass}">${stockText}</div>
-                            <button class="btn btn-primary" style="width:100%" onclick="event.stopPropagation(); addToCart('${product.id}')" ${product.stock === 0 ? 'disabled' : ''}>
-                                ${product.stock === 0 ? 'Agotado' : 'Agregar al Carrito'}
+                            <button class="btn btn-primary" onclick="event.stopPropagation(); addToCart('${product.id}')" ${product.stock === 0 ? 'disabled' : ''}>
+                                ${product.stock === 0 ? 'Agotado' : ' Agregar al Carrito'}
                             </button>
                         </div>
                     </div>
@@ -728,18 +816,50 @@
 
             const imageHtml = product.image 
                 ? `<img src="${product.image}" alt="${product.name}">`
-                : `<div style="font-size:6rem;color:#555">🔧</div>`;
+                : `<div style="font-size:6rem;color:#555"></div>`;
 
-            const specsHtml = `
+            // Precio con oferta
+            let priceHtml = '';
+            if (product.discount && product.discount > 0) {
+                const discountedPrice = calculateDiscountedPrice(product.price, product.discount);
+                priceHtml = `
+                    <div class="product-detail-price-container">
+                        <div class="product-detail-offer-badge">🔥 OFERTA -${product.discount}% - AHORA</div>
+                        <div>
+                            <span class="product-detail-price-original">$${Number(product.price).toFixed(2)}</span>
+                            <span class="product-detail-price">$${discountedPrice.toFixed(2)}</span>
+                        </div>
+                    </div>
+                `;
+            } else {
+                priceHtml = `<div class="product-detail-price">$${Number(product.price).toFixed(2)}</div>`;
+            }
+
+            // Ficha técnica - solo mostrar campos que tengan valor
+            const specs = [];
+            if (product.code) specs.push({ label: 'Código', value: product.code });
+            if (product.brand) specs.push({ label: 'Marca del Repuesto', value: product.brand });
+            if (product.partNumber) specs.push({ label: 'Número de Parte', value: product.partNumber });
+            if (product.category) specs.push({ label: 'Categoría', value: product.category });
+            if (product.subcategory) specs.push({ label: 'Subcategoría', value: product.subcategory });
+            if (product.vehicle) specs.push({ label: 'Compatible con', value: product.vehicle });
+            if (product.diameter) specs.push({ label: 'Diámetro', value: product.diameter });
+            if (product.length) specs.push({ label: 'Largo', value: product.length });
+            if (product.width) specs.push({ label: 'Ancho', value: product.width });
+            if (product.height) specs.push({ label: 'Alto', value: product.height });
+            if (product.weight) specs.push({ label: 'Peso', value: product.weight });
+            if (product.material) specs.push({ label: 'Material', value: product.material });
+            if (product.voltage) specs.push({ label: 'Voltaje', value: product.voltage });
+            if (product.power) specs.push({ label: 'Potencia', value: product.power });
+            if (product.thread) specs.push({ label: 'Rosca', value: product.thread });
+            specs.push({ label: 'Stock disponible', value: `${product.stock} unidades` });
+
+            const specsHtml = specs.length > 0 ? `
                 <div class="product-detail-specs">
                     <h3>📋 Ficha Técnica</h3>
-                    ${product.code ? `<div class="spec-row"><span class="spec-label">Código:</span><span class="spec-value">${product.code}</span></div>` : ''}
-                    ${product.category ? `<div class="spec-row"><span class="spec-label">Categoría:</span><span class="spec-value">${product.category}</span></div>` : ''}
-                    ${product.subcategory ? `<div class="spec-row"><span class="spec-label">Subcategoría:</span><span class="spec-value">${product.subcategory}</span></div>` : ''}
-                    ${product.vehicle ? `<div class="spec-row"><span class="spec-label">Compatible con:</span><span class="spec-value">${product.vehicle}</span></div>` : ''}
-                    <div class="spec-row"><span class="spec-label">Stock disponible:</span><span class="spec-value">${product.stock} unidades</span></div>
+                    ${specs.map(s => `<div class="spec-row"><span class="spec-label">${s.label}:</span><span class="spec-value">${s.value}</span></div>`).join('')}
                 </div>
-            `;
+            ` : '';
 
             document.getElementById('productDetailContent').innerHTML = `
                 <div class="product-detail-header">
@@ -747,19 +867,21 @@
                     <div class="product-detail-info">
                         ${product.code ? `<div class="product-detail-code">Código: ${product.code}</div>` : ''}
                         <h2>${product.name}</h2>
-                        <div class="product-detail-price">$${Number(product.price).toFixed(2)}</div>
+                        ${priceHtml}
                         <div class="product-detail-stock" style="color: ${product.stock === 0 ? '#dc3545' : product.stock < 10 ? '#ffc107' : '#28a745'}">
                             ${product.stock === 0 ? '❌ Agotado' : product.stock < 10 ? `⚠️ ¡Últimas ${product.stock} unidades!` : `✅ Stock: ${product.stock} unidades`}
                         </div>
-                        <div class="product-detail-description">
-                            <h3 style="color:#FFC107;margin-bottom:0.5rem">Descripción</h3>
-                            <p>${product.description || 'Sin descripción disponible'}</p>
-                        </div>
+                        ${product.description ? `
+                            <div class="product-detail-description">
+                                <h3 style="color:#FFC107;margin-bottom:0.5rem">Descripción</h3>
+                                <p>${product.description}</p>
+                            </div>
+                        ` : ''}
                     </div>
                 </div>
                 ${specsHtml}
                 <div class="product-detail-actions">
-                    <button class="btn btn-primary" onclick="addToCart('${product.id}'); closeModal('productDetailModal')" ${product.stock === 0 ? 'disabled' : ''}>
+                    <button class="btn btn-primary" onclick="addToCart('${product.id}')" ${product.stock === 0 ? 'disabled' : ''}>
                         ${product.stock === 0 ? 'Agotado' : '🛒 Agregar al Carrito'}
                     </button>
                     <button class="btn btn-secondary" onclick="closeModal('productDetailModal')">Cerrar</button>
@@ -779,11 +901,18 @@
         window.addToCart = function(productId) {
             const product = products.find(p => p.id === productId);
             if (!product || product.stock <= 0) { alert('Producto sin stock'); return; }
+            
+            const priceToAdd = product.discount && product.discount > 0 
+                ? calculateDiscountedPrice(product.price, product.discount) 
+                : product.price;
+            
             const existingItem = cart.find(item => item.id === productId);
             if (existingItem) {
                 if (existingItem.quantity < product.stock) existingItem.quantity++;
                 else { alert('No hay más stock disponible'); return; }
-            } else { cart.push({ ...product, quantity: 1 }); }
+            } else { 
+                cart.push({ ...product, price: priceToAdd, quantity: 1 }); 
+            }
             updateCartUI();
             saveCart();
         };
