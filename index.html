@@ -13,9 +13,124 @@
             line-height: 1.6;
         }
         
-        /* Header estilo Walmart */
+        /* Layout principal con sidebar */
+        .main-layout {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* Sidebar de categorías - FIJO */
+        .category-sidebar {
+            width: 280px;
+            background: white;
+            border-right: 3px solid #dc3545;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+            flex-shrink: 0;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+        }
+        .sidebar-header {
+            background: #dc3545;
+            color: white;
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        .sidebar-logo {
+            width: 40px; height: 40px; border-radius: 50%;
+            background: white; overflow: hidden;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .sidebar-logo img { width: 100%; height: 100%; object-fit: cover; }
+        .sidebar-title { font-size: 1.1rem; font-weight: bold; }
+        .sidebar-title span { color: #FFC107; }
+        
+        .sidebar-search {
+            padding: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+        .sidebar-search input {
+            width: 100%;
+            padding: 0.7rem;
+            border: 2px solid #dc3545;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            outline: none;
+        }
+        .sidebar-search input:focus { border-color: #8b0000; }
+        
+        .category-list { padding: 0.5rem 0; }
+        .category-item { border-bottom: 1px solid #f0f0f0; }
+        .category-header {
+            padding: 0.9rem 1rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            color: #333;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+        .category-header:hover {
+            background: #fff5f5;
+            color: #dc3545;
+        }
+        .category-header.active {
+            background: #dc3545;
+            color: white;
+        }
+        .category-arrow {
+            transition: transform 1.5s ease;
+            font-size: 0.8rem;
+        }
+        .category-header.active .category-arrow {
+            transform: rotate(180deg);
+        }
+        .subcategory-list {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 1.5s ease;
+            background: #fafafa;
+        }
+        .subcategory-list.open {
+            max-height: 500px;
+        }
+        .subcategory-item {
+            padding: 0.7rem 1rem 0.7rem 2rem;
+            cursor: pointer;
+            font-size: 0.85rem;
+            color: #666;
+            transition: all 0.3s;
+            border-left: 3px solid transparent;
+        }
+        .subcategory-item:hover {
+            background: #fff5f5;
+            color: #dc3545;
+            border-left-color: #dc3545;
+        }
+        .subcategory-item.active {
+            background: #ffe0e0;
+            color: #dc3545;
+            font-weight: bold;
+            border-left-color: #dc3545;
+        }
+        
+        /* Contenido principal */
+        .main-content {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        /* Header superior */
         .top-header {
-            background: #fff;
+            background: white;
             border-bottom: 3px solid #dc3545;
             padding: 0.8rem 2rem;
             display: flex;
@@ -25,45 +140,9 @@
             gap: 1rem;
             position: sticky;
             top: 0;
-            z-index: 1000;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            z-index: 100;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         }
-        .logo-container { display: flex; align-items: center; gap: 0.8rem; cursor: pointer; }
-        .logo-img {
-            width: 45px; height: 45px; border-radius: 50%;
-            object-fit: cover; background: #dc3545;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 1.3rem; overflow: hidden;
-        }
-        .logo-img img { width: 100%; height: 100%; object-fit: cover; }
-        .logo-text { font-size: 1.4rem; font-weight: bold; color: #dc3545; }
-        .logo-text span { color: #333; }
-        
-        .search-bar {
-            flex: 1;
-            max-width: 600px;
-            display: flex;
-            background: #fff;
-            border: 2px solid #dc3545;
-            border-radius: 30px;
-            overflow: hidden;
-        }
-        .search-bar input {
-            flex: 1;
-            padding: 0.7rem 1.2rem;
-            border: none;
-            outline: none;
-            font-size: 1rem;
-        }
-        .search-bar button {
-            background: #dc3545;
-            color: white;
-            border: none;
-            padding: 0 1.5rem;
-            cursor: pointer;
-            font-size: 1.1rem;
-        }
-        
         .header-actions { display: flex; gap: 1rem; align-items: center; }
         .header-btn {
             background: none;
@@ -75,6 +154,7 @@
             color: #333;
             font-size: 0.75rem;
             position: relative;
+            padding: 0.3rem 0.8rem;
         }
         .header-btn .icon { font-size: 1.5rem; margin-bottom: 2px; }
         .header-btn:hover { color: #dc3545; }
@@ -96,7 +176,7 @@
         
         /* Barra de ubicación */
         .location-bar {
-            background: #fff;
+            background: white;
             padding: 0.8rem 2rem;
             display: flex;
             align-items: center;
@@ -110,8 +190,8 @@
             align-items: center;
             gap: 0.5rem;
             cursor: pointer;
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
+            padding: 0.6rem 1.2rem;
+            border-radius: 25px;
             border: 2px solid #ddd;
             transition: all 0.3s;
         }
@@ -121,49 +201,59 @@
         }
         .location-option .icon { font-size: 1.3rem; }
         .location-option .text { font-size: 0.9rem; font-weight: 600; }
-        .location-option .subtext { font-size: 0.75rem; color: #666; }
-        .delivery-address {
-            background: #fff5f5;
-            padding: 0.5rem 1rem;
-            border-radius: 5px;
-            font-size: 0.85rem;
-            color: #dc3545;
-            display: none;
-        }
-        .delivery-address.show { display: block; }
         
-        /* Navegación */
-        .main-nav {
-            background: #dc3545;
-            padding: 0.8rem 2rem;
+        /* Carrusel de banners */
+        .banner-carousel {
+            position: relative;
+            width: 100%;
+            height: 400px;
+            overflow: hidden;
+            background: #ddd;
+        }
+        .banner-slide {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            opacity: 0;
+            transition: opacity 1s ease;
+        }
+        .banner-slide.active { opacity: 1; }
+        .banner-slide img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+        }
+        .banner-dots {
+            position: absolute;
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
             display: flex;
-            gap: 1.5rem;
-            overflow-x: auto;
+            gap: 8px;
+            z-index: 5;
         }
-        .main-nav a {
-            color: white;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 0.9rem;
-            white-space: nowrap;
-            transition: opacity 0.3s;
+        .banner-dot {
+            width: 12px; height: 12px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.5);
+            cursor: pointer;
+            border: 2px solid white;
         }
-        .main-nav a:hover { opacity: 0.8; }
-        
-        /* Banner */
-        .hero-banner {
+        .banner-dot.active { background: #dc3545; }
+        .banner-empty {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: #666;
+            font-size: 1.2rem;
             background: linear-gradient(135deg, #dc3545 0%, #8b0000 100%);
             color: white;
-            padding: 3rem 2rem;
-            text-align: center;
         }
-        .hero-banner h1 { font-size: 2.5rem; margin-bottom: 0.5rem; }
-        .hero-banner p { font-size: 1.1rem; opacity: 0.9; }
         
-        /* Secciones */
+        /* Secciones de productos */
         .section { padding: 2rem; max-width: 1400px; margin: 0 auto; }
         .section-title {
-            font-size: 1.8rem;
+            font-size: 1.6rem;
             margin-bottom: 1.5rem;
             color: #333;
             display: flex;
@@ -172,7 +262,6 @@
         }
         .section-title .highlight { color: #dc3545; }
         
-        /* Productos */
         .products-scroll {
             display: flex;
             gap: 1rem;
@@ -219,8 +308,7 @@
         .product-image .no-image { font-size: 3rem; color: #ccc; }
         .offer-tag {
             position: absolute;
-            top: 10px;
-            left: 10px;
+            top: 10px; left: 10px;
             background: #dc3545;
             color: white;
             padding: 0.3rem 0.6rem;
@@ -230,8 +318,7 @@
         }
         .recommended-tag {
             position: absolute;
-            top: 10px;
-            right: 10px;
+            top: 10px; right: 10px;
             background: #FFC107;
             color: #333;
             padding: 0.3rem 0.6rem;
@@ -252,7 +339,6 @@
             overflow: hidden;
         }
         .product-code { font-size: 0.75rem; color: #888; margin-bottom: 0.5rem; }
-        .product-price-container { margin-bottom: 0.5rem; }
         .product-price { font-size: 1.3rem; color: #333; font-weight: bold; }
         .product-price-bs { font-size: 0.85rem; color: #666; }
         .product-price-original {
@@ -305,13 +391,11 @@
         }
         .modal-close {
             position: absolute;
-            top: 1rem;
-            right: 1rem;
+            top: 1rem; right: 1rem;
             background: #dc3545;
             color: white;
             border: none;
-            width: 35px;
-            height: 35px;
+            width: 35px; height: 35px;
             border-radius: 50%;
             font-size: 1.2rem;
             cursor: pointer;
@@ -343,11 +427,7 @@
         }
         .detail-price-usd { font-size: 2rem; color: #333; font-weight: bold; }
         .detail-price-bs { font-size: 1.1rem; color: #666; }
-        .detail-price-original {
-            font-size: 1rem;
-            color: #999;
-            text-decoration: line-through;
-        }
+        .detail-price-original { font-size: 1rem; color: #999; text-decoration: line-through; }
         .detail-offer-badge {
             background: #dc3545;
             color: white;
@@ -365,11 +445,7 @@
             color: #555;
             line-height: 1.6;
         }
-        .specs-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 1rem 0;
-        }
+        .specs-table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
         .specs-table tr { border-bottom: 1px solid #eee; }
         .specs-table td { padding: 0.6rem; }
         .specs-table td:first-child { color: #666; font-weight: 600; width: 40%; }
@@ -415,8 +491,7 @@
             align-items: center;
         }
         .cart-item-img {
-            width: 60px;
-            height: 60px;
+            width: 60px; height: 60px;
             background: #f8f8f8;
             border-radius: 5px;
             overflow: hidden;
@@ -433,8 +508,7 @@
             background: #dc3545;
             color: white;
             border: none;
-            width: 28px;
-            height: 28px;
+            width: 28px; height: 28px;
             border-radius: 50%;
             cursor: pointer;
             font-weight: bold;
@@ -445,7 +519,6 @@
             background: #f8f8f8;
             border-top: 2px solid #dc3545;
         }
-        .cart-totals { margin-bottom: 1rem; }
         .cart-total-row {
             display: flex;
             justify-content: space-between;
@@ -471,109 +544,64 @@
             font-weight: bold;
             cursor: pointer;
         }
-        .checkout-btn:hover { background: #c82333; }
         
-        /* Modal login/registro */
-        .auth-modal .modal-content {
-            max-width: 450px;
-            padding: 2rem;
-        }
+        /* Auth modal */
+        .auth-modal .modal-content { max-width: 450px; padding: 2rem; }
         .auth-modal h2 { color: #dc3545; margin-bottom: 1.5rem; text-align: center; }
-        .auth-tabs {
-            display: flex;
-            margin-bottom: 1.5rem;
-            border-bottom: 2px solid #eee;
-        }
+        .auth-tabs { display: flex; margin-bottom: 1.5rem; border-bottom: 2px solid #eee; }
         .auth-tab {
-            flex: 1;
-            padding: 0.8rem;
-            text-align: center;
-            cursor: pointer;
-            font-weight: 600;
-            color: #666;
-            border-bottom: 3px solid transparent;
-            margin-bottom: -2px;
+            flex: 1; padding: 0.8rem; text-align: center;
+            cursor: pointer; font-weight: 600; color: #666;
+            border-bottom: 3px solid transparent; margin-bottom: -2px;
         }
-        .auth-tab.active {
-            color: #dc3545;
-            border-bottom-color: #dc3545;
-        }
+        .auth-tab.active { color: #dc3545; border-bottom-color: #dc3545; }
         .form-group { margin-bottom: 1rem; }
         .form-group label { display: block; margin-bottom: 0.4rem; font-weight: 600; color: #333; font-size: 0.9rem; }
         .form-group input, .form-group textarea, .form-group select {
-            width: 100%;
-            padding: 0.7rem;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 0.95rem;
+            width: 100%; padding: 0.7rem;
+            border: 1px solid #ddd; border-radius: 5px; font-size: 0.95rem;
         }
         .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
-            outline: none;
-            border-color: #dc3545;
+            outline: none; border-color: #dc3545;
         }
         .auth-btn {
-            width: 100%;
-            background: #dc3545;
-            color: white;
-            border: none;
-            padding: 0.9rem;
-            border-radius: 25px;
-            font-size: 1rem;
-            font-weight: bold;
-            cursor: pointer;
-            margin-top: 1rem;
+            width: 100%; background: #dc3545; color: white;
+            border: none; padding: 0.9rem; border-radius: 25px;
+            font-size: 1rem; font-weight: bold; cursor: pointer; margin-top: 1rem;
         }
-        .user-menu {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            cursor: pointer;
-        }
+        .user-menu { display: flex; align-items: center; gap: 0.5rem; cursor: pointer; }
         .user-avatar {
-            width: 35px;
-            height: 35px;
-            border-radius: 50%;
-            background: #dc3545;
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            width: 35px; height: 35px; border-radius: 50%;
+            background: #dc3545; color: white;
+            display: flex; align-items: center; justify-content: center;
             font-weight: bold;
         }
         
-        /* Modal checkout */
+        /* Checkout modal */
         .checkout-modal .modal-content { max-width: 600px; }
-        .delivery-options {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
-            margin: 1rem 0;
-        }
+        .delivery-options { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1rem 0; }
         .delivery-option {
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            padding: 1rem;
-            cursor: pointer;
-            text-align: center;
+            border: 2px solid #ddd; border-radius: 8px;
+            padding: 1rem; cursor: pointer; text-align: center;
             transition: all 0.3s;
         }
-        .delivery-option.active {
-            border-color: #dc3545;
-            background: #fff5f5;
-        }
+        .delivery-option.active { border-color: #dc3545; background: #fff5f5; }
         .delivery-option .icon { font-size: 2rem; margin-bottom: 0.5rem; }
         .delivery-option .title { font-weight: bold; margin-bottom: 0.3rem; }
         .delivery-option .desc { font-size: 0.8rem; color: #666; }
-        .map-placeholder {
-            background: #f0f0f0;
-            height: 200px;
+        .map-link-box {
+            background: #fff5f5;
+            padding: 1rem;
             border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             margin: 1rem 0;
-            color: #666;
+            text-align: center;
         }
+        .map-link-box a {
+            color: #dc3545;
+            font-weight: bold;
+            text-decoration: none;
+        }
+        .map-link-box a:hover { text-decoration: underline; }
         
         /* Footer */
         footer {
@@ -583,114 +611,127 @@
             margin-top: 3rem;
         }
         .footer-content {
-            max-width: 1400px;
-            margin: 0 auto;
+            max-width: 1400px; margin: 0 auto;
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 2rem;
-            margin-bottom: 2rem;
+            gap: 2rem; margin-bottom: 2rem;
         }
         .footer-section h3 { color: #dc3545; margin-bottom: 1rem; }
         .footer-section p, .footer-section a { color: #ccc; font-size: 0.9rem; margin-bottom: 0.5rem; display: block; text-decoration: none; }
         .footer-bottom {
-            text-align: center;
-            padding-top: 2rem;
-            border-top: 1px solid #555;
-            color: #999;
-            font-size: 0.85rem;
+            text-align: center; padding-top: 2rem;
+            border-top: 1px solid #555; color: #999; font-size: 0.85rem;
         }
         
         .loading { text-align: center; padding: 3rem; color: #666; }
         .no-results { text-align: center; padding: 3rem; color: #666; grid-column: 1/-1; }
         
-        @media (max-width: 768px) {
+        /* Botón menú móvil */
+        .mobile-menu-btn {
+            display: none;
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+        
+        @media (max-width: 900px) {
+            .category-sidebar {
+                position: fixed;
+                left: -300px;
+                top: 0;
+                z-index: 1500;
+                transition: left 0.3s;
+            }
+            .category-sidebar.open { left: 0; }
+            .mobile-menu-btn { display: block; }
             .product-detail { grid-template-columns: 1fr; }
             .delivery-options { grid-template-columns: 1fr; }
-            .hero-banner h1 { font-size: 1.8rem; }
+            .banner-carousel { height: 250px; }
+        }
+        @media (max-width: 600px) {
+            .products-grid { grid-template-columns: repeat(2, 1fr); }
             .top-header { padding: 0.8rem 1rem; }
-            .search-bar { order: 3; max-width: 100%; flex-basis: 100%; }
         }
     </style>
 </head>
 <body>
-    <!-- Header -->
-    <div class="top-header">
-        <div class="logo-container" id="logoContainer">
-            <div class="logo-img" id="logoDisplay">🔧</div>
-            <div class="logo-text">AKIRA <span>MOTORS</span></div>
-        </div>
-        <div class="search-bar">
-            <input type="text" id="searchInput" placeholder="Buscar repuestos por nombre o código...">
-            <button>🔍</button>
-        </div>
-        <div class="header-actions">
-            <button class="header-btn" id="accountBtn" onclick="openAuthModal()">
-                <span class="icon">👤</span>
-                <span>Mi Cuenta</span>
-            </button>
-            <button class="header-btn" onclick="toggleCart()">
-                <span class="icon">🛒</span>
-                <span>Carrito</span>
-                <span class="cart-badge" id="cartCount">0</span>
-            </button>
-        </div>
-    </div>
-    
-    <!-- Barra de ubicación -->
-    <div class="location-bar">
-        <div class="location-option active" id="pickupOption" onclick="selectDeliveryMode('pickup')">
-            <span class="icon">🏪</span>
-            <div>
-                <div class="text">Pickup en tienda</div>
-                <div class="subtext">Calle Caracas, Local 70-E</div>
+    <div class="main-layout">
+        <!-- Sidebar de categorías -->
+        <aside class="category-sidebar" id="categorySidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo" id="sidebarLogo"></div>
+                <div class="sidebar-title">AKIRA <span>MOTORS</span></div>
             </div>
-        </div>
-        <div class="location-option" id="deliveryOption" onclick="selectDeliveryMode('delivery')">
-            <span class="icon">🚚</span>
-            <div>
-                <div class="text">Delivery</div>
-                <div class="subtext">Envío a domicilio</div>
+            <div class="sidebar-search">
+                <input type="text" id="searchInput" placeholder="🔍 Buscar repuesto...">
             </div>
-        </div>
-        <div class="delivery-address" id="deliveryAddress">
-             <span id="addressText">Obteniendo ubicación...</span>
-        </div>
-    </div>
-    
-    <!-- Navegación -->
-    <nav class="main-nav">
-        <a href="#inicio">Inicio</a>
-        <a href="#recomendados">Recomendados</a>
-        <a href="#productos">Todos los Productos</a>
-        <a href="#categorias">Categorías</a>
-        <a href="#contacto">Contacto</a>
-    </nav>
-    
-    <!-- Banner -->
-    <div class="hero-banner" id="inicio">
-        <h1>AKIRA MOTORS</h1>
-        <p>Repuestos Automotrices de Calidad en Ciudad Bolívar</p>
-    </div>
-    
-    <!-- Recomendados -->
-    <div class="section" id="recomendados">
-        <h2 class="section-title">⭐ <span class="highlight">Recomendados</span> para ti</h2>
-        <div class="products-scroll" id="recommendedContainer">
-            <div class="loading">Cargando recomendados...</div>
-        </div>
-    </div>
-    
-    <!-- Relacionados -->
-    <div class="section" id="relatedSection" style="display:none;">
-        <h2 class="section-title">🔗 <span class="highlight">Productos Relacionados</span></h2>
-        <div class="products-scroll" id="relatedContainer"></div>
-    </div>
-    
-    <!-- Todos los productos -->
-    <div class="section" id="productos">
-        <h2 class="section-title">🛠️ <span class="highlight">Todos los Productos</span></h2>
-        <div class="products-grid" id="productsContainer">
-            <div class="loading">Cargando productos...</div>
+            <div class="category-list" id="categoryList"></div>
+        </aside>
+        
+        <!-- Contenido principal -->
+        <div class="main-content">
+            <!-- Header -->
+            <div class="top-header">
+                <button class="mobile-menu-btn" onclick="toggleSidebar()">☰</button>
+                <div class="header-actions">
+                    <button class="header-btn" id="accountBtn" onclick="openAuthModal()">
+                        <span class="icon">👤</span>
+                        <span>Mi Cuenta</span>
+                    </button>
+                    <button class="header-btn" onclick="toggleCart()">
+                        <span class="icon">🛒</span>
+                        <span>Carrito</span>
+                        <span class="cart-badge" id="cartCount">0</span>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Barra de ubicación -->
+            <div class="location-bar">
+                <div class="location-option active" id="pickupOption" onclick="selectDeliveryMode('pickup')">
+                    <span class="icon">🏪</span>
+                    <div>
+                        <div class="text">Pickup en tienda</div>
+                    </div>
+                </div>
+                <div class="location-option" id="deliveryOption" onclick="selectDeliveryMode('delivery')">
+                    <span class="icon">🚚</span>
+                    <div>
+                        <div class="text">Delivery</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Carrusel de banners -->
+            <div class="banner-carousel" id="bannerCarousel">
+                <div class="banner-empty">Cargando banners...</div>
+            </div>
+            
+            <!-- Recomendados -->
+            <div class="section" id="recomendados">
+                <h2 class="section-title">⭐ <span class="highlight">Recomendados</span> para ti</h2>
+                <div class="products-scroll" id="recommendedContainer">
+                    <div class="loading">Cargando...</div>
+                </div>
+            </div>
+            
+            <!-- Relacionados -->
+            <div class="section" id="relatedSection" style="display:none;">
+                <h2 class="section-title"> <span class="highlight">Productos Relacionados</span></h2>
+                <div class="products-scroll" id="relatedContainer"></div>
+            </div>
+            
+            <!-- Todos los productos -->
+            <div class="section" id="productos">
+                <h2 class="section-title" id="productsTitle">🛠️ <span class="highlight">Todos los Productos</span></h2>
+                <div class="products-grid" id="productsContainer">
+                    <div class="loading">Cargando productos...</div>
+                </div>
+            </div>
         </div>
     </div>
     
@@ -704,39 +745,19 @@
             <button class="modal-close" onclick="closeModal('authModal')">×</button>
             <h2>Mi Cuenta</h2>
             <div class="auth-tabs">
-                <div class="auth-tab active" onclick="switchAuthTab('login')">Iniciar Sesión</div>
-                <div class="auth-tab" onclick="switchAuthTab('register')">Registrarse</div>
+                <div class="auth-tab active" onclick="switchAuthTab('login', event)">Iniciar Sesión</div>
+                <div class="auth-tab" onclick="switchAuthTab('register', event)">Registrarse</div>
             </div>
-            
             <div id="loginForm">
-                <div class="form-group">
-                    <label>Correo electrónico</label>
-                    <input type="email" id="loginEmail" required>
-                </div>
-                <div class="form-group">
-                    <label>Contraseña</label>
-                    <input type="password" id="loginPassword" required>
-                </div>
+                <div class="form-group"><label>Correo electrónico</label><input type="email" id="loginEmail"></div>
+                <div class="form-group"><label>Contraseña</label><input type="password" id="loginPassword"></div>
                 <button class="auth-btn" onclick="loginUser()">Iniciar Sesión</button>
             </div>
-            
             <div id="registerForm" style="display:none;">
-                <div class="form-group">
-                    <label>Nombre completo</label>
-                    <input type="text" id="regName" required>
-                </div>
-                <div class="form-group">
-                    <label>Teléfono</label>
-                    <input type="tel" id="regPhone" required>
-                </div>
-                <div class="form-group">
-                    <label>Correo electrónico</label>
-                    <input type="email" id="regEmail" required>
-                </div>
-                <div class="form-group">
-                    <label>Contraseña</label>
-                    <input type="password" id="regPassword" required minlength="6">
-                </div>
+                <div class="form-group"><label>Nombre completo</label><input type="text" id="regName"></div>
+                <div class="form-group"><label>Teléfono</label><input type="tel" id="regPhone"></div>
+                <div class="form-group"><label>Correo electrónico</label><input type="email" id="regEmail"></div>
+                <div class="form-group"><label>Contraseña</label><input type="password" id="regPassword" minlength="6"></div>
                 <button class="auth-btn" onclick="registerUser()">Crear Cuenta</button>
             </div>
         </div>
@@ -746,7 +767,6 @@
         <div class="modal-content">
             <button class="modal-close" onclick="closeModal('checkoutModal')">×</button>
             <h2 style="color:#dc3545; text-align:center; margin-bottom:1.5rem;">Finalizar Compra</h2>
-            
             <div style="margin-bottom:1.5rem;">
                 <h3 style="margin-bottom:0.8rem;">Método de entrega:</h3>
                 <div class="delivery-options">
@@ -762,25 +782,23 @@
                     </div>
                 </div>
             </div>
-            
             <div id="deliveryFields" style="display:none;">
-                <div class="form-group">
-                    <label>Dirección de entrega</label>
-                    <input type="text" id="deliveryAddressInput" placeholder="Calle, número, referencia...">
-                </div>
+                <div class="form-group"><label>Dirección de entrega</label><input type="text" id="deliveryAddressInput" placeholder="Calle, número, referencia..."></div>
                 <div class="form-group">
                     <label>Ubicación GPS</label>
                     <button class="auth-btn" style="background:#28a745; margin-top:0.5rem;" onclick="getLocation()">📍 Obtener mi ubicación</button>
-                    <div class="map-placeholder" id="mapPlaceholder">
-                        La ubicación aparecerá aquí
-                    </div>
-                    <input type="hidden" id="gpsLat">
-                    <input type="hidden" id="gpsLng">
+                    <div style="background:#f0f0f0;height:150px;border-radius:8px;display:flex;align-items:center;justify-content:center;margin:1rem 0;color:#666;" id="mapPlaceholder">La ubicación aparecerá aquí</div>
+                    <input type="hidden" id="gpsLat"><input type="hidden" id="gpsLng">
                 </div>
             </div>
-            
-            <div class="cart-totals" id="checkoutTotals"></div>
-            
+            <div id="pickupMapLink" style="display:none;">
+                <div class="map-link-box">
+                    <div style="font-size:2rem;margin-bottom:0.5rem;">📍</div>
+                    <div style="margin-bottom:0.5rem;">Haz click para ver la ubicación de la tienda:</div>
+                    <a href="#" id="pickupMapsLink" target="_blank">🗺️ Ver ubicación en Google Maps</a>
+                </div>
+            </div>
+            <div class="cart-totals" id="checkoutTotals" style="margin:1rem 0;"></div>
             <button class="checkout-btn" onclick="confirmOrder()">Confirmar Pedido por WhatsApp</button>
         </div>
     </div>
@@ -793,8 +811,8 @@
         </div>
         <div class="cart-items" id="cartItems"></div>
         <div class="cart-footer">
-            <div class="cart-totals" id="cartTotals"></div>
-            <button class="checkout-btn" onclick="openCheckout()">Finalizar Compra</button>
+            <div id="cartTotals"></div>
+            <button class="checkout-btn" onclick="openCheckout()" style="margin-top:1rem;">Finalizar Compra</button>
         </div>
     </div>
     
@@ -844,15 +862,6 @@
         const db = getFirestore(app);
         const auth = getAuth(app);
 
-        let products = [];
-        let cart = JSON.parse(localStorage.getItem('akira_cart')) || [];
-        let currentUser = null;
-        let userData = null;
-        let bcvRate = 36.5; // Tasa BCV por defecto
-        let deliveryMode = 'pickup';
-        let checkoutDeliveryMode = 'pickup';
-        let lastViewedProduct = null;
-
         const CATEGORIES = {
             "Tren delantero y Dirección": ["Rotulas", "Muñones", "Terminales"],
             "Amortiguadores y Suspensión": ["Amortiguadores", "Bases Amortiguador", "Mesetas", "Espirales"],
@@ -863,10 +872,24 @@
             "Inyección y Combustible": ["Bombas de Gasolina", "Filtros de Gasolina"]
         };
 
+        let products = [];
+        let cart = JSON.parse(localStorage.getItem('akira_cart')) || [];
+        let currentUser = null;
+        let userData = null;
+        let bcvRate = 36.5;
+        let deliveryMode = 'pickup';
+        let checkoutDeliveryMode = 'pickup';
+        let pickupMapsUrl = '';
+        let banners = [];
+        let currentBanner = 0;
+        let bannerInterval;
+        let activeCategory = null;
+        let activeSubcategory = null;
+
         // Triple clic en logo para admin
         let logoClickCount = 0;
         let logoClickTimer;
-        document.getElementById('logoContainer').addEventListener('click', function() {
+        document.getElementById('sidebarLogo').addEventListener('click', function() {
             logoClickCount++;
             if (logoClickCount === 1) logoClickTimer = setTimeout(() => { logoClickCount = 0; }, 800);
             if (logoClickCount >= 3) {
@@ -883,43 +906,30 @@
                 const userDoc = await getDoc(doc(db, 'users', user.uid));
                 if (userDoc.exists()) userData = userDoc.data();
                 updateAccountButton();
-                loadRecommendations();
             } else {
                 userData = null;
                 updateAccountButton();
-                loadRecommendations();
             }
+            renderRecommended();
         });
 
         function updateAccountButton() {
             const btn = document.getElementById('accountBtn');
             if (currentUser && userData) {
                 const initial = userData.name ? userData.name.charAt(0).toUpperCase() : 'U';
-                btn.innerHTML = `
-                    <div class="user-avatar">${initial}</div>
-                    <span>${userData.name.split(' ')[0]}</span>
-                `;
-                btn.onclick = () => {
-                    if (confirm(`Hola ${userData.name}! ¿Cerrar sesión?`)) {
-                        signOut(auth);
-                    }
-                };
+                btn.innerHTML = `<div class="user-menu"><div class="user-avatar">${initial}</div><span>${userData.name.split(' ')[0]}</span></div>`;
+                btn.onclick = () => { if (confirm(`Hola ${userData.name}! ¿Cerrar sesión?`)) signOut(auth); };
             } else {
                 btn.innerHTML = '<span class="icon">👤</span><span>Mi Cuenta</span>';
                 btn.onclick = openAuthModal;
             }
         }
 
-        window.switchAuthTab = function(tab) {
+        window.switchAuthTab = function(tab, event) {
             document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
             event.target.classList.add('active');
-            if (tab === 'login') {
-                document.getElementById('loginForm').style.display = 'block';
-                document.getElementById('registerForm').style.display = 'none';
-            } else {
-                document.getElementById('loginForm').style.display = 'none';
-                document.getElementById('registerForm').style.display = 'block';
-            }
+            document.getElementById('loginForm').style.display = tab === 'login' ? 'block' : 'none';
+            document.getElementById('registerForm').style.display = tab === 'register' ? 'block' : 'none';
         };
 
         window.registerUser = async function() {
@@ -927,7 +937,7 @@
             const phone = document.getElementById('regPhone').value;
             const email = document.getElementById('regEmail').value;
             const password = document.getElementById('regPassword').value;
-            
+            if (!name || !phone || !email || !password) { alert('Completa todos los campos'); return; }
             try {
                 const cred = await createUserWithEmailAndPassword(auth, email, password);
                 await setDoc(doc(db, 'users', cred.user.uid), {
@@ -938,56 +948,207 @@
                 });
                 alert('✅ Cuenta creada exitosamente');
                 closeModal('authModal');
-            } catch (error) {
-                alert('❌ Error: ' + error.message);
-            }
+            } catch (error) { alert('❌ Error: ' + error.message); }
         };
 
         window.loginUser = async function() {
             const email = document.getElementById('loginEmail').value;
             const password = document.getElementById('loginPassword').value;
-            
+            if (!email || !password) { alert('Completa todos los campos'); return; }
             try {
                 await signInWithEmailAndPassword(auth, email, password);
                 alert('✅ Bienvenido de vuelta');
                 closeModal('authModal');
-            } catch (error) {
-                alert('❌ Error: ' + error.message);
-            }
+            } catch (error) { alert('❌ Error: ' + error.message); }
         };
 
         window.openAuthModal = function() {
             if (currentUser) {
-                if (confirm(`Hola ${userData?.name || 'usuario'}! ¿Cerrar sesión?`)) {
-                    signOut(auth);
-                }
+                if (confirm(`Hola ${userData?.name || 'usuario'}! ¿Cerrar sesión?`)) signOut(auth);
             } else {
                 document.getElementById('authModal').classList.add('active');
             }
         };
 
+        // Renderizar sidebar de categorías
+        function renderCategorySidebar() {
+            const list = document.getElementById('categoryList');
+            let html = '';
+            for (const [category, subcategories] of Object.entries(CATEGORIES)) {
+                html += `
+                    <div class="category-item">
+                        <div class="category-header" onclick="toggleCategory(this, '${category}')">
+                            <span>${category}</span>
+                            <span class="category-arrow">▼</span>
+                        </div>
+                        <div class="subcategory-list">
+                            <div class="subcategory-item" onclick="filterBySubcategory(event, '${category}', '')">Todas las subcategorías</div>
+                            ${subcategories.map(sub => `
+                                <div class="subcategory-item" onclick="filterBySubcategory(event, '${category}', '${sub}')">${sub}</div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+            list.innerHTML = html;
+        }
+
+        window.toggleCategory = function(element, category) {
+            const subList = element.nextElementSibling;
+            const isOpen = subList.classList.contains('open');
+            
+            // Cerrar todos
+            document.querySelectorAll('.subcategory-list').forEach(s => s.classList.remove('open'));
+            document.querySelectorAll('.category-header').forEach(h => h.classList.remove('active'));
+            
+            if (!isOpen) {
+                subList.classList.add('open');
+                element.classList.add('active');
+                activeCategory = category;
+                activeSubcategory = null;
+                applyFilters();
+            } else {
+                activeCategory = null;
+                applyFilters();
+            }
+        };
+
+        window.filterBySubcategory = function(event, category, subcategory) {
+            event.stopPropagation();
+            activeCategory = category;
+            activeSubcategory = subcategory || null;
+            
+            document.querySelectorAll('.subcategory-item').forEach(s => s.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            applyFilters();
+            
+            // Cerrar sidebar en móvil
+            if (window.innerWidth <= 900) {
+                document.getElementById('categorySidebar').classList.remove('open');
+            }
+        };
+
+        window.toggleSidebar = function() {
+            document.getElementById('categorySidebar').classList.toggle('open');
+        };
+
+        // Búsqueda funcional
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            const query = e.target.value.toLowerCase().trim();
+            applyFilters(query);
+        });
+
+        function applyFilters(searchQuery) {
+            const query = searchQuery !== undefined ? searchQuery : document.getElementById('searchInput').value.toLowerCase().trim();
+            
+            let filtered = products;
+            
+            if (query) {
+                filtered = filtered.filter(p => 
+                    p.name.toLowerCase().includes(query) || 
+                    (p.code && p.code.toLowerCase().includes(query)) ||
+                    (p.description && p.description.toLowerCase().includes(query))
+                );
+            }
+            
+            if (activeCategory) {
+                filtered = filtered.filter(p => p.category === activeCategory);
+            }
+            if (activeSubcategory) {
+                filtered = filtered.filter(p => p.subcategory === activeSubcategory);
+            }
+            
+            renderProducts(filtered);
+            
+            // Actualizar título
+            const title = document.getElementById('productsTitle');
+            if (query || activeCategory || activeSubcategory) {
+                let titleText = '🔍 Resultados';
+                if (activeSubcategory) titleText = `📂 ${activeSubcategory}`;
+                else if (activeCategory) titleText = `📂 ${activeCategory}`;
+                else if (query) titleText = `🔍 Búsqueda: "${query}"`;
+                title.innerHTML = `${titleText} <span class="highlight">(${filtered.length})</span>`;
+            } else {
+                title.innerHTML = '🛠️ <span class="highlight">Todos los Productos</span>';
+            }
+        }
+
         // Cargar datos
         async function loadData() {
             try {
-                // Tasa BCV
                 const rateDoc = await getDoc(doc(db, 'settings', 'bcvRate'));
                 if (rateDoc.exists()) bcvRate = rateDoc.data().value;
                 
-                // Logo
                 const logoDoc = await getDoc(doc(db, 'settings', 'logo'));
                 if (logoDoc.exists()) {
-                    document.getElementById('logoDisplay').innerHTML = `<img src="${logoDoc.data().image}">`;
+                    const imgHtml = `<img src="${logoDoc.data().image}">`;
+                    document.getElementById('sidebarLogo').innerHTML = imgHtml;
                 }
                 
-                // Productos
+                const pickupDoc = await getDoc(doc(db, 'settings', 'pickupMaps'));
+                if (pickupDoc.exists()) pickupMapsUrl = pickupDoc.data().url || '';
+                
+                const bannersDoc = await getDoc(doc(db, 'settings', 'banners'));
+                if (bannersDoc.exists()) banners = bannersDoc.data().images || [];
+                
                 const snapshot = await getDocs(collection(db, 'products'));
                 products = [];
                 snapshot.forEach(docSnap => products.push({ id: docSnap.id, ...docSnap.data() }));
                 
-                renderAll();
+                renderCategorySidebar();
+                renderBanners();
+                renderRecommended();
+                renderProducts();
+                updateCartUI();
             } catch (error) {
                 console.error('Error:', error);
             }
+        }
+
+        function renderBanners() {
+            const carousel = document.getElementById('bannerCarousel');
+            if (banners.length === 0) {
+                carousel.innerHTML = '<div class="banner-empty"><div><h1 style="font-size:2.5rem;margin-bottom:1rem;">AKIRA MOTORS</h1><p style="font-size:1.2rem;">Repuestos Automotrices de Calidad</p></div></div>';
+                return;
+            }
+            
+            let html = '';
+            banners.forEach((banner, i) => {
+                html += `<div class="banner-slide ${i === 0 ? 'active' : ''}"><img src="${banner}" alt="Banner ${i+1}"></div>`;
+            });
+            html += '<div class="banner-dots">';
+            banners.forEach((_, i) => {
+                html += `<div class="banner-dot ${i === 0 ? 'active' : ''}" onclick="goToBanner(${i})"></div>`;
+            });
+            html += '</div>';
+            carousel.innerHTML = html;
+            
+            startBannerRotation();
+        }
+
+        function startBannerRotation() {
+            if (bannerInterval) clearInterval(bannerInterval);
+            if (banners.length <= 1) return;
+            bannerInterval = setInterval(() => {
+                currentBanner = (currentBanner + 1) % banners.length;
+                updateBannerDisplay();
+            }, 5000);
+        }
+
+        window.goToBanner = function(index) {
+            currentBanner = index;
+            updateBannerDisplay();
+            startBannerRotation();
+        };
+
+        function updateBannerDisplay() {
+            document.querySelectorAll('.banner-slide').forEach((s, i) => {
+                s.classList.toggle('active', i === currentBanner);
+            });
+            document.querySelectorAll('.banner-dot').forEach((d, i) => {
+                d.classList.toggle('active', i === currentBanner);
+            });
         }
 
         function calculateDiscountedPrice(price, discount) {
@@ -1010,7 +1171,7 @@
             let priceHtml = '';
             if (hasDiscount) {
                 priceHtml = `
-                    <div class="product-price-container">
+                    <div>
                         <span class="product-price-original">$${Number(product.price).toFixed(2)}</span>
                         <span class="product-discount">-${product.discount}%</span>
                         <div class="product-price">$${finalPrice.toFixed(2)}</div>
@@ -1019,10 +1180,8 @@
                 `;
             } else {
                 priceHtml = `
-                    <div class="product-price-container">
-                        <div class="product-price">$${finalPrice.toFixed(2)}</div>
-                        <div class="product-price-bs">Bs. ${priceBs.toFixed(2)}</div>
-                    </div>
+                    <div class="product-price">$${finalPrice.toFixed(2)}</div>
+                    <div class="product-price-bs">Bs. ${priceBs.toFixed(2)}</div>
                 `;
             }
             
@@ -1053,67 +1212,45 @@
             `;
         }
 
-        function renderAll() {
-            renderRecommended();
-            renderProducts();
-            updateCartUI();
-        }
-
         function renderRecommended() {
             const container = document.getElementById('recommendedContainer');
-            
-            // Si el usuario está logueado y tiene historial, mostrar recomendaciones personalizadas
             let recommended = [];
             if (currentUser && userData?.purchaseHistory?.length > 0) {
-                // Recomendar productos de categorías que ha comprado antes
                 const viewedCats = userData.viewedCategories || [];
                 recommended = products.filter(p => 
                     p.recommended && 
                     (viewedCats.includes(p.category) || viewedCats.includes(p.subcategory))
                 );
             }
-            
-            // Si no hay recomendaciones personalizadas, mostrar los marcados como recomendados
-            if (recommended.length === 0) {
-                recommended = products.filter(p => p.recommended);
-            }
-            
-            // Si tampoco hay, mostrar los primeros 8
-            if (recommended.length === 0) {
-                recommended = products.slice(0, 8);
-            }
+            if (recommended.length === 0) recommended = products.filter(p => p.recommended);
+            if (recommended.length === 0) recommended = products.slice(0, 8);
             
             if (recommended.length === 0) {
                 container.innerHTML = '<div class="loading">No hay productos disponibles</div>';
                 return;
             }
-            
             container.innerHTML = recommended.map(p => createProductCard(p, true)).join('');
         }
 
-        function renderProducts() {
+        function renderProducts(list) {
             const container = document.getElementById('productsContainer');
-            if (products.length === 0) {
-                container.innerHTML = '<div class="no-results">No hay productos disponibles</div>';
+            const productsToShow = list || products;
+            if (productsToShow.length === 0) {
+                container.innerHTML = '<div class="no-results">No se encontraron productos</div>';
                 return;
             }
-            container.innerHTML = products.map(p => createProductCard(p)).join('');
+            container.innerHTML = productsToShow.map(p => createProductCard(p)).join('');
         }
 
         function renderRelatedProducts(product) {
             const section = document.getElementById('relatedSection');
             const container = document.getElementById('relatedContainer');
-            
             const related = products.filter(p => 
                 p.id !== product.id && 
                 (p.category === product.category || p.subcategory === product.subcategory)
             ).slice(0, 10);
             
-            if (related.length === 0) {
-                section.style.display = 'none';
-                return;
-            }
-            
+            if (related.length === 0) { section.style.display = 'none'; return; }
             section.style.display = 'block';
             container.innerHTML = related.map(p => createProductCard(p)).join('');
         }
@@ -1122,23 +1259,16 @@
             const product = products.find(p => p.id === productId);
             if (!product) return;
             
-            lastViewedProduct = product;
-            
-            // Guardar categoría vista si está logueado
             if (currentUser && product.category) {
                 try {
                     const userRef = doc(db, 'users', currentUser.uid);
                     const userDoc = await getDoc(userRef);
                     const viewedCats = userDoc.data()?.viewedCategories || [];
-                    if (!viewedCats.includes(product.category)) {
-                        viewedCats.push(product.category);
-                    }
-                    if (product.subcategory && !viewedCats.includes(product.subcategory)) {
-                        viewedCats.push(product.subcategory);
-                    }
+                    if (!viewedCats.includes(product.category)) viewedCats.push(product.category);
+                    if (product.subcategory && !viewedCats.includes(product.subcategory)) viewedCats.push(product.subcategory);
                     await updateDoc(userRef, { viewedCategories: viewedCats });
                     userData = { ...userData, viewedCategories: viewedCats };
-                } catch (e) { console.log('Error guardando categoría:', e); }
+                } catch (e) { console.log('Error:', e); }
             }
             
             const { finalPrice, priceBs, hasDiscount } = formatPrices(product.price, product.discount);
@@ -1215,29 +1345,19 @@
                 </div>
             `;
             document.getElementById('productDetailModal').classList.add('active');
-            
-            // Mostrar relacionados
             setTimeout(() => renderRelatedProducts(product), 500);
         };
 
         window.addToCart = function(productId) {
             const product = products.find(p => p.id === productId);
             if (!product || product.stock <= 0) { alert('Producto sin stock'); return; }
-            
             const { finalPrice, priceBs } = formatPrices(product.price, product.discount);
             const existingItem = cart.find(item => item.id === productId);
             if (existingItem) {
                 if (existingItem.quantity < product.stock) existingItem.quantity++;
                 else { alert('No hay más stock disponible'); return; }
             } else {
-                cart.push({ 
-                    id: product.id, 
-                    name: product.name, 
-                    price: finalPrice, 
-                    priceBs: priceBs,
-                    image: product.image,
-                    quantity: 1 
-                });
+                cart.push({ id: product.id, name: product.name, price: finalPrice, priceBs: priceBs, image: product.image, quantity: 1 });
             }
             updateCartUI();
             saveCart();
@@ -1267,7 +1387,6 @@
             const cartItems = document.getElementById('cartItems');
             const cartCount = document.getElementById('cartCount');
             const cartTotals = document.getElementById('cartTotals');
-            
             const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
             cartCount.textContent = totalItems;
             
@@ -1279,9 +1398,7 @@
             
             cartItems.innerHTML = cart.map(item => `
                 <div class="cart-item">
-                    <div class="cart-item-img">
-                        ${item.image ? `<img src="${item.image}">` : '🔧'}
-                    </div>
+                    <div class="cart-item-img">${item.image ? `<img src="${item.image}">` : ''}</div>
                     <div class="cart-item-info">
                         <div class="cart-item-name">${item.name}</div>
                         <div class="cart-item-prices">
@@ -1301,61 +1418,32 @@
             
             const totalUsd = cart.reduce((sum, item) => sum + (Number(item.price) * item.quantity), 0);
             const totalBs = totalUsd * bcvRate;
-            
             cartTotals.innerHTML = `
-                <div class="cart-total-row">
-                    <span>Subtotal:</span>
-                    <span>$${totalUsd.toFixed(2)} / Bs. ${totalBs.toFixed(2)}</span>
-                </div>
-                <div class="cart-total-row">
-                    <span>Tasa BCV:</span>
-                    <span>${bcvRate} Bs/$</span>
-                </div>
-                <div class="cart-total-row total">
-                    <span>TOTAL:</span>
-                    <span>$${totalUsd.toFixed(2)} / Bs. ${totalBs.toFixed(2)}</span>
-                </div>
+                <div class="cart-total-row"><span>Subtotal:</span><span>$${totalUsd.toFixed(2)} / Bs. ${totalBs.toFixed(2)}</span></div>
+                <div class="cart-total-row"><span>Tasa BCV:</span><span>${bcvRate} Bs/$</span></div>
+                <div class="cart-total-row total"><span>TOTAL:</span><span>$${totalUsd.toFixed(2)} / Bs. ${totalBs.toFixed(2)}</span></div>
             `;
         }
 
         function saveCart() { localStorage.setItem('akira_cart', JSON.stringify(cart)); }
 
-        window.toggleCart = function() {
-            document.getElementById('cartSidebar').classList.toggle('active');
-        };
+        window.toggleCart = function() { document.getElementById('cartSidebar').classList.toggle('active'); };
 
         window.selectDeliveryMode = function(mode) {
             deliveryMode = mode;
             document.getElementById('pickupOption').classList.toggle('active', mode === 'pickup');
             document.getElementById('deliveryOption').classList.toggle('active', mode === 'delivery');
-            
-            if (mode === 'delivery') {
-                document.getElementById('deliveryAddress').classList.add('show');
-                getLocation();
-            } else {
-                document.getElementById('deliveryAddress').classList.remove('show');
-            }
         };
 
         window.getLocation = function() {
-            if (!navigator.geolocation) {
-                alert('Tu navegador no soporta geolocalización');
-                return;
-            }
+            if (!navigator.geolocation) { alert('Tu navegador no soporta geolocalización'); return; }
             navigator.geolocation.getCurrentPosition(
                 (pos) => {
                     const lat = pos.coords.latitude;
                     const lng = pos.coords.longitude;
-                    document.getElementById('addressText').textContent = `Lat: ${lat.toFixed(5)}, Lng: ${lng.toFixed(5)}`;
                     document.getElementById('gpsLat').value = lat;
                     document.getElementById('gpsLng').value = lng;
-                    document.getElementById('mapPlaceholder').innerHTML = `
-                        <div style="text-align:center;">
-                            <div style="font-size:3rem;">📍</div>
-                            <div>Ubicación obtenida</div>
-                            <div style="font-size:0.8rem;">${lat.toFixed(5)}, ${lng.toFixed(5)}</div>
-                        </div>
-                    `;
+                    document.getElementById('mapPlaceholder').innerHTML = `<div style="text-align:center;"><div style="font-size:3rem;">📍</div><div>Ubicación obtenida</div><div style="font-size:0.8rem;">${lat.toFixed(5)}, ${lng.toFixed(5)}</div></div>`;
                 },
                 (err) => alert('No se pudo obtener la ubicación: ' + err.message)
             );
@@ -1363,12 +1451,7 @@
 
         window.openCheckout = function() {
             if (cart.length === 0) { alert('Tu carrito está vacío'); return; }
-            if (!currentUser) {
-                alert('Debes iniciar sesión para finalizar la compra');
-                openAuthModal();
-                return;
-            }
-            
+            if (!currentUser) { alert('Debes iniciar sesión para finalizar la compra'); openAuthModal(); return; }
             selectCheckoutDelivery(deliveryMode);
             updateCheckoutTotals();
             document.getElementById('checkoutModal').classList.add('active');
@@ -1380,6 +1463,11 @@
             document.getElementById('checkoutPickup').classList.toggle('active', mode === 'pickup');
             document.getElementById('checkoutDelivery').classList.toggle('active', mode === 'delivery');
             document.getElementById('deliveryFields').style.display = mode === 'delivery' ? 'block' : 'none';
+            document.getElementById('pickupMapLink').style.display = mode === 'pickup' ? 'block' : 'none';
+            if (mode === 'pickup' && pickupMapsUrl) {
+                document.getElementById('pickupMapsLink').href = pickupMapsUrl;
+            }
+            updateCheckoutTotals();
         };
 
         function updateCheckoutTotals() {
@@ -1388,21 +1476,10 @@
             const deliveryFee = checkoutDeliveryMode === 'delivery' ? 5 : 0;
             const finalUsd = totalUsd + deliveryFee;
             const finalBs = finalUsd * bcvRate;
-            
             document.getElementById('checkoutTotals').innerHTML = `
-                <div class="cart-total-row">
-                    <span>Subtotal:</span>
-                    <span>$${totalUsd.toFixed(2)} / Bs. ${totalBs.toFixed(2)}</span>
-                </div>
-                ${checkoutDeliveryMode === 'delivery' ? `
-                <div class="cart-total-row">
-                    <span>Delivery:</span>
-                    <span>$${deliveryFee.toFixed(2)} / Bs. ${(deliveryFee*bcvRate).toFixed(2)}</span>
-                </div>` : ''}
-                <div class="cart-total-row total">
-                    <span>TOTAL:</span>
-                    <span>$${finalUsd.toFixed(2)} / Bs. ${finalBs.toFixed(2)}</span>
-                </div>
+                <div class="cart-total-row"><span>Subtotal:</span><span>$${totalUsd.toFixed(2)} / Bs. ${totalBs.toFixed(2)}</span></div>
+                ${checkoutDeliveryMode === 'delivery' ? `<div class="cart-total-row"><span>Delivery:</span><span>$${deliveryFee.toFixed(2)} / Bs. ${(deliveryFee*bcvRate).toFixed(2)}</span></div>` : ''}
+                <div class="cart-total-row total"><span>TOTAL:</span><span>$${finalUsd.toFixed(2)} / Bs. ${finalBs.toFixed(2)}</span></div>
             `;
         }
 
@@ -1410,10 +1487,7 @@
             if (checkoutDeliveryMode === 'delivery') {
                 const address = document.getElementById('deliveryAddressInput').value;
                 const lat = document.getElementById('gpsLat').value;
-                if (!address && !lat) {
-                    alert('Por favor ingresa una dirección o obtén tu ubicación GPS');
-                    return;
-                }
+                if (!address && !lat) { alert('Por favor ingresa una dirección o obtén tu ubicación GPS'); return; }
             }
             
             const totalUsd = cart.reduce((sum, item) => sum + (Number(item.price) * item.quantity), 0);
@@ -1424,11 +1498,9 @@
             
             let message = `¡Hola Akira Motors! Soy ${userData?.name || 'cliente'}.%0A%0A`;
             message += `🛒 *MI PEDIDO:*%0A`;
-            cart.forEach(item => {
-                message += `- ${item.name} x${item.quantity} = $${(Number(item.price) * item.quantity).toFixed(2)}%0A`;
-            });
+            cart.forEach(item => { message += `- ${item.name} x${item.quantity} = $${(Number(item.price) * item.quantity).toFixed(2)}%0A`; });
             message += `%0A💰 *TOTAL:* $${finalUsd.toFixed(2)} / Bs. ${finalBs.toFixed(2)}`;
-            message += `%0A Tasa BCV: ${bcvRate}`;
+            message += `%0A📊 Tasa BCV: ${bcvRate}`;
             message += `%0A%0A📦 *Entrega:* ${checkoutDeliveryMode === 'pickup' ? 'Pickup en tienda' : 'Delivery'}`;
             
             if (checkoutDeliveryMode === 'delivery') {
@@ -1436,24 +1508,17 @@
                 const lat = document.getElementById('gpsLat').value;
                 const lng = document.getElementById('gpsLng').value;
                 if (address) message += `%0A📍 Dirección: ${address}`;
-                if (lat) message += `%0A🗺️ GPS: ${lat}, ${lng}`;
-                message += `%0A🗺️ Maps: https://maps.google.com/?q=${lat},${lng}`;
+                if (lat) message += `%0A️ GPS: ${lat}, ${lng}%0A🗺️ Maps: https://maps.google.com/?q=${lat},${lng}`;
             }
             
-            // Guardar en historial de compras
             if (currentUser) {
                 try {
                     const userRef = doc(db, 'users', currentUser.uid);
                     const userDoc = await getDoc(userRef);
                     const history = userDoc.data()?.purchaseHistory || [];
-                    history.push({
-                        date: new Date().toISOString(),
-                        items: cart.map(i => ({ id: i.id, name: i.name, quantity: i.quantity })),
-                        total: finalUsd,
-                        deliveryMode: checkoutDeliveryMode
-                    });
+                    history.push({ date: new Date().toISOString(), items: cart.map(i => ({ id: i.id, name: i.name, quantity: i.quantity })), total: finalUsd, deliveryMode: checkoutDeliveryMode });
                     await updateDoc(userRef, { purchaseHistory: history });
-                } catch (e) { console.log('Error guardando historial:', e); }
+                } catch (e) { console.log('Error:', e); }
             }
             
             window.open(`https://wa.me/584148700616?text=${message}`, '_blank');
@@ -1465,22 +1530,6 @@
         };
 
         window.closeModal = function(id) { document.getElementById(id).classList.remove('active'); };
-
-        document.getElementById('searchInput').addEventListener('input', function(e) {
-            const query = e.target.value.toLowerCase().trim();
-            if (query === '') {
-                renderProducts();
-                return;
-            }
-            const filtered = products.filter(p => 
-                p.name.toLowerCase().includes(query) || 
-                (p.code && p.code.toLowerCase().includes(query))
-            );
-            document.getElementById('productsContainer').innerHTML = 
-                filtered.length > 0 
-                    ? filtered.map(p => createProductCard(p)).join('')
-                    : '<div class="no-results">No se encontraron productos</div>';
-        });
 
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') {
