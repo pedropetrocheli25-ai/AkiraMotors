@@ -43,6 +43,8 @@
             gap: 0.8rem;
             font-size: 1.3rem;
             font-weight: bold;
+            cursor: pointer;
+            user-select: none;
         }
         .header-logo-img {
             width: 40px; height: 40px; border-radius: 50%;
@@ -635,12 +637,12 @@
                 <h3 style="margin-bottom:0.8rem;">Método de entrega:</h3>
                 <div class="delivery-options">
                     <div class="delivery-option active" id="checkoutPickup" onclick="selectCheckoutDelivery('pickup')">
-                        <div class="icon">🏪</div>
+                        <div class="icon"></div>
                         <div class="title">Pickup</div>
                         <div class="desc">Retirar en tienda</div>
                     </div>
                     <div class="delivery-option" id="checkoutDelivery" onclick="selectCheckoutDelivery('delivery')">
-                        <div class="icon">🚚</div>
+                        <div class="icon"></div>
                         <div class="title">Delivery</div>
                         <div class="desc">Envío a domicilio</div>
                     </div>
@@ -657,7 +659,7 @@
             </div>
             <div id="pickupMapLink" style="display:none;">
                 <div class="map-link-box">
-                    <div style="font-size:2rem;margin-bottom:0.5rem;"></div>
+                    <div style="font-size:2rem;margin-bottom:0.5rem;">📍</div>
                     <div style="margin-bottom:0.5rem;">Ubicación de la tienda:</div>
                     <a href="#" id="pickupMapsLink" target="_blank">Ver en Google Maps</a>
                 </div>
@@ -742,6 +744,21 @@
             instagram: '',
             tiktok: ''
         };
+
+        // Triple clic en el logo para ir al admin
+        let logoClickCount = 0;
+        let logoClickTimer;
+        document.getElementById('headerLogo').addEventListener('click', function() {
+            logoClickCount++;
+            if (logoClickCount === 1) {
+                logoClickTimer = setTimeout(() => { logoClickCount = 0; }, 800);
+            }
+            if (logoClickCount >= 3) {
+                clearTimeout(logoClickTimer);
+                logoClickCount = 0;
+                window.location.href = 'admin.html';
+            }
+        });
 
         // Sidebar
         window.toggleSidebar = function() {
@@ -1218,7 +1235,7 @@
                     const lng = pos.coords.longitude;
                     document.getElementById('gpsLat').value = lat;
                     document.getElementById('gpsLng').value = lng;
-                    document.getElementById('mapPlaceholder').innerHTML = `<div style="text-align:center;"><div style="font-size:3rem;">📍</div><div>Ubicación obtenida</div><div style="font-size:0.8rem;">${lat.toFixed(5)}, ${lng.toFixed(5)}</div></div>`;
+                    document.getElementById('mapPlaceholder').innerHTML = `<div style="text-align:center;"><div style="font-size:3rem;"></div><div>Ubicación obtenida</div><div style="font-size:0.8rem;">${lat.toFixed(5)}, ${lng.toFixed(5)}</div></div>`;
                 },
                 (err) => alert('No se pudo obtener la ubicación: ' + err.message)
             );
@@ -1228,6 +1245,7 @@
             if (currentUser) {
                 if (confirm(`Hola ${currentUser.name}! ¿Cerrar sesión?`)) {
                     currentUser = null;
+                    localStorage.removeItem('akira_guest');
                     updateHeaderButtons();
                 }
             } else {
