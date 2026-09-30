@@ -260,7 +260,8 @@
                         <strong>Web (PC):</strong> 1400 x 400 píxeles<br>
                         <strong>Móvil:</strong> 750 x 1000 píxeles o 1200 x 600<br>
                         <strong>Formato:</strong> JPG o WebP<br>
-                        <strong>Peso máximo:</strong> 1MB por imagen
+                        <strong>Peso máximo:</strong> 1MB por imagen<br>
+                        <strong>Máximo:</strong> 5 imágenes que rotan cada 5 segundos
                     </div>
                     <div class="form-group">
                         <label>Agregar nuevo banner</label>
@@ -311,7 +312,7 @@
     <div class="modal" id="productModal">
         <div class="modal-content">
             <h2 id="productModalTitle">Agregar Producto</h2>
-            <div class="alert-info">Los campos con * son obligatorios. El precio de venta se calcula: Compra + % Ganancia.</div>
+            <div class="alert-info">Los campos con * son obligatorios.</div>
             <form onsubmit="saveProduct(event)">
                 <div class="form-section">
                     <h3>Información Básica</h3>
@@ -344,8 +345,8 @@
                 <div class="form-section">
                     <h3>Precio y Ganancia</h3>
                     <div class="alert-warning">
-                        <strong>Fórmula:</strong> Precio Venta = Precio Compra × (1 + Margen/100)<br>
-                        Ejemplo: Compra $100 + 30% = Venta $130
+                        <strong>Fórmula correcta:</strong> Precio Venta = Precio Compra / (1 - Margen/100)<br>
+                        Ejemplo: $100 / (1 - 0.30) = $142.86 (ganancia real de 30% sobre venta)
                     </div>
                     <div class="form-row">
                         <div class="form-group"><label>Precio de Compra ($) *</label><input type="number" id="productCostPrice" step="0.01" required oninput="calculateSalePrice()"></div>
@@ -484,23 +485,28 @@
         window.calculateSalePrice = function() {
             const cost = parseFloat(document.getElementById('productCostPrice').value) || 0;
             const margin = parseFloat(document.getElementById('productMargin').value) || 0;
-            const salePrice = cost * (1 + margin / 100);
+            // Fórmula correcta: Precio Venta = Precio Compra / (1 - Margen/100)
+            // Ejemplo: $100 / (1 - 0.30) = $142.86 (ganancia real de 30% sobre el precio de venta)
+            if (margin >= 100) {
+                document.getElementById('productPrice').value = '0.00';
+                alert('El margen no puede ser 100% o más');
+                return;
+            }
+            const salePrice = cost / (1 - margin / 100);
             document.getElementById('productPrice').value = salePrice.toFixed(2);
         };
 
         window.adminLogin = function(event) {
             event.preventDefault();
             const password = document.getElementById('adminPassword').value;
-            console.log('Intentando login con:', password);
             if (password === ADMIN_PASSWORD) {
-                console.log('Login exitoso');
                 document.getElementById('loginScreen').style.display = 'none';
                 document.getElementById('adminPanel').classList.remove('hidden');
                 document.getElementById('adminPanel').style.display = 'flex';
                 document.getElementById('adminPassword').value = '';
                 loadAll();
             } else { 
-                alert('Contraseña incorrecta. Intenta con: fjat21'); 
+                alert('Contraseña incorrecta'); 
             }
         };
 
@@ -595,6 +601,7 @@
         window.addBanner = async function(event) {
             const file = event.target.files[0];
             if (!file) return;
+            if (banners.length >= 5) { alert('Máximo 5 banners permitidos'); event.target.value = ''; return; }
             if (file.size > 1 * 1024 * 1024) { alert('Máximo 1MB'); event.target.value = ''; return; }
             const reader = new FileReader();
             reader.onload = async function(e) {
