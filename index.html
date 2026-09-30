@@ -637,4 +637,156 @@
         function toggleCart() {
             const sidebar = document.getElementById('cartSidebar');
             const overlay = document.getElementById('overlay');
-            sidebar.classLi
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+        }
+
+        function checkout() {
+            if (cart.length === 0) {
+                alert('Tu carrito está vacío');
+                return;
+            }
+            alert('¡Gracias por tu compra! Te contactaremos para coordinar el pago y entrega.');
+            cart = [];
+            updateCartUI();
+            saveCart();
+            toggleCart();
+        }
+
+        // Cotización
+        function openQuoteModal() {
+            document.getElementById('quoteModal').classList.add('active');
+        }
+
+        function submitQuote(event) {
+            event.preventDefault();
+            alert('¡Cotización enviada! Te contactaremos pronto.');
+            closeModal('quoteModal');
+            event.target.reset();
+        }
+
+        // Admin
+        function openAdminLogin() {
+            if (isAdmin) {
+                document.getElementById('adminPanel').classList.add('active');
+                renderAdminProducts();
+            } else {
+                document.getElementById('adminLoginModal').classList.add('active');
+            }
+        }
+
+        function adminLogin(event) {
+            event.preventDefault();
+            const password = document.getElementById('adminPassword').value;
+            if (password === ADMIN_PASSWORD) {
+                isAdmin = true;
+                closeModal('adminLoginModal');
+                document.getElementById('adminPanel').classList.add('active');
+                renderAdminProducts();
+            } else {
+                alert('Contraseña incorrecta');
+            }
+        }
+
+        function logoutAdmin() {
+            isAdmin = false;
+            document.getElementById('adminPanel').classList.remove('active');
+        }
+
+        function renderAdminProducts() {
+            const list = document.getElementById('adminProductList');
+            list.innerHTML = products.map(product => `
+                <div class="admin-product-item">
+                    <div>
+                        <strong>${product.icon} ${product.name}</strong><br>
+                        <small>Precio: $${product.price.toFixed(2)} | Stock: ${product.stock}</small>
+                    </div>
+                    <div class="admin-actions">
+                        <button class="btn btn-small btn-primary" onclick="editProduct(${product.id})">Editar</button>
+                        <button class="btn btn-small btn-danger" onclick="deleteProduct(${product.id})">Eliminar</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function openAddProductModal() {
+            document.getElementById('modalTitle').textContent = 'Agregar Producto';
+            document.getElementById('editProductId').value = '';
+            document.getElementById('productName').value = '';
+            document.getElementById('productDescription').value = '';
+            document.getElementById('productPrice').value = '';
+            document.getElementById('productStock').value = '';
+            document.getElementById('productIcon').value = '🔧';
+            document.getElementById('addProductModal').classList.add('active');
+        }
+
+        function editProduct(productId) {
+            const product = products.find(p => p.id === productId);
+            document.getElementById('modalTitle').textContent = 'Editar Producto';
+            document.getElementById('editProductId').value = product.id;
+            document.getElementById('productName').value = product.name;
+            document.getElementById('productDescription').value = product.description;
+            document.getElementById('productPrice').value = product.price;
+            document.getElementById('productStock').value = product.stock;
+            document.getElementById('productIcon').value = product.icon;
+            document.getElementById('addProductModal').classList.add('active');
+        }
+
+        function saveProduct(event) {
+            event.preventDefault();
+            const editId = document.getElementById('editProductId').value;
+            const productData = {
+                name: document.getElementById('productName').value,
+                description: document.getElementById('productDescription').value,
+                price: parseFloat(document.getElementById('productPrice').value),
+                stock: parseInt(document.getElementById('productStock').value),
+                icon: document.getElementById('productIcon').value
+            };
+
+            if (editId) {
+                const index = products.findIndex(p => p.id === parseInt(editId));
+                products[index] = { ...products[index], ...productData };
+            } else {
+                const newId = Math.max(...products.map(p => p.id), 0) + 1;
+                products.push({ id: newId, ...productData });
+            }
+
+            saveProducts();
+            renderProducts();
+            renderAdminProducts();
+            closeModal('addProductModal');
+        }
+
+        function deleteProduct(productId) {
+            if (confirm('¿Estás seguro de eliminar este producto?')) {
+                products = products.filter(p => p.id !== productId);
+                saveProducts();
+                renderProducts();
+                renderAdminProducts();
+            }
+        }
+
+        // Utilidades
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        function closeAll() {
+            document.getElementById('cartSidebar').classList.remove('active');
+            document.getElementById('overlay').classList.remove('active');
+        }
+
+        function scrollToProducts() {
+            document.getElementById('products').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function saveProducts() {
+            localStorage.setItem('products', JSON.stringify(products));
+        }
+
+        function saveCart() {
+            localStorage.setItem('cart', JSON.stringify(cart));
+        }
+    </script>
+</body>
+</html>
