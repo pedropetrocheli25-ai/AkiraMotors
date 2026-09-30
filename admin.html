@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Akira Motors</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        .admin-header {
+            background: #000;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #e63946;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .admin-title { color: #e63946; font-size: 1.5rem; font-weight: bold; }
+        .admin-title span { color: white; }
+        .btn {
+            padding: 0.7rem 1.2rem; border: none; border-radius: 5px;
+            cursor: pointer; font-size: 0.9rem; transition: all 0.3s;
+            font-weight: 600; text-transform: uppercase;
+        }
+        .btn-primary { background: #e63946; color: white; }
+        .btn-primary:hover { background: #ff4d5a; }
+        .btn-secondary { background: transparent; color: white; border: 2px solid #e63946; }
+        .btn-secondary:hover { background: #e63946; }
+        .btn-danger { background: #dc3545; color: white; }
+        .btn-small { padding: 0.4rem 0.8rem; font-size: 0.8rem; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 2rem; }
+        .section-title {
+            color: #e63946; font-size: 1.5rem; margin-bottom: 1rem;
+            text-transform: uppercase; border-bottom: 2px solid #e63946;
+            padding-bottom: 0.5rem;
+        }
+        .admin-section { margin-bottom: 3rem; }
+        .admin-product-item, .admin-brand-item {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 1rem; background: #1a1a1a; margin-bottom: 0.8rem;
+            border-radius: 5px; border: 1px solid #333; flex-wrap: wrap; gap: 1rem;
+        }
+        .admin-info { display: flex; align-items: center; gap: 1rem; flex: 1; }
+        .admin-thumb {
+            width: 60px; height: 60px; background: #222; border-radius: 5px;
+            overflow: hidden; display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+        }
+        .admin-thumb img { width: 100%; height: 100%; object-fit: cover; }
+        .admin-actions { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+        .modal {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85); z-index: 3000;
+            align-items: center; justify-content: center; padding: 1rem;
+        }
+        .modal.active { display: flex; }
+        .modal-content {
+            background: #1a1a1a; padding: 2rem; border-radius: 10px;
+            max-width: 600px; width: 100%; max-height: 90vh; overflow-y: auto;
+            border: 1px solid #e63946;
+        }
+        .modal-content h2 { color: #e63946; margin-bottom: 1.5rem; text-transform: uppercase; font-size: 1.5rem; }
+        .form-group { margin-bottom: 1.2rem; }
+        .form-group label { display: block; margin-bottom: 0.4rem; font-weight: 600; color: #fff; font-size: 0.9rem; }
+        .form-group input, .form-group textarea {
+            width: 100%; padding: 0.7rem; background: #222; border: 1px solid #444;
+            border-radius: 5px; font-size: 0.95rem; color: white;
+        }
+        .form-group input:focus, .form-group textarea:focus { outline: none; border-color: #e63946; }
+        .form-group textarea { resize: vertical; min-height: 80px; }
+        .image-preview {
+            width: 100%; height: 130px; background: #222; border: 2px dashed #444;
+            border-radius: 5px; display: flex; align-items: center; justify-content: center;
+            margin-top: 0.5rem; overflow: hidden;
+        }
+        .image-preview img { max-width: 100%; max-height: 100%; object-fit: contain; }
+        .image-preview .placeholder { color: #666; text-align: center; font-size: 0.9rem; }
+        .alert-info {
+            background: #1a3a5c; border: 1px solid #2a5a8c; color: #8ab4f8;
+            padding: 0.8rem; border-radius: 5px; margin-bottom: 1rem; font-size: 0.85rem;
+        }
+        .close-btn { background: none; border: none; color: white; font-size: 1.8rem; cursor: pointer; }
+        .login-container {
+            max-width: 400px; margin: 4rem auto; padding: 2rem;
+            background: #1a1a1a; border-radius: 10px; border: 1px solid #e63946;
+        }
+        .login-container h2 { color: #e63946; margin-bottom: 1.5rem; text-align: center; }
+        .back-link {
+            display: inline-block; margin-top: 1rem; color: #e63946;
+            text-decoration: none; font-size: 0.9rem;
+        }
+        .back-link:hover { text-decoration: underline; }
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+    <!-- Pantalla de Login -->
+    <div id="loginScreen">
+        <div class="login-container">
+            <h2>🔒 Acceso Administrador</h2>
+            <form onsubmit="adminLogin(event)">
+                <div class="form-group">
+                    <label>Contraseña</label>
+                    <input type="password" id="adminPassword" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width:100%">Ingresar</button>
+            </form>
+            <a href="index.html" class="back-link">← Volver a la tienda</a>
+        </div>
+    </div>
+
+    <!-- Panel Admin (oculto hasta login) -->
+    <div id="adminPanel" class="hidden">
+        <div class="admin-header">
+            <div class="admin-title"> AKIRA <span>MOTORS</span> - Admin</div>
+            <div>
+                <button class="btn btn-primary" onclick="openAddProductModal()">+ Agregar Producto</button>
+                <button class="btn btn-secondary" onclick="logoutAdmin()">Salir</button>
+            </div>
+        </div>
+
+        <div class="container">
+            <!-- Logo -->
+            <div class="admin-section">
+                <h3 class="section-title">🖼️ Logo de la Empresa</h3>
+                <div class="admin-product-item">
+                    <div class="admin-info">
+                        <div class="admin-thumb" id="adminLogoPreview"></div>
+                        <div>
+                            <strong>Logo Akira Motors</strong><br>
+                            <small style="color:#aaa">Se mostrará a todos los visitantes</small>
+                        </div>
+                    </div>
+                    <div class="admin-actions">
+                        <input type="file" id="adminLogoUpload" accept="image/*" style="display:none" onchange="uploadAdminLogo(event)">
+                        <button class="btn btn-small btn-primary" onclick="document.getElementById('adminLogoUpload').click()">Cambiar Logo</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Productos -->
+            <div class="admin-section">
+                <h3 class="section-title"> Productos</h3>
+                <div id="adminProductList"></div>
+            </div>
+
+            <!-- Marcas -->
+            <div class="admin-section">
+                <h3 class="section-title">🏷️ Marcas</h3>
+                <div id="adminBrandsList"></div>
+            </div>
+
+            <a href="index.html" class="back-link">← Volver a la tienda</a>
+        </div>
+    </div>
+
+    <!-- Modal Producto -->
+    <div class="modal" id="productModal">
+        <div class="modal-content">
+            <h2 id="productModalTitle">Agregar Producto</h2>
+            <div class="alert-info">ℹ️ Imágenes máximo 1MB. Se guardan en la base de datos.</div>
+            <form onsubmit="saveProduct(event)">
+                <div class="form-group"><label>Nombre del Producto</label><input type="text" id="productName" required></div>
+                <div class="form-group"><label>Descripción</label><textarea id="productDescription" required></textarea></div>
+                <div class="form-group"><label>Precio ($)</label><input type="number" id="productPrice" step="0.01" required></div>
+                <div class="form-group"><label>Stock Disponible</label><input type="number" id="productStock" required></div>
+                <div class="form-group">
+                    <label>Foto del Producto (máx. 1MB)</label>
+                    <input type="file" id="productImage" accept="image/*" onchange="previewImage(event, 'productImagePreview', 'currentProductImageData')">
+                    <div class="image-preview" id="productImagePreview"><div class="placeholder">📷 Selecciona una imagen</div></div>
+                </div>
+                <input type="hidden" id="editProductId">
+                <input type="hidden" id="currentProductImageData">
+                <button type="submit" class="btn btn-primary" style="width:100%" id="saveProductBtn">Guardar</button>
+                <button type="button" class="btn btn-secondary" style="width:100%;margin-top:0.8rem" onclick="closeModal('productModal')">Cancelar</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Marca -->
+    <div class="modal" id="brandModal">
+        <div class="modal-content">
+            <h2 id="brandModalTitle">Imagen de Marca</h2>
+            <form onsubmit="saveBrandImage(event)">
+                <div class="form-group">
+                    <label>Imagen de la marca (máx. 1MB)</label>
+                    <input type="file" id="brandImageInput" accept="image/*" onchange="previewImage(event, 'brandImagePreview', 'currentBrandImageData')">
+                    <div class="image-preview" id="brandImagePreview"><div class="placeholder">📷 Selecciona una imagen</div></div>
+                </div>
+                <input type="hidden" id="editBrandId">
+                <input type="hidden" id="currentBrandImageData">
+                <button type="submit" class="btn btn-primary" style="width:100%" id="saveBrandBtn">Guardar</button>
+                <button type="button" class="btn btn-secondary" style="width:100%;margin-top:0.8rem" onclick="closeModal('brandModal')">Cancelar</button>
+            </form>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, getDocs, updateDoc, deleteDoc, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAU77yzh7Tm3RPuuvVcxlCt26u2LjmsBK0",
+            authDomain: "akiramotors-cc498.firebaseapp.com",
+            projectId: "akiramotors-cc498",
+            storageBucket: "akiramotors-cc498.firebasestorage.app",
+            messagingSenderId: "657064466850",
+            appId: "1:657064466850:web:2d1340db67f790d11ebafb"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        let products = [];
+        let brands = [];
+        let isAdmin = false;
+        const ADMIN_PASSWORD = 'fjat21';
+
+        const defaultBrands = [
+            { id: 'mitsubishi', name: 'Mitsubishi', image: null },
+            { id: 'ford', name: 'Ford', image: null },
+            { id: 'kia', name: 'Kia', image: null },
+            { id: 'hyundai', name: 'Hyundai', image: null },
+            { id: 'chevrolet', name: 'Chevrolet', image: null }
+        ];
+
+        window.adminLogin = function(event) {
+            event.preventDefault();
+            if (document.getElementById('adminPassword').value === ADMIN_PASSWORD) {
+                isAdmin = true;
+                document.getElementById('loginScreen').classList.add('hidden');
+                document.getElementById('adminPanel').classList.remove('hidden');
+                document.getElementById('adminPassword').value = '';
+                loadAll();
+            } else { alert('Contraseña incorrecta'); }
+        };
+
+        window.logoutAdmin = function() {
+            isAdmin = false;
+            document.getElementById('adminPanel').classList.add('hidden');
+            document.getElementById('loginScreen').classList.remove('hidden');
+        };
+
+        async function loadAll() {
+            await loadLogo();
+            await loadBrands();
+            await loadProducts();
+        }
+
+        async function loadLogo() {
+            try {
+                const logoDoc = await getDoc(doc(db, 'settings', 'logo'));
+                if (logoDoc.exists()) {
+                    const imgData = logoDoc.data().image;
+                    document.getElementById('adminLogoPreview').innerHTML = `<img src="${imgData}">`;
+                }
+            } catch (error) { console.log('Logo:', error); }
+        }
+
+        async function loadBrands() {
+            try {
+                const snapshot = await getDocs(collection(db, 'brands'));
+                if (snapshot.empty) {
+                    brands = defaultBrands;
+                    for (const brand of defaultBrands) {
+                        await setDoc(doc(db, 'brands', brand.id), brand);
+                    }
+                } else {
+                    brands = [];
+                    snapshot.forEach(docSnap => brands.push({ id: docSnap.id, ...docSnap.data() }));
+                }
+                renderAdminBrands();
+            } catch (error) { console.error('Marcas:', error); }
+        }
+
+        async function loadProducts() {
+            try {
+                const snapshot = await getDocs(collection(db, 'products'));
+                products = [];
+                snapshot.forEach(docSnap => products.push({ id: docSnap.id, ...docSnap.data() }));
+                renderAdminProducts();
+            } catch (error) { console.error('Productos:', error); }
+        }
+
+        function renderAdminProducts() {
+            const list = document.getElementById('adminProductList');
+            if (products.length === 0) {
+                list.innerHTML = '<p style="text-align:center;color:#666;padding:1rem">No hay productos. Agrega el primero.</p>';
+                return;
+            }
+            list.innerHTML = products.map(product => {
+                const thumbHtml = product.image ? `<img src="${product.image}">` : '🔧';
+                return `
+                    <div class="admin-product-item">
+                        <div class="admin-info">
+                            <div class="admin-thumb">${thumbHtml}</div>
+                            <div>
+                                <strong>${product.name}</strong><br>
+                                <small style="color:#aaa">Precio: $${Number(product.price).toFixed(2)} | Stock: ${product.stock}</small>
+                            </div>
+                        </div>
+                        <div class="admin-actions">
+                            <button class="btn btn-small btn-primary" onclick="editProduct('${product.id}')">Editar</button>
+                            <button class="btn btn-small btn-danger" onclick="deleteProduct('${product.id}')">Eliminar</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderAdminBrands() {
+            const list = document.getElementById('adminBrandsList');
+            list.innerHTML = brands.map(brand => {
+                const thumbHtml = brand.image ? `<img src="${brand.image}">` : '🚗';
+                return `
+                    <div class="admin-brand-item">
+                        <div class="admin-info">
+                            <div class="admin-thumb">${thumbHtml}</div>
+                            <div>
+                                <strong>${brand.name}</strong><br>
+                                <small style="color:#aaa">${brand.image ? 'Imagen cargada' : 'Sin imagen'}</small>
+                            </div>
+                        </div>
+                        <div class="admin-actions">
+                            <button class="btn btn-small btn-primary" onclick="editBrandImage('${brand.id}')">
+                                ${brand.image ? 'Cambiar Imagen' : 'Agregar Imagen'}
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        window.openAddProductModal = function() {
+            document.getElementById('productModalTitle').textContent = 'Agregar Producto';
+            document.getElementById('editProductId').value = '';
+            document.getElementById('productName').value = '';
+            document.getElementById('productDescription').value = '';
+            document.getElementById('productPrice').value = '';
+            document.getElementById('productStock').value = '';
+            document.getElementById('productImage').value = '';
+            document.getElementById('currentProductImageData').value = '';
+            document.getElementById('productImagePreview').innerHTML = '<div class="placeholder">📷 Selecciona una imagen</div>';
+            document.getElementById('productModal').classList.add('active');
+        };
+
+        window.editProduct = function(productId) {
+            const product = products.find(p => p.id === productId);
+            document.getElementById('productModalTitle').textContent = 'Editar Producto';
+            document.getElementById('editProductId').value = product.id;
+            document.getElementById('productName').value = product.name;
+            document.getElementById('productDescription').value = product.description;
+            document.getElementById('productPrice').value = product.price;
+            document.getElementById('productStock').value = product.stock;
+            document.getElementById('currentProductImageData').value = product.image || '';
+            if (product.image) {
+                document.getElementById('productImagePreview').innerHTML = `<img src="${product.image}">`;
+            } else {
+                document.getElementById('productImagePreview').innerHTML = '<div class="placeholder">📷 Selecciona una imagen</div>';
+            }
+            document.getElementById('productImage').value = '';
+            document.getElementById('productModal').classList.add('active');
+        };
+
+        window.previewImage = function(event, previewId, dataId) {
+            const file = event.target.files[0];
+            if (file) {
+                if (file.size > 1 * 1024 * 1024) {
+                    alert('⚠️ La imagen es muy grande. Máximo 1MB.');
+                    event.target.value = '';
+                    return;
+                }
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById(dataId).value = e.target.result;
+                    document.getElementById(previewId).innerHTML = `<img src="${e.target.result}">`;
+                };
+                reader.readAsDataURL(file);
+            }
+        };
+
+        window.saveProduct = async function(event) {
+            event.preventDefault();
+            const saveBtn = document.getElementById('saveProductBtn');
+            saveBtn.disabled = true;
+            saveBtn.textContent = 'Guardando...';
+
+            const editId = document.getElementById('editProductId').value;
+            const imageData = document.getElementById('currentProductImageData').value;
+
+            const productData = {
+                name: document.getElementById('productName').value,
+                description: document.getElementById('productDescription').value,
+                price: parseFloat(document.getElementById('productPrice').value),
+                stock: parseInt(document.getElementById('productStock').value),
+                image: imageData || null,
+                updatedAt: new Date().toISOStrin
