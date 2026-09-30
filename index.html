@@ -12,17 +12,6 @@
             color: #ffffff;
             line-height: 1.6;
         }
-        .top-bar {
-            background: #e63946;
-            color: white;
-            padding: 0.5rem 2rem;
-            display: flex;
-            justify-content: flex-end;
-            align-items: center;
-            font-size: 0.9rem;
-        }
-        .social-icons { display: flex; gap: 1rem; }
-        .social-icons a { color: white; text-decoration: none; font-size: 1.1rem; }
         header {
             background: #000;
             padding: 1rem 2rem;
@@ -261,7 +250,6 @@
             .hero h1 { font-size: 2.2rem; }
             nav { display: none; }
             .cart-sidebar { width: 100%; right: -100%; }
-            .top-bar { justify-content: center; }
             .products-grid { grid-template-columns: repeat(2, 1fr); }
         }
         @media (max-width: 480px) {
@@ -270,13 +258,6 @@
     </style>
 </head>
 <body>
-    <div class="top-bar">
-        <div class="social-icons">
-            <a href="#" title="Facebook">f</a>
-            <a href="#" title="Instagram">📷</a>
-        </div>
-    </div>
-
     <header>
         <div class="logo-container" id="logoContainer" title="Akira Motors">
             <div class="logo-img" id="logoDisplay">🔧</div>
@@ -304,7 +285,6 @@
                 <div class="info-box">
                     <h3>📍 Visítanos</h3>
                     <p><strong>Dirección:</strong> Calle Caracas, Local 70-E, Ciudad Bolívar, Estado Bolívar, 8001</p>
-                    <p><strong>Teléfono:</strong> 0414-8700616</p>
                     <p><strong>Horario:</strong> 8 AM - 5 PM</p>
                 </div>
             </div>
@@ -320,7 +300,7 @@
         <h2 class="section-title">Nuestros <span>Servicios</span></h2>
         <div class="services-grid">
             <div class="service-card"><div class="service-icon">🔩</div><h3>Suspensión</h3></div>
-            <div class="service-card"><div class="service-icon">️</div><h3>Embragues</h3></div>
+            <div class="service-card"><div class="service-icon">⚙️</div><h3>Embragues</h3></div>
             <div class="service-card"><div class="service-icon">🛑</div><h3>Frenos</h3></div>
             <div class="service-card"><div class="service-icon">⚡</div><h3>Partes Eléctricas</h3></div>
         </div>
@@ -329,7 +309,7 @@
     <section class="products-section" id="productos">
         <h2 class="section-title">Nuestros <span>Productos</span></h2>
         <div class="search-container">
-            <span class="search-icon">🔍</span>
+            <span class="search-icon"></span>
             <input type="text" class="search-input" id="searchInput" placeholder="Buscar producto por nombre...">
         </div>
         <div id="productsContainer">
@@ -341,7 +321,7 @@
     <div class="overlay" id="overlay" onclick="closeAll()"></div>
     <div class="cart-sidebar" id="cartSidebar">
         <div class="cart-header">
-            <h3> Tu Carrito</h3>
+            <h3>🛒 Tu Carrito</h3>
             <button class="close-btn" onclick="toggleCart()">×</button>
         </div>
         <div class="cart-items" id="cartItems">
@@ -378,7 +358,6 @@
                 <h3>Contacto</h3>
                 <p>📍 Calle Caracas, Local 70-E</p>
                 <p>Ciudad Bolívar, Edo. Bolívar, 8001</p>
-                <p>📞 0414-8700616</p>
             </div>
             <div class="footer-section">
                 <h3>Horario</h3>
@@ -388,7 +367,7 @@
             <div class="footer-section">
                 <h3>Síguenos</h3>
                 <p>📘 Facebook</p>
-                <p> Instagram</p>
+                <p>📷 Instagram</p>
             </div>
         </div>
         <div class="footer-bottom">
@@ -420,7 +399,6 @@
         let currentPage = 1;
         const PRODUCTS_PER_PAGE = 8;
 
-        // Triple clic en logo para ir al admin
         let logoClickCount = 0;
         let logoClickTimer;
         document.getElementById('logoContainer').addEventListener('click', function() {
@@ -482,7 +460,7 @@
             const pagination = document.getElementById('pagination');
 
             if (filteredProducts.length === 0) {
-                container.innerHTML = '<div class="no-results"> No se encontraron productos</div>';
+                container.innerHTML = '<div class="no-results">No se encontraron productos</div>';
                 pagination.innerHTML = '';
                 return;
             }
@@ -502,7 +480,7 @@
                 else if (product.stock < 10) { stockClass = 'low'; stockText = `¡Últimas ${product.stock}!`; }
                 const imageHtml = product.image 
                     ? `<img src="${product.image}" alt="${product.name}" loading="lazy">`
-                    : `<div class="no-image">🔧</div>`;
+                    : `<div class="no-image"></div>`;
                 return `
                     <div class="product-card">
                         <div class="product-image">${imageHtml}</div>
@@ -521,12 +499,11 @@
             container.innerHTML = '';
             container.appendChild(grid);
 
-            // Paginación
             if (totalPages <= 1) {
                 pagination.innerHTML = '';
                 return;
             }
-            let paginationHtml = `<button ${currentPage === 1 ? 'disabled' : ''} onclick="changePage(${currentPage - 1})"> Anterior</button>`;
+            let paginationHtml = `<button ${currentPage === 1 ? 'disabled' : ''} onclick="changePage(${currentPage - 1})">◀ Anterior</button>`;
             for (let i = 1; i <= totalPages; i++) {
                 paginationHtml += `<button class="${i === currentPage ? 'active' : ''}" onclick="changePage(${i})">${i}</button>`;
             }
@@ -540,7 +517,6 @@
             document.getElementById('productos').scrollIntoView({ behavior: 'smooth' });
         };
 
-        // Búsqueda
         document.getElementById('searchInput').addEventListener('input', function(e) {
             const query = e.target.value.toLowerCase().trim();
             if (query === '') {
@@ -648,10 +624,10 @@
             };
             try {
                 await addDoc(collection(db, 'quotes'), quoteData);
-                alert('¡Cotización enviada! Te contactaremos al 0414-8700616');
+                alert('¡Cotización enviada! Te contactaremos pronto.');
                 closeModal('quoteModal');
                 event.target.reset();
-            } catch (error) { alert('Error al enviar. Por favor llámanos al 0414-8700616'); }
+            } catch (error) { alert('Error al enviar. Escríbenos por WhatsApp.'); }
         };
 
         window.closeModal = function(id) { document.getElementById(id).classList.remove('active'); };
