@@ -102,7 +102,6 @@
     </style>
 </head>
 <body>
-    <!-- Pantalla de Login -->
     <div id="loginScreen">
         <div class="login-container">
             <h2>🔒 Acceso Administrador</h2>
@@ -117,10 +116,9 @@
         </div>
     </div>
 
-    <!-- Panel Admin (oculto hasta login) -->
     <div id="adminPanel" class="hidden">
         <div class="admin-header">
-            <div class="admin-title"> AKIRA <span>MOTORS</span> - Admin</div>
+            <div class="admin-title">🔧 AKIRA <span>MOTORS</span> - Admin</div>
             <div>
                 <button class="btn btn-primary" onclick="openAddProductModal()">+ Agregar Producto</button>
                 <button class="btn btn-secondary" onclick="logoutAdmin()">Salir</button>
@@ -128,7 +126,6 @@
         </div>
 
         <div class="container">
-            <!-- Logo -->
             <div class="admin-section">
                 <h3 class="section-title">🖼️ Logo de la Empresa</h3>
                 <div class="admin-product-item">
@@ -146,13 +143,11 @@
                 </div>
             </div>
 
-            <!-- Productos -->
             <div class="admin-section">
                 <h3 class="section-title"> Productos</h3>
                 <div id="adminProductList"></div>
             </div>
 
-            <!-- Marcas -->
             <div class="admin-section">
                 <h3 class="section-title">🏷️ Marcas</h3>
                 <div id="adminBrandsList"></div>
@@ -162,7 +157,6 @@
         </div>
     </div>
 
-    <!-- Modal Producto -->
     <div class="modal" id="productModal">
         <div class="modal-content">
             <h2 id="productModalTitle">Agregar Producto</h2>
@@ -185,7 +179,6 @@
         </div>
     </div>
 
-    <!-- Modal Marca -->
     <div class="modal" id="brandModal">
         <div class="modal-content">
             <h2 id="brandModalTitle">Imagen de Marca</h2>
@@ -297,7 +290,7 @@
                 return;
             }
             list.innerHTML = products.map(product => {
-                const thumbHtml = product.image ? `<img src="${product.image}">` : '🔧';
+                const thumbHtml = product.image ? `<img src="${product.image}">` : '';
                 return `
                     <div class="admin-product-item">
                         <div class="admin-info">
@@ -374,7 +367,7 @@
             const file = event.target.files[0];
             if (file) {
                 if (file.size > 1 * 1024 * 1024) {
-                    alert('⚠️ La imagen es muy grande. Máximo 1MB.');
+                    alert('️ La imagen es muy grande. Máximo 1MB.');
                     event.target.value = '';
                     return;
                 }
@@ -402,4 +395,94 @@
                 price: parseFloat(document.getElementById('productPrice').value),
                 stock: parseInt(document.getElementById('productStock').value),
                 image: imageData || null,
-                updatedAt: new Date().toISOStrin
+                updatedAt: new Date().toISOString()
+            };
+
+            try {
+                if (editId) {
+                    await updateDoc(doc(db, 'products', editId), productData);
+                } else {
+                    productData.createdAt = new Date().toISOString();
+                    await addDoc(collection(db, 'products'), productData);
+                }
+                await loadProducts();
+                closeModal('productModal');
+                alert('✅ Producto guardado');
+            } catch (error) {
+                alert('❌ Error: ' + error.message);
+            }
+
+            saveBtn.disabled = false;
+            saveBtn.textContent = 'Guardar';
+        };
+
+        window.deleteProduct = async function(productId) {
+            if (!confirm('¿Eliminar este producto?')) return;
+            try {
+                await deleteDoc(doc(db, 'products', productId));
+                await loadProducts();
+                alert('✅ Producto eliminado');
+            } catch (error) { alert('Error: ' + error.message); }
+        };
+
+        window.editBrandImage = function(brandId) {
+            const brand = brands.find(b => b.id === brandId);
+            document.getElementById('brandModalTitle').textContent = `Imagen: ${brand.name}`;
+            document.getElementById('editBrandId').value = brandId;
+            document.getElementById('currentBrandImageData').value = brand.image || '';
+            if (brand.image) {
+                document.getElementById('brandImagePreview').innerHTML = `<img src="${brand.image}">`;
+            } else {
+                document.getElementById('brandImagePreview').innerHTML = '<div class="placeholder">📷 Selecciona una imagen</div>';
+            }
+            document.getElementById('brandImageInput').value = '';
+            document.getElementById('brandModal').classList.add('active');
+        };
+
+        window.saveBrandImage = async function(event) {
+            event.preventDefault();
+            const saveBtn = document.getElementById('saveBrandBtn');
+            saveBtn.disabled = true;
+            saveBtn.textContent = 'Guardando...';
+
+            const brandId = document.getElementById('editBrandId').value;
+            const imageData = document.getElementById('currentBrandImageData').value;
+
+            try {
+                await updateDoc(doc(db, 'brands', brandId), { image: imageData || null });
+                await loadBrands();
+                closeModal('brandModal');
+                alert('✅ Imagen de marca guardada');
+            } catch (error) { alert('❌ Error: ' + error.message); }
+
+            saveBtn.disabled = false;
+            saveBtn.textContent = 'Guardar';
+        };
+
+        window.uploadAdminLogo = async function(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            if (file.size > 1 * 1024 * 1024) { alert('Imagen muy grande. Máximo 1MB'); return; }
+            
+            const reader = new FileReader();
+            reader.onload = async function(e) {
+                const imgData = e.target.result;
+                try {
+                    await setDoc(doc(db, 'settings', 'logo'), { image: imgData, updatedAt: new Date().toISOString() });
+                    document.getElementById('adminLogoPreview').innerHTML = `<img src="${imgData}">`;
+                    alert('✅ Logo actualizado');
+                } catch (error) { alert('Error: ' + error.message); }
+            };
+            reader.readAsDataURL(file);
+        };
+
+        window.closeModal = function(id) { document.getElementById(id).classList.remove('active'); };
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.modal.active').forEach(m => m.classList.remove('active'));
+            }
+        });
+    </script>
+</body>
+</html>
