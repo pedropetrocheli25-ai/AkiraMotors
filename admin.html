@@ -64,18 +64,20 @@
         .modal.active { display: flex; }
         .modal-content {
             background: #1a1a1a; padding: 2rem; border-radius: 10px;
-            max-width: 700px; width: 100%; max-height: 90vh; overflow-y: auto;
+            max-width: 800px; width: 100%; max-height: 90vh; overflow-y: auto;
             border: 2px solid #FFC107;
         }
         .modal-content h2 { color: #FFC107; margin-bottom: 1.5rem; text-transform: uppercase; font-size: 1.5rem; }
         .form-group { margin-bottom: 1.2rem; }
         .form-group label { display: block; margin-bottom: 0.4rem; font-weight: 600; color: #fff; font-size: 0.9rem; }
+        .form-group label .required { color: #dc3545; }
         .form-group input, .form-group textarea, .form-group select {
             width: 100%; padding: 0.7rem; background: #121212; border: 1px solid #2D3748;
             border-radius: 5px; font-size: 0.95rem; color: white;
         }
         .form-group input:focus, .form-group textarea:focus, .form-group select:focus { outline: none; border-color: #FFC107; }
         .form-group textarea { resize: vertical; min-height: 80px; }
+        .form-group .hint { font-size: 0.8rem; color: #888; margin-top: 0.3rem; }
         .image-preview {
             width: 100%; height: 150px; background: #121212; border: 2px dashed #2D3748;
             border-radius: 5px; display: flex; align-items: center; justify-content: center;
@@ -100,15 +102,24 @@
         .back-link:hover { text-decoration: underline; }
         .hidden { display: none !important; }
         .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+        .form-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; }
+        .form-section {
+            background: #121212; padding: 1.5rem; border-radius: 8px;
+            margin-bottom: 1.5rem; border: 1px solid #2D3748;
+        }
+        .form-section h3 {
+            color: #FFC107; margin-bottom: 1rem; font-size: 1.1rem;
+            border-bottom: 1px solid #2D3748; padding-bottom: 0.5rem;
+        }
         @media (max-width: 600px) {
-            .form-row { grid-template-columns: 1fr; }
+            .form-row, .form-row-3 { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
     <div id="loginScreen">
         <div class="login-container">
-            <h2>🔒 Acceso Administrador</h2>
+            <h2> Acceso Administrador</h2>
             <form onsubmit="adminLogin(event)">
                 <div class="form-group">
                     <label>Contraseña</label>
@@ -122,7 +133,7 @@
 
     <div id="adminPanel" class="hidden">
         <div class="admin-header">
-            <div class="admin-title">🔧 AKIRA <span>MOTORS</span> - Admin</div>
+            <div class="admin-title"> AKIRA <span>MOTORS</span> - Admin</div>
             <div>
                 <button class="btn btn-primary" onclick="openAddProductModal()">+ Agregar Producto</button>
                 <button class="btn btn-secondary" onclick="logoutAdmin()">Salir</button>
@@ -131,7 +142,7 @@
 
         <div class="container">
             <div class="admin-section">
-                <h3 class="section-title">️ Logo de la Empresa</h3>
+                <h3 class="section-title">🖼️ Logo de la Empresa</h3>
                 <div class="admin-product-item">
                     <div class="admin-info">
                         <div class="admin-thumb" id="adminLogoPreview"></div>
@@ -153,7 +164,7 @@
             </div>
 
             <div class="admin-section">
-                <h3 class="section-title">🏷️ Marcas</h3>
+                <h3 class="section-title">️ Marcas</h3>
                 <div id="adminBrandsList"></div>
             </div>
 
@@ -164,43 +175,146 @@
     <div class="modal" id="productModal">
         <div class="modal-content">
             <h2 id="productModalTitle">Agregar Producto</h2>
-            <div class="alert-info">ℹ️ Imágenes máximo 1MB. Complete todos los campos para mejor organización.</div>
+            <div class="alert-info">
+                ℹ️ Los campos con <span style="color:#dc3545">*</span> son obligatorios. Los demás pueden dejarse en blanco si no aplican.
+            </div>
+            
             <form onsubmit="saveProduct(event)">
-                <div class="form-row">
-                    <div class="form-group"><label>Código del Producto *</label><input type="text" id="productCode" required placeholder="Ej: AM-001"></div>
-                    <div class="form-group"><label>Precio ($) *</label><input type="number" id="productPrice" step="0.01" required></div>
-                </div>
-                <div class="form-group"><label>Nombre del Producto *</label><input type="text" id="productName" required></div>
-                <div class="form-group"><label>Descripción *</label><textarea id="productDescription" required></textarea></div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Categoría *</label>
-                        <select id="productCategory" required onchange="updateSubcategoryOptions()">
-                            <option value="">Seleccionar...</option>
-                        </select>
+                <!-- Información Básica -->
+                <div class="form-section">
+                    <h3>📋 Información Básica</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Código del Producto <span class="required">*</span></label>
+                            <input type="text" id="productCode" required placeholder="Ej: AM-001">
+                        </div>
+                        <div class="form-group">
+                            <label>Marca del Repuesto</label>
+                            <input type="text" id="productBrand" placeholder="Ej: Bosch, SKF, Monroe">
+                        </div>
                     </div>
                     <div class="form-group">
-                        <label>Subcategoría *</label>
-                        <select id="productSubcategory" required>
-                            <option value="">Seleccionar categoría primero...</option>
-                        </select>
+                        <label>Nombre del Producto <span class="required">*</span></label>
+                        <input type="text" id="productName" required placeholder="Ej: Kit de Embrague Completo">
+                    </div>
+                    <div class="form-group">
+                        <label>Número de Parte / OEM</label>
+                        <input type="text" id="productPartNumber" placeholder="Ej: OEM-12345">
+                        <div class="hint">Número original del fabricante (opcional)</div>
+                    </div>
+                    <div class="form-group">
+                        <label>Descripción <span class="required">*</span></label>
+                        <textarea id="productDescription" required placeholder="Descripción detallada del producto..."></textarea>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label>Marca/Modelo de Vehículo Compatible</label>
-                    <input type="text" id="productVehicle" placeholder="Ej: Toyota Corolla 2020, Nissan Versa, Universal...">
+
+                <!-- Categoría y Compatibilidad -->
+                <div class="form-section">
+                    <h3>🗂️ Categoría y Compatibilidad</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Categoría <span class="required">*</span></label>
+                            <select id="productCategory" required onchange="updateSubcategoryOptions()">
+                                <option value="">Seleccionar...</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Subcategoría <span class="required">*</span></label>
+                            <select id="productSubcategory" required>
+                                <option value="">Seleccionar categoría primero...</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Vehículo Compatible</label>
+                        <input type="text" id="productVehicle" placeholder="Ej: Toyota Corolla 2015-2020, Nissan Versa, Universal">
+                        <div class="hint">Indica para qué vehículos es compatible</div>
+                    </div>
                 </div>
-                <div class="form-row">
-                    <div class="form-group"><label>Stock Disponible *</label><input type="number" id="productStock" required></div>
+
+                <!-- Precio y Oferta -->
+                <div class="form-section">
+                    <h3>💰 Precio y Oferta</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Precio Regular ($) <span class="required">*</span></label>
+                            <input type="number" id="productPrice" step="0.01" required placeholder="0.00">
+                        </div>
+                        <div class="form-group">
+                            <label>% de Descuento (Oferta)</label>
+                            <input type="number" id="productDiscount" min="0" max="100" step="1" placeholder="0">
+                            <div class="hint">Ej: 10 = 10% de descuento. Dejar en 0 si no hay oferta</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Stock Disponible <span class="required">*</span></label>
+                        <input type="number" id="productStock" required placeholder="0">
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label>Foto del Producto (máx. 1MB)</label>
-                    <input type="file" id="productImage" accept="image/*" onchange="previewImage(event, 'productImagePreview', 'currentProductImageData')">
-                    <div class="image-preview" id="productImagePreview"><div class="placeholder">📷 Selecciona una imagen</div></div>
+
+                <!-- Especificaciones Técnicas -->
+                <div class="form-section">
+                    <h3>🔧 Especificaciones Técnicas</h3>
+                    <p style="color:#888;font-size:0.85rem;margin-bottom:1rem">Complete solo los campos que apliquen al producto</p>
+                    <div class="form-row-3">
+                        <div class="form-group">
+                            <label>Diámetro</label>
+                            <input type="text" id="specDiameter" placeholder="Ej: 50mm">
+                        </div>
+                        <div class="form-group">
+                            <label>Largo</label>
+                            <input type="text" id="specLength" placeholder="Ej: 120mm">
+                        </div>
+                        <div class="form-group">
+                            <label>Ancho</label>
+                            <input type="text" id="specWidth" placeholder="Ej: 80mm">
+                        </div>
+                    </div>
+                    <div class="form-row-3">
+                        <div class="form-group">
+                            <label>Alto</label>
+                            <input type="text" id="specHeight" placeholder="Ej: 60mm">
+                        </div>
+                        <div class="form-group">
+                            <label>Peso</label>
+                            <input type="text" id="specWeight" placeholder="Ej: 2.5kg">
+                        </div>
+                        <div class="form-group">
+                            <label>Material</label>
+                            <input type="text" id="specMaterial" placeholder="Ej: Acero, Aluminio">
+                        </div>
+                    </div>
+                    <div class="form-row-3">
+                        <div class="form-group">
+                            <label>Voltaje</label>
+                            <input type="text" id="specVoltage" placeholder="Ej: 12V">
+                            <div class="hint">Para partes eléctricas</div>
+                        </div>
+                        <div class="form-group">
+                            <label>Potencia</label>
+                            <input type="text" id="specPower" placeholder="Ej: 100W">
+                        </div>
+                        <div class="form-group">
+                            <label>Rosca</label>
+                            <input type="text" id="specThread" placeholder="Ej: M12x1.5">
+                        </div>
+                    </div>
                 </div>
+
+                <!-- Imagen -->
+                <div class="form-section">
+                    <h3> Imagen del Producto</h3>
+                    <div class="form-group">
+                        <label>Foto del Producto (máx. 1MB)</label>
+                        <input type="file" id="productImage" accept="image/*" onchange="previewImage(event, 'productImagePreview', 'currentProductImageData')">
+                        <div class="image-preview" id="productImagePreview"><div class="placeholder"> Selecciona una imagen</div></div>
+                    </div>
+                </div>
+
                 <input type="hidden" id="editProductId">
                 <input type="hidden" id="currentProductImageData">
-                <button type="submit" class="btn btn-primary" style="width:100%" id="saveProductBtn">Guardar</button>
+                
+                <button type="submit" class="btn btn-primary" style="width:100%" id="saveProductBtn">Guardar Producto</button>
                 <button type="button" class="btn btn-secondary" style="width:100%;margin-top:0.8rem" onclick="closeModal('productModal')">Cancelar</button>
             </form>
         </div>
@@ -346,6 +460,7 @@
             }
             list.innerHTML = products.map(product => {
                 const thumbHtml = product.image ? `<img src="${product.image}">` : '';
+                const offerText = product.discount && product.discount > 0 ? ` | 🔥 -${product.discount}%` : '';
                 return `
                     <div class="admin-product-item">
                         <div class="admin-info">
@@ -353,7 +468,7 @@
                             <div>
                                 <strong>${product.name}</strong><br>
                                 <small style="color:#FFC107">Código: ${product.code || 'Sin código'}</small><br>
-                                <small style="color:#aaa">$${Number(product.price).toFixed(2)} | Stock: ${product.stock} | ${product.category || 'Sin categoría'}</small>
+                                <small style="color:#aaa">$${Number(product.price).toFixed(2)}${offerText} | Stock: ${product.stock} | ${product.category || 'Sin categoría'}</small>
                             </div>
                         </div>
                         <div class="admin-actions">
@@ -393,16 +508,28 @@
             document.getElementById('productModalTitle').textContent = 'Agregar Producto';
             document.getElementById('editProductId').value = '';
             document.getElementById('productCode').value = '';
+            document.getElementById('productBrand').value = '';
             document.getElementById('productName').value = '';
+            document.getElementById('productPartNumber').value = '';
             document.getElementById('productDescription').value = '';
             document.getElementById('productPrice').value = '';
+            document.getElementById('productDiscount').value = '';
             document.getElementById('productStock').value = '';
             document.getElementById('productCategory').value = '';
             document.getElementById('productSubcategory').value = '';
             document.getElementById('productVehicle').value = '';
+            document.getElementById('specDiameter').value = '';
+            document.getElementById('specLength').value = '';
+            document.getElementById('specWidth').value = '';
+            document.getElementById('specHeight').value = '';
+            document.getElementById('specWeight').value = '';
+            document.getElementById('specMaterial').value = '';
+            document.getElementById('specVoltage').value = '';
+            document.getElementById('specPower').value = '';
+            document.getElementById('specThread').value = '';
             document.getElementById('productImage').value = '';
             document.getElementById('currentProductImageData').value = '';
-            document.getElementById('productImagePreview').innerHTML = '<div class="placeholder">📷 Selecciona una imagen</div>';
+            document.getElementById('productImagePreview').innerHTML = '<div class="placeholder"> Selecciona una imagen</div>';
             document.getElementById('productModal').classList.add('active');
         };
 
@@ -412,14 +539,26 @@
             document.getElementById('productModalTitle').textContent = 'Editar Producto';
             document.getElementById('editProductId').value = product.id;
             document.getElementById('productCode').value = product.code || '';
+            document.getElementById('productBrand').value = product.brand || '';
             document.getElementById('productName').value = product.name;
+            document.getElementById('productPartNumber').value = product.partNumber || '';
             document.getElementById('productDescription').value = product.description || '';
             document.getElementById('productPrice').value = product.price;
+            document.getElementById('productDiscount').value = product.discount || '';
             document.getElementById('productStock').value = product.stock;
             document.getElementById('productCategory').value = product.category || '';
             updateSubcategoryOptions();
             document.getElementById('productSubcategory').value = product.subcategory || '';
             document.getElementById('productVehicle').value = product.vehicle || '';
+            document.getElementById('specDiameter').value = product.diameter || '';
+            document.getElementById('specLength').value = product.length || '';
+            document.getElementById('specWidth').value = product.width || '';
+            document.getElementById('specHeight').value = product.height || '';
+            document.getElementById('specWeight').value = product.weight || '';
+            document.getElementById('specMaterial').value = product.material || '';
+            document.getElementById('specVoltage').value = product.voltage || '';
+            document.getElementById('specPower').value = product.power || '';
+            document.getElementById('specThread').value = product.thread || '';
             document.getElementById('currentProductImageData').value = product.image || '';
             if (product.image) {
                 document.getElementById('productImagePreview').innerHTML = `<img src="${product.image}">`;
@@ -455,16 +594,29 @@
 
             const editId = document.getElementById('editProductId').value;
             const imageData = document.getElementById('currentProductImageData').value;
+            const discount = parseFloat(document.getElementById('productDiscount').value) || 0;
 
             const productData = {
                 code: document.getElementById('productCode').value,
+                brand: document.getElementById('productBrand').value,
                 name: document.getElementById('productName').value,
+                partNumber: document.getElementById('productPartNumber').value,
                 description: document.getElementById('productDescription').value,
                 price: parseFloat(document.getElementById('productPrice').value),
+                discount: discount,
                 stock: parseInt(document.getElementById('productStock').value),
                 category: document.getElementById('productCategory').value,
                 subcategory: document.getElementById('productSubcategory').value,
                 vehicle: document.getElementById('productVehicle').value,
+                diameter: document.getElementById('specDiameter').value,
+                length: document.getElementById('specLength').value,
+                width: document.getElementById('specWidth').value,
+                height: document.getElementById('specHeight').value,
+                weight: document.getElementById('specWeight').value,
+                material: document.getElementById('specMaterial').value,
+                voltage: document.getElementById('specVoltage').value,
+                power: document.getElementById('specPower').value,
+                thread: document.getElementById('specThread').value,
                 image: imageData || null,
                 updatedAt: new Date().toISOString()
             };
@@ -478,13 +630,13 @@
                 }
                 await loadProducts();
                 closeModal('productModal');
-                alert('✅ Producto guardado');
+                alert('✅ Producto guardado exitosamente');
             } catch (error) {
                 alert('❌ Error: ' + error.message);
             }
 
             saveBtn.disabled = false;
-            saveBtn.textContent = 'Guardar';
+            saveBtn.textContent = 'Guardar Producto';
         };
 
         window.deleteProduct = async function(productId) {
