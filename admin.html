@@ -55,13 +55,10 @@
         .alert-info { background: #e3f2fd; border: 1px solid #90caf9; color: #1565c0; padding: 0.8rem; border-radius: 8px; margin-bottom: 1rem; font-size: 0.85rem; }
         .alert-warning { background: #fff3cd; border: 1px solid #ffc107; color: #856404; padding: 0.8rem; border-radius: 8px; margin-bottom: 1rem; font-size: 0.85rem; }
         .alert-success { background: #d4edda; border: 1px solid #c3e6cb; color: #155724; padding: 0.8rem; border-radius: 8px; margin-bottom: 1rem; font-size: 0.85rem; }
-        
-        /* LOGIN SCREEN */
         .login-container { max-width: 400px; margin: 4rem auto; padding: 2rem; background: white; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
         .login-container h2 { color: #dc3545; margin-bottom: 1.5rem; text-align: center; }
         .login-container .login-icon { font-size: 4rem; text-align: center; margin-bottom: 1rem; }
         .hidden { display: none !important; }
-        
         .rate-display { background: #fff5f5; padding: 1rem; border-radius: 8px; border-left: 4px solid #dc3545; margin-bottom: 1rem; }
         .rate-display .current { font-size: 1.5rem; font-weight: bold; color: #dc3545; }
         .banner-preview-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; margin-top: 1rem; }
@@ -127,18 +124,18 @@
     </style>
 </head>
 <body>
-    <!-- PANTALLA DE LOGIN -->
+    <!-- PANTALLA DE LOGIN (SIN CONTRASEÑA) -->
     <div id="loginScreen" style="width:100%;">
         <div class="login-container">
-            <div class="login-icon">🔐</div>
+            <div class="login-icon">🔓</div>
             <h2>Acceso Administrador</h2>
             <p style="text-align:center; color:#666; margin-bottom:1.5rem; font-size:0.9rem;">
-                Ingresa la contraseña para acceder al panel
+                Modo de prueba - Acceso libre temporal
             </p>
             <form onsubmit="adminLogin(event)">
                 <div class="form-group">
-                    <label>Contraseña</label>
-                    <input type="password" id="adminPassword" placeholder="Ingresa la contraseña" required autofocus>
+                    <label>Contraseña (opcional)</label>
+                    <input type="password" id="adminPassword" placeholder="Déjalo vacío y haz clic en Ingresar">
                 </div>
                 <button type="submit" class="btn btn-primary" style="width:100%; padding:0.9rem;">Ingresar al Panel</button>
             </form>
@@ -156,12 +153,12 @@
             <div class="admin-menu">
                 <div class="admin-menu-item active" onclick="showSection('dashboard', event)">📊 Dashboard</div>
                 <div class="admin-menu-item" onclick="showSection('todayDashboard', event)">📅 Dashboard del Día</div>
-                <div class="admin-menu-item" onclick="showSection('orders', event)">📦 Pedidos</div>
+                <div class="admin-menu-item" onclick="showSection('orders', event)"> Pedidos</div>
                 <div class="admin-menu-item" onclick="showSection('drivers', event)">🏍️ Domiciliarios</div>
-                <div class="admin-menu-item" onclick="showSection('customers', event)">👥 Clientes</div>
+                <div class="admin-menu-item" onclick="showSection('customers', event)"> Clientes</div>
                 <div class="admin-menu-item" onclick="showSection('products', event)">🛒 Productos</div>
                 <div class="admin-menu-item" onclick="showSection('vehicles', event)">🚗 Vehículos</div>
-                <div class="admin-menu-item" onclick="showSection('brands', event)">🏷️ Marcas</div>
+                <div class="admin-menu-item" onclick="showSection('brands', event)">️ Marcas</div>
                 <div class="admin-menu-item" onclick="showSection('banners', event)">🖼️ Banners</div>
                 <div class="admin-menu-item" onclick="showSection('coupons', event)">🎟️ Cupones</div>
                 <div class="admin-menu-item" onclick="showSection('delivery', event)">📍 Zonas Delivery</div>
@@ -170,7 +167,7 @@
                 <div class="admin-menu-item" onclick="showSection('appearance', event)">🎨 Apariencia</div>
                 <div class="admin-menu-item" onclick="showSection('settings', event)">⚙️ Configuración</div>
                 <div class="admin-menu-item" onclick="showSection('export', event)">💾 Exportar Datos</div>
-                <div class="admin-menu-item" onclick="logoutAdmin()" style="margin-top:2rem; background:#dc3545;">🚪 Salir</div>
+                <div class="admin-menu-item" onclick="logoutAdmin()" style="margin-top:2rem; background:#dc3545;"> Salir</div>
             </div>
         </aside>
 
@@ -207,10 +204,7 @@
                     <div class="dashboard-card"><h4>Pendientes</h4><div class="value" id="todayPending">0</div><div class="sub">Por asignar</div></div>
                     <div class="dashboard-card"><h4>En Camino</h4><div class="value" id="todayShipped">0</div><div class="sub">Con domiciliario</div></div>
                 </div>
-                <div class="admin-card">
-                    <h3>Pedidos de Hoy</h3>
-                    <div id="todayOrdersList"></div>
-                </div>
+                <div class="admin-card"><h3>Pedidos de Hoy</h3><div id="todayOrdersList"></div></div>
             </div>
 
             <div class="admin-section" id="section-orders">
@@ -244,10 +238,7 @@
                     </div>
                     <button class="btn btn-primary" onclick="addDriver()">Agregar Domiciliario</button>
                 </div>
-                <div class="admin-card">
-                    <h3>Domiciliarios registrados</h3>
-                    <div id="driversList"></div>
-                </div>
+                <div class="admin-card"><h3>Domiciliarios registrados</h3><div id="driversList"></div></div>
             </div>
 
             <div class="admin-section" id="section-customers">
@@ -289,18 +280,12 @@
                         <div class="form-group" style="display:flex; align-items:flex-end;"><button class="btn btn-primary" onclick="addVehicleBrand()" style="width:100%;">Agregar Marca</button></div>
                     </div>
                 </div>
-                <div class="admin-card">
-                    <h3>Marcas y modelos</h3>
-                    <div id="vehiclesList"></div>
-                </div>
+                <div class="admin-card"><h3>Marcas y modelos</h3><div id="vehiclesList"></div></div>
             </div>
 
             <div class="admin-section" id="section-brands">
                 <h2 class="section-title">Marcas de Repuestos</h2>
-                <div class="admin-card">
-                    <h3>Marcas que trabajamos</h3>
-                    <div id="adminBrandsList"></div>
-                </div>
+                <div class="admin-card"><h3>Marcas que trabajamos</h3><div id="adminBrandsList"></div></div>
             </div>
 
             <div class="admin-section" id="section-banners">
@@ -333,10 +318,7 @@
                     </div>
                     <button class="btn btn-primary" onclick="createCoupon()">Crear Cupón</button>
                 </div>
-                <div class="admin-card">
-                    <h3>Cupones activos</h3>
-                    <div id="couponsList"></div>
-                </div>
+                <div class="admin-card"><h3>Cupones activos</h3><div id="couponsList"></div></div>
             </div>
 
             <div class="admin-section" id="section-delivery">
@@ -350,18 +332,12 @@
                     </div>
                     <button class="btn btn-primary" onclick="addDeliveryZone()">Agregar Zona</button>
                 </div>
-                <div class="admin-card">
-                    <h3>Zonas configuradas</h3>
-                    <div id="deliveryZonesList"></div>
-                </div>
+                <div class="admin-card"><h3>Zonas configuradas</h3><div id="deliveryZonesList"></div></div>
             </div>
 
             <div class="admin-section" id="section-reviews">
                 <h2 class="section-title">Reseñas de Clientes</h2>
-                <div class="admin-card">
-                    <h3>Todas las reseñas</h3>
-                    <div id="reviewsList"></div>
-                </div>
+                <div class="admin-card"><h3>Todas las reseñas</h3><div id="reviewsList"></div></div>
             </div>
 
             <div class="admin-section" id="section-footer">
@@ -611,25 +587,18 @@
         window.removeSelectedVehicle = function(index) { selectedVehiclesList.splice(index, 1); renderSelectedVehicles(); };
         window.calculateSalePrice = function() { const cost = parseFloat(document.getElementById('productCostPrice').value) || 0; const margin = parseFloat(document.getElementById('productMargin').value) || 0; if (margin >= 100) { document.getElementById('productPrice').value = '0.00'; alert('El margen no puede ser 100% o más'); return; } const salePrice = cost / (1 - margin / 100); document.getElementById('productPrice').value = salePrice.toFixed(2); };
 
-        // ============ LOGIN DEL ADMINISTRADOR ============
+        // ============ LOGIN SIN CONTRASEÑA (TEMPORAL) ============
         window.adminLogin = function(event) {
             event.preventDefault();
-            const password = document.getElementById('adminPassword').value;
-            if (password === ADMIN_PASSWORD) {
-                document.getElementById('loginScreen').style.display = 'none';
-                document.getElementById('adminPanel').classList.remove('hidden');
-                document.getElementById('adminPanel').style.display = 'flex';
-                document.getElementById('adminPassword').value = '';
-                loadAll();
-            } else { 
-                alert('❌ Contraseña incorrecta. Intenta de nuevo.'); 
-                document.getElementById('adminPassword').value = '';
-                document.getElementById('adminPassword').focus();
-            }
+            // TEMPORAL: Sin validación de contraseña
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('adminPanel').classList.remove('hidden');
+            document.getElementById('adminPanel').style.display = 'flex';
+            document.getElementById('adminPassword').value = '';
+            loadAll();
         };
 
         window.logoutAdmin = function() { 
-            if (!confirm('¿Seguro que deseas salir del panel de administración?')) return;
             document.getElementById('adminPanel').style.display = 'none'; 
             document.getElementById('adminPanel').classList.add('hidden'); 
             document.getElementById('loginScreen').style.display = 'block'; 
@@ -746,7 +715,7 @@
                         <button class="btn btn-small btn-warning" onclick="updateOrderStatus('${order.id}', 'shipped')">Marcar enviado</button>
                         <button class="btn btn-small btn-success" onclick="updateOrderStatus('${order.id}', 'delivered')">Marcar entregado</button>
                         <button class="btn btn-small btn-secondary" onclick="updateOrderStatus('${order.id}', 'cancelled')">Cancelar</button>
-                        <button class="btn btn-small" style="background:#999;color:white;" onclick="deleteOrder('${order.id}')">🗑️ Eliminar</button>
+                        <button class="btn btn-small" style="background:#999;color:white;" onclick="deleteOrder('${order.id}')">️ Eliminar</button>
                     </div>
                 </div>`; 
             }).join(''); 
@@ -800,9 +769,9 @@
                     <button class="btn btn-small btn-primary" onclick="assignDriver('${order.id}')">Asignar</button>
                     ${order.driverName ? `<div style="margin-top:1rem; padding:1rem; background:white; border-radius:8px;"><strong>Domiciliario asignado:</strong> ${order.driverName}<br><strong>Teléfono:</strong> ${order.driverPhone || 'N/A'}</div>` : ''}
                     <div style="margin-top:1rem;">
-                        <button class="whatsapp-btn" onclick="sendDriverMessage('${order.id}')">📱 Enviar mensaje al domiciliario</button>
+                        <button class="whatsapp-btn" onclick="sendDriverMessage('${order.id}')"> Enviar mensaje al domiciliario</button>
                         <button class="whatsapp-btn" style="background:#25d366;" onclick="sendCustomerMessage('${order.id}')">💬 Enviar mensaje al cliente</button>
-                        <button class="notify-btn" onclick="notifyCustomerByBrowser('${order.id}')">🔔 Notificación navegador</button>
+                        <button class="notify-btn" onclick="notifyCustomerByBrowser('${order.id}')"> Notificación navegador</button>
                     </div>
                 </div>
                 <div style="margin-top:1rem; padding:1rem; background:#f8f8f8; border-radius:8px;">
@@ -845,7 +814,7 @@
             const order = orders.find(o => o.id === orderId); 
             if (!order || !order.driverPhone) { alert('No hay domiciliario asignado'); return; } 
             const cleanDriverPhone = order.driverPhone.replace(/\D/g, '');
-            const message = `Hola ${order.driverName}!%0A%0ANuevo pedido para entregar:%0A📦 Pedido #${order.id.slice(-6)}%0A👤 Cliente: ${order.userName}%0A📞 Teléfono cliente: ${order.userPhone}%0A📍 Dirección: ${order.address || 'Pickup en tienda'}%0A💰 Total: $${order.total.toFixed(2)}%0A%0AEl pedido ya fue recogido. Por favor confirma cuando lo entregues.`; 
+            const message = `Hola ${order.driverName}!%0A%0ANuevo pedido para entregar:%0A📦 Pedido #${order.id.slice(-6)}%0A👤 Cliente: ${order.userName}%0A📞 Teléfono cliente: ${order.userPhone}%0A📍 Dirección: ${order.address || 'Pickup en tienda'}%0A Total: $${order.total.toFixed(2)}%0A%0AEl pedido ya fue recogido. Por favor confirma cuando lo entregues.`; 
             window.open(`https://wa.me/${cleanDriverPhone}?text=${message}`, '_blank'); 
         };
         
@@ -853,7 +822,7 @@
             const order = orders.find(o => o.id === orderId); 
             if (!order || !order.userPhone) { alert('No hay teléfono del cliente'); return; } 
             const cleanCustomerPhone = order.userPhone.replace(/\D/g, '');
-            const statusText = { pending: 'pendiente', shipped: 'en camino 🚚', delivered: 'entregado ✅', cancelled: 'cancelado ❌' }[order.status] || order.status; 
+            const statusText = { pending: 'pendiente', shipped: 'en camino ', delivered: 'entregado ✅', cancelled: 'cancelado ❌' }[order.status] || order.status; 
             const message = `Hola ${order.userName}!%0A%0ATu pedido #${order.id.slice(-6)} está ${statusText}.%0A%0A${order.driverName ? `Domiciliario: ${order.driverName}%0ATeléfono: ${order.driverPhone}%0A` : ''}Total: $${order.total.toFixed(2)}%0A%0AGracias por tu compra!`; 
             window.open(`https://wa.me/${cleanCustomerPhone}?text=${message}`, '_blank'); 
         };
@@ -940,7 +909,7 @@
             document.getElementById('todayShipped').textContent = todayShipped;
             const list = document.getElementById('todayOrdersList');
             if (todayOrders.length === 0) { list.innerHTML = '<p style="text-align:center;color:#666;padding:1rem">No hay pedidos hoy.</p>'; return; }
-            list.innerHTML = todayOrders.sort((a,b) => new Date(b.date) - new Date(a.date)).map(order => { const statusText = { pending: 'Pendiente', shipped: 'En camino', delivered: 'Entregado', cancelled: 'Cancelado' }[order.status] || order.status; return `<div class="order-item"><div class="order-header"><div><strong>Pedido #${order.id.slice(-6)}</strong><br><small style="color:#666">${order.userName} - 📞 ${order.userPhone}</small>${order.customerCode ? `<br><small style="color:#dc3545;">Código: ${order.customerCode}</small>` : ''}</div><span class="order-status ${order.status}">${statusText}</span></div><div style="margin:0.5rem 0;"><strong>Total: $${Number(order.total).toFixed(2)}</strong> | ${order.deliveryMode === 'pickup' ? 'Pickup' : 'Delivery'}${order.deliveryZone ? ' - ' + order.deliveryZone : ''}${order.driverName ? `<br><small style="color:#9C27B0;">🏍️ Domiciliario: ${order.driverName}</small>` : ''}</div><div style="display:flex; gap:0.5rem; flex-wrap:wrap;"><button class="btn btn-small btn-primary" onclick="viewOrderDetail('${order.id}')">Ver detalle</button>${!order.driverId && order.status === 'pending' ? `<button class="btn btn-small btn-warning" onclick="quickAssignDriver('${order.id}')">Asignar domiciliario</button>` : ''}<button class="btn btn-small" style="background:#999;color:white;" onclick="deleteOrder('${order.id}')">🗑️ Eliminar</button></div></div>`; }).join('');
+            list.innerHTML = todayOrders.sort((a,b) => new Date(b.date) - new Date(a.date)).map(order => { const statusText = { pending: 'Pendiente', shipped: 'En camino', delivered: 'Entregado', cancelled: 'Cancelado' }[order.status] || order.status; return `<div class="order-item"><div class="order-header"><div><strong>Pedido #${order.id.slice(-6)}</strong><br><small style="color:#666">${order.userName} -  ${order.userPhone}</small>${order.customerCode ? `<br><small style="color:#dc3545;">Código: ${order.customerCode}</small>` : ''}</div><span class="order-status ${order.status}">${statusText}</span></div><div style="margin:0.5rem 0;"><strong>Total: $${Number(order.total).toFixed(2)}</strong> | ${order.deliveryMode === 'pickup' ? 'Pickup' : 'Delivery'}${order.deliveryZone ? ' - ' + order.deliveryZone : ''}${order.driverName ? `<br><small style="color:#9C27B0;">🏍️ Domiciliario: ${order.driverName}</small>` : ''}</div><div style="display:flex; gap:0.5rem; flex-wrap:wrap;"><button class="btn btn-small btn-primary" onclick="viewOrderDetail('${order.id}')">Ver detalle</button>${!order.driverId && order.status === 'pending' ? `<button class="btn btn-small btn-warning" onclick="quickAssignDriver('${order.id}')">Asignar domiciliario</button>` : ''}<button class="btn btn-small" style="background:#999;color:white;" onclick="deleteOrder('${order.id}')">🗑️ Eliminar</button></div></div>`; }).join('');
         }
 
         window.quickAssignDriver = async function(orderId) { const driverName = prompt('Nombre del domiciliario:'); const driverPhone = prompt('Teléfono del domiciliario:'); const commission = parseFloat(prompt('Comisión por entrega ($):')); if (!driverName || !driverPhone || !commission) { alert('Completa todos los datos'); return; } try { await updateDoc(doc(db, 'orders', orderId), { driverId: 'manual-' + Date.now(), driverName: driverName, driverPhone: driverPhone, driverCommission: commission, status: 'shipped' }); await loadOrders(); await loadTodayDashboard(); alert('✅ Domiciliario asignado'); } catch (error) { alert('Error: ' + error.message); } };
@@ -957,4 +926,18 @@
         window.exportProducts = function() { 
             if (products.length === 0) { alert('No hay productos para exportar'); return; } 
             let csv = 'Código,Nombre,Marca,Categoría,Subcategoría,Vehículos,Precio Compra,Margen,Precio Venta,Descuento,Stock\n'; 
-            products.forEach(p => { csv += `"${p.code || ''}","${p.name}","${p.brand || ''}","${p.category || ''}","${p.subcategory || ''}","${p.vehicle || ''}",${p.costPrice ||
+            products.forEach(p => { csv += `"${p.code || ''}","${p.name}","${p.brand || ''}","${p.category || ''}","${p.subcategory || ''}","${p.vehicle || ''}",${p.costPrice || 0},${p.margin || 0},${p.price},${p.discount || 0},${p.stock}\n`; }); 
+            downloadCSV(csv, 'productos_akira_motors.csv'); 
+        };
+        window.exportCustomers = function() { 
+            if (customers.length === 0) { alert('No hay clientes para exportar'); return; } 
+            let csv = 'Código,Nombre,Teléfono\n'; 
+            customers.forEach(c => { csv += `"${c.customerCode || ''}","${c.name}","${c.phone}"\n`; }); 
+            downloadCSV(csv, 'clientes_akira_motors.csv'); 
+        };
+        window.exportBackup = async function() { 
+            const backup = { products, orders, reviews, coupons, deliveryZones, drivers, customers, brands, banners, vehicles, siteConfig, bcvRate, exportDate: new Date().toISOString() }; 
+            const json = JSON.stringify(backup, null, 2); 
+            const blob = new Blob([json], { type: 'application/json' }); 
+            const url = URL.createObjectURL(blob); 
+            const a = doc
