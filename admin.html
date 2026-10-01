@@ -43,8 +43,9 @@
         .admin-actions { display: flex; gap: 0.5rem; flex-wrap: wrap; }
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 3000; align-items: center; justify-content: center; padding: 1rem; }
         .modal.active { display: flex; }
-        .modal-content { background: white; padding: 2rem; border-radius: 12px; max-width: 800px; width: 100%; max-height: 90vh; overflow-y: auto; }
+        .modal-content { background: white; padding: 2rem; border-radius: 12px; max-width: 800px; width: 100%; max-height: 90vh; overflow-y: auto; position: relative; }
         .modal-content h2 { color: #dc3545; margin-bottom: 1.5rem; }
+        .modal-close { position: absolute; top: 1rem; right: 1rem; background: #dc3545; color: white; border: none; width: 35px; height: 35px; border-radius: 50%; font-size: 1.2rem; cursor: pointer; z-index: 10; }
         .form-section { background: #f8f8f8; padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem; border: 1px solid #eee; }
         .form-section h3 { color: #dc3545; margin-bottom: 1rem; font-size: 1.1rem; }
         .checkbox-group { display: flex; align-items: center; gap: 0.5rem; }
@@ -54,9 +55,13 @@
         .alert-info { background: #e3f2fd; border: 1px solid #90caf9; color: #1565c0; padding: 0.8rem; border-radius: 8px; margin-bottom: 1rem; font-size: 0.85rem; }
         .alert-warning { background: #fff3cd; border: 1px solid #ffc107; color: #856404; padding: 0.8rem; border-radius: 8px; margin-bottom: 1rem; font-size: 0.85rem; }
         .alert-success { background: #d4edda; border: 1px solid #c3e6cb; color: #155724; padding: 0.8rem; border-radius: 8px; margin-bottom: 1rem; font-size: 0.85rem; }
+        
+        /* LOGIN SCREEN */
         .login-container { max-width: 400px; margin: 4rem auto; padding: 2rem; background: white; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
         .login-container h2 { color: #dc3545; margin-bottom: 1.5rem; text-align: center; }
+        .login-container .login-icon { font-size: 4rem; text-align: center; margin-bottom: 1rem; }
         .hidden { display: none !important; }
+        
         .rate-display { background: #fff5f5; padding: 1rem; border-radius: 8px; border-left: 4px solid #dc3545; margin-bottom: 1rem; }
         .rate-display .current { font-size: 1.5rem; font-weight: bold; color: #dc3545; }
         .banner-preview-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; margin-top: 1rem; }
@@ -122,17 +127,26 @@
     </style>
 </head>
 <body>
+    <!-- PANTALLA DE LOGIN -->
     <div id="loginScreen" style="width:100%;">
         <div class="login-container">
+            <div class="login-icon">🔐</div>
             <h2>Acceso Administrador</h2>
+            <p style="text-align:center; color:#666; margin-bottom:1.5rem; font-size:0.9rem;">
+                Ingresa la contraseña para acceder al panel
+            </p>
             <form onsubmit="adminLogin(event)">
-                <div class="form-group"><label>Contraseña</label><input type="password" id="adminPassword" required></div>
-                <button type="submit" class="btn btn-primary" style="width:100%">Ingresar</button>
+                <div class="form-group">
+                    <label>Contraseña</label>
+                    <input type="password" id="adminPassword" placeholder="Ingresa la contraseña" required autofocus>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width:100%; padding:0.9rem;">Ingresar al Panel</button>
             </form>
             <a href="index.html" class="back-link">← Volver a la tienda</a>
         </div>
     </div>
 
+    <!-- PANEL DE ADMINISTRACIÓN -->
     <div id="adminPanel" class="hidden" style="display:flex; width:100%;">
         <aside class="admin-sidebar">
             <div class="admin-sidebar-header">
@@ -140,23 +154,23 @@
                 <small>Panel de Administración</small>
             </div>
             <div class="admin-menu">
-                <div class="admin-menu-item active" onclick="showSection('dashboard', event)">Dashboard</div>
-                <div class="admin-menu-item" onclick="showSection('todayDashboard', event)">Dashboard del Día</div>
-                <div class="admin-menu-item" onclick="showSection('orders', event)">Pedidos</div>
-                <div class="admin-menu-item" onclick="showSection('drivers', event)">Domiciliarios</div>
-                <div class="admin-menu-item" onclick="showSection('customers', event)">Clientes</div>
-                <div class="admin-menu-item" onclick="showSection('products', event)">Productos</div>
-                <div class="admin-menu-item" onclick="showSection('vehicles', event)">Vehículos</div>
-                <div class="admin-menu-item" onclick="showSection('brands', event)">Marcas</div>
-                <div class="admin-menu-item" onclick="showSection('banners', event)">Banners</div>
-                <div class="admin-menu-item" onclick="showSection('coupons', event)">Cupones</div>
-                <div class="admin-menu-item" onclick="showSection('delivery', event)">Zonas Delivery</div>
-                <div class="admin-menu-item" onclick="showSection('reviews', event)">Reseñas</div>
-                <div class="admin-menu-item" onclick="showSection('footer', event)">Pie de página</div>
-                <div class="admin-menu-item" onclick="showSection('appearance', event)">Apariencia</div>
-                <div class="admin-menu-item" onclick="showSection('settings', event)">Configuración</div>
-                <div class="admin-menu-item" onclick="showSection('export', event)">Exportar Datos</div>
-                <div class="admin-menu-item" onclick="logoutAdmin()" style="margin-top:2rem; background:#dc3545;">Salir</div>
+                <div class="admin-menu-item active" onclick="showSection('dashboard', event)">📊 Dashboard</div>
+                <div class="admin-menu-item" onclick="showSection('todayDashboard', event)">📅 Dashboard del Día</div>
+                <div class="admin-menu-item" onclick="showSection('orders', event)">📦 Pedidos</div>
+                <div class="admin-menu-item" onclick="showSection('drivers', event)">🏍️ Domiciliarios</div>
+                <div class="admin-menu-item" onclick="showSection('customers', event)">👥 Clientes</div>
+                <div class="admin-menu-item" onclick="showSection('products', event)">🛒 Productos</div>
+                <div class="admin-menu-item" onclick="showSection('vehicles', event)">🚗 Vehículos</div>
+                <div class="admin-menu-item" onclick="showSection('brands', event)">🏷️ Marcas</div>
+                <div class="admin-menu-item" onclick="showSection('banners', event)">🖼️ Banners</div>
+                <div class="admin-menu-item" onclick="showSection('coupons', event)">🎟️ Cupones</div>
+                <div class="admin-menu-item" onclick="showSection('delivery', event)">📍 Zonas Delivery</div>
+                <div class="admin-menu-item" onclick="showSection('reviews', event)">⭐ Reseñas</div>
+                <div class="admin-menu-item" onclick="showSection('footer', event)">📄 Pie de página</div>
+                <div class="admin-menu-item" onclick="showSection('appearance', event)">🎨 Apariencia</div>
+                <div class="admin-menu-item" onclick="showSection('settings', event)">⚙️ Configuración</div>
+                <div class="admin-menu-item" onclick="showSection('export', event)">💾 Exportar Datos</div>
+                <div class="admin-menu-item" onclick="logoutAdmin()" style="margin-top:2rem; background:#dc3545;">🚪 Salir</div>
             </div>
         </aside>
 
@@ -409,7 +423,7 @@
                 <div class="admin-card">
                     <h3>WhatsApp de la tienda</h3>
                     <div class="alert-info">
-                        <strong>️ Importante:</strong> Este número se usará en TODA la web (botón flotante, hero, footer, confirmación de pedidos). 
+                        <strong>⚠️ Importante:</strong> Este número se usará en TODA la web (botón flotante, hero, footer, confirmación de pedidos). 
                         Incluye el código de país sin el símbolo +. Ejemplo: 584148700616
                     </div>
                     <div class="form-group">
@@ -426,9 +440,9 @@
                 <div class="admin-card">
                     <h3>Descargar datos en CSV (Excel)</h3>
                     <div style="display:flex; gap:1rem; flex-wrap:wrap;">
-                        <button class="btn btn-primary" onclick="exportOrders()"> Exportar Pedidos</button>
-                        <button class="btn btn-success" onclick="exportProducts()"> Exportar Productos</button>
-                        <button class="btn btn-info" onclick="exportCustomers()"> Exportar Clientes</button>
+                        <button class="btn btn-primary" onclick="exportOrders()">📥 Exportar Pedidos</button>
+                        <button class="btn btn-success" onclick="exportProducts()">📥 Exportar Productos</button>
+                        <button class="btn btn-info" onclick="exportCustomers()">📥 Exportar Clientes</button>
                     </div>
                 </div>
                 <div class="admin-card">
@@ -442,6 +456,7 @@
 
     <div class="modal" id="productModal">
         <div class="modal-content">
+            <button class="modal-close" onclick="closeModal('productModal')">×</button>
             <h2 id="productModalTitle">Agregar Producto</h2>
             <div class="alert-info">Los campos con * son obligatorios. Puedes subir hasta 5 fotos por producto.</div>
             <form onsubmit="saveProduct(event)">
@@ -525,6 +540,7 @@
 
     <div class="modal" id="brandModal">
         <div class="modal-content">
+            <button class="modal-close" onclick="closeModal('brandModal')">×</button>
             <h2 id="brandModalTitle">Imagen de Marca</h2>
             <form onsubmit="saveBrandImage(event)">
                 <div class="form-group">
@@ -595,6 +611,7 @@
         window.removeSelectedVehicle = function(index) { selectedVehiclesList.splice(index, 1); renderSelectedVehicles(); };
         window.calculateSalePrice = function() { const cost = parseFloat(document.getElementById('productCostPrice').value) || 0; const margin = parseFloat(document.getElementById('productMargin').value) || 0; if (margin >= 100) { document.getElementById('productPrice').value = '0.00'; alert('El margen no puede ser 100% o más'); return; } const salePrice = cost / (1 - margin / 100); document.getElementById('productPrice').value = salePrice.toFixed(2); };
 
+        // ============ LOGIN DEL ADMINISTRADOR ============
         window.adminLogin = function(event) {
             event.preventDefault();
             const password = document.getElementById('adminPassword').value;
@@ -604,26 +621,42 @@
                 document.getElementById('adminPanel').style.display = 'flex';
                 document.getElementById('adminPassword').value = '';
                 loadAll();
-            } else { alert('Contraseña incorrecta'); }
+            } else { 
+                alert('❌ Contraseña incorrecta. Intenta de nuevo.'); 
+                document.getElementById('adminPassword').value = '';
+                document.getElementById('adminPassword').focus();
+            }
         };
 
-        window.logoutAdmin = function() { document.getElementById('adminPanel').style.display = 'none'; document.getElementById('adminPanel').classList.add('hidden'); document.getElementById('loginScreen').style.display = 'block'; };
-        window.showSection = function(sectionId, event) { document.querySelectorAll('.admin-section').forEach(s => s.classList.remove('active')); document.querySelectorAll('.admin-menu-item').forEach(m => m.classList.remove('active')); document.getElementById('section-' + sectionId).classList.add('active'); if (event) event.currentTarget.classList.add('active'); if (sectionId === 'customers') loadCustomers(); if (sectionId === 'todayDashboard') loadTodayDashboard(); if (sectionId === 'drivers') renderDrivers(); };
+        window.logoutAdmin = function() { 
+            if (!confirm('¿Seguro que deseas salir del panel de administración?')) return;
+            document.getElementById('adminPanel').style.display = 'none'; 
+            document.getElementById('adminPanel').classList.add('hidden'); 
+            document.getElementById('loginScreen').style.display = 'block'; 
+        };
+        
+        window.showSection = function(sectionId, event) { 
+            document.querySelectorAll('.admin-section').forEach(s => s.classList.remove('active')); 
+            document.querySelectorAll('.admin-menu-item').forEach(m => m.classList.remove('active')); 
+            document.getElementById('section-' + sectionId).classList.add('active'); 
+            if (event) event.currentTarget.classList.add('active'); 
+            if (sectionId === 'customers') loadCustomers(); 
+            if (sectionId === 'todayDashboard') loadTodayDashboard(); 
+            if (sectionId === 'drivers') renderDrivers(); 
+        };
 
         async function loadAll() { await loadBcvRate(); await loadLogo(); await loadPickupMaps(); await loadWhatsapp(); await loadBanners(); await loadSiteConfig(); await loadVehicles(); await loadBrands(); await loadProducts(); await loadOrders(); await loadReviews(); await loadCoupons(); await loadDeliveryZones(); await loadDrivers(); await loadCustomers(); await loadDashboard(); }
 
         async function loadBcvRate() { try { const rateDoc = await getDoc(doc(db, 'settings', 'bcvRate')); if (rateDoc.exists()) bcvRate = rateDoc.data().value; document.getElementById('currentRate').textContent = `Bs. ${bcvRate} por $1`; } catch (error) { console.log('Error tasa:', error); } }
-        window.updateBcvRate = async function() { const newRate = parseFloat(document.getElementById('bcvRateInput').value); if (!newRate || newRate <= 0) { alert('Ingresa una tasa válida'); return; } try { await setDoc(doc(db, 'settings', 'bcvRate'), { value: newRate, updatedAt: new Date().toISOString() }); bcvRate = newRate; document.getElementById('currentRate').textContent = `Bs. ${bcvRate} por $1`; document.getElementById('bcvRateInput').value = ''; alert('Tasa BCV actualizada'); } catch (error) { alert('Error: ' + error.message); } };
+        window.updateBcvRate = async function() { const newRate = parseFloat(document.getElementById('bcvRateInput').value); if (!newRate || newRate <= 0) { alert('Ingresa una tasa válida'); return; } try { await setDoc(doc(db, 'settings', 'bcvRate'), { value: newRate, updatedAt: new Date().toISOString() }); bcvRate = newRate; document.getElementById('currentRate').textContent = `Bs. ${bcvRate} por $1`; document.getElementById('bcvRateInput').value = ''; alert('✅ Tasa BCV actualizada'); } catch (error) { alert('Error: ' + error.message); } };
 
         async function loadPickupMaps() { try { const pickupDoc = await getDoc(doc(db, 'settings', 'pickupMaps')); if (pickupDoc.exists()) document.getElementById('pickupMapsInput').value = pickupDoc.data().url || ''; } catch (error) { console.log('Error pickup:', error); } }
-        window.updatePickupMaps = async function() { const url = document.getElementById('pickupMapsInput').value.trim(); if (!url) { alert('Ingresa un link válido'); return; } try { await setDoc(doc(db, 'settings', 'pickupMaps'), { url: url, updatedAt: new Date().toISOString() }); alert('Ubicación de pickup actualizada'); } catch (error) { alert('Error: ' + error.message); } };
+        window.updatePickupMaps = async function() { const url = document.getElementById('pickupMapsInput').value.trim(); if (!url) { alert('Ingresa un link válido'); return; } try { await setDoc(doc(db, 'settings', 'pickupMaps'), { url: url, updatedAt: new Date().toISOString() }); alert('✅ Ubicación de pickup actualizada'); } catch (error) { alert('Error: ' + error.message); } };
 
         async function loadWhatsapp() { 
             try { 
                 const waDoc = await getDoc(doc(db, 'settings', 'whatsapp')); 
-                if (waDoc.exists() && waDoc.data().number) { 
-                    whatsappNumber = waDoc.data().number;
-                }
+                if (waDoc.exists() && waDoc.data().number) { whatsappNumber = waDoc.data().number; }
                 document.getElementById('whatsappNumber').value = whatsappNumber; 
             } catch (error) { console.log('Error whatsapp:', error); } 
         }
@@ -642,26 +675,26 @@
         async function loadLogo() { try { const logoDoc = await getDoc(doc(db, 'settings', 'logo')); if (logoDoc.exists()) document.getElementById('adminLogoPreview').innerHTML = `<img src="${logoDoc.data().image}">`; } catch (error) { console.log('Logo:', error); } }
         async function loadBanners() { try { const bannersDoc = await getDoc(doc(db, 'settings', 'banners')); if (bannersDoc.exists()) banners = bannersDoc.data().images || []; renderBannerPreviews(); } catch (error) { console.log('Banners:', error); } }
         function renderBannerPreviews() { const grid = document.getElementById('bannerPreviewGrid'); const html = banners.length === 0 ? '<p style="color:#666;text-align:center;grid-column:1/-1;">No hay banners.</p>' : banners.map((banner, i) => `<div class="banner-preview-item"><img src="${banner}" alt="Banner ${i+1}"><button class="remove-btn" onclick="removeBanner(${i})">×</button><div style="padding:0.5rem;font-size:0.8rem;text-align:center;">Banner ${i+1}</div></div>`).join(''); if (grid) grid.innerHTML = html; }
-        window.addBanner = async function(event) { const file = event.target.files[0]; if (!file) return; if (banners.length >= 5) { alert('Máximo 5 banners permitidos'); event.target.value = ''; return; } if (file.size > 1 * 1024 * 1024) { alert('Máximo 1MB'); event.target.value = ''; return; } const reader = new FileReader(); reader.onload = async function(e) { banners.push(e.target.result); try { await setDoc(doc(db, 'settings', 'banners'), { images: banners, updatedAt: new Date().toISOString() }); renderBannerPreviews(); alert('Banner agregado'); } catch (error) { alert('Error: ' + error.message); } }; reader.readAsDataURL(file); event.target.value = ''; };
+        window.addBanner = async function(event) { const file = event.target.files[0]; if (!file) return; if (banners.length >= 5) { alert('Máximo 5 banners permitidos'); event.target.value = ''; return; } if (file.size > 1 * 1024 * 1024) { alert('Máximo 1MB'); event.target.value = ''; return; } const reader = new FileReader(); reader.onload = async function(e) { banners.push(e.target.result); try { await setDoc(doc(db, 'settings', 'banners'), { images: banners, updatedAt: new Date().toISOString() }); renderBannerPreviews(); alert('✅ Banner agregado'); } catch (error) { alert('Error: ' + error.message); } }; reader.readAsDataURL(file); event.target.value = ''; };
         window.removeBanner = async function(index) { if (!confirm('¿Eliminar este banner?')) return; banners.splice(index, 1); try { await setDoc(doc(db, 'settings', 'banners'), { images: banners, updatedAt: new Date().toISOString() }); renderBannerPreviews(); alert('Banner eliminado'); } catch (error) { alert('Error: ' + error.message); } };
 
         async function loadSiteConfig() { try { const configDoc = await getDoc(doc(db, 'settings', 'siteConfig')); if (configDoc.exists()) siteConfig = { ...siteConfig, ...configDoc.data() }; document.getElementById('cfgCompanyName').value = siteConfig.companyName; document.getElementById('cfgSlogan').value = siteConfig.slogan; document.getElementById('cfgDescription').value = siteConfig.description; document.getElementById('cfgAddress').value = siteConfig.address; document.getElementById('cfgPhone').value = siteConfig.phone; document.getElementById('cfgSchedule').value = siteConfig.schedule; document.getElementById('cfgFacebook').value = siteConfig.facebook || ''; document.getElementById('cfgInstagram').value = siteConfig.instagram || ''; document.getElementById('cfgTiktok').value = siteConfig.tiktok || ''; } catch (error) { console.log('Config:', error); } }
-        window.saveSiteConfig = async function() { const config = { companyName: document.getElementById('cfgCompanyName').value, slogan: document.getElementById('cfgSlogan').value, description: document.getElementById('cfgDescription').value, address: document.getElementById('cfgAddress').value, phone: document.getElementById('cfgPhone').value, schedule: document.getElementById('cfgSchedule').value, facebook: document.getElementById('cfgFacebook').value, instagram: document.getElementById('cfgInstagram').value, tiktok: document.getElementById('cfgTiktok').value, updatedAt: new Date().toISOString() }; try { await setDoc(doc(db, 'settings', 'siteConfig'), config); siteConfig = { ...siteConfig, ...config }; alert('Configuración guardada'); } catch (error) { alert('Error: ' + error.message); } };
+        window.saveSiteConfig = async function() { const config = { companyName: document.getElementById('cfgCompanyName').value, slogan: document.getElementById('cfgSlogan').value, description: document.getElementById('cfgDescription').value, address: document.getElementById('cfgAddress').value, phone: document.getElementById('cfgPhone').value, schedule: document.getElementById('cfgSchedule').value, facebook: document.getElementById('cfgFacebook').value, instagram: document.getElementById('cfgInstagram').value, tiktok: document.getElementById('cfgTiktok').value, updatedAt: new Date().toISOString() }; try { await setDoc(doc(db, 'settings', 'siteConfig'), config); siteConfig = { ...siteConfig, ...config }; alert('✅ Configuración guardada'); } catch (error) { alert('Error: ' + error.message); } };
 
         async function loadVehicles() { try { const vehiclesDoc = await getDoc(doc(db, 'settings', 'vehicles')); if (vehiclesDoc.exists()) { vehicles = vehiclesDoc.data().brands || {}; } else { vehicles = { "Toyota": ["Corolla", "Hilux", "Yaris", "Fortuner"], "Nissan": ["Versa", "Sentra", "Frontier", "X-Trail"], "Chevrolet": ["Aveo", "Cruze", "Captiva", "Silverado"], "Ford": ["Fiesta", "Focus", "Ranger", "Explorer"], "Hyundai": ["Tucson", "Creta", "Accent", "Santa Fe"], "Kia": ["Rio", "Sportage", "Picanto", "Seltos"], "Mitsubishi": ["L200", "Outlander", "Montero", "ASX"] }; await setDoc(doc(db, 'settings', 'vehicles'), { brands: vehicles }); } renderVehicles(); } catch (error) { console.error('Vehículos:', error); } }
         function renderVehicles() { const list = document.getElementById('vehiclesList'); if (Object.keys(vehicles).length === 0) { list.innerHTML = '<p style="text-align:center;color:#666;padding:1rem">No hay marcas registradas.</p>'; return; } let html = ''; for (const [brand, models] of Object.entries(vehicles)) { html += `<div class="admin-item" style="flex-direction:column; align-items:stretch;"><div style="display:flex; justify-content:space-between; align-items:center; width:100%;"><strong style="font-size:1.1rem; color:#dc3545;">${brand}</strong><button class="btn btn-small btn-secondary" onclick="deleteVehicleBrand('${brand}')">Eliminar marca</button></div><div style="margin-top:1rem; padding:1rem; background:white; border-radius:8px; width:100%;"><div style="display:flex; gap:0.5rem; margin-bottom:1rem;"><input type="text" id="newModel-${brand}" placeholder="Nuevo modelo" style="flex:1; padding:0.5rem; border:1px solid #ddd; border-radius:8px;"><button class="btn btn-small btn-primary" onclick="addVehicleModel('${brand}')">Agregar modelo</button></div><div style="display:flex; flex-wrap:wrap; gap:0.5rem;">${models.map(model => `<span class="vehicle-tag">${model}<button onclick="deleteVehicleModel('${brand}', '${model}')">×</button></span>`).join('')}</div></div></div>`; } list.innerHTML = html; }
-        window.addVehicleBrand = async function() { const brand = document.getElementById('newVehicleBrand').value.trim(); if (!brand) { alert('Ingresa el nombre de la marca'); return; } if (vehicles[brand]) { alert('Esta marca ya existe'); return; } vehicles[brand] = []; try { await setDoc(doc(db, 'settings', 'vehicles'), { brands: vehicles, updatedAt: new Date().toISOString() }); document.getElementById('newVehicleBrand').value = ''; renderVehicles(); alert('Marca agregada'); } catch (error) { alert('Error: ' + error.message); } };
+        window.addVehicleBrand = async function() { const brand = document.getElementById('newVehicleBrand').value.trim(); if (!brand) { alert('Ingresa el nombre de la marca'); return; } if (vehicles[brand]) { alert('Esta marca ya existe'); return; } vehicles[brand] = []; try { await setDoc(doc(db, 'settings', 'vehicles'), { brands: vehicles, updatedAt: new Date().toISOString() }); document.getElementById('newVehicleBrand').value = ''; renderVehicles(); alert('✅ Marca agregada'); } catch (error) { alert('Error: ' + error.message); } };
         window.deleteVehicleBrand = async function(brand) { if (!confirm(`¿Eliminar la marca "${brand}" y todos sus modelos?`)) return; delete vehicles[brand]; try { await setDoc(doc(db, 'settings', 'vehicles'), { brands: vehicles, updatedAt: new Date().toISOString() }); renderVehicles(); alert('Marca eliminada'); } catch (error) { alert('Error: ' + error.message); } };
-        window.addVehicleModel = async function(brand) { const modelInput = document.getElementById(`newModel-${brand}`); const model = modelInput.value.trim(); if (!model) { alert('Ingresa el nombre del modelo'); return; } if (vehicles[brand].includes(model)) { alert('Este modelo ya existe'); return; } vehicles[brand].push(model); try { await setDoc(doc(db, 'settings', 'vehicles'), { brands: vehicles, updatedAt: new Date().toISOString() }); modelInput.value = ''; renderVehicles(); alert('Modelo agregado'); } catch (error) { alert('Error: ' + error.message); } };
+        window.addVehicleModel = async function(brand) { const modelInput = document.getElementById(`newModel-${brand}`); const model = modelInput.value.trim(); if (!model) { alert('Ingresa el nombre del modelo'); return; } if (vehicles[brand].includes(model)) { alert('Este modelo ya existe'); return; } vehicles[brand].push(model); try { await setDoc(doc(db, 'settings', 'vehicles'), { brands: vehicles, updatedAt: new Date().toISOString() }); modelInput.value = ''; renderVehicles(); alert('✅ Modelo agregado'); } catch (error) { alert('Error: ' + error.message); } };
         window.deleteVehicleModel = async function(brand, model) { if (!confirm(`¿Eliminar el modelo "${model}" de ${brand}?`)) return; vehicles[brand] = vehicles[brand].filter(m => m !== model); try { await setDoc(doc(db, 'settings', 'vehicles'), { brands: vehicles, updatedAt: new Date().toISOString() }); renderVehicles(); alert('Modelo eliminado'); } catch (error) { alert('Error: ' + error.message); } };
 
         async function loadBrands() { try { const snapshot = await getDocs(collection(db, 'brands')); if (snapshot.empty) { brands = defaultBrands; for (const brand of defaultBrands) await setDoc(doc(db, 'brands', brand.id), brand); } else { brands = []; snapshot.forEach(docSnap => brands.push({ id: docSnap.id, ...docSnap.data() })); } renderAdminBrands(); } catch (error) { console.error('Marcas:', error); } }
         function renderAdminBrands() { const list = document.getElementById('adminBrandsList'); list.innerHTML = brands.map(brand => { const thumbHtml = brand.image ? `<img src="${brand.image}">` : ''; return `<div class="admin-item"><div class="admin-info"><div class="admin-thumb">${thumbHtml}</div><div><strong>${brand.name}</strong><br><small style="color:#666">${brand.image ? 'Imagen cargada' : 'Sin imagen'}</small></div></div><div class="admin-actions"><button class="btn btn-small btn-primary" onclick="editBrandImage('${brand.id}')">${brand.image ? 'Cambiar' : 'Agregar Imagen'}</button></div></div>`; }).join(''); }
         window.editBrandImage = function(brandId) { const brand = brands.find(b => b.id === brandId); document.getElementById('brandModalTitle').textContent = `Imagen: ${brand.name}`; document.getElementById('editBrandId').value = brandId; document.getElementById('currentBrandImageData').value = brand.image || ''; if (brand.image) { document.getElementById('brandImagePreview').innerHTML = `<img src="${brand.image}">`; } else { document.getElementById('brandImagePreview').innerHTML = '<div style="color:#999;">Selecciona una imagen</div>'; } document.getElementById('brandImageInput').value = ''; document.getElementById('brandModal').classList.add('active'); };
         window.previewBrandImage = function(event) { const file = event.target.files[0]; if (file) { if (file.size > 1 * 1024 * 1024) { alert('Máximo 1MB'); event.target.value = ''; return; } const reader = new FileReader(); reader.onload = function(e) { document.getElementById('currentBrandImageData').value = e.target.result; document.getElementById('brandImagePreview').innerHTML = `<img src="${e.target.result}">`; }; reader.readAsDataURL(file); } };
-        window.saveBrandImage = async function(event) { event.preventDefault(); const brandId = document.getElementById('editBrandId').value; const imageData = document.getElementById('currentBrandImageData').value; try { await updateDoc(doc(db, 'brands', brandId), { image: imageData || null }); await loadBrands(); closeModal('brandModal'); alert('Imagen guardada'); } catch (error) { alert('Error: ' + error.message); } };
-        window.uploadAdminLogo = async function(event) { const file = event.target.files[0]; if (!file) return; if (file.size > 1 * 1024 * 1024) { alert('Máximo 1MB'); return; } const reader = new FileReader(); reader.onload = async function(e) { try { await setDoc(doc(db, 'settings', 'logo'), { image: e.target.result, updatedAt: new Date().toISOString() }); document.getElementById('adminLogoPreview').innerHTML = `<img src="${e.target.result}">`; alert('Logo actualizado'); } catch (error) { alert('Error: ' + error.message); } }; reader.readAsDataURL(file); };
-        window.saveColors = async function() { const colors = { primary: document.getElementById('colorPrimary').value, accent: document.getElementById('colorAccent').value, background: document.getElementById('colorBg').value }; try { await setDoc(doc(db, 'settings', 'colors'), colors); alert('Colores guardados'); } catch (error) { alert('Error: ' + error.message); } };
+        window.saveBrandImage = async function(event) { event.preventDefault(); const brandId = document.getElementById('editBrandId').value; const imageData = document.getElementById('currentBrandImageData').value; try { await updateDoc(doc(db, 'brands', brandId), { image: imageData || null }); await loadBrands(); closeModal('brandModal'); alert('✅ Imagen guardada'); } catch (error) { alert('Error: ' + error.message); } };
+        window.uploadAdminLogo = async function(event) { const file = event.target.files[0]; if (!file) return; if (file.size > 1 * 1024 * 1024) { alert('Máximo 1MB'); return; } const reader = new FileReader(); reader.onload = async function(e) { try { await setDoc(doc(db, 'settings', 'logo'), { image: e.target.result, updatedAt: new Date().toISOString() }); document.getElementById('adminLogoPreview').innerHTML = `<img src="${e.target.result}">`; alert('✅ Logo actualizado'); } catch (error) { alert('Error: ' + error.message); } }; reader.readAsDataURL(file); };
+        window.saveColors = async function() { const colors = { primary: document.getElementById('colorPrimary').value, accent: document.getElementById('colorAccent').value, background: document.getElementById('colorBg').value }; try { await setDoc(doc(db, 'settings', 'colors'), colors); alert('✅ Colores guardados'); } catch (error) { alert('Error: ' + error.message); } };
 
         async function loadProducts() { try { const snapshot = await getDocs(collection(db, 'products')); products = []; snapshot.forEach(docSnap => products.push({ id: docSnap.id, ...docSnap.data() })); document.getElementById('statProducts').textContent = products.length; renderAdminProducts(); } catch (error) { console.error('Productos:', error); } }
         function renderAdminProducts(filter = '') { const list = document.getElementById('adminProductList'); let filtered = products; if (filter) { const q = filter.toLowerCase(); filtered = products.filter(p => p.name.toLowerCase().includes(q) || (p.code && p.code.toLowerCase().includes(q))); } if (filtered.length === 0) { list.innerHTML = '<p style="text-align:center;color:#666;padding:1rem">No hay productos.</p>'; return; } list.innerHTML = filtered.map(product => { const images = product.images || (product.image ? [product.image] : []); const thumbHtml = images.length > 0 ? `<img src="${images[0]}">` : ''; const offerText = product.discount && product.discount > 0 ? ` | -${product.discount}%` : ''; const recText = product.recommended ? ' | RECOMENDADO' : ''; const marginText = product.costPrice && product.margin ? ` | Compra: $${Number(product.costPrice).toFixed(2)} + ${product.margin}%` : ''; const vehicleText = product.vehicle ? ` | ${product.vehicle}` : ''; return `<div class="admin-item"><div class="admin-info"><div class="admin-thumb">${thumbHtml}</div><div><strong>${product.name}</strong>${recText}<br><small style="color:#dc3545">Código: ${product.code || 'Sin código'}</small><br><small style="color:#666">Venta: $${Number(product.price).toFixed(2)}${offerText}${marginText}${vehicleText} | Stock: ${product.stock}</small></div></div><div class="admin-actions"><button class="btn btn-small btn-primary" onclick="editProduct('${product.id}')">Editar</button><button class="btn btn-small btn-secondary" onclick="deleteProduct('${product.id}')">Eliminar</button></div></div>`; }).join(''); }
@@ -672,7 +705,7 @@
         function renderProductImages() { const container = document.getElementById('productImagesContainer'); if (currentProductImages.length === 0) { container.innerHTML = '<div style="color:#999;">No hay imágenes</div>'; return; } container.innerHTML = currentProductImages.map((img, i) => `<div class="img-thumb"><img src="${img}"><button type="button" class="remove-img" onclick="removeProductImage(${i})">×</button></div>`).join(''); }
         window.addProductImage = function(event) { const file = event.target.files[0]; if (!file) return; if (currentProductImages.length >= 5) { alert('Máximo 5 imágenes'); event.target.value = ''; return; } if (file.size > 1 * 1024 * 1024) { alert('Máximo 1MB'); event.target.value = ''; return; } const reader = new FileReader(); reader.onload = function(e) { currentProductImages.push(e.target.result); renderProductImages(); }; reader.readAsDataURL(file); event.target.value = ''; };
         window.removeProductImage = function(index) { currentProductImages.splice(index, 1); renderProductImages(); };
-        window.saveProduct = async function(event) { event.preventDefault(); const saveBtn = document.getElementById('saveProductBtn'); saveBtn.disabled = true; saveBtn.textContent = 'Guardando...'; const editId = document.getElementById('editProductId').value; const costPrice = parseFloat(document.getElementById('productCostPrice').value) || 0; const margin = parseFloat(document.getElementById('productMargin').value) || 0; const salePrice = parseFloat(document.getElementById('productPrice').value) || 0; const discount = parseFloat(document.getElementById('productDiscount').value) || 0; const productData = { code: document.getElementById('productCode').value, brand: document.getElementById('productBrand').value, name: document.getElementById('productName').value, partNumber: document.getElementById('productPartNumber').value, description: document.getElementById('productDescription').value, costPrice: costPrice, margin: margin, price: salePrice, discount: discount, stock: parseInt(document.getElementById('productStock').value), category: document.getElementById('productCategory').value, subcategory: document.getElementById('productSubcategory').value, vehicle: document.getElementById('productVehicle').value, recommended: document.getElementById('productRecommended').checked, diameter: document.getElementById('specDiameter').value, length: document.getElementById('specLength').value, width: document.getElementById('specWidth').value, height: document.getElementById('specHeight').value, weight: document.getElementById('specWeight').value, material: document.getElementById('specMaterial').value, voltage: document.getElementById('specVoltage').value, power: document.getElementById('specPower').value, thread: document.getElementById('specThread').value, images: currentProductImages.length > 0 ? currentProductImages : null, image: currentProductImages.length > 0 ? currentProductImages[0] : null, updatedAt: new Date().toISOString() }; try { if (editId) { await updateDoc(doc(db, 'products', editId), productData); } else { productData.createdAt = new Date().toISOString(); await addDoc(collection(db, 'products'), productData); } await loadProducts(); await loadDashboard(); closeModal('productModal'); alert('Producto guardado'); } catch (error) { alert('Error: ' + error.message); } saveBtn.disabled = false; saveBtn.textContent = 'Guardar Producto'; };
+        window.saveProduct = async function(event) { event.preventDefault(); const saveBtn = document.getElementById('saveProductBtn'); saveBtn.disabled = true; saveBtn.textContent = 'Guardando...'; const editId = document.getElementById('editProductId').value; const costPrice = parseFloat(document.getElementById('productCostPrice').value) || 0; const margin = parseFloat(document.getElementById('productMargin').value) || 0; const salePrice = parseFloat(document.getElementById('productPrice').value) || 0; const discount = parseFloat(document.getElementById('productDiscount').value) || 0; const productData = { code: document.getElementById('productCode').value, brand: document.getElementById('productBrand').value, name: document.getElementById('productName').value, partNumber: document.getElementById('productPartNumber').value, description: document.getElementById('productDescription').value, costPrice: costPrice, margin: margin, price: salePrice, discount: discount, stock: parseInt(document.getElementById('productStock').value), category: document.getElementById('productCategory').value, subcategory: document.getElementById('productSubcategory').value, vehicle: document.getElementById('productVehicle').value, recommended: document.getElementById('productRecommended').checked, diameter: document.getElementById('specDiameter').value, length: document.getElementById('specLength').value, width: document.getElementById('specWidth').value, height: document.getElementById('specHeight').value, weight: document.getElementById('specWeight').value, material: document.getElementById('specMaterial').value, voltage: document.getElementById('specVoltage').value, power: document.getElementById('specPower').value, thread: document.getElementById('specThread').value, images: currentProductImages.length > 0 ? currentProductImages : null, image: currentProductImages.length > 0 ? currentProductImages[0] : null, updatedAt: new Date().toISOString() }; try { if (editId) { await updateDoc(doc(db, 'products', editId), productData); } else { productData.createdAt = new Date().toISOString(); await addDoc(collection(db, 'products'), productData); } await loadProducts(); await loadDashboard(); closeModal('productModal'); alert('✅ Producto guardado'); } catch (error) { alert('Error: ' + error.message); } saveBtn.disabled = false; saveBtn.textContent = 'Guardar Producto'; };
         window.deleteProduct = async function(productId) { if (!confirm('¿Eliminar este producto?')) return; try { await deleteDoc(doc(db, 'products', productId)); await loadProducts(); await loadDashboard(); alert('Producto eliminado'); } catch (error) { alert('Error: ' + error.message); } };
 
         async function loadOrders() { try { const snapshot = await getDocs(collection(db, 'orders')); orders = []; snapshot.forEach(docSnap => orders.push({ id: docSnap.id, ...docSnap.data() })); renderOrders(); } catch (error) { console.error('Pedidos:', error); } }
@@ -699,14 +732,14 @@
                     <div class="order-header">
                         <div>
                             <strong>Pedido #${order.id.slice(-6)}</strong><br>
-                            <small style="color:#666">${order.userName || 'Cliente'} - ${order.userPhone || 'Sin teléfono'}</small><br>
+                            <small style="color:#666">${order.userName || 'Cliente'} - 📞 ${order.userPhone || 'Sin teléfono'}</small><br>
                             <small style="color:#666">${new Date(order.date).toLocaleString()}</small>
                             ${order.customerCode ? `<br><small style="color:#dc3545;">Código cliente: <strong>${order.customerCode}</strong></small>` : ''}
                         </div>
                         <span class="order-status ${order.status}">${statusText}</span>
                     </div>
                     <div style="margin:0.5rem 0;">
-                        <strong>Total: $${Number(order.total).toFixed(2)}</strong> | ${order.deliveryMode === 'pickup' ? 'Pickup' : 'Delivery'}${order.deliveryZone ? ' - ' + order.deliveryZone : ''}${order.couponCode ? ` | Cupón: ${order.couponCode}` : ''}${order.driverName ? `<br><small style="color:#9C27B0;">Domiciliario: ${order.driverName}</small>` : ''}
+                        <strong>Total: $${Number(order.total).toFixed(2)}</strong> | ${order.deliveryMode === 'pickup' ? 'Pickup' : 'Delivery'}${order.deliveryZone ? ' - ' + order.deliveryZone : ''}${order.couponCode ? ` | Cupón: ${order.couponCode}` : ''}${order.driverName ? `<br><small style="color:#9C27B0;">🏍️ Domiciliario: ${order.driverName}</small>` : ''}
                     </div>
                     <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
                         <button class="btn btn-small btn-primary" onclick="viewOrderDetail('${order.id}')">Ver detalle</button>
@@ -767,15 +800,15 @@
                     <button class="btn btn-small btn-primary" onclick="assignDriver('${order.id}')">Asignar</button>
                     ${order.driverName ? `<div style="margin-top:1rem; padding:1rem; background:white; border-radius:8px;"><strong>Domiciliario asignado:</strong> ${order.driverName}<br><strong>Teléfono:</strong> ${order.driverPhone || 'N/A'}</div>` : ''}
                     <div style="margin-top:1rem;">
-                        <button class="whatsapp-btn" onclick="sendDriverMessage('${order.id}')"> Enviar mensaje al domiciliario</button>
+                        <button class="whatsapp-btn" onclick="sendDriverMessage('${order.id}')">📱 Enviar mensaje al domiciliario</button>
                         <button class="whatsapp-btn" style="background:#25d366;" onclick="sendCustomerMessage('${order.id}')">💬 Enviar mensaje al cliente</button>
-                        <button class="notify-btn" onclick="notifyCustomerByBrowser('${order.id}')"> Notificación navegador</button>
+                        <button class="notify-btn" onclick="notifyCustomerByBrowser('${order.id}')">🔔 Notificación navegador</button>
                     </div>
                 </div>
                 <div style="margin-top:1rem; padding:1rem; background:#f8f8f8; border-radius:8px;">
                     <h4 style="margin-bottom:0.5rem; color:#666;">Eliminar pedido</h4>
                     <p style="font-size:0.85rem; color:#666; margin-bottom:0.5rem;">Esta acción es permanente y no se puede deshacer.</p>
-                    <button class="btn btn-small" style="background:#999;color:white;" onclick="deleteOrder('${order.id}'); closeModal('orderDetailModal');">️ Eliminar este pedido</button>
+                    <button class="btn btn-small" style="background:#999;color:white;" onclick="deleteOrder('${order.id}'); closeModal('orderDetailModal');">🗑️ Eliminar este pedido</button>
                 </div>
             `; 
             document.getElementById('orderDetailModal').classList.add('active'); 
@@ -804,7 +837,7 @@
                 await loadOrders(); 
                 await loadDashboard(); 
                 closeModal('orderDetailModal'); 
-                alert(`Domiciliario ${driver.name} asignado al pedido`); 
+                alert(`✅ Domiciliario ${driver.name} asignado al pedido`); 
             } catch (error) { alert('Error: ' + error.message); } 
         };
         
@@ -847,13 +880,13 @@
                         window.open(`https://wa.me/${cleanPhone}?text=${whatsappMsg}`, '_blank');
                     }
                 }
-                alert('Estado actualizado'); 
+                alert('✅ Estado actualizado'); 
             } catch (error) { alert('Error: ' + error.message); } 
         };
 
         async function loadDrivers() { try { const snapshot = await getDocs(collection(db, 'drivers')); drivers = []; snapshot.forEach(docSnap => drivers.push({ id: docSnap.id, ...docSnap.data() })); renderDrivers(); } catch (error) { console.error('Domiciliarios:', error); } }
         function renderDrivers() { const list = document.getElementById('driversList'); if (drivers.length === 0) { list.innerHTML = '<p style="text-align:center;color:#666;padding:1rem">No hay domiciliarios registrados.</p>'; return; } list.innerHTML = drivers.map(driver => { const todayOrders = orders.filter(o => o.driverId === driver.id && new Date(o.date).toDateString() === new Date().toDateString()); const todayEarnings = todayOrders.reduce((sum, o) => sum + (Number(o.driverCommission) || 0), 0); return `<div class="driver-card"><div class="driver-info"><strong>${driver.name}</strong><br><small>📞 ${driver.phone} | 💰 $${Number(driver.commission).toFixed(2)} por entrega</small><br><small style="color:#28a745;">Hoy: ${todayOrders.length} entregas | $${todayEarnings.toFixed(2)}</small></div><div class="admin-actions"><button class="btn btn-small btn-secondary" onclick="deleteDriver('${driver.id}')">Eliminar</button></div></div>`; }).join(''); }
-        window.addDriver = async function() { const name = document.getElementById('driverName').value.trim(); const phone = document.getElementById('driverPhone').value.trim(); const commission = parseFloat(document.getElementById('driverCommission').value); if (!name || !phone || !commission) { alert('Completa todos los campos'); return; } try { await addDoc(collection(db, 'drivers'), { name, phone, commission, createdAt: new Date().toISOString() }); document.getElementById('driverName').value = ''; document.getElementById('driverPhone').value = ''; document.getElementById('driverCommission').value = ''; await loadDrivers(); alert('Domiciliario agregado'); } catch (error) { alert('Error: ' + error.message); } };
+        window.addDriver = async function() { const name = document.getElementById('driverName').value.trim(); const phone = document.getElementById('driverPhone').value.trim(); const commission = parseFloat(document.getElementById('driverCommission').value); if (!name || !phone || !commission) { alert('Completa todos los campos'); return; } try { await addDoc(collection(db, 'drivers'), { name, phone, commission, createdAt: new Date().toISOString() }); document.getElementById('driverName').value = ''; document.getElementById('driverPhone').value = ''; document.getElementById('driverCommission').value = ''; await loadDrivers(); alert('✅ Domiciliario agregado'); } catch (error) { alert('Error: ' + error.message); } };
         window.deleteDriver = async function(driverId) { if (!confirm('¿Eliminar este domiciliario?')) return; try { await deleteDoc(doc(db, 'drivers', driverId)); await loadDrivers(); alert('Domiciliario eliminado'); } catch (error) { alert('Error: ' + error.message); } };
 
         async function loadCustomers() { try { const customersSnap = await getDocs(collection(db, 'customers')); customers = []; customersSnap.forEach(docSnap => customers.push({ id: docSnap.id, ...docSnap.data() })); renderCustomers(); } catch (error) { console.error('Clientes:', error); } }
@@ -866,12 +899,12 @@
 
         async function loadCoupons() { try { const snapshot = await getDocs(collection(db, 'coupons')); coupons = []; snapshot.forEach(docSnap => coupons.push({ id: docSnap.id, ...docSnap.data() })); renderCoupons(); } catch (error) { console.error('Cupones:', error); } }
         function renderCoupons() { const list = document.getElementById('couponsList'); if (coupons.length === 0) { list.innerHTML = '<p style="text-align:center;color:#666;padding:1rem">No hay cupones.</p>'; return; } list.innerHTML = coupons.map(coupon => `<div class="admin-item"><div class="admin-info"><div><strong>${coupon.code}</strong><br><small style="color:#666">${coupon.discount}% de descuento | Usos: ${coupon.uses || 0}/${coupon.maxUses || '∞'}</small></div></div><div class="admin-actions"><button class="btn btn-small btn-secondary" onclick="deleteCoupon('${coupon.id}')">Eliminar</button></div></div>`).join(''); }
-        window.createCoupon = async function() { const code = document.getElementById('couponCode').value.trim().toUpperCase(); const discount = parseInt(document.getElementById('couponDiscount').value); const maxUses = parseInt(document.getElementById('couponMaxUses').value); if (!code || !discount || !maxUses) { alert('Completa todos los campos'); return; } try { await addDoc(collection(db, 'coupons'), { code, discount, maxUses, uses: 0, createdAt: new Date().toISOString() }); document.getElementById('couponCode').value = ''; document.getElementById('couponDiscount').value = ''; document.getElementById('couponMaxUses').value = ''; await loadCoupons(); alert('Cupón creado'); } catch (error) { alert('Error: ' + error.message); } };
+        window.createCoupon = async function() { const code = document.getElementById('couponCode').value.trim().toUpperCase(); const discount = parseInt(document.getElementById('couponDiscount').value); const maxUses = parseInt(document.getElementById('couponMaxUses').value); if (!code || !discount || !maxUses) { alert('Completa todos los campos'); return; } try { await addDoc(collection(db, 'coupons'), { code, discount, maxUses, uses: 0, createdAt: new Date().toISOString() }); document.getElementById('couponCode').value = ''; document.getElementById('couponDiscount').value = ''; document.getElementById('couponMaxUses').value = ''; await loadCoupons(); alert('✅ Cupón creado'); } catch (error) { alert('Error: ' + error.message); } };
         window.deleteCoupon = async function(couponId) { if (!confirm('¿Eliminar este cupón?')) return; try { await deleteDoc(doc(db, 'coupons', couponId)); await loadCoupons(); alert('Cupón eliminado'); } catch (error) { alert('Error: ' + error.message); } };
 
         async function loadDeliveryZones() { try { const snapshot = await getDocs(collection(db, 'deliveryZones')); deliveryZones = []; snapshot.forEach(docSnap => deliveryZones.push({ id: docSnap.id, ...docSnap.data() })); renderDeliveryZones(); } catch (error) { console.error('Zonas:', error); } }
         function renderDeliveryZones() { const list = document.getElementById('deliveryZonesList'); if (deliveryZones.length === 0) { list.innerHTML = '<p style="text-align:center;color:#666;padding:1rem">No hay zonas configuradas.</p>'; return; } list.innerHTML = deliveryZones.map(zone => `<div class="admin-item"><div class="admin-info"><div><strong>${zone.name}</strong><br><small style="color:#666">Costo: $${Number(zone.cost).toFixed(2)} / Bs. ${(Number(zone.cost) * bcvRate).toFixed(2)} | Tiempo: ${zone.time || 'N/A'}</small></div></div><div class="admin-actions"><button class="btn btn-small btn-secondary" onclick="deleteDeliveryZone('${zone.id}')">Eliminar</button></div></div>`).join(''); }
-        window.addDeliveryZone = async function() { const name = document.getElementById('zoneName').value.trim(); const cost = parseFloat(document.getElementById('zoneCost').value); const time = document.getElementById('zoneTime').value.trim(); if (!name || !cost) { alert('Completa nombre y costo'); return; } try { await addDoc(collection(db, 'deliveryZones'), { name, cost, time, createdAt: new Date().toISOString() }); document.getElementById('zoneName').value = ''; document.getElementById('zoneCost').value = ''; document.getElementById('zoneTime').value = ''; await loadDeliveryZones(); alert('Zona agregada'); } catch (error) { alert('Error: ' + error.message); } };
+        window.addDeliveryZone = async function() { const name = document.getElementById('zoneName').value.trim(); const cost = parseFloat(document.getElementById('zoneCost').value); const time = document.getElementById('zoneTime').value.trim(); if (!name || !cost) { alert('Completa nombre y costo'); return; } try { await addDoc(collection(db, 'deliveryZones'), { name, cost, time, createdAt: new Date().toISOString() }); document.getElementById('zoneName').value = ''; document.getElementById('zoneCost').value = ''; document.getElementById('zoneTime').value = ''; await loadDeliveryZones(); alert('✅ Zona agregada'); } catch (error) { alert('Error: ' + error.message); } };
         window.deleteDeliveryZone = async function(zoneId) { if (!confirm('¿Eliminar esta zona?')) return; try { await deleteDoc(doc(db, 'deliveryZones', zoneId)); await loadDeliveryZones(); alert('Zona eliminada'); } catch (error) { alert('Error: ' + error.message); } };
 
         async function loadDashboard() {
@@ -890,7 +923,7 @@
             document.getElementById('statOrdersPending').textContent = ordersPending;
             document.getElementById('statCustomers').textContent = customers.length;
             const lowStockList = document.getElementById('lowStockList');
-            if (lowStock.length === 0 && outOfStock.length === 0) { lowStockList.innerHTML = '<div class="alert-success">Todos los productos tienen stock suficiente.</div>'; }
+            if (lowStock.length === 0 && outOfStock.length === 0) { lowStockList.innerHTML = '<div class="alert-success">✅ Todos los productos tienen stock suficiente.</div>'; }
             else { let html = ''; if (outOfStock.length > 0) { html += '<h4 style="color:#dc3545; margin:1rem 0 0.5rem;">Agotados:</h4>'; html += outOfStock.map(p => `<div class="low-stock-item" style="background:#f8d7da;"><span>${p.name} (${p.code || 'Sin código'})</span><span class="stock-count">Stock: 0</span></div>`).join(''); } if (lowStock.length > 0) { html += '<h4 style="color:#FFC107; margin:1rem 0 0.5rem;">Stock bajo (menos de 5):</h4>'; html += lowStock.map(p => `<div class="low-stock-item"><span>${p.name} (${p.code || 'Sin código'})</span><span class="stock-count">Stock: ${p.stock}</span></div>`).join(''); } lowStockList.innerHTML = html; }
         }
 
@@ -907,10 +940,10 @@
             document.getElementById('todayShipped').textContent = todayShipped;
             const list = document.getElementById('todayOrdersList');
             if (todayOrders.length === 0) { list.innerHTML = '<p style="text-align:center;color:#666;padding:1rem">No hay pedidos hoy.</p>'; return; }
-            list.innerHTML = todayOrders.sort((a,b) => new Date(b.date) - new Date(a.date)).map(order => { const statusText = { pending: 'Pendiente', shipped: 'En camino', delivered: 'Entregado', cancelled: 'Cancelado' }[order.status] || order.status; return `<div class="order-item"><div class="order-header"><div><strong>Pedido #${order.id.slice(-6)}</strong><br><small style="color:#666">${order.userName} - ${order.userPhone}</small>${order.customerCode ? `<br><small style="color:#dc3545;">Código: ${order.customerCode}</small>` : ''}</div><span class="order-status ${order.status}">${statusText}</span></div><div style="margin:0.5rem 0;"><strong>Total: $${Number(order.total).toFixed(2)}</strong> | ${order.deliveryMode === 'pickup' ? 'Pickup' : 'Delivery'}${order.deliveryZone ? ' - ' + order.deliveryZone : ''}${order.driverName ? `<br><small style="color:#9C27B0;">Domiciliario: ${order.driverName}</small>` : ''}</div><div style="display:flex; gap:0.5rem; flex-wrap:wrap;"><button class="btn btn-small btn-primary" onclick="viewOrderDetail('${order.id}')">Ver detalle</button>${!order.driverId && order.status === 'pending' ? `<button class="btn btn-small btn-warning" onclick="quickAssignDriver('${order.id}')">Asignar domiciliario</button>` : ''}<button class="btn btn-small" style="background:#999;color:white;" onclick="deleteOrder('${order.id}')">️ Eliminar</button></div></div>`; }).join('');
+            list.innerHTML = todayOrders.sort((a,b) => new Date(b.date) - new Date(a.date)).map(order => { const statusText = { pending: 'Pendiente', shipped: 'En camino', delivered: 'Entregado', cancelled: 'Cancelado' }[order.status] || order.status; return `<div class="order-item"><div class="order-header"><div><strong>Pedido #${order.id.slice(-6)}</strong><br><small style="color:#666">${order.userName} - 📞 ${order.userPhone}</small>${order.customerCode ? `<br><small style="color:#dc3545;">Código: ${order.customerCode}</small>` : ''}</div><span class="order-status ${order.status}">${statusText}</span></div><div style="margin:0.5rem 0;"><strong>Total: $${Number(order.total).toFixed(2)}</strong> | ${order.deliveryMode === 'pickup' ? 'Pickup' : 'Delivery'}${order.deliveryZone ? ' - ' + order.deliveryZone : ''}${order.driverName ? `<br><small style="color:#9C27B0;">🏍️ Domiciliario: ${order.driverName}</small>` : ''}</div><div style="display:flex; gap:0.5rem; flex-wrap:wrap;"><button class="btn btn-small btn-primary" onclick="viewOrderDetail('${order.id}')">Ver detalle</button>${!order.driverId && order.status === 'pending' ? `<button class="btn btn-small btn-warning" onclick="quickAssignDriver('${order.id}')">Asignar domiciliario</button>` : ''}<button class="btn btn-small" style="background:#999;color:white;" onclick="deleteOrder('${order.id}')">🗑️ Eliminar</button></div></div>`; }).join('');
         }
 
-        window.quickAssignDriver = async function(orderId) { const driverName = prompt('Nombre del domiciliario:'); const driverPhone = prompt('Teléfono del domiciliario:'); const commission = parseFloat(prompt('Comisión por entrega ($):')); if (!driverName || !driverPhone || !commission) { alert('Completa todos los datos'); return; } try { await updateDoc(doc(db, 'orders', orderId), { driverId: 'manual-' + Date.now(), driverName: driverName, driverPhone: driverPhone, driverCommission: commission, status: 'shipped' }); await loadOrders(); await loadTodayDashboard(); alert('Domiciliario asignado'); } catch (error) { alert('Error: ' + error.message); } };
+        window.quickAssignDriver = async function(orderId) { const driverName = prompt('Nombre del domiciliario:'); const driverPhone = prompt('Teléfono del domiciliario:'); const commission = parseFloat(prompt('Comisión por entrega ($):')); if (!driverName || !driverPhone || !commission) { alert('Completa todos los datos'); return; } try { await updateDoc(doc(db, 'orders', orderId), { driverId: 'manual-' + Date.now(), driverName: driverName, driverPhone: driverPhone, driverCommission: commission, status: 'shipped' }); await loadOrders(); await loadTodayDashboard(); alert('✅ Domiciliario asignado'); } catch (error) { alert('Error: ' + error.message); } };
 
         window.exportOrders = function() { 
             if (orders.length === 0) { alert('No hay pedidos para exportar'); return; } 
@@ -924,33 +957,4 @@
         window.exportProducts = function() { 
             if (products.length === 0) { alert('No hay productos para exportar'); return; } 
             let csv = 'Código,Nombre,Marca,Categoría,Subcategoría,Vehículos,Precio Compra,Margen,Precio Venta,Descuento,Stock\n'; 
-            products.forEach(p => { csv += `"${p.code || ''}","${p.name}","${p.brand || ''}","${p.category || ''}","${p.subcategory || ''}","${p.vehicle || ''}",${p.costPrice || 0},${p.margin || 0},${p.price},${p.discount || 0},${p.stock}\n`; }); 
-            downloadCSV(csv, 'productos_akira_motors.csv'); 
-        };
-        window.exportCustomers = function() { 
-            if (customers.length === 0) { alert('No hay clientes para exportar'); return; } 
-            let csv = 'Código,Nombre,Teléfono\n'; 
-            customers.forEach(c => { csv += `"${c.customerCode || ''}","${c.name}","${c.phone}"\n`; }); 
-            downloadCSV(csv, 'clientes_akira_motors.csv'); 
-        };
-        window.exportBackup = async function() { 
-            const backup = { products, orders, reviews, coupons, deliveryZones, drivers, customers, brands, banners, vehicles, siteConfig, bcvRate, exportDate: new Date().toISOString() }; 
-            const json = JSON.stringify(backup, null, 2); 
-            const blob = new Blob([json], { type: 'application/json' }); 
-            const url = URL.createObjectURL(blob); 
-            const a = document.createElement('a'); 
-            a.href = url; 
-            a.download = `backup_akira_motors_${new Date().toISOString().slice(0,10)}.json`; 
-            a.click(); 
-            URL.revokeObjectURL(url); 
-            alert('Backup descargado'); 
-        };
-        function downloadCSV(csv, filename) { 
-            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' }); 
-            const url = URL.createObjectURL(blob); 
-            const a = document.createElement('a'); 
-            a.href = url; 
-            a.download = filename; 
-            a.click(); 
-            URL.revokeObjectURL(url); 
-        }
+            products.forEach(p => { csv += `"${p.code || ''}","${p.name}","${p.brand || ''}","${p.category || ''}","${p.subcategory || ''}","${p.vehicle || ''}",${p.costPrice ||
