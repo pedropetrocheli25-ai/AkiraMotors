@@ -107,8 +107,10 @@
         .dashboard-card .sub { font-size: 0.85rem; color: #666; margin-top: 0.3rem; }
         .driver-assignment { background: #fff5f5; padding: 1rem; border-radius: 8px; margin-top: 1rem; }
         .driver-assignment select { width: 100%; padding: 0.7rem; border: 1px solid #ddd; border-radius: 8px; margin: 0.5rem 0; }
-        .whatsapp-btn { background: #25d366; color: white; border: none; padding: 0.7rem 1rem; border-radius: 8px; cursor: pointer; font-weight: 600; margin-top: 0.5rem; }
+        .whatsapp-btn { background: #25d366; color: white; border: none; padding: 0.7rem 1rem; border-radius: 8px; cursor: pointer; font-weight: 600; margin-top: 0.5rem; margin-right: 0.5rem; }
         .whatsapp-btn:hover { background: #128C7E; }
+        .notify-btn { background: #2196F3; color: white; border: none; padding: 0.7rem 1rem; border-radius: 8px; cursor: pointer; font-weight: 600; margin-top: 0.5rem; margin-right: 0.5rem; }
+        .notify-btn:hover { background: #1976D2; }
         @media (max-width: 768px) {
             body { flex-direction: column; }
             .admin-sidebar { width: 100%; height: auto; position: relative; }
@@ -202,8 +204,8 @@
                 <div class="admin-card">
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; flex-wrap:wrap; gap:1rem;">
                         <h3 style="margin:0;">Todos los pedidos</h3>
-                        <div style="display:flex; gap:0.5rem;">
-                            <input type="text" id="searchOrderCode" placeholder="Buscar por código cliente..." style="padding:0.5rem; border:1px solid #ddd; border-radius:8px;" oninput="renderOrders()">
+                        <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+                            <input type="text" id="searchOrderCode" placeholder="Buscar por código, nombre o teléfono..." style="padding:0.5rem; border:1px solid #ddd; border-radius:8px; min-width:250px;" oninput="renderOrders()">
                             <select id="filterOrderStatus" onchange="renderOrders()" style="padding:0.5rem; border:1px solid #ddd; border-radius:8px;">
                                 <option value="">Todos los estados</option>
                                 <option value="pending">Pendientes</option>
@@ -406,8 +408,16 @@
                 </div>
                 <div class="admin-card">
                     <h3>WhatsApp de la tienda</h3>
-                    <div class="form-group"><label>Número de WhatsApp (con código de país)</label><input type="text" id="whatsappNumber" placeholder="584148700616"></div>
-                    <button class="btn btn-primary" onclick="saveWhatsapp()">Guardar</button>
+                    <div class="alert-info">
+                        <strong>️ Importante:</strong> Este número se usará en TODA la web (botón flotante, hero, footer, confirmación de pedidos). 
+                        Incluye el código de país sin el símbolo +. Ejemplo: 584148700616
+                    </div>
+                    <div class="form-group">
+                        <label>Número de WhatsApp (con código de país, sin + ni espacios)</label>
+                        <input type="text" id="whatsappNumber" placeholder="584148700616">
+                        <div class="hint">Ejemplo: 584148700616 (Venezuela + número)</div>
+                    </div>
+                    <button class="btn btn-primary" onclick="saveWhatsapp()">Guardar número de WhatsApp</button>
                 </div>
             </div>
 
@@ -416,9 +426,9 @@
                 <div class="admin-card">
                     <h3>Descargar datos en CSV (Excel)</h3>
                     <div style="display:flex; gap:1rem; flex-wrap:wrap;">
-                        <button class="btn btn-primary" onclick="exportOrders()">📥 Exportar Pedidos</button>
-                        <button class="btn btn-success" onclick="exportProducts()">📥 Exportar Productos</button>
-                        <button class="btn btn-info" onclick="exportCustomers()">📥 Exportar Clientes</button>
+                        <button class="btn btn-primary" onclick="exportOrders()"> Exportar Pedidos</button>
+                        <button class="btn btn-success" onclick="exportProducts()"> Exportar Productos</button>
+                        <button class="btn btn-info" onclick="exportCustomers()"> Exportar Clientes</button>
                     </div>
                 </div>
                 <div class="admin-card">
@@ -560,22 +570,13 @@
             "Inyección y Combustible": ["Bombas de Gasolina", "Filtros de Gasolina"]
         };
 
-        let products = [];
-        let brands = [];
-        let banners = [];
-        let orders = [];
-        let reviews = [];
-        let coupons = [];
-        let deliveryZones = [];
-        let drivers = [];
-        let customers = [];
+        let products = [], brands = [], banners = [], orders = [], reviews = [], coupons = [], deliveryZones = [], drivers = [], customers = [];
         let vehicles = {};
         let bcvRate = 36.5;
         const ADMIN_PASSWORD = 'fjat21';
-        let siteConfig = { companyName: 'AKIRA MOTORS', slogan: 'Repuestos Automotrices de Calidad', description: 'Tu tienda de repuestos automotrices de confianza.', address: 'Calle Caracas, Local 70-E, Ciudad Bolívar, Edo. Bolívar, 8001', phone: '0414-8700616', schedule: 'Lunes a Viernes: 8:00 AM - 5:00 PM', facebook: '', instagram: '', tiktok: '' };
+        let siteConfig = { companyName: 'AKIRA MOTORS', slogan: 'Repuestos y Servicios Automotrices', description: 'Tu taller de confianza en Ciudad Bolívar.', address: 'Calle Caracas, Local 70-E, Ciudad Bolívar, Edo. Bolívar, 8001', phone: '0414-8700616', schedule: 'Lunes a Viernes: 8:00 AM - 5:00 PM', facebook: '', instagram: '', tiktok: '' };
         let whatsappNumber = '584148700616';
-        let currentProductImages = [];
-        let selectedVehiclesList = [];
+        let currentProductImages = [], selectedVehiclesList = [];
 
         const defaultBrands = [
             { id: 'mitsubishi', name: 'Mitsubishi', image: null },
@@ -603,9 +604,7 @@
                 document.getElementById('adminPanel').style.display = 'flex';
                 document.getElementById('adminPassword').value = '';
                 loadAll();
-            } else {
-                alert('Contraseña incorrecta');
-            }
+            } else { alert('Contraseña incorrecta'); }
         };
 
         window.logoutAdmin = function() { document.getElementById('adminPanel').style.display = 'none'; document.getElementById('adminPanel').classList.add('hidden'); document.getElementById('loginScreen').style.display = 'block'; };
@@ -619,8 +618,26 @@
         async function loadPickupMaps() { try { const pickupDoc = await getDoc(doc(db, 'settings', 'pickupMaps')); if (pickupDoc.exists()) document.getElementById('pickupMapsInput').value = pickupDoc.data().url || ''; } catch (error) { console.log('Error pickup:', error); } }
         window.updatePickupMaps = async function() { const url = document.getElementById('pickupMapsInput').value.trim(); if (!url) { alert('Ingresa un link válido'); return; } try { await setDoc(doc(db, 'settings', 'pickupMaps'), { url: url, updatedAt: new Date().toISOString() }); alert('Ubicación de pickup actualizada'); } catch (error) { alert('Error: ' + error.message); } };
 
-        async function loadWhatsapp() { try { const waDoc = await getDoc(doc(db, 'settings', 'whatsapp')); if (waDoc.exists()) { whatsappNumber = waDoc.data().number || '584148700616'; document.getElementById('whatsappNumber').value = whatsappNumber; } } catch (error) { console.log('Error whatsapp:', error); } }
-        window.saveWhatsapp = async function() { const num = document.getElementById('whatsappNumber').value.trim(); if (!num) { alert('Ingresa un número'); return; } try { await setDoc(doc(db, 'settings', 'whatsapp'), { number: num }); whatsappNumber = num; alert('WhatsApp actualizado'); } catch (error) { alert('Error: ' + error.message); } };
+        async function loadWhatsapp() { 
+            try { 
+                const waDoc = await getDoc(doc(db, 'settings', 'whatsapp')); 
+                if (waDoc.exists() && waDoc.data().number) { 
+                    whatsappNumber = waDoc.data().number;
+                }
+                document.getElementById('whatsappNumber').value = whatsappNumber; 
+            } catch (error) { console.log('Error whatsapp:', error); } 
+        }
+        window.saveWhatsapp = async function() { 
+            const num = document.getElementById('whatsappNumber').value.trim(); 
+            if (!num) { alert('Ingresa un número'); return; } 
+            const cleanNum = num.replace(/\D/g, '');
+            if (cleanNum.length < 10) { alert('El número debe tener al menos 10 dígitos (incluyendo código de país)'); return; }
+            try { 
+                await setDoc(doc(db, 'settings', 'whatsapp'), { number: cleanNum, updatedAt: new Date().toISOString() }); 
+                whatsappNumber = cleanNum; 
+                alert(`✅ Número de WhatsApp actualizado a: +${cleanNum}\n\nEste número se usará en toda la web.`); 
+            } catch (error) { alert('Error: ' + error.message); } 
+        };
 
         async function loadLogo() { try { const logoDoc = await getDoc(doc(db, 'settings', 'logo')); if (logoDoc.exists()) document.getElementById('adminLogoPreview').innerHTML = `<img src="${logoDoc.data().image}">`; } catch (error) { console.log('Logo:', error); } }
         async function loadBanners() { try { const bannersDoc = await getDoc(doc(db, 'settings', 'banners')); if (bannersDoc.exists()) banners = bannersDoc.data().images || []; renderBannerPreviews(); } catch (error) { console.log('Banners:', error); } }
@@ -659,12 +676,180 @@
         window.deleteProduct = async function(productId) { if (!confirm('¿Eliminar este producto?')) return; try { await deleteDoc(doc(db, 'products', productId)); await loadProducts(); await loadDashboard(); alert('Producto eliminado'); } catch (error) { alert('Error: ' + error.message); } };
 
         async function loadOrders() { try { const snapshot = await getDocs(collection(db, 'orders')); orders = []; snapshot.forEach(docSnap => orders.push({ id: docSnap.id, ...docSnap.data() })); renderOrders(); } catch (error) { console.error('Pedidos:', error); } }
-        function renderOrders() { const list = document.getElementById('ordersList'); const filter = document.getElementById('filterOrderStatus').value; const searchCode = document.getElementById('searchOrderCode').value.toLowerCase(); let filtered = orders; if (filter) filtered = filtered.filter(o => o.status === filter); if (searchCode) filtered = filtered.filter(o => (o.customerCode || '').toLowerCase().includes(searchCode) || (o.userName || '').toLowerCase().includes(searchCode) || (o.userPhone || '').includes(searchCode)); if (filtered.length === 0) { list.innerHTML = '<p style="text-align:center;color:#666;padding:1rem">No hay pedidos.</p>'; return; } list.innerHTML = filtered.sort((a,b) => new Date(b.date) - new Date(a.date)).map(order => { const statusText = { pending: 'Pendiente', shipped: 'En camino', delivered: 'Entregado', cancelled: 'Cancelado' }[order.status] || order.status; return `<div class="order-item"><div class="order-header"><div><strong>Pedido #${order.id.slice(-6)}</strong><br><small style="color:#666">${order.userName || 'Cliente'} - ${order.userPhone || 'Sin teléfono'}</small><br><small style="color:#666">${new Date(order.date).toLocaleString()}</small>${order.customerCode ? `<br><small style="color:#dc3545;">Código cliente: <strong>${order.customerCode}</strong></small>` : ''}</div><span class="order-status ${order.status}">${statusText}</span></div><div style="margin:0.5rem 0;"><strong>Total: $${Number(order.total).toFixed(2)}</strong> | ${order.deliveryMode === 'pickup' ? 'Pickup' : 'Delivery'}${order.deliveryZone ? ' - ' + order.deliveryZone : ''}${order.couponCode ? ` | Cupón: ${order.couponCode}` : ''}${order.driverName ? `<br><small style="color:#9C27B0;">Domiciliario: ${order.driverName}</small>` : ''}</div><div style="display:flex; gap:0.5rem; flex-wrap:wrap;"><button class="btn btn-small btn-primary" onclick="viewOrderDetail('${order.id}')">Ver detalle</button><button class="btn btn-small btn-warning" onclick="updateOrderStatus('${order.id}', 'shipped')">Marcar enviado</button><button class="btn btn-small btn-success" onclick="updateOrderStatus('${order.id}', 'delivered')">Marcar entregado</button><button class="btn btn-small btn-secondary" onclick="updateOrderStatus('${order.id}', 'cancelled')">Cancelar</button></div></div>`; }).join(''); }
-        window.viewOrderDetail = function(orderId) { const order = orders.find(o => o.id === orderId); if (!order) return; const statusText = { pending: 'Pendiente', shipped: 'En camino', delivered: 'Entregado', cancelled: 'Cancelado' }[order.status] || order.status; const driversOptions = drivers.map(d => `<option value="${d.id}" ${order.driverId === d.id ? 'selected' : ''}>${d.name} - ${d.phone}</option>`).join(''); document.getElementById('orderDetailContent').innerHTML = `<button class="modal-close" onclick="closeModal('orderDetailModal')">×</button><h2 style="color:#dc3545;">Pedido #${order.id.slice(-6)}</h2><div style="margin:1rem 0;"><strong>Cliente:</strong> ${order.userName || 'N/A'}<br><strong>Teléfono:</strong> ${order.userPhone || 'N/A'}${order.customerCode ? `<br><strong>Código Cliente:</strong> ${order.customerCode}` : ''}<br><strong>Fecha:</strong> ${new Date(order.date).toLocaleString()}<br><strong>Estado:</strong> <span class="order-status ${order.status}">${statusText}</span><br><strong>Entrega:</strong> ${order.deliveryMode === 'pickup' ? 'Pickup en tienda' : 'Delivery' + (order.deliveryZone ? ' - ' + order.deliveryZone : '')}</div>${order.address ? `<div style="margin:1rem 0;"><strong>Dirección:</strong> ${order.address}</div>` : ''}${order.gpsLat ? `<div style="margin:1rem 0;"><strong>GPS:</strong> <a href="https://maps.google.com/?q=${order.gpsLat},${order.gpsLng}" target="_blank">Ver en mapa</a></div>` : ''}<h3 style="margin:1rem 0 0.5rem; color:#dc3545;">Productos</h3><div style="background:#f8f8f8; padding:1rem; border-radius:8px;">${order.items.map(item => `<div style="padding:0.5rem 0; border-bottom:1px solid #eee;">${item.name} x${item.quantity} = $${(Number(item.price) * item.quantity).toFixed(2)}</div>`).join('')}</div><div style="margin-top:1rem; padding:1rem; background:#fff5f5; border-radius:8px;"><div style="display:flex; justify-content:space-between; margin-bottom:0.5rem;"><span>Subtotal:</span><span>$${Number(order.subtotal).toFixed(2)}</span></div>${order.discount > 0 ? `<div style="display:flex; justify-content:space-between; margin-bottom:0.5rem; color:#28a745;"><span>Descuento (${order.couponCode}):</span><span>-$${Number(order.discount).toFixed(2)}</span></div>` : ''}<div style="display:flex; justify-content:space-between; margin-bottom:0.5rem;"><span>IVA (16%):</span><span>$${Number(order.iva).toFixed(2)}</span></div>${order.deliveryFee > 0 ? `<div style="display:flex; justify-content:space-between; margin-bottom:0.5rem;"><span>Delivery:</span><span>$${Number(order.deliveryFee).toFixed(2)}</span></div>` : ''}<div style="display:flex; justify-content:space-between; font-size:1.3rem; font-weight:bold; color:#dc3545; border-top:1px solid #ddd; padding-top:0.5rem; margin-top:0.5rem;"><span>TOTAL:</span><span>$${Number(order.total).toFixed(2)}</span></div></div><div class="driver-assignment"><h4 style="margin-bottom:0.5rem;">Asignar Domiciliario</h4><select id="driverSelect-${order.id}"><option value="">-- Seleccionar domiciliario --</option>${driversOptions}</select><button class="btn btn-small btn-primary" onclick="assignDriver('${order.id}')">Asignar</button>${order.driverName ? `<div style="margin-top:1rem; padding:1rem; background:white; border-radius:8px;"><strong>Domiciliario asignado:</strong> ${order.driverName}<br><strong>Teléfono:</strong> ${order.driverPhone || 'N/A'}</div>` : ''}<div style="margin-top:1rem;"><button class="whatsapp-btn" onclick="sendDriverMessage('${order.id}')">📱 Enviar mensaje al domiciliario</button><button class="whatsapp-btn" style="background:#25d366;" onclick="sendCustomerMessage('${order.id}')">💬 Enviar mensaje al cliente</button></div></div>`; document.getElementById('orderDetailModal').classList.add('active'); };
-        window.assignDriver = async function(orderId) { const driverId = document.getElementById(`driverSelect-${orderId}`).value; if (!driverId) { alert('Selecciona un domiciliario'); return; } const driver = drivers.find(d => d.id === driverId); if (!driver) return; try { await updateDoc(doc(db, 'orders', orderId), { driverId: driver.id, driverName: driver.name, driverPhone: driver.phone, driverCommission: driver.commission, status: 'shipped' }); await loadOrders(); await loadDashboard(); closeModal('orderDetailModal'); alert(`Domiciliario ${driver.name} asignado al pedido`); } catch (error) { alert('Error: ' + error.message); } };
-        window.sendDriverMessage = function(orderId) { const order = orders.find(o => o.id === orderId); if (!order || !order.driverPhone) { alert('No hay domiciliario asignado'); return; } const message = `Hola ${order.driverName}!%0A%0ANuevo pedido para entregar:%0A📦 Pedido #${order.id.slice(-6)}%0A👤 Cliente: ${order.userName}%0A📞 Teléfono: ${order.userPhone}%0A📍 Dirección: ${order.address || 'Pickup en tienda'}%0A Total: $${order.total.toFixed(2)}%0A%0AEl pedido ya fue recogido. Por favor confirma cuando lo entregues.`; window.open(`https://wa.me/${order.driverPhone.replace(/\D/g,'')}?text=${message}`, '_blank'); };
-        window.sendCustomerMessage = function(orderId) { const order = orders.find(o => o.id === orderId); if (!order || !order.userPhone) { alert('No hay teléfono del cliente'); return; } const statusText = { pending: 'pendiente', shipped: 'en camino', delivered: 'entregado', cancelled: 'cancelado' }[order.status] || order.status; const message = `Hola ${order.userName}!%0A%0ATu pedido #${order.id.slice(-6)} está ${statusText}.%0A%0A${order.driverName ? `Domiciliario: ${order.driverName}%0ATeléfono: ${order.driverPhone}%0A` : ''}Total: $${order.total.toFixed(2)}%0A%0AGracias por tu compra!`; window.open(`https://wa.me/${order.userPhone.replace(/\D/g,'')}?text=${message}`, '_blank'); };
-        window.updateOrderStatus = async function(orderId, status) { if (!confirm(`¿Cambiar estado a "${status}"?`)) return; try { await updateDoc(doc(db, 'orders', orderId), { status: status }); await loadOrders(); await loadDashboard(); alert('Estado actualizado'); } catch (error) { alert('Error: ' + error.message); } };
+        
+        function renderOrders() { 
+            const list = document.getElementById('ordersList'); 
+            const filter = document.getElementById('filterOrderStatus').value; 
+            const searchQuery = (document.getElementById('searchOrderCode').value || '').toLowerCase().trim();
+            let filtered = orders; 
+            if (filter) filtered = filtered.filter(o => o.status === filter); 
+            if (searchQuery) {
+                filtered = filtered.filter(o => {
+                    const code = (o.customerCode || '').toLowerCase();
+                    const name = (o.userName || '').toLowerCase();
+                    const phone = (o.userPhone || '').toLowerCase();
+                    const orderId = o.id.toLowerCase();
+                    return code.includes(searchQuery) || name.includes(searchQuery) || phone.includes(searchQuery) || orderId.includes(searchQuery);
+                });
+            }
+            if (filtered.length === 0) { list.innerHTML = '<p style="text-align:center;color:#666;padding:1rem">No hay pedidos.</p>'; return; } 
+            list.innerHTML = filtered.sort((a,b) => new Date(b.date) - new Date(a.date)).map(order => { 
+                const statusText = { pending: 'Pendiente', shipped: 'En camino', delivered: 'Entregado', cancelled: 'Cancelado' }[order.status] || order.status; 
+                return `<div class="order-item">
+                    <div class="order-header">
+                        <div>
+                            <strong>Pedido #${order.id.slice(-6)}</strong><br>
+                            <small style="color:#666">${order.userName || 'Cliente'} - ${order.userPhone || 'Sin teléfono'}</small><br>
+                            <small style="color:#666">${new Date(order.date).toLocaleString()}</small>
+                            ${order.customerCode ? `<br><small style="color:#dc3545;">Código cliente: <strong>${order.customerCode}</strong></small>` : ''}
+                        </div>
+                        <span class="order-status ${order.status}">${statusText}</span>
+                    </div>
+                    <div style="margin:0.5rem 0;">
+                        <strong>Total: $${Number(order.total).toFixed(2)}</strong> | ${order.deliveryMode === 'pickup' ? 'Pickup' : 'Delivery'}${order.deliveryZone ? ' - ' + order.deliveryZone : ''}${order.couponCode ? ` | Cupón: ${order.couponCode}` : ''}${order.driverName ? `<br><small style="color:#9C27B0;">Domiciliario: ${order.driverName}</small>` : ''}
+                    </div>
+                    <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+                        <button class="btn btn-small btn-primary" onclick="viewOrderDetail('${order.id}')">Ver detalle</button>
+                        <button class="btn btn-small btn-warning" onclick="updateOrderStatus('${order.id}', 'shipped')">Marcar enviado</button>
+                        <button class="btn btn-small btn-success" onclick="updateOrderStatus('${order.id}', 'delivered')">Marcar entregado</button>
+                        <button class="btn btn-small btn-secondary" onclick="updateOrderStatus('${order.id}', 'cancelled')">Cancelar</button>
+                        <button class="btn btn-small" style="background:#999;color:white;" onclick="deleteOrder('${order.id}')">🗑️ Eliminar</button>
+                    </div>
+                </div>`; 
+            }).join(''); 
+        }
+        
+        window.deleteOrder = async function(orderId) {
+            if (!confirm('¿Eliminar este pedido permanentemente?\n\nEsta acción no se puede deshacer.')) return;
+            try {
+                await deleteDoc(doc(db, 'orders', orderId));
+                await loadOrders();
+                await loadDashboard();
+                alert('✅ Pedido eliminado');
+            } catch (error) { alert('Error al eliminar: ' + error.message); }
+        };
+
+        window.viewOrderDetail = function(orderId) { 
+            const order = orders.find(o => o.id === orderId); 
+            if (!order) return; 
+            const statusText = { pending: 'Pendiente', shipped: 'En camino', delivered: 'Entregado', cancelled: 'Cancelado' }[order.status] || order.status; 
+            const driversOptions = drivers.map(d => `<option value="${d.id}" ${order.driverId === d.id ? 'selected' : ''}>${d.name} - ${d.phone}</option>`).join(''); 
+            document.getElementById('orderDetailContent').innerHTML = `
+                <button class="modal-close" onclick="closeModal('orderDetailModal')">×</button>
+                <h2 style="color:#dc3545;">Pedido #${order.id.slice(-6)}</h2>
+                <div style="margin:1rem 0;">
+                    <strong>Cliente:</strong> ${order.userName || 'N/A'}<br>
+                    <strong>Teléfono:</strong> ${order.userPhone || 'N/A'}
+                    ${order.customerCode ? `<br><strong>Código Cliente:</strong> ${order.customerCode}` : ''}
+                    <br><strong>Fecha:</strong> ${new Date(order.date).toLocaleString()}
+                    <br><strong>Estado:</strong> <span class="order-status ${order.status}">${statusText}</span>
+                    <br><strong>Entrega:</strong> ${order.deliveryMode === 'pickup' ? 'Pickup en tienda' : 'Delivery' + (order.deliveryZone ? ' - ' + order.deliveryZone : '')}
+                </div>
+                ${order.address ? `<div style="margin:1rem 0;"><strong>Dirección:</strong> ${order.address}</div>` : ''}
+                ${order.gpsLat ? `<div style="margin:1rem 0;"><strong>GPS:</strong> <a href="https://maps.google.com/?q=${order.gpsLat},${order.gpsLng}" target="_blank">Ver en mapa</a></div>` : ''}
+                <h3 style="margin:1rem 0 0.5rem; color:#dc3545;">Productos</h3>
+                <div style="background:#f8f8f8; padding:1rem; border-radius:8px;">
+                    ${order.items.map(item => `<div style="padding:0.5rem 0; border-bottom:1px solid #eee;">${item.name} x${item.quantity} = $${(Number(item.price) * item.quantity).toFixed(2)}</div>`).join('')}
+                </div>
+                <div style="margin-top:1rem; padding:1rem; background:#fff5f5; border-radius:8px;">
+                    <div style="display:flex; justify-content:space-between; margin-bottom:0.5rem;"><span>Subtotal:</span><span>$${Number(order.subtotal).toFixed(2)}</span></div>
+                    ${order.discount > 0 ? `<div style="display:flex; justify-content:space-between; margin-bottom:0.5rem; color:#28a745;"><span>Descuento (${order.couponCode}):</span><span>-$${Number(order.discount).toFixed(2)}</span></div>` : ''}
+                    <div style="display:flex; justify-content:space-between; margin-bottom:0.5rem;"><span>IVA (16%):</span><span>$${Number(order.iva).toFixed(2)}</span></div>
+                    ${order.deliveryFee > 0 ? `<div style="display:flex; justify-content:space-between; margin-bottom:0.5rem;"><span>Delivery:</span><span>$${Number(order.deliveryFee).toFixed(2)}</span></div>` : ''}
+                    <div style="display:flex; justify-content:space-between; font-size:1.3rem; font-weight:bold; color:#dc3545; border-top:1px solid #ddd; padding-top:0.5rem; margin-top:0.5rem;"><span>TOTAL:</span><span>$${Number(order.total).toFixed(2)}</span></div>
+                </div>
+                <div class="driver-assignment">
+                    <h4 style="margin-bottom:0.5rem;">Asignar Domiciliario</h4>
+                    <select id="driverSelect-${order.id}">
+                        <option value="">-- Seleccionar domiciliario --</option>
+                        ${driversOptions}
+                    </select>
+                    <button class="btn btn-small btn-primary" onclick="assignDriver('${order.id}')">Asignar</button>
+                    ${order.driverName ? `<div style="margin-top:1rem; padding:1rem; background:white; border-radius:8px;"><strong>Domiciliario asignado:</strong> ${order.driverName}<br><strong>Teléfono:</strong> ${order.driverPhone || 'N/A'}</div>` : ''}
+                    <div style="margin-top:1rem;">
+                        <button class="whatsapp-btn" onclick="sendDriverMessage('${order.id}')"> Enviar mensaje al domiciliario</button>
+                        <button class="whatsapp-btn" style="background:#25d366;" onclick="sendCustomerMessage('${order.id}')">💬 Enviar mensaje al cliente</button>
+                        <button class="notify-btn" onclick="notifyCustomerByBrowser('${order.id}')"> Notificación navegador</button>
+                    </div>
+                </div>
+                <div style="margin-top:1rem; padding:1rem; background:#f8f8f8; border-radius:8px;">
+                    <h4 style="margin-bottom:0.5rem; color:#666;">Eliminar pedido</h4>
+                    <p style="font-size:0.85rem; color:#666; margin-bottom:0.5rem;">Esta acción es permanente y no se puede deshacer.</p>
+                    <button class="btn btn-small" style="background:#999;color:white;" onclick="deleteOrder('${order.id}'); closeModal('orderDetailModal');">️ Eliminar este pedido</button>
+                </div>
+            `; 
+            document.getElementById('orderDetailModal').classList.add('active'); 
+        };
+        
+        window.notifyCustomerByBrowser = function(orderId) {
+            const order = orders.find(o => o.id === orderId);
+            if (!order) return;
+            const statusMessages = {
+                'pending': 'Tu pedido está siendo procesado',
+                'shipped': '🚚 ¡Tu pedido está en camino! El domiciliario ya lo recogió',
+                'delivered': '✅ ¡Tu pedido fue entregado! Gracias por tu compra',
+                'cancelled': '❌ Tu pedido fue cancelado. Contáctanos para más información'
+            };
+            const message = statusMessages[order.status] || 'Estado de tu pedido actualizado';
+            alert(`📱 Notificación preparada para: ${order.userName}\n📞 Teléfono: ${order.userPhone}\n\nMensaje: "${message}"\n\nNota: Esta notificación solo llegará si el cliente tiene la web abierta y dio permisos de notificación.\n\nPara notificación garantizada, usa el botón "Enviar mensaje al cliente" (WhatsApp).`);
+        };
+
+        window.assignDriver = async function(orderId) { 
+            const driverId = document.getElementById(`driverSelect-${orderId}`).value; 
+            if (!driverId) { alert('Selecciona un domiciliario'); return; } 
+            const driver = drivers.find(d => d.id === driverId); 
+            if (!driver) return; 
+            try { 
+                await updateDoc(doc(db, 'orders', orderId), { driverId: driver.id, driverName: driver.name, driverPhone: driver.phone, driverCommission: driver.commission, status: 'shipped' }); 
+                await loadOrders(); 
+                await loadDashboard(); 
+                closeModal('orderDetailModal'); 
+                alert(`Domiciliario ${driver.name} asignado al pedido`); 
+            } catch (error) { alert('Error: ' + error.message); } 
+        };
+        
+        window.sendDriverMessage = function(orderId) { 
+            const order = orders.find(o => o.id === orderId); 
+            if (!order || !order.driverPhone) { alert('No hay domiciliario asignado'); return; } 
+            const cleanDriverPhone = order.driverPhone.replace(/\D/g, '');
+            const message = `Hola ${order.driverName}!%0A%0ANuevo pedido para entregar:%0A📦 Pedido #${order.id.slice(-6)}%0A👤 Cliente: ${order.userName}%0A📞 Teléfono cliente: ${order.userPhone}%0A📍 Dirección: ${order.address || 'Pickup en tienda'}%0A💰 Total: $${order.total.toFixed(2)}%0A%0AEl pedido ya fue recogido. Por favor confirma cuando lo entregues.`; 
+            window.open(`https://wa.me/${cleanDriverPhone}?text=${message}`, '_blank'); 
+        };
+        
+        window.sendCustomerMessage = function(orderId) { 
+            const order = orders.find(o => o.id === orderId); 
+            if (!order || !order.userPhone) { alert('No hay teléfono del cliente'); return; } 
+            const cleanCustomerPhone = order.userPhone.replace(/\D/g, '');
+            const statusText = { pending: 'pendiente', shipped: 'en camino 🚚', delivered: 'entregado ✅', cancelled: 'cancelado ❌' }[order.status] || order.status; 
+            const message = `Hola ${order.userName}!%0A%0ATu pedido #${order.id.slice(-6)} está ${statusText}.%0A%0A${order.driverName ? `Domiciliario: ${order.driverName}%0ATeléfono: ${order.driverPhone}%0A` : ''}Total: $${order.total.toFixed(2)}%0A%0AGracias por tu compra!`; 
+            window.open(`https://wa.me/${cleanCustomerPhone}?text=${message}`, '_blank'); 
+        };
+        
+        window.updateOrderStatus = async function(orderId, status) { 
+            if (!confirm(`¿Cambiar estado a "${status}"?\n\nSe ofrecerá notificar al cliente.`)) return; 
+            try { 
+                await updateDoc(doc(db, 'orders', orderId), { status: status }); 
+                await loadOrders(); 
+                await loadDashboard(); 
+                
+                const order = orders.find(o => o.id === orderId);
+                if (order && order.userPhone) {
+                    const statusMessages = {
+                        'pending': 'Tu pedido está siendo procesado',
+                        'shipped': '🚚 ¡Tu pedido está en camino! El domiciliario ya lo recogió',
+                        'delivered': '✅ ¡Tu pedido fue entregado! Gracias por tu compra',
+                        'cancelled': '❌ Tu pedido fue cancelado. Contáctanos para más información'
+                    };
+                    const msg = statusMessages[status];
+                    if (msg && confirm(`¿Notificar al cliente (${order.userName}) por WhatsApp?\n\nMensaje: "${msg}"`)) {
+                        const cleanPhone = order.userPhone.replace(/\D/g, '');
+                        const whatsappMsg = `Hola ${order.userName}!%0A%0A${msg}%0A%0APedido #${order.id.slice(-6)}%0ATotal: $${order.total.toFixed(2)}%0A%0AAkira Motors - Ciudad Bolívar`;
+                        window.open(`https://wa.me/${cleanPhone}?text=${whatsappMsg}`, '_blank');
+                    }
+                }
+                alert('Estado actualizado'); 
+            } catch (error) { alert('Error: ' + error.message); } 
+        };
 
         async function loadDrivers() { try { const snapshot = await getDocs(collection(db, 'drivers')); drivers = []; snapshot.forEach(docSnap => drivers.push({ id: docSnap.id, ...docSnap.data() })); renderDrivers(); } catch (error) { console.error('Domiciliarios:', error); } }
         function renderDrivers() { const list = document.getElementById('driversList'); if (drivers.length === 0) { list.innerHTML = '<p style="text-align:center;color:#666;padding:1rem">No hay domiciliarios registrados.</p>'; return; } list.innerHTML = drivers.map(driver => { const todayOrders = orders.filter(o => o.driverId === driver.id && new Date(o.date).toDateString() === new Date().toDateString()); const todayEarnings = todayOrders.reduce((sum, o) => sum + (Number(o.driverCommission) || 0), 0); return `<div class="driver-card"><div class="driver-info"><strong>${driver.name}</strong><br><small>📞 ${driver.phone} | 💰 $${Number(driver.commission).toFixed(2)} por entrega</small><br><small style="color:#28a745;">Hoy: ${todayOrders.length} entregas | $${todayEarnings.toFixed(2)}</small></div><div class="admin-actions"><button class="btn btn-small btn-secondary" onclick="deleteDriver('${driver.id}')">Eliminar</button></div></div>`; }).join(''); }
@@ -722,18 +907,50 @@
             document.getElementById('todayShipped').textContent = todayShipped;
             const list = document.getElementById('todayOrdersList');
             if (todayOrders.length === 0) { list.innerHTML = '<p style="text-align:center;color:#666;padding:1rem">No hay pedidos hoy.</p>'; return; }
-            list.innerHTML = todayOrders.sort((a,b) => new Date(b.date) - new Date(a.date)).map(order => { const statusText = { pending: 'Pendiente', shipped: 'En camino', delivered: 'Entregado', cancelled: 'Cancelado' }[order.status] || order.status; return `<div class="order-item"><div class="order-header"><div><strong>Pedido #${order.id.slice(-6)}</strong><br><small style="color:#666">${order.userName} - ${order.userPhone}</small>${order.customerCode ? `<br><small style="color:#dc3545;">Código: ${order.customerCode}</small>` : ''}</div><span class="order-status ${order.status}">${statusText}</span></div><div style="margin:0.5rem 0;"><strong>Total: $${Number(order.total).toFixed(2)}</strong> | ${order.deliveryMode === 'pickup' ? 'Pickup' : 'Delivery'}${order.deliveryZone ? ' - ' + order.deliveryZone : ''}${order.driverName ? `<br><small style="color:#9C27B0;">Domiciliario: ${order.driverName}</small>` : ''}</div><div style="display:flex; gap:0.5rem; flex-wrap:wrap;"><button class="btn btn-small btn-primary" onclick="viewOrderDetail('${order.id}')">Ver detalle</button>${!order.driverId && order.status === 'pending' ? `<button class="btn btn-small btn-warning" onclick="quickAssignDriver('${order.id}')">Asignar domiciliario</button>` : ''}</div></div>`; }).join('');
+            list.innerHTML = todayOrders.sort((a,b) => new Date(b.date) - new Date(a.date)).map(order => { const statusText = { pending: 'Pendiente', shipped: 'En camino', delivered: 'Entregado', cancelled: 'Cancelado' }[order.status] || order.status; return `<div class="order-item"><div class="order-header"><div><strong>Pedido #${order.id.slice(-6)}</strong><br><small style="color:#666">${order.userName} - ${order.userPhone}</small>${order.customerCode ? `<br><small style="color:#dc3545;">Código: ${order.customerCode}</small>` : ''}</div><span class="order-status ${order.status}">${statusText}</span></div><div style="margin:0.5rem 0;"><strong>Total: $${Number(order.total).toFixed(2)}</strong> | ${order.deliveryMode === 'pickup' ? 'Pickup' : 'Delivery'}${order.deliveryZone ? ' - ' + order.deliveryZone : ''}${order.driverName ? `<br><small style="color:#9C27B0;">Domiciliario: ${order.driverName}</small>` : ''}</div><div style="display:flex; gap:0.5rem; flex-wrap:wrap;"><button class="btn btn-small btn-primary" onclick="viewOrderDetail('${order.id}')">Ver detalle</button>${!order.driverId && order.status === 'pending' ? `<button class="btn btn-small btn-warning" onclick="quickAssignDriver('${order.id}')">Asignar domiciliario</button>` : ''}<button class="btn btn-small" style="background:#999;color:white;" onclick="deleteOrder('${order.id}')">️ Eliminar</button></div></div>`; }).join('');
         }
 
         window.quickAssignDriver = async function(orderId) { const driverName = prompt('Nombre del domiciliario:'); const driverPhone = prompt('Teléfono del domiciliario:'); const commission = parseFloat(prompt('Comisión por entrega ($):')); if (!driverName || !driverPhone || !commission) { alert('Completa todos los datos'); return; } try { await updateDoc(doc(db, 'orders', orderId), { driverId: 'manual-' + Date.now(), driverName: driverName, driverPhone: driverPhone, driverCommission: commission, status: 'shipped' }); await loadOrders(); await loadTodayDashboard(); alert('Domiciliario asignado'); } catch (error) { alert('Error: ' + error.message); } };
 
-        window.exportOrders = function() { if (orders.length === 0) { alert('No hay pedidos para exportar'); return; } let csv = 'ID,Fecha,Cliente,Teléfono,Código Cliente,Productos,Subtotal,Descuento,IVA,Delivery,Total,Estado,Entrega,Zona,Cupón,Domiciliario\n'; orders.forEach(o => { const products = o.items.map(i => `${i.name} x${i.quantity}`).join('; '); csv += `${o.id.slice(-6)},${new Date(o.date).toLocaleString()},"${o.userName || ''}","${o.userPhone || ''}","${o.customerCode || ''}","${products}",${o.subtotal},${o.discount || 0},${o.iva},${o.deliveryFee || 0},${o.total},${o.status},${o.deliveryMode},"${o.deliveryZone || ''}","${o.couponCode || ''}","${o.driverName || ''}"\n`; }); downloadCSV(csv, 'pedidos_akira_motors.csv'); };
-        window.exportProducts = function() { if (products.length === 0) { alert('No hay productos para exportar'); return; } let csv = 'Código,Nombre,Marca,Categoría,Subcategoría,Vehículos,Precio Compra,Margen,Precio Venta,Descuento,Stock\n'; products.forEach(p => { csv += `"${p.code || ''}","${p.name}","${p.brand || ''}","${p.category || ''}","${p.subcategory || ''}","${p.vehicle || ''}",${p.costPrice || 0},${p.margin || 0},${p.price},${p.discount || 0},${p.stock}\n`; }); downloadCSV(csv, 'productos_akira_motors.csv'); };
-        window.exportCustomers = function() { if (customers.length === 0) { alert('No hay clientes para exportar'); return; } let csv = 'Código,Nombre,Teléfono\n'; customers.forEach(c => { csv += `"${c.customerCode || ''}","${c.name}","${c.phone}"\n`; }); downloadCSV(csv, 'clientes_akira_motors.csv'); };
-        window.exportBackup = async function() { const backup = { products, orders, reviews, coupons, deliveryZones, drivers, customers, brands, banners, vehicles, siteConfig, bcvRate, exportDate: new Date().toISOString() }; const json = JSON.stringify(backup, null, 2); const blob = new Blob([json], { type: 'application/json' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = `backup_akira_motors_${new Date().toISOString().slice(0,10)}.json`; a.click(); URL.revokeObjectURL(url); alert('Backup descargado'); };
-        function downloadCSV(csv, filename) { const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = filename; a.click(); URL.revokeObjectURL(url); }
-
-        window.closeModal = function(id) { document.getElementById(id).classList.remove('active'); };
-    </script>
-</body>
-</html>
+        window.exportOrders = function() { 
+            if (orders.length === 0) { alert('No hay pedidos para exportar'); return; } 
+            let csv = 'ID,Fecha,Cliente,Teléfono,Código Cliente,Productos,Subtotal,Descuento,IVA,Delivery,Total,Estado,Entrega,Zona,Cupón,Domiciliario\n'; 
+            orders.forEach(o => { 
+                const productsList = o.items.map(i => `${i.name} x${i.quantity}`).join('; '); 
+                csv += `${o.id.slice(-6)},${new Date(o.date).toLocaleString()},"${o.userName || ''}","${o.userPhone || ''}","${o.customerCode || ''}","${productsList}",${o.subtotal},${o.discount || 0},${o.iva},${o.deliveryFee || 0},${o.total},${o.status},${o.deliveryMode},"${o.deliveryZone || ''}","${o.couponCode || ''}","${o.driverName || ''}"\n`; 
+            }); 
+            downloadCSV(csv, 'pedidos_akira_motors.csv'); 
+        };
+        window.exportProducts = function() { 
+            if (products.length === 0) { alert('No hay productos para exportar'); return; } 
+            let csv = 'Código,Nombre,Marca,Categoría,Subcategoría,Vehículos,Precio Compra,Margen,Precio Venta,Descuento,Stock\n'; 
+            products.forEach(p => { csv += `"${p.code || ''}","${p.name}","${p.brand || ''}","${p.category || ''}","${p.subcategory || ''}","${p.vehicle || ''}",${p.costPrice || 0},${p.margin || 0},${p.price},${p.discount || 0},${p.stock}\n`; }); 
+            downloadCSV(csv, 'productos_akira_motors.csv'); 
+        };
+        window.exportCustomers = function() { 
+            if (customers.length === 0) { alert('No hay clientes para exportar'); return; } 
+            let csv = 'Código,Nombre,Teléfono\n'; 
+            customers.forEach(c => { csv += `"${c.customerCode || ''}","${c.name}","${c.phone}"\n`; }); 
+            downloadCSV(csv, 'clientes_akira_motors.csv'); 
+        };
+        window.exportBackup = async function() { 
+            const backup = { products, orders, reviews, coupons, deliveryZones, drivers, customers, brands, banners, vehicles, siteConfig, bcvRate, exportDate: new Date().toISOString() }; 
+            const json = JSON.stringify(backup, null, 2); 
+            const blob = new Blob([json], { type: 'application/json' }); 
+            const url = URL.createObjectURL(blob); 
+            const a = document.createElement('a'); 
+            a.href = url; 
+            a.download = `backup_akira_motors_${new Date().toISOString().slice(0,10)}.json`; 
+            a.click(); 
+            URL.revokeObjectURL(url); 
+            alert('Backup descargado'); 
+        };
+        function downloadCSV(csv, filename) { 
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' }); 
+            const url = URL.createObjectURL(blob); 
+            const a = document.createElement('a'); 
+            a.href = url; 
+            a.download = filename; 
+            a.click(); 
+            URL.revokeObjectURL(url); 
+        }
