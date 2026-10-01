@@ -3,20 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Akira Motors - Repuestos Automotrices</title>
+    <title>Akira Motors - Repuestos y Servicios Automotrices en Ciudad Bolívar</title>
+    <meta name="description" content="Limpieza de inyectores, reparaciones mecánicas y repuestos automotrices en Ciudad Bolívar. Agenda tu cita hoy. Primer taller con tienda online de la ciudad.">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f5f5f5; color: #333; line-height: 1.6; }
-        .top-header { background: #dc3545; color: white; padding: 0.8rem 1.5rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
+        .top-header { background: #dc3545; color: white; padding: 0.6rem 1.5rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.8rem; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
         .header-left { display: flex; align-items: center; gap: 1rem; }
         .menu-btn { background: none; border: none; color: white; font-size: 1.8rem; cursor: pointer; padding: 0.3rem; }
-        .header-logo { display: flex; align-items: center; gap: 0.8rem; font-size: 1.3rem; font-weight: bold; cursor: pointer; user-select: none; }
-        .header-logo-img { width: 40px; height: 40px; border-radius: 50%; background: white; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+        .header-logo { display: flex; align-items: center; gap: 0.8rem; font-size: 1.2rem; font-weight: bold; cursor: pointer; user-select: none; }
+        .header-logo-img { width: 38px; height: 38px; border-radius: 50%; background: white; overflow: hidden; display: flex; align-items: center; justify-content: center; }
         .header-logo-img img { width: 100%; height: 100%; object-fit: cover; }
-        .header-right { display: flex; gap: 1rem; align-items: center; }
-        .header-btn { background: rgba(255,255,255,0.15); border: none; cursor: pointer; display: flex; flex-direction: column; align-items: center; color: white; font-size: 0.75rem; padding: 0.4rem 0.8rem; border-radius: 8px; transition: background 0.3s; position: relative; }
+        .header-right { display: flex; gap: 0.8rem; align-items: center; }
+        .header-btn { background: rgba(255,255,255,0.15); border: none; cursor: pointer; display: flex; flex-direction: column; align-items: center; color: white; font-size: 0.7rem; padding: 0.3rem 0.7rem; border-radius: 8px; transition: background 0.3s; position: relative; }
         .header-btn:hover { background: rgba(255,255,255,0.25); }
-        .header-btn .icon { font-size: 1.4rem; margin-bottom: 2px; }
+        .header-btn .icon { font-size: 1.3rem; margin-bottom: 1px; }
         .cart-badge { position: absolute; top: -5px; right: -5px; background: #FFC107; color: #333; border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: bold; }
         .sidebar-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1400; }
         .sidebar-overlay.active { display: block; }
@@ -38,7 +39,231 @@
         .subcategory-item { padding: 0.7rem 1rem 0.7rem 2rem; cursor: pointer; font-size: 0.85rem; color: #666; transition: all 0.3s; border-left: 3px solid transparent; }
         .subcategory-item:hover { background: #fff5f5; color: #dc3545; border-left-color: #dc3545; }
         .subcategory-item.active { background: #ffe0e0; color: #dc3545; font-weight: bold; border-left-color: #dc3545; }
-        .banner-carousel { position: relative; width: 100%; height: 350px; overflow: hidden; background: #ddd; }
+
+        /* HERO con copywriting */
+        .hero-section {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            color: white;
+            padding: 3rem 1.5rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: url('https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=1200') center/cover;
+            opacity: 0.15;
+        }
+        .hero-content { position: relative; z-index: 2; max-width: 900px; margin: 0 auto; }
+        .hero-badge {
+            display: inline-block;
+            background: #FFC107;
+            color: #1a1a1a;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+        .hero-title {
+            font-size: 2.2rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+        .hero-title .highlight { color: #FFC107; }
+        .hero-subtitle {
+            font-size: 1.1rem;
+            color: #ddd;
+            margin-bottom: 1.5rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .hero-cta-group {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 1.5rem;
+        }
+        .btn-hero {
+            padding: 0.9rem 1.8rem;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s;
+            border: none;
+        }
+        .btn-hero-primary { background: #dc3545; color: white; }
+        .btn-hero-primary:hover { background: #c82333; transform: translateY(-2px); }
+        .btn-hero-secondary { background: #25d366; color: white; }
+        .btn-hero-secondary:hover { background: #128C7E; transform: translateY(-2px); }
+        .hero-trust {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            font-size: 0.85rem;
+            color: #ccc;
+        }
+        .hero-trust span { display: flex; align-items: center; gap: 0.3rem; }
+
+        /* Banner de apertura */
+        .opening-banner {
+            background: linear-gradient(90deg, #FFC107 0%, #FF9800 100%);
+            color: #1a1a1a;
+            padding: 1rem 1.5rem;
+            text-align: center;
+            font-weight: bold;
+            position: relative;
+        }
+        .opening-banner .countdown {
+            display: inline-block;
+            background: #1a1a1a;
+            color: #FFC107;
+            padding: 0.3rem 0.8rem;
+            border-radius: 5px;
+            margin-left: 0.5rem;
+            font-family: monospace;
+        }
+
+        /* Sección de servicios (NUEVA) */
+        .services-section {
+            padding: 3rem 1.5rem;
+            background: white;
+        }
+        .services-container { max-width: 1400px; margin: 0 auto; }
+        .section-title { font-size: 1.8rem; margin-bottom: 0.5rem; color: #1a1a1a; text-align: center; }
+        .section-subtitle { text-align: center; color: #666; margin-bottom: 2rem; font-size: 1rem; }
+        .section-title .highlight { color: #dc3545; }
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+        .service-card {
+            background: white;
+            border: 2px solid #f0f0f0;
+            border-radius: 16px;
+            padding: 1.5rem;
+            transition: all 0.3s;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        .service-card:hover {
+            border-color: #dc3545;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(220,53,69,0.15);
+        }
+        .service-card.featured {
+            border-color: #FFC107;
+            background: linear-gradient(135deg, #fff9e6 0%, white 100%);
+        }
+        .service-card.featured::before {
+            content: 'MÁS SOLICITADO';
+            position: absolute;
+            top: 15px;
+            right: -30px;
+            background: #dc3545;
+            color: white;
+            padding: 0.3rem 2.5rem;
+            font-size: 0.7rem;
+            font-weight: bold;
+            transform: rotate(45deg);
+        }
+        .service-icon { font-size: 3rem; margin-bottom: 1rem; }
+        .service-card h3 { color: #1a1a1a; margin-bottom: 0.5rem; font-size: 1.2rem; }
+        .service-card p { color: #666; font-size: 0.9rem; margin-bottom: 1rem; }
+        .service-price {
+            font-size: 1.3rem;
+            color: #dc3545;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+        .service-price .from { font-size: 0.8rem; color: #666; font-weight: normal; }
+        .service-features {
+            list-style: none;
+            margin-bottom: 1rem;
+        }
+        .service-features li {
+            padding: 0.3rem 0;
+            font-size: 0.85rem;
+            color: #555;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .service-features li::before {
+            content: '✓';
+            color: #28a745;
+            font-weight: bold;
+        }
+        .btn-service {
+            width: 100%;
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 0.7rem;
+            border-radius: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .btn-service:hover { background: #c82333; }
+
+        /* Sección de urgencia (NUEVA) */
+        .urgency-section {
+            background: #1a1a1a;
+            color: white;
+            padding: 2rem 1.5rem;
+            text-align: center;
+        }
+        .urgency-container { max-width: 900px; margin: 0 auto; }
+        .urgency-title { font-size: 1.5rem; margin-bottom: 0.5rem; color: #FFC107; }
+        .urgency-text { color: #ccc; margin-bottom: 1.5rem; }
+        .slots-container {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+        .slot {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+        .slot.available { background: #28a745; color: white; }
+        .slot.taken { background: #dc3545; color: white; opacity: 0.5; }
+        .urgency-cta {
+            background: #FFC107;
+            color: #1a1a1a;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .urgency-cta:hover { background: #FFD54F; transform: scale(1.05); }
+
+        /* Banner carrusel */
+        .banner-carousel { position: relative; width: 100%; height: 300px; overflow: hidden; background: #ddd; }
         .banner-slide { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; transition: opacity 1s ease; }
         .banner-slide.active { opacity: 1; }
         .banner-slide img { width: 100%; height: 100%; object-fit: cover; }
@@ -46,10 +271,10 @@
         .banner-dot { width: 12px; height: 12px; border-radius: 50%; background: rgba(255,255,255,0.5); cursor: pointer; border: 2px solid white; }
         .banner-dot.active { background: #dc3545; }
         .banner-empty { display: flex; align-items: center; justify-content: center; height: 100%; background: linear-gradient(135deg, #dc3545 0%, #8b0000 100%); color: white; font-size: 1.5rem; text-align: center; padding: 2rem; }
-        .banner-empty h1 { font-size: 2.5rem; margin-bottom: 0.5rem; }
+        .banner-empty h1 { font-size: 2rem; margin-bottom: 0.5rem; }
+
+        /* Productos */
         .section { padding: 2rem 1.5rem; max-width: 1400px; margin: 0 auto; }
-        .section-title { font-size: 1.6rem; margin-bottom: 1.5rem; color: #333; display: flex; align-items: center; gap: 0.5rem; }
-        .section-title .highlight { color: #dc3545; }
         .featured-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; }
         .featured-card { background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.08); transition: all 0.3s; cursor: pointer; position: relative; }
         .featured-card:hover { transform: translateY(-5px); box-shadow: 0 8px 25px rgba(220,53,69,0.2); }
@@ -71,14 +296,40 @@
         .featured-discount { color: #dc3545; font-weight: bold; font-size: 0.85rem; }
         .offer-tag { position: absolute; top: 10px; left: 10px; background: #dc3545; color: white; padding: 0.3rem 0.7rem; border-radius: 15px; font-size: 0.75rem; font-weight: bold; }
         .recommended-tag { position: absolute; top: 10px; right: 10px; background: #FFC107; color: #333; padding: 0.3rem 0.7rem; border-radius: 15px; font-size: 0.7rem; font-weight: bold; }
+        .stock-urgent { position: absolute; bottom: 10px; right: 10px; background: #dc3545; color: white; padding: 0.2rem 0.6rem; border-radius: 10px; font-size: 0.7rem; font-weight: bold; }
         .featured-stock { font-size: 0.8rem; margin: 0.5rem 0; }
         .featured-stock.in { color: #28a745; }
-        .featured-stock.low { color: #FFC107; }
+        .featured-stock.low { color: #FFC107; font-weight: bold; }
         .featured-stock.out { color: #dc3545; }
         .featured-add-btn { width: 100%; background: #dc3545; color: white; border: none; padding: 0.7rem; border-radius: 20px; cursor: pointer; font-weight: 600; font-size: 0.9rem; margin-top: 0.5rem; transition: background 0.3s; }
         .featured-add-btn:hover { background: #c82333; }
         .featured-add-btn:disabled { background: #ccc; cursor: not-allowed; }
         .featured-card.tall .featured-add-btn { background: #FFC107; color: #333; }
+
+        /* Por qué elegirnos */
+        .why-us-section {
+            background: #f8f8f8;
+            padding: 3rem 1.5rem;
+        }
+        .why-us-container { max-width: 1200px; margin: 0 auto; }
+        .why-us-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        .why-us-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .why-us-icon { font-size: 2.5rem; margin-bottom: 0.8rem; }
+        .why-us-card h4 { color: #dc3545; margin-bottom: 0.5rem; }
+        .why-us-card p { color: #666; font-size: 0.9rem; }
+
+        /* Modales */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 3000; align-items: center; justify-content: center; padding: 1rem; }
         .modal.active { display: flex; }
         .modal-content { background: white; border-radius: 20px; max-width: 900px; width: 100%; max-height: 90vh; overflow-y: auto; position: relative; box-shadow: 0 10px 40px rgba(0,0,0,0.3); }
@@ -113,6 +364,8 @@
         .star-rating { display: flex; gap: 0.5rem; margin: 0.5rem 0; }
         .star-rating span { font-size: 2rem; cursor: pointer; color: #ddd; user-select: none; transition: color 0.2s; }
         .star-rating span:hover, .star-rating span.active { color: #FFC107; }
+
+        /* Carrito */
         .cart-sidebar { position: fixed; right: -500px; top: 0; width: 450px; max-width: 100%; height: 100vh; background: white; box-shadow: -5px 0 20px rgba(0,0,0,0.2); transition: right 0.3s; z-index: 2000; display: flex; flex-direction: column; border-radius: 20px 0 0 20px; }
         .cart-sidebar.active { right: 0; }
         .cart-header { background: #dc3545; color: white; padding: 1.2rem; display: flex; justify-content: space-between; align-items: center; border-radius: 20px 0 0 0; }
@@ -136,6 +389,8 @@
         .delivery-option { flex: 1; padding: 1rem 0.5rem; border: 2px solid #ddd; border-radius: 12px; cursor: pointer; text-align: center; transition: all 0.3s; font-size: 0.85rem; font-weight: 600; background: white; }
         .delivery-option.active { border-color: #dc3545; background: #dc3545; color: white; }
         .delivery-option:hover:not(.active) { border-color: #dc3545; background: #fff5f5; }
+
+        /* Auth */
         .auth-modal .modal-content { max-width: 450px; padding: 2rem; }
         .auth-modal h2 { color: #dc3545; margin-bottom: 1.5rem; text-align: center; }
         .form-group { margin-bottom: 1rem; }
@@ -144,9 +399,13 @@
         .form-group input:focus, .form-group textarea:focus, .form-group select:focus { outline: none; border-color: #dc3545; }
         .auth-btn { width: 100%; background: #dc3545; color: white; border: none; padding: 0.9rem; border-radius: 25px; font-size: 1rem; font-weight: bold; cursor: pointer; margin-top: 0.5rem; }
         .guest-btn { width: 100%; background: white; color: #dc3545; border: 2px solid #dc3545; padding: 0.9rem; border-radius: 25px; font-size: 1rem; font-weight: bold; cursor: pointer; margin-top: 0.5rem; }
+
+        /* Checkout */
         .checkout-modal .modal-content { max-width: 600px; }
         .map-link-box { background: #fff5f5; padding: 1rem; border-radius: 16px; margin: 1rem 0; text-align: center; }
         .map-link-box a { color: #dc3545; font-weight: bold; text-decoration: none; }
+
+        /* Búsqueda */
         .search-results-container { padding: 1rem 1.5rem; max-width: 1400px; margin: 0 auto; }
         .search-results-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1rem; }
         .search-result-card { background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.08); cursor: pointer; transition: all 0.3s; }
@@ -156,8 +415,12 @@
         .search-result-info { padding: 1rem; }
         .search-result-name { font-weight: 600; margin-bottom: 0.5rem; }
         .search-result-price { color: #dc3545; font-weight: bold; font-size: 1.1rem; }
+
+        /* WhatsApp flotante */
         .whatsapp-float { position: fixed; bottom: 20px; right: 20px; background: #25d366; color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; text-decoration: none; box-shadow: 0 4px 12px rgba(0,0,0,0.3); z-index: 999; transition: transform 0.3s; }
         .whatsapp-float:hover { transform: scale(1.1); }
+
+        /* Orders */
         .orders-modal .modal-content { max-width: 700px; }
         .order-item { background: #f8f8f8; padding: 1rem; border-radius: 12px; margin-bottom: 1rem; }
         .order-header { display: flex; justify-content: space-between; margin-bottom: 0.5rem; }
@@ -165,41 +428,52 @@
         .order-status.pending { background: #FFC107; color: #333; }
         .order-status.shipped { background: #2196F3; color: white; }
         .order-status.delivered { background: #4CAF50; color: white; }
-        .order-status.cancelled { background: #dc3545; color: white; }
+
+        /* Paginación */
         .pagination { display: flex; justify-content: center; gap: 0.5rem; margin-top: 2rem; flex-wrap: wrap; }
         .pagination button { background: white; color: #333; border: 2px solid #ddd; padding: 0.6rem 1rem; border-radius: 8px; cursor: pointer; font-weight: 600; transition: all 0.3s; }
         .pagination button:hover { border-color: #dc3545; }
         .pagination button.active { background: #dc3545; color: white; border-color: #dc3545; }
         .pagination button:disabled { opacity: 0.4; cursor: not-allowed; }
+
+        /* Delivery zones */
         .delivery-zone-selector { display: flex; flex-direction: column; gap: 0.5rem; margin: 1rem 0; }
         .zone-option { padding: 0.8rem; border: 2px solid #ddd; border-radius: 8px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: all 0.3s; }
         .zone-option:hover { border-color: #dc3545; background: #fff5f5; }
         .zone-option.active { border-color: #dc3545; background: #fff5f5; }
         .zone-option .zone-name { font-weight: 600; }
         .zone-option .zone-price { color: #dc3545; font-weight: bold; }
+
+        /* Footer */
         footer { background: #1a1a1a; color: white; padding: 3rem 2rem 1rem; margin-top: 3rem; }
         .footer-content { max-width: 1400px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; margin-bottom: 2rem; }
-        .footer-section h3 { color: #dc3545; margin-bottom: 1rem; font-size: 1.1rem; }
+        .footer-section h3 { color: #FFC107; margin-bottom: 1rem; font-size: 1.1rem; }
         .footer-section p, .footer-section a { color: #ccc; font-size: 0.9rem; margin-bottom: 0.5rem; display: block; text-decoration: none; }
-        .footer-section a:hover { color: #dc3545; }
+        .footer-section a:hover { color: #FFC107; }
         .footer-brands { display: flex; gap: 1.5rem; flex-wrap: wrap; justify-content: center; padding: 1.5rem 0; border-top: 1px solid #333; border-bottom: 1px solid #333; margin: 1.5rem 0; }
         .footer-brand-logo { width: 70px; height: 70px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; overflow: hidden; padding: 8px; }
         .footer-brand-logo img { width: 100%; height: 100%; object-fit: contain; }
         .footer-bottom { text-align: center; color: #999; font-size: 0.85rem; }
+
         .loading { text-align: center; padding: 3rem; color: #666; }
         .no-results { text-align: center; padding: 3rem; color: #666; }
+
         @media (max-width: 900px) {
             .product-detail { grid-template-columns: 1fr; }
             .banner-carousel { height: 220px; }
             .featured-grid { grid-template-columns: 1fr; }
             .featured-card.large { grid-column: span 1; }
             .search-results-grid { grid-template-columns: repeat(2, 1fr); }
+            .hero-title { font-size: 1.6rem; }
         }
         @media (max-width: 600px) {
             .top-header { padding: 0.6rem 1rem; }
             .header-logo { font-size: 1rem; }
             .search-results-grid { grid-template-columns: 1fr; }
             .delivery-selector { flex-direction: column; }
+            .hero-section { padding: 2rem 1rem; }
+            .hero-title { font-size: 1.4rem; }
+            .hero-subtitle { font-size: 0.95rem; }
         }
     </style>
 </head>
@@ -232,33 +506,165 @@
             <button class="sidebar-close" onclick="toggleSidebar()">×</button>
         </div>
         <div class="sidebar-search">
-            <input type="text" id="searchInput" placeholder="Buscar por nombre o código...">
+            <input type="text" id="searchInput" placeholder="Buscar repuesto...">
         </div>
         <div class="category-list" id="categoryList"></div>
     </aside>
-    
-    <div class="banner-carousel" id="bannerCarousel">
-        <div class="banner-empty">
-            <div>
-                <h1 id="bannerTitle">AKIRA MOTORS</h1>
-                <p id="bannerSlogan">Repuestos Automotrices de Calidad</p>
+
+    <!-- HERO con copywriting -->
+    <div class="hero-section">
+        <div class="hero-content">
+            <div class="hero-badge"> PRIMER TALLER ONLINE DE CIUDAD BOLÍVAR</div>
+            <h1 class="hero-title">
+                ¿Tu carro te está <span class="highlight">fallando</span>?<br>
+                Lo dejamos como nuevo <span class="highlight">hoy mismo</span>
+            </h1>
+            <p class="hero-subtitle">
+                Limpieza de inyectores, reparaciones mecánicas y los repuestos exactos para tu vehículo. 
+                Atención directa con el dueño. Garantía por escrito en cada servicio.
+            </p>
+            <div class="hero-cta-group">
+                <a href="https://wa.me/584148700616?text=Hola!%20Quiero%20agendar%20una%20cita%20para%20mi%20carro" class="btn-hero btn-hero-secondary" target="_blank">
+                    💬 Agendar Cita por WhatsApp
+                </a>
+                <button class="btn-hero btn-hero-primary" onclick="document.getElementById('servicesSection').scrollIntoView({behavior:'smooth'})">
+                    Ver Servicios y Precios
+                </button>
+            </div>
+            <div class="hero-trust">
+                <span>✓ Garantía por escrito</span>
+                <span>✓ Atención personalizada</span>
+                <span>✓ Precios justos</span>
+                <span>✓ Ciudad Bolívar</span>
             </div>
         </div>
     </div>
-    
-    <div class="section" id="recommendedSection">
-        <h2 class="section-title">Recomendados</h2>
+
+    <!-- Banner de apertura -->
+    <div class="opening-banner">
+        🎉 <strong>GRAN APERTURA:</strong> 15% de descuento en tu primer servicio 
+        <span class="countdown" id="openingCountdown">Termina pronto</span>
+        <span style="margin-left:1rem; font-size:0.85rem;">Código: <strong>APERTURA15</strong></span>
+    </div>
+
+    <!-- SERVICIOS (NUEVO - lo más importante) -->
+    <div class="services-section" id="servicesSection">
+        <div class="services-container">
+            <h2 class="section-title">Nuestros <span class="highlight">Servicios</span></h2>
+            <p class="section-subtitle">Soluciones reales para problemas reales de tu vehículo</p>
+            <div class="services-grid">
+                <div class="service-card featured" onclick="openServiceWhatsApp('limpieza')">
+                    <div class="service-icon">️</div>
+                    <h3>Limpieza de Inyectores</h3>
+                    <p>Tu carro pierde potencia, tiembla o gasta más gasolina? Probablemente son los inyectores sucios. Los dejamos como nuevos.</p>
+                    <div class="service-price"><span class="from">Desde</span> $XX</div>
+                    <ul class="service-features">
+                        <li>Diagnóstico gratuito incluido</li>
+                        <li>Mejora el rendimiento de gasolina</li>
+                        <li>Eliminación de tirones y vibraciones</li>
+                        <li>Garantía de 30 días</li>
+                    </ul>
+                    <button class="btn-service">Agendar Limpieza →</button>
+                </div>
+
+                <div class="service-card" onclick="openServiceWhatsApp('reparacion')">
+                    <div class="service-icon">🔧</div>
+                    <h3>Reparaciones Mecánicas</h3>
+                    <p>Desde un cambio de aceite hasta reparaciones más complejas. Te decimos la verdad sobre lo que tu carro necesita, sin venderte lo que no hace falta.</p>
+                    <div class="service-price"><span class="from">Diagnóstico</span> Gratis</div>
+                    <ul class="service-features">
+                        <li>Diagnóstico honesto y transparente</li>
+                        <li>Presupuesto antes de tocar tu carro</li>
+                        <li>Repuestos originales o genéricos de calidad</li>
+                        <li>Te explicamos qué le hicimos</li>
+                    </ul>
+                    <button class="btn-service">Consultar Problema →</button>
+                </div>
+
+                <div class="service-card" onclick="document.getElementById('productsSection').scrollIntoView({behavior:'smooth'})">
+                    <div class="service-icon">🛒</div>
+                    <h3>Repuestos y Piezas</h3>
+                    <p>¿Ya sabes qué repuesto necesitas? Búscalo en nuestro catálogo online o pregúntanos por WhatsApp. Te confirmamos disponibilidad al instante.</p>
+                    <div class="service-price"><span class="from">Catálogo</span> Online</div>
+                    <ul class="service-features">
+                        <li>Stock real y actualizado</li>
+                        <li>Precios en dólares y bolívares</li>
+                        <li>Compatibilidad verificada con tu carro</li>
+                        <li>Delivery o pickup en tienda</li>
+                    </ul>
+                    <button class="btn-service">Ver Catálogo →</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- URGENCIA (NUEVO) -->
+    <div class="urgency-section">
+        <div class="urgency-container">
+            <h2 class="urgency-title">️ Agenda esta semana y obtén 15% OFF</h2>
+            <p class="urgency-text">
+                Solo atendemos <strong>8 vehículos por día</strong> para garantizar calidad. 
+                Esta semana ya tenemos varios cupos reservados.
+            </p>
+            <div class="slots-container" id="slotsContainer">
+                <!-- Se llena con JS -->
+            </div>
+            <p style="font-size:0.85rem; color:#999; margin-bottom:1rem;">
+                <span style="color:#28a745;">■</span> Disponible &nbsp;&nbsp; 
+                <span style="color:#dc3545;">■</span> Reservado
+            </p>
+            <a href="https://wa.me/584148700616?text=Hola!%20Quiero%20aprovechar%20el%2015%25%20de%20descuento%20de%20apertura.%20Mi%20carro%20es%3A%20" class="urgency-cta" target="_blank">
+                Reservar Mi Cupo Ahora →
+            </a>
+        </div>
+    </div>
+
+    <!-- POR QUÉ ELEGIRNOS -->
+    <div class="why-us-section">
+        <div class="why-us-container">
+            <h2 class="section-title">¿Por qué <span class="highlight">Akira Motors</span>?</h2>
+            <p class="section-subtitle">No somos una cadena. Somos tu taller de confianza en Ciudad Bolívar.</p>
+            <div class="why-us-grid">
+                <div class="why-us-card">
+                    <div class="why-us-icon">🎯</div>
+                    <h4>Diagnóstico Honesto</h4>
+                    <p>Te decimos exactamente qué tiene tu carro. Si no necesita reparación, te lo decimos. Sin ventas innecesarias.</p>
+                </div>
+                <div class="why-us-card">
+                    <div class="why-us-icon">📝</div>
+                    <h4>Garantía por Escrito</h4>
+                    <p>Cada servicio viene con garantía documentada. Si algo falla, lo resolvemos sin costo adicional.</p>
+                </div>
+                <div class="why-us-card">
+                    <div class="why-us-icon">💬</div>
+                    <h4>Atención Directa</h4>
+                    <p>Hablas directamente con el dueño, no con un intermediario. Tu carro recibe atención personalizada.</p>
+                </div>
+                <div class="why-us-card">
+                    <div class="why-us-icon">💰</div>
+                    <h4>Precios Justos</h4>
+                    <p>Presupuesto claro antes de empezar. Sin sorpresas ni cargos ocultos. Pagas lo acordado.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PRODUCTOS -->
+    <div class="section" id="productsSection">
+        <h2 class="section-title">Repuestos <span class="highlight">Disponibles</span></h2>
+        <p class="section-subtitle">Busca por nombre, código o filtra por tu vehículo</p>
         <div class="featured-grid" id="recommendedContainer">
-            <div class="loading">Cargando...</div>
+            <div class="loading">Cargando productos...</div>
         </div>
     </div>
     
     <div class="search-results-container" id="searchResultsContainer" style="display:none;">
-        <h2 class="section-title" id="searchResultsTitle">Resultados de búsqueda</h2>
+        <h2 class="section-title" id="searchResultsTitle">Resultados</h2>
         <div class="search-results-grid" id="searchResultsGrid"></div>
         <div class="pagination" id="pagination"></div>
     </div>
     
+    <!-- Modales -->
     <div class="modal" id="productDetailModal">
         <div class="modal-content" id="productDetailContent"></div>
     </div>
@@ -266,7 +672,10 @@
     <div class="modal auth-modal" id="authModal">
         <div class="modal-content">
             <button class="modal-close" onclick="closeModal('authModal')">×</button>
-            <h2>Mi Cuenta</h2>
+            <h2>Crea tu Cuenta</h2>
+            <p style="text-align:center; color:#666; margin-bottom:1rem; font-size:0.9rem;">
+                Guarda tu historial de compras y recibe ofertas exclusivas
+            </p>
             <div id="loginForm">
                 <div class="form-group"><label>Nombre</label><input type="text" id="guestName" placeholder="Tu nombre"></div>
                 <div class="form-group"><label>Teléfono</label><input type="tel" id="guestPhone" placeholder="Tu teléfono"></div>
@@ -341,7 +750,7 @@
                 </div>
             </div>
             <div style="margin-top: 1rem; border-top: 1px solid #ddd; padding-top: 1rem;">
-                <label style="font-size: 0.9rem; font-weight: bold; display: block; margin-bottom: 0.5rem;">Cupón de descuento</label>
+                <label style="font-size: 0.9rem; font-weight: bold; display: block; margin-bottom: 0.5rem;">¿Tienes un cupón?</label>
                 <div style="display: flex; gap: 0.5rem;">
                     <input type="text" id="couponCodeInput" placeholder="Código" style="flex: 1; padding: 0.5rem; border: 1px solid #ddd; border-radius: 8px; font-size: 0.9rem;">
                     <button onclick="applyCouponCode()" style="background: #333; color: white; border: none; padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer; font-weight: bold;">Aplicar</button>
@@ -359,7 +768,7 @@
         <div class="footer-bottom" id="footerBottom"></div>
     </footer>
 
-    <a href="https://wa.me/584148700616" class="whatsapp-float" target="_blank"></a>
+    <a href="https://wa.me/584148700616?text=Hola!%20Tengo%20una%20consulta%20sobre%20mi%20carro" class="whatsapp-float" target="_blank" title="Escríbenos por WhatsApp"></a>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
@@ -410,7 +819,17 @@
         const PRODUCTS_PER_PAGE = 25;
         let showAllMode = false;
         
-        let siteConfig = { companyName: 'AKIRA MOTORS', slogan: 'Repuestos Automotrices de Calidad', description: 'Tu tienda de repuestos automotrices de confianza.', address: 'Calle Caracas, Local 70-E, Ciudad Bolívar, Edo. Bolívar, 8001', phone: '0414-8700616', schedule: 'Lunes a Viernes: 8:00 AM - 5:00 PM', facebook: '', instagram: '', tiktok: '' };
+        let siteConfig = { 
+            companyName: 'AKIRA MOTORS', 
+            slogan: 'Repuestos y Servicios Automotrices', 
+            description: 'Tu taller de confianza en Ciudad Bolívar. Limpieza de inyectores, reparaciones mecánicas y repuestos con garantía.', 
+            address: 'Calle Caracas, Local 70-E, Ciudad Bolívar, Edo. Bolívar, 8001', 
+            phone: '0414-8700616', 
+            schedule: 'Lunes a Viernes: 8:00 AM - 5:00 PM | Sábados: 8:00 AM - 12:00 PM', 
+            facebook: '', 
+            instagram: '', 
+            tiktok: '' 
+        };
 
         let logoClickCount = 0;
         let logoClickTimer;
@@ -419,6 +838,43 @@
             if (logoClickCount === 1) { logoClickTimer = setTimeout(() => { logoClickCount = 0; }, 800); }
             if (logoClickCount >= 3) { clearTimeout(logoClickTimer); logoClickCount = 0; window.location.href = 'admin.html'; }
         });
+
+        // Función para abrir WhatsApp con mensaje de servicio
+        window.openServiceWhatsApp = function(service) {
+            const messages = {
+                'limpieza': 'Hola! Quiero agendar una limpieza de inyectores. Mi carro es: ',
+                'reparacion': 'Hola! Tengo un problema con mi carro y quiero consultar. Mi carro es: '
+            };
+            window.open(`https://wa.me/584148700616?text=${encodeURIComponent(messages[service] || 'Hola!')}`, '_blank');
+        };
+
+        // Simular cupos disponibles (urgencia realista)
+        function renderSlots() {
+            const container = document.getElementById('slotsContainer');
+            const days = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
+            const today = new Date().getDay();
+            let html = '';
+            days.forEach((day, i) => {
+                // Simular que algunos días están casi llenos (realista para un negocio pequeño)
+                const available = Math.floor(Math.random() * 4) + 1; // 1-4 cupos disponibles
+                const isTodayOrPast = (i + 1) % 7 <= today % 7 && today !== 0;
+                const slots = Array(8).fill(0).map((_, idx) => idx < available ? 'available' : 'taken');
+                html += `<div style="text-align:center; margin: 0 0.5rem;"><div style="font-size:0.8rem; color:#999; margin-bottom:0.3rem;">${day}</div><div style="display:flex; gap:3px; flex-wrap:wrap; justify-content:center;">${slots.map(s => `<div class="slot ${s}"></div>`).join('')}</div><div style="font-size:0.75rem; color:${available <= 2 ? '#dc3545' : '#28a745'}; margin-top:0.3rem;">${available} cupos</div></div>`;
+            });
+            container.innerHTML = html;
+        }
+
+        // Countdown de apertura (7 días desde hoy)
+        function updateCountdown() {
+            const endDate = new Date();
+            endDate.setDate(endDate.getDate() + 7);
+            const now = new Date();
+            const diff = endDate - now;
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            document.getElementById('openingCountdown').textContent = `${days}d ${hours}h ${minutes}m`;
+        }
 
         window.toggleSidebar = function() {
             document.getElementById('categorySidebar').classList.toggle('open');
@@ -429,12 +885,12 @@
             const list = document.getElementById('categoryList');
             let html = '<div class="category-item"><div class="category-header" onclick="showAllProductsFromMenu()"><span>Todos los productos</span></div></div>';
             for (const brand of Object.keys(vehicles)) {
-                html += `<div class="category-item"><div class="category-header" onclick="toggleCategory(this, 'vehicle-${brand}')"><span>${brand}</span><span class="category-arrow">▼</span></div><div class="subcategory-list">`;
-                vehicles[brand].forEach(model => { html += `<div class="subcategory-item" onclick="filterByVehicle(event, '${brand}', '${model}')">${model}</div>`; });
+                html += `<div class="category-item"><div class="category-header" onclick="toggleCategory(this, \'vehicle-${brand}\')"><span>${brand}</span><span class="category-arrow">▼</span></div><div class="subcategory-list">`;
+                vehicles[brand].forEach(model => { html += `<div class="subcategory-item" onclick="filterByVehicle(event, \'${brand}\', \'${model}\')">${model}</div>`; });
                 html += '</div></div>';
             }
             for (const [category, subcategories] of Object.entries(CATEGORIES)) {
-                html += `<div class="category-item"><div class="category-header" onclick="toggleCategory(this, '${category}')"><span>${category}</span><span class="category-arrow">▼</span></div><div class="subcategory-list"><div class="subcategory-item" onclick="filterBySubcategory(event, '${category}', '')">Todas</div>${subcategories.map(sub => `<div class="subcategory-item" onclick="filterBySubcategory(event, '${category}', '${sub}')">${sub}</div>`).join('')}</div></div>`;
+                html += `<div class="category-item"><div class="category-header" onclick="toggleCategory(this, \'${category}\')"><span>${category}</span><span class="category-arrow">▼</span></div><div class="subcategory-list"><div class="subcategory-item" onclick="filterBySubcategory(event, \'${category}\', \'\')">Todas</div>${subcategories.map(sub => `<div class="subcategory-item" onclick="filterBySubcategory(event, \'${category}\', \'${sub}\')">${sub}</div>`).join('')}</div></div>`;
             }
             list.innerHTML = html;
         }
@@ -443,7 +899,7 @@
             searchQuery = ''; activeCategory = null; activeSubcategory = null; selectedVehicle = { brand: '', model: '' };
             document.getElementById('searchInput').value = '';
             document.getElementById('searchResultsContainer').style.display = 'block';
-            document.getElementById('recommendedSection').style.display = 'none';
+            document.getElementById('productsSection').style.display = 'block';
             document.getElementById('searchResultsTitle').textContent = `Todos los productos (${products.length})`;
             showAllMode = true;
             currentPage = 1;
@@ -462,7 +918,7 @@
                 else { activeCategory = category; activeSubcategory = null; selectedVehicle = { brand: '', model: '' }; }
                 showAllMode = false;
                 showFilteredProducts(); 
-            } else { activeCategory = null; selectedVehicle = { brand: '', model: '' }; document.getElementById('searchResultsContainer').style.display = 'none'; document.getElementById('recommendedSection').style.display = 'block'; }
+            } else { activeCategory = null; selectedVehicle = { brand: '', model: '' }; document.getElementById('searchResultsContainer').style.display = 'none'; document.getElementById('productsSection').style.display = 'block'; }
             toggleSidebar();
         };
 
@@ -478,7 +934,7 @@
 
         document.getElementById('searchInput').addEventListener('input', function(e) {
             searchQuery = e.target.value.toLowerCase().trim();
-            if (searchQuery.length < 2) { document.getElementById('searchResultsContainer').style.display = 'none'; document.getElementById('recommendedSection').style.display = 'block'; return; }
+            if (searchQuery.length < 2) { document.getElementById('searchResultsContainer').style.display = 'none'; document.getElementById('productsSection').style.display = 'block'; return; }
             applyFilters();
         });
 
@@ -490,7 +946,7 @@
             if (selectedVehicle.brand) { filtered = filtered.filter(p => { if (!p.vehicle) return false; const vehicleText = p.vehicle.toLowerCase(); return vehicleText.includes(selectedVehicle.brand.toLowerCase()) && (selectedVehicle.model === '' || vehicleText.includes(selectedVehicle.model.toLowerCase())); }); }
             const hasFilter = searchQuery || activeCategory || activeSubcategory || selectedVehicle.brand;
             if (hasFilter) {
-                document.getElementById('recommendedSection').style.display = 'none'; document.getElementById('searchResultsContainer').style.display = 'block';
+                document.getElementById('productsSection').style.display = 'none'; document.getElementById('searchResultsContainer').style.display = 'block';
                 let title = 'Resultados';
                 if (searchQuery) title = `Búsqueda: "${searchQuery}"`;
                 if (activeSubcategory) title = activeSubcategory; else if (activeCategory) title = activeCategory;
@@ -499,13 +955,13 @@
                 document.getElementById('searchResultsTitle').textContent = title; 
                 currentPage = 1;
                 renderSearchResults(filtered);
-            } else { document.getElementById('searchResultsContainer').style.display = 'none'; document.getElementById('recommendedSection').style.display = 'block'; }
+            } else { document.getElementById('searchResultsContainer').style.display = 'none'; document.getElementById('productsSection').style.display = 'block'; }
         }
 
         function renderSearchResults(filteredProducts) {
             const grid = document.getElementById('searchResultsGrid');
             const pagination = document.getElementById('pagination');
-            if (filteredProducts.length === 0) { grid.innerHTML = '<div class="no-results" style="grid-column:1/-1;">No se encontraron productos</div>'; pagination.innerHTML = ''; return; }
+            if (filteredProducts.length === 0) { grid.innerHTML = '<div class="no-results" style="grid-column:1/-1;">No se encontraron productos. ¿No ves lo que buscas? Escríbenos por WhatsApp y te lo conseguimos.</div>'; pagination.innerHTML = ''; return; }
             
             const totalPages = Math.ceil(filteredProducts.length / PRODUCTS_PER_PAGE);
             if (currentPage > totalPages) currentPage = totalPages;
@@ -515,7 +971,7 @@
             grid.innerHTML = pageProducts.map(p => {
                 const { finalPrice, priceBs } = formatPrices(p.price, p.discount);
                 const imageHtml = p.images && p.images.length > 0 ? `<img src="${p.images[0]}" alt="${p.name}">` : (p.image ? `<img src="${p.image}" alt="${p.name}">` : '');
-                return `<div class="search-result-card" onclick="openProductDetail('${p.id}')"><div class="search-result-image">${imageHtml}</div><div class="search-result-info">${p.code ? `<div style="font-size:0.75rem;color:#888;">Código: ${p.code}</div>` : ''}<div class="search-result-name">${p.name}</div><div class="search-result-price">$${finalPrice.toFixed(2)} / Bs. ${priceBs.toFixed(2)}</div><div style="font-size:0.8rem;color:${p.stock === 0 ? '#dc3545' : '#28a745'};margin-top:0.3rem;">${p.stock === 0 ? 'No disponible' : `Stock: ${p.stock}`}</div></div></div>`;
+                return `<div class="search-result-card" onclick="openProductDetail(\'${p.id}\')"><div class="search-result-image">${imageHtml}</div><div class="search-result-info">${p.code ? `<div style="font-size:0.75rem;color:#888;">Código: ${p.code}</div>` : ''}<div class="search-result-name">${p.name}</div><div class="search-result-price">$${finalPrice.toFixed(2)} / Bs. ${priceBs.toFixed(2)}</div><div style="font-size:0.8rem;color:${p.stock === 0 ? '#dc3545' : '#28a745'};margin-top:0.3rem;">${p.stock === 0 ? 'No disponible' : `Stock: ${p.stock}`}</div></div></div>`;
             }).join('');
             
             if (totalPages > 1) {
@@ -540,11 +996,11 @@
                 const couponsSnap = await getDocs(collection(db, 'coupons')); allCoupons = []; couponsSnap.forEach(docSnap => allCoupons.push({ id: docSnap.id, ...docSnap.data() }));
                 const snapshot = await getDocs(collection(db, 'products')); products = []; snapshot.forEach(docSnap => products.push({ id: docSnap.id, ...docSnap.data() }));
                 const brandsSnap = await getDocs(collection(db, 'brands')); let brands = []; brandsSnap.forEach(docSnap => brands.push({ id: docSnap.id, ...docSnap.data() }));
-                applySiteConfig(); renderCategorySidebar(); renderBanners(); renderRecommended(); renderFooterBrands(brands); updateCartUI(); updateHeaderButtons();
+                applySiteConfig(); renderCategorySidebar(); renderBanners(); renderRecommended(); renderFooterBrands(brands); updateCartUI(); updateHeaderButtons(); renderSlots();
             } catch (error) { console.error('Error:', error); }
         }
 
-        function applySiteConfig() { document.getElementById('headerCompanyName').textContent = siteConfig.companyName; document.getElementById('bannerTitle').textContent = siteConfig.companyName; document.getElementById('bannerSlogan').textContent = siteConfig.slogan; document.title = `${siteConfig.companyName} - Repuestos`; }
+        function applySiteConfig() { document.getElementById('headerCompanyName').textContent = siteConfig.companyName; document.title = `${siteConfig.companyName} - Repuestos y Servicios en Ciudad Bolívar`; }
         function renderFooterBrands(brands) { const container = document.getElementById('footerBrands'); const activeBrands = brands.filter(b => b.image); if (activeBrands.length === 0) { container.style.display = 'none'; return; } container.innerHTML = activeBrands.map(b => `<div class="footer-brand-logo"><img src="${b.image}" alt="${b.name}"></div>`).join(''); }
         function renderBanners() { const carousel = document.getElementById('bannerCarousel'); if (banners.length === 0) return; let html = ''; banners.forEach((banner, i) => { html += `<div class="banner-slide ${i === 0 ? 'active' : ''}"><img src="${banner}" alt="Banner ${i+1}"></div>`; }); html += '<div class="banner-dots">'; banners.forEach((_, i) => { html += `<div class="banner-dot ${i === 0 ? 'active' : ''}" onclick="goToBanner(${i})"></div>`; }); html += '</div>'; carousel.innerHTML = html; startBannerRotation(); }
         function startBannerRotation() { if (bannerInterval) clearInterval(bannerInterval); if (banners.length <= 1) return; bannerInterval = setInterval(() => { currentBanner = (currentBanner + 1) % banners.length; updateBannerDisplay(); }, 5000); }
@@ -556,7 +1012,7 @@
         function renderRecommended() {
             const container = document.getElementById('recommendedContainer');
             const recommended = products.filter(p => p.recommended);
-            if (recommended.length === 0) { container.innerHTML = '<div class="no-results">No hay productos recomendados</div>'; return; }
+            if (recommended.length === 0) { container.innerHTML = '<div class="no-results">Próximamente agregaremos más productos. Mientras tanto, escríbenos por WhatsApp y te ayudamos a encontrar lo que necesitas.</div>'; return; }
             container.innerHTML = recommended.map((p, i) => {
                 const { finalPrice, priceBs, hasDiscount } = formatPrices(p.price, p.discount);
                 const imageHtml = p.images && p.images.length > 0 ? `<img src="${p.images[0]}" alt="${p.name}">` : (p.image ? `<img src="${p.image}" alt="${p.name}">` : '');
@@ -564,10 +1020,12 @@
                 if (hasDiscount) { priceHtml = `<span class="featured-price-original">$${Number(p.price).toFixed(2)}</span><span class="featured-discount">-${p.discount}%</span><div class="featured-price">$${finalPrice.toFixed(2)}</div><div class="featured-price-bs">Bs. ${priceBs.toFixed(2)}</div>`; }
                 else { priceHtml = `<div class="featured-price">$${finalPrice.toFixed(2)}</div><div class="featured-price-bs">Bs. ${priceBs.toFixed(2)}</div>`; }
                 let stockClass = 'in', stockText = `Stock: ${p.stock}`;
-                if (p.stock === 0) { stockClass = 'out'; stockText = 'No disponible'; } else if (p.stock < 10) { stockClass = 'low'; stockText = `¡Últimas ${p.stock}!`; }
-                const tags = []; if (hasDiscount) tags.push(`<div class="offer-tag">-${p.discount}%</div>`); if (p.recommended) tags.push(`<div class="recommended-tag">Recomendado</div>`);
+                let stockUrgent = '';
+                if (p.stock === 0) { stockClass = 'out'; stockText = 'No disponible'; } 
+                else if (p.stock < 5) { stockClass = 'low'; stockText = `¡Últimas ${p.stock}!`; stockUrgent = '<div class="stock-urgent">¡Últimas unidades!</div>'; }
+                const tags = []; if (hasDiscount) tags.push(`<div class="offer-tag">-${p.discount}%</div>`); if (p.recommended) tags.push(`<div class="recommended-tag">Disponible</div>`);
                 const sizeClass = i === 0 ? 'large' : (i === 1 ? 'tall' : '');
-                return `<div class="featured-card ${sizeClass}" onclick="openProductDetail('${p.id}')"><div class="featured-image">${imageHtml}${tags.join('')}</div><div class="featured-info">${p.code ? `<div style="font-size:0.75rem;color:#888;">Código: ${p.code}</div>` : ''}<div class="featured-name">${p.name}</div>${priceHtml}<div class="featured-stock ${stockClass}">${stockText}</div><button class="featured-add-btn" onclick="event.stopPropagation(); addToCart('${p.id}')" ${p.stock === 0 ? 'disabled' : ''}>${p.stock === 0 ? 'No disponible' : 'Agregar al carrito'}</button></div></div>`;
+                return `<div class="featured-card ${sizeClass}" onclick="openProductDetail(\'${p.id}\')"><div class="featured-image">${imageHtml}${tags.join('')}${stockUrgent}</div><div class="featured-info">${p.code ? `<div style="font-size:0.75rem;color:#888;">Código: ${p.code}</div>` : ''}<div class="featured-name">${p.name}</div>${priceHtml}<div class="featured-stock ${stockClass}">${stockText}</div><button class="featured-add-btn" onclick="event.stopPropagation(); addToCart(\'${p.id}\')" ${p.stock === 0 ? 'disabled' : ''}>${p.stock === 0 ? 'No disponible' : 'Agregar al carrito'}</button></div></div>`;
             }).join('');
         }
 
@@ -578,35 +1036,35 @@
             const { finalPrice, priceBs, hasDiscount } = formatPrices(product.price, product.discount);
             const imageHtml = currentImage ? `<img src="${currentImage}" alt="${product.name}" id="mainProductImage">` : '';
             let galleryDots = '';
-            if (images.length > 1) { galleryDots = '<div class="gallery-dots">'; images.forEach((_, i) => { galleryDots += `<div class="gallery-dot ${i === 0 ? 'active' : ''}" onclick="changeProductImage('${productId}', ${i})"></div>`; }); galleryDots += '</div>'; }
+            if (images.length > 1) { galleryDots = '<div class="gallery-dots">'; images.forEach((_, i) => { galleryDots += `<div class="gallery-dot ${i === 0 ? 'active' : ''}" onclick="changeProductImage(\'${productId}\', ${i})"></div>`; }); galleryDots += '</div>'; }
             let priceBox = '';
             if (hasDiscount) { priceBox = `<div class="detail-price-box"><div class="detail-offer-badge">OFERTA -${product.discount}%</div><div class="detail-price-original">Antes: $${Number(product.price).toFixed(2)}</div><div class="detail-price-usd">$${finalPrice.toFixed(2)}</div><div class="detail-price-bs">Bs. ${priceBs.toFixed(2)} (Tasa BCV: ${bcvRate})</div></div>`; }
             else { priceBox = `<div class="detail-price-box"><div class="detail-price-usd">$${finalPrice.toFixed(2)}</div><div class="detail-price-bs">Bs. ${priceBs.toFixed(2)} (Tasa BCV: ${bcvRate})</div></div>`; }
             const specs = [];
             if (product.code) specs.push(['Código', product.code]); if (product.brand) specs.push(['Marca', product.brand]); if (product.partNumber) specs.push(['N° de Parte', product.partNumber]); if (product.category) specs.push(['Categoría', product.category]); if (product.subcategory) specs.push(['Subcategoría', product.subcategory]); if (product.vehicle) specs.push(['Compatible con', product.vehicle]); if (product.diameter) specs.push(['Diámetro', product.diameter]); if (product.length) specs.push(['Largo', product.length]); if (product.width) specs.push(['Ancho', product.width]); if (product.height) specs.push(['Alto', product.height]); if (product.weight) specs.push(['Peso', product.weight]); if (product.material) specs.push(['Material', product.material]); if (product.voltage) specs.push(['Voltaje', product.voltage]); if (product.power) specs.push(['Potencia', product.power]); if (product.thread) specs.push(['Rosca', product.thread]); specs.push(['Stock', `${product.stock} unidades`]);
             const specsHtml = specs.length > 0 ? `<h3 style="color:#dc3545; margin:1rem 0 0.5rem;">Ficha Técnica</h3><table class="specs-table">${specs.map(s => `<tr><td>${s[0]}</td><td>${s[1]}</td></tr>`).join('')}</table>` : '';
-            document.getElementById('productDetailContent').innerHTML = `<button class="modal-close" onclick="closeModal('productDetailModal')">×</button><div class="product-detail"><div class="product-detail-image">${imageHtml}${galleryDots}</div><div class="product-detail-info">${product.code ? `<div class="product-detail-code">Código: ${product.code}</div>` : ''}<h2>${product.name}</h2>${priceBox}<div style="color: ${product.stock === 0 ? '#dc3545' : product.stock < 10 ? '#FFC107' : '#28a745'}; font-weight:bold; margin:0.5rem 0;">${product.stock === 0 ? 'No disponible' : product.stock < 10 ? `¡Últimas ${product.stock} unidades!` : `Disponible: ${product.stock} unidades`}</div>${product.description ? `<h3 style="color:#dc3545; margin:1rem 0 0.5rem;">Descripción</h3><div class="detail-description">${product.description}</div>` : ''}${specsHtml}</div></div><div class="reviews-section" id="reviewsSection-${productId}"><h3 style="color:#dc3545; margin-bottom:1rem;">Reseñas de clientes</h3><div id="reviewsList-${productId}">Cargando reseñas...</div>${currentUser ? `<div class="add-review-form"><h4 style="margin-bottom:0.5rem;">Deja tu reseña</h4><div class="star-rating" id="starRating-${productId}"><span data-rating="1" onclick="setRating('${productId}', 1)">★</span><span data-rating="2" onclick="setRating('${productId}', 2)">★</span><span data-rating="3" onclick="setRating('${productId}', 3)">★</span><span data-rating="4" onclick="setRating('${productId}', 4)">★</span><span data-rating="5" onclick="setRating('${productId}', 5)">★</span></div><div class="form-group"><textarea id="reviewText-${productId}" placeholder="Escribe tu opinión..." rows="3"></textarea></div><button class="auth-btn" onclick="submitReview('${productId}')">Enviar reseña</button></div>` : '<p style="color:#666;">Inicia sesión para dejar una reseña</p>'}</div><div class="detail-actions"><button class="featured-add-btn" style="flex:1; padding:1rem;" onclick="addToCart('${product.id}'); closeModal('productDetailModal')" ${product.stock === 0 ? 'disabled' : ''}>${product.stock === 0 ? 'No disponible' : 'Agregar al carrito'}</button></div>`;
+            document.getElementById('productDetailContent').innerHTML = `<button class="modal-close" onclick="closeModal(\'productDetailModal\')">×</button><div class="product-detail"><div class="product-detail-image">${imageHtml}${galleryDots}</div><div class="product-detail-info">${product.code ? `<div class="product-detail-code">Código: ${product.code}</div>` : ''}<h2>${product.name}</h2>${priceBox}<div style="color: ${product.stock === 0 ? '#dc3545' : product.stock < 5 ? '#FFC107' : '#28a745'}; font-weight:bold; margin:0.5rem 0;">${product.stock === 0 ? 'No disponible - Escríbenos y te lo conseguimos' : product.stock < 5 ? `¡Últimas ${product.stock} unidades! Reserva el tuyo` : `Disponible: ${product.stock} unidades`}</div>${product.description ? `<h3 style="color:#dc3545; margin:1rem 0 0.5rem;">Descripción</h3><div class="detail-description">${product.description}</div>` : ''}${specsHtml}</div></div><div class="reviews-section" id="reviewsSection-${productId}"><h3 style="color:#dc3545; margin-bottom:1rem;">Reseñas de clientes</h3><div id="reviewsList-${productId}">Cargando reseñas...</div>${currentUser ? `<div class="add-review-form"><h4 style="margin-bottom:0.5rem;">Deja tu reseña</h4><div class="star-rating" id="starRating-${productId}"><span data-rating="1" onclick="setRating(\'${productId}\', 1)">★</span><span data-rating="2" onclick="setRating(\'${productId}\', 2)">★</span><span data-rating="3" onclick="setRating(\'${productId}\', 3)">★</span><span data-rating="4" onclick="setRating(\'${productId}\', 4)">★</span><span data-rating="5" onclick="setRating(\'${productId}\', 5)">★</span></div><div class="form-group"><textarea id="reviewText-${productId}" placeholder="Escribe tu opinión..." rows="3"></textarea></div><button class="auth-btn" onclick="submitReview(\'${productId}\')">Enviar reseña</button></div>` : '<p style="color:#666;">Inicia sesión para dejar una reseña</p>'}</div><div class="detail-actions"><button class="featured-add-btn" style="flex:1; padding:1rem;" onclick="addToCart(\'${product.id}\'); closeModal(\'productDetailModal\')" ${product.stock === 0 ? 'disabled' : ''}>${product.stock === 0 ? 'Consultar por WhatsApp' : 'Agregar al carrito'}</button></div>`;
             document.getElementById('productDetailModal').classList.add('active'); loadReviews(productId);
         };
 
         window.changeProductImage = function(productId, index) { const product = products.find(p => p.id === productId); if (!product || !product.images) return; const img = document.getElementById('mainProductImage'); if (img && product.images[index]) { img.src = product.images[index]; } document.querySelectorAll('.gallery-dot').forEach((dot, i) => { dot.classList.toggle('active', i === index); }); };
         let currentRating = 0;
         window.setRating = function(productId, rating) { currentRating = rating; const stars = document.querySelectorAll(`#starRating-${productId} span`); stars.forEach((star, index) => { star.classList.toggle('active', index < rating); }); };
-        async function loadReviews(productId) { try { const reviewsSnap = await getDocs(collection(db, 'reviews')); const reviews = []; reviewsSnap.forEach(doc => { const data = doc.data(); if (data.productId === productId) { reviews.push({ id: doc.id, ...data }); } }); const reviewsList = document.getElementById(`reviewsList-${productId}`); if (reviews.length === 0) { reviewsList.innerHTML = '<p style="color:#666;">Aún no hay reseñas</p>'; } else { reviewsList.innerHTML = reviews.map(r => `<div class="review-item"><div class="review-header"><span class="review-author">${r.userName}</span><span class="review-date">${new Date(r.date).toLocaleDateString()}</span></div><div class="review-stars">${'★'.repeat(r.rating)}${'☆'.repeat(5-r.rating)}</div><div class="review-text">${r.text}</div></div>`).join(''); } } catch (error) { console.error('Error cargando reseñas:', error); } }
-        window.submitReview = async function(productId) { if (currentRating === 0) { alert('Por favor selecciona una calificación (toca las estrellas)'); return; } const text = document.getElementById(`reviewText-${productId}`).value.trim(); if (!text) { alert('Por favor escribe tu opinión'); return; } try { await addDoc(collection(db, 'reviews'), { productId: productId, userId: currentUser.name, userName: currentUser.name, rating: currentRating, text: text, date: new Date().toISOString() }); alert('Reseña enviada'); currentRating = 0; loadReviews(productId); document.getElementById(`reviewText-${productId}`).value = ''; document.querySelectorAll(`#starRating-${productId} span`).forEach(s => s.classList.remove('active')); } catch (error) { alert('Error: ' + error.message); } };
+        async function loadReviews(productId) { try { const reviewsSnap = await getDocs(collection(db, 'reviews')); const reviews = []; reviewsSnap.forEach(doc => { const data = doc.data(); if (data.productId === productId) { reviews.push({ id: doc.id, ...data }); } }); const reviewsList = document.getElementById(`reviewsList-${productId}`); if (reviews.length === 0) { reviewsList.innerHTML = '<p style="color:#666;">Sé el primero en dejar una reseña de este producto</p>'; } else { reviewsList.innerHTML = reviews.map(r => `<div class="review-item"><div class="review-header"><span class="review-author">${r.userName}</span><span class="review-date">${new Date(r.date).toLocaleDateString()}</span></div><div class="review-stars">${'★'.repeat(r.rating)}${'☆'.repeat(5-r.rating)}</div><div class="review-text">${r.text}</div></div>`).join(''); } } catch (error) { console.error('Error cargando reseñas:', error); } }
+        window.submitReview = async function(productId) { if (currentRating === 0) { alert('Por favor selecciona una calificación (toca las estrellas)'); return; } const text = document.getElementById(`reviewText-${productId}`).value.trim(); if (!text) { alert('Por favor escribe tu opinión'); return; } try { await addDoc(collection(db, 'reviews'), { productId: productId, userId: currentUser.name, userName: currentUser.name, rating: currentRating, text: text, date: new Date().toISOString() }); alert('¡Gracias por tu reseña!'); currentRating = 0; loadReviews(productId); document.getElementById(`reviewText-${productId}`).value = ''; document.querySelectorAll(`#starRating-${productId} span`).forEach(s => s.classList.remove('active')); } catch (error) { alert('Error: ' + error.message); } };
 
-        window.addToCart = function(productId) { const product = products.find(p => p.id === productId); if (!product || product.stock <= 0) { alert('Producto no disponible'); return; } const { finalPrice, priceBs } = formatPrices(product.price, product.discount); const existingItem = cart.find(item => item.id === productId); if (existingItem) { if (existingItem.quantity < product.stock) existingItem.quantity++; else { alert('No hay más stock disponible'); return; } } else { cart.push({ id: product.id, name: product.name, price: finalPrice, priceBs: priceBs, image: product.images?.[0] || product.image, quantity: 1 }); } updateCartUI(); saveCart(); };
+        window.addToCart = function(productId) { const product = products.find(p => p.id === productId); if (!product || product.stock <= 0) { alert('Producto no disponible. Escríbenos por WhatsApp y te ayudamos.'); return; } const { finalPrice, priceBs } = formatPrices(product.price, product.discount); const existingItem = cart.find(item => item.id === productId); if (existingItem) { if (existingItem.quantity < product.stock) existingItem.quantity++; else { alert('No hay más stock disponible'); return; } } else { cart.push({ id: product.id, name: product.name, price: finalPrice, priceBs: priceBs, image: product.images?.[0] || product.image, quantity: 1 }); } updateCartUI(); saveCart(); };
         window.removeFromCart = function(productId) { cart = cart.filter(item => item.id !== productId); updateCartUI(); saveCart(); };
         window.updateQuantity = function(productId, change) { const item = cart.find(item => item.id === productId); const product = products.find(p => p.id === productId); if (item) { item.quantity += change; if (item.quantity <= 0) removeFromCart(productId); else if (item.quantity > product.stock) { item.quantity = product.stock; alert('No hay más stock disponible'); updateCartUI(); } else { updateCartUI(); saveCart(); } } };
 
-        window.applyCouponCode = function() { const codeInput = document.getElementById('couponCodeInput').value.trim().toUpperCase(); const messageDiv = document.getElementById('couponMessage'); if (!codeInput) { messageDiv.innerHTML = '<span style="color:#dc3545;">Ingresa un código</span>'; return; } const coupon = allCoupons.find(c => c.code === codeInput); if (!coupon) { messageDiv.innerHTML = '<span style="color:#dc3545;">Cupón inválido</span>'; appliedCoupon = null; updateCartUI(); return; } if (coupon.uses >= coupon.maxUses) { messageDiv.innerHTML = '<span style="color:#dc3545;">Cupón agotado</span>'; appliedCoupon = null; updateCartUI(); return; } appliedCoupon = coupon; messageDiv.innerHTML = `<span style="color:#28a745;">✅ Cupón aplicado: -${coupon.discount}%</span> <button onclick="removeCoupon()" style="background:none; border:none; color:#dc3545; cursor:pointer; font-size:0.8rem; text-decoration:underline;">Quitar</button>`; updateCartUI(); };
+        window.applyCouponCode = function() { const codeInput = document.getElementById('couponCodeInput').value.trim().toUpperCase(); const messageDiv = document.getElementById('couponMessage'); if (!codeInput) { messageDiv.innerHTML = '<span style="color:#dc3545;">Ingresa un código</span>'; return; } const coupon = allCoupons.find(c => c.code === codeInput); if (!coupon) { messageDiv.innerHTML = '<span style="color:#dc3545;">Cupón inválido. Prueba con APERTURA15</span>'; appliedCoupon = null; updateCartUI(); return; } if (coupon.uses >= coupon.maxUses) { messageDiv.innerHTML = '<span style="color:#dc3545;">Cupón agotado</span>'; appliedCoupon = null; updateCartUI(); return; } appliedCoupon = coupon; messageDiv.innerHTML = `<span style="color:#28a745;">✅ Cupón aplicado: -${coupon.discount}%</span> <button onclick="removeCoupon()" style="background:none; border:none; color:#dc3545; cursor:pointer; font-size:0.8rem; text-decoration:underline;">Quitar</button>`; updateCartUI(); };
         window.removeCoupon = function() { appliedCoupon = null; document.getElementById('couponCodeInput').value = ''; document.getElementById('couponMessage').innerHTML = ''; updateCartUI(); };
 
         function updateCartUI() {
             const cartItems = document.getElementById('cartItems'); const cartCount = document.getElementById('cartCount'); const cartTotals = document.getElementById('cartTotals');
             const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0); cartCount.textContent = totalItems;
             if (cart.length === 0) { cartItems.innerHTML = '<p style="text-align:center;color:#999;padding:2rem;">Tu carrito está vacío</p>'; cartTotals.innerHTML = ''; return; }
-            cartItems.innerHTML = cart.map(item => `<div class="cart-item"><div class="cart-item-img">${item.image ? `<img src="${item.image}">` : ''}</div><div class="cart-item-info"><div class="cart-item-name">${item.name}</div><div class="cart-item-prices"><span style="color:#333;font-weight:bold;">$${Number(item.price).toFixed(2)}</span><span style="color:#666;"> | Bs. ${Number(item.priceBs).toFixed(2)}</span><br><small>x ${item.quantity}</small></div></div><div class="cart-item-controls"><button onclick="updateQuantity('${item.id}',-1)">-</button><span>${item.quantity}</span><button onclick="updateQuantity('${item.id}',1)">+</button><button class="delete" onclick="removeFromCart('${item.id}')">×</button></div></div>`).join('');
+            cartItems.innerHTML = cart.map(item => `<div class="cart-item"><div class="cart-item-img">${item.image ? `<img src="${item.image}">` : ''}</div><div class="cart-item-info"><div class="cart-item-name">${item.name}</div><div class="cart-item-prices"><span style="color:#333;font-weight:bold;">$${Number(item.price).toFixed(2)}</span><span style="color:#666;"> | Bs. ${Number(item.priceBs).toFixed(2)}</span><br><small>x ${item.quantity}</small></div></div><div class="cart-item-controls"><button onclick="updateQuantity(\'${item.id}\',-1)">-</button><span>${item.quantity}</span><button onclick="updateQuantity(\'${item.id}\',1)">+</button><button class="delete" onclick="removeFromCart(\'${item.id}\')">×</button></div></div>`).join('');
             let subtotalUsd = cart.reduce((sum, item) => sum + (Number(item.price) * item.quantity), 0);
             let discountUsd = 0;
             if (appliedCoupon) { discountUsd = subtotalUsd * (appliedCoupon.discount / 100); subtotalUsd = subtotalUsd - discountUsd; }
@@ -631,15 +1089,15 @@
         window.getLocation = function() { if (!navigator.geolocation) { alert('Tu navegador no soporta geolocalización'); return; } navigator.geolocation.getCurrentPosition((pos) => { const lat = pos.coords.latitude; const lng = pos.coords.longitude; document.getElementById('gpsLat').value = lat; document.getElementById('gpsLng').value = lng; document.getElementById('mapPlaceholder').innerHTML = `<div style="text-align:center;"><div style="font-size:3rem;">📍</div><div>Ubicación obtenida</div><div style="font-size:0.8rem;">${lat.toFixed(5)}, ${lng.toFixed(5)}</div></div>`; }, (err) => alert('No se pudo obtener la ubicación: ' + err.message)); };
         
         window.handleAccount = function() { if (currentUser) { const action = prompt(`Hola ${currentUser.name}!\n\n1. Ver mis pedidos\n2. Cerrar sesión\n\nIngresa el número:`); if (action === '1') { showMyOrders(); } else if (action === '2') { currentUser = null; localStorage.removeItem('akira_guest'); updateHeaderButtons(); } } else { document.getElementById('authModal').classList.add('active'); } };
-        async function showMyOrders() { if (!currentUser) return; try { const ordersSnap = await getDocs(collection(db, 'orders')); const myOrders = []; ordersSnap.forEach(doc => { const data = doc.data(); if (data.userId === currentUser.name || data.userPhone === currentUser.phone) { myOrders.push({ id: doc.id, ...data }); } }); const ordersList = document.getElementById('ordersList'); if (myOrders.length === 0) { ordersList.innerHTML = '<p style="text-align:center;color:#666;padding:2rem;">No tienes pedidos aún</p>'; } else { ordersList.innerHTML = myOrders.sort((a,b) => new Date(b.date) - new Date(a.date)).map(order => `<div class="order-item"><div class="order-header"><strong>Pedido #${order.id.slice(-6)}</strong><span class="order-status ${order.status}">${order.status === 'pending' ? 'Pendiente' : order.status === 'shipped' ? 'En camino' : order.status === 'delivered' ? 'Entregado' : 'Cancelado'}</span></div><div style="font-size:0.85rem;color:#666;margin-bottom:0.5rem;">${new Date(order.date).toLocaleDateString()}</div><div style="margin-bottom:0.5rem;">${order.items.map(item => `<div>${item.name} x${item.quantity}</div>`).join('')}</div><div style="font-weight:bold;color:#dc3545;">Total: $${order.total.toFixed(2)}</div>${order.customerCode ? `<div style="font-size:0.85rem;color:#666;margin-top:0.5rem;">Tu código: <strong>${order.customerCode}</strong></div>` : ''}</div>`).join(''); } document.getElementById('ordersModal').classList.add('active'); } catch (error) { alert('Error cargando pedidos: ' + error.message); } }
+        async function showMyOrders() { if (!currentUser) return; try { const ordersSnap = await getDocs(collection(db, 'orders')); const myOrders = []; ordersSnap.forEach(doc => { const data = doc.data(); if (data.userId === currentUser.name || data.userPhone === currentUser.phone) { myOrders.push({ id: doc.id, ...data }); } }); const ordersList = document.getElementById('ordersList'); if (myOrders.length === 0) { ordersList.innerHTML = '<p style="text-align:center;color:#666;padding:2rem;">Aún no tienes pedidos. ¡Agrega productos al carrito o agenda un servicio!</p>'; } else { ordersList.innerHTML = myOrders.sort((a,b) => new Date(b.date) - new Date(a.date)).map(order => `<div class="order-item"><div class="order-header"><strong>Pedido #${order.id.slice(-6)}</strong><span class="order-status ${order.status}">${order.status === 'pending' ? 'Pendiente' : order.status === 'shipped' ? 'En camino' : order.status === 'delivered' ? 'Entregado' : 'Cancelado'}</span></div><div style="font-size:0.85rem;color:#666;margin-bottom:0.5rem;">${new Date(order.date).toLocaleDateString()}</div><div style="margin-bottom:0.5rem;">${order.items.map(item => `<div>${item.name} x${item.quantity}</div>`).join('')}</div><div style="font-weight:bold;color:#dc3545;">Total: $${order.total.toFixed(2)}</div>${order.customerCode ? `<div style="font-size:0.85rem;color:#666;margin-top:0.5rem;">Tu código: <strong>${order.customerCode}</strong></div>` : ''}</div>`).join(''); } document.getElementById('ordersModal').classList.add('active'); } catch (error) { alert('Error cargando pedidos: ' + error.message); } }
         window.loginAsGuest = async function() { const name = document.getElementById('guestName').value.trim(); const phone = document.getElementById('guestPhone').value.trim(); const password = document.getElementById('guestPassword').value.trim(); if (!name || !phone) { alert('Completa nombre y teléfono'); return; } const customerCode = 'AM-' + Math.random().toString(36).substr(2, 6).toUpperCase(); currentUser = { name, phone, password, customerCode, isGuest: true }; localStorage.setItem('akira_guest', JSON.stringify(currentUser));
             try { await setDoc(doc(db, 'customers', phone), { name, phone, customerCode, createdAt: new Date().toISOString() }); } catch (error) { console.error('Error guardando cliente:', error); }
-            updateHeaderButtons(); closeModal('authModal'); alert(`Bienvenido ${name}!\nTu código de cliente es: ${customerCode}`);
+            updateHeaderButtons(); closeModal('authModal'); alert(`¡Bienvenido ${name}!\nTu código de cliente es: ${customerCode}\nGuárdalo para futuras compras.`);
         };
 
         function updateHeaderButtons() { const accountText = document.getElementById('accountText'); const accountIcon = document.getElementById('accountIcon'); if (currentUser) { const initial = currentUser.name.charAt(0).toUpperCase(); accountText.textContent = currentUser.name.split(' ')[0]; accountIcon.textContent = initial; } else { accountText.textContent = 'Cuenta'; accountIcon.textContent = ''; } }
         
-        window.openCheckout = function() { if (cart.length === 0) { alert('Tu carrito está vacío'); return; } if (!currentUser) { alert('Debes crear una cuenta para finalizar la compra'); document.getElementById('authModal').classList.add('active'); return; } selectCheckoutDelivery(deliveryMode); updateCheckoutTotals(); document.getElementById('checkoutModal').classList.add('active'); toggleCart(); };
+        window.openCheckout = function() { if (cart.length === 0) { alert('Tu carrito está vacío'); return; } if (!currentUser) { alert('Crea tu cuenta para finalizar la compra (es gratis y toma 10 segundos)'); document.getElementById('authModal').classList.add('active'); return; } selectCheckoutDelivery(deliveryMode); updateCheckoutTotals(); document.getElementById('checkoutModal').classList.add('active'); toggleCart(); };
         window.selectCheckoutDelivery = function(mode) { checkoutDeliveryMode = mode; selectedDeliveryZone = null; document.getElementById('checkoutPickup').classList.toggle('active', mode === 'pickup'); document.getElementById('checkoutDelivery').classList.toggle('active', mode === 'delivery'); document.getElementById('deliveryFields').style.display = mode === 'delivery' ? 'block' : 'none'; document.getElementById('pickupMapLink').style.display = mode === 'pickup' ? 'block' : 'none'; document.getElementById('deliveryZonesSection').style.display = mode === 'delivery' ? 'block' : 'none'; if (mode === 'pickup' && pickupMapsUrl) { document.getElementById('pickupMapsLink').href = pickupMapsUrl; } if (mode === 'delivery') { renderDeliveryZones(); } updateCheckoutTotals(); };
         
         function renderDeliveryZones() {
@@ -650,7 +1108,7 @@
             }
             container.innerHTML = deliveryZones.map(zone => {
                 const priceBs = (zone.cost * bcvRate).toFixed(2);
-                return `<div class="zone-option ${selectedDeliveryZone?.id === zone.id ? 'active' : ''}" onclick="selectDeliveryZone('${zone.id}')"><div><div class="zone-name">${zone.name}</div><div style="font-size:0.8rem;color:#666;">${zone.time || ''}</div></div><div class="zone-price">$${zone.cost.toFixed(2)} / Bs. ${priceBs}</div></div>`;
+                return `<div class="zone-option ${selectedDeliveryZone?.id === zone.id ? 'active' : ''}" onclick="selectDeliveryZone(\'${zone.id}\')"><div><div class="zone-name">${zone.name}</div><div style="font-size:0.8rem;color:#666;">${zone.time || ''}</div></div><div class="zone-price">$${zone.cost.toFixed(2)} / Bs. ${priceBs}</div></div>`;
             }).join('');
         }
 
@@ -690,23 +1148,26 @@
             if (checkoutDeliveryMode === 'delivery') { orderData.address = document.getElementById('deliveryAddressInput').value; orderData.gpsLat = document.getElementById('gpsLat').value; orderData.gpsLng = document.getElementById('gpsLng').value; }
             try { await addDoc(collection(db, 'orders'), orderData); if (appliedCoupon) { const couponRef = doc(db, 'coupons', appliedCoupon.id); const couponDoc = await getDoc(couponRef); if (couponDoc.exists()) { await updateDoc(couponRef, { uses: (couponDoc.data().uses || 0) + 1 }); } } } catch (error) { console.error('Error guardando pedido:', error); }
             for (const item of cart) { const product = products.find(p => p.id === item.id); if (product) { const newStock = product.stock - item.quantity; try { await updateDoc(doc(db, 'products', item.id), { stock: Math.max(0, newStock) }); product.stock = Math.max(0, newStock); } catch (error) { console.error('Error actualizando stock:', error); } } }
-            let message = `Hola ${siteConfig.companyName}! Soy ${currentUser?.name || 'cliente'}.%0A%0AMI PEDIDO:%0A`;
+            let message = `¡Hola Akira Motors! Soy ${currentUser?.name || 'cliente'}.%0A%0AQuiero comprar:%0A`;
             cart.forEach(item => { message += `- ${item.name} x${item.quantity} = $${(Number(item.price) * item.quantity).toFixed(2)}%0A`; });
             if (appliedCoupon) { message += `%0ACUPÓN: ${appliedCoupon.code} (-${appliedCoupon.discount}%)`; }
-            message += `%0ASubtotal: $${subtotalUsd.toFixed(2)}%0AIVA (16%): $${ivaUsd.toFixed(2)}`;
-            if (deliveryFee > 0) message += `%0ADelivery${selectedDeliveryZone ? ' (' + selectedDeliveryZone.name + ')' : ''}: $${deliveryFee.toFixed(2)}`;
-            message += `%0ATOTAL: $${totalUsd.toFixed(2)} / Bs. ${totalBs.toFixed(2)}%0ATasa BCV: ${bcvRate}%0A%0AEntrega: ${checkoutDeliveryMode === 'pickup' ? 'Pickup en tienda' : 'Delivery'}`;
-            if (checkoutDeliveryMode === 'delivery') { const address = document.getElementById('deliveryAddressInput').value; const lat = document.getElementById('gpsLat').value; const lng = document.getElementById('gpsLng').value; if (address) message += `%0ADirección: ${address}`; if (lat) message += `%0AGPS: ${lat}, ${lng}%0AMaps: https://maps.google.com/?q=${lat},${lng}`; }
+            message += `%0ATotal: $${totalUsd.toFixed(2)} / Bs. ${totalBs.toFixed(2)}%0AEntrega: ${checkoutDeliveryMode === 'pickup' ? 'Pickup en tienda' : 'Delivery'}`;
+            if (checkoutDeliveryMode === 'delivery') { const address = document.getElementById('deliveryAddressInput').value; const lat = document.getElementById('gpsLat').value; const lng = document.getElementById('gpsLng').value; if (address) message += `%0ADirección: ${address}`; if (lat) message += `%0AGPS: ${lat}, ${lng}`; }
             window.open(`https://wa.me/584148700616?text=${message}`, '_blank');
             cart = []; appliedCoupon = null; selectedDeliveryZone = null; document.getElementById('couponCodeInput').value = ''; document.getElementById('couponMessage').innerHTML = '';
-            updateCartUI(); saveCart(); closeModal('checkoutModal'); alert('✅ Pedido enviado por WhatsApp. El stock ha sido actualizado.'); await loadData();
+            updateCartUI(); saveCart(); closeModal('checkoutModal'); alert('✅ Pedido enviado. Te confirmaremos por WhatsApp en minutos.'); await loadData();
         };
 
-        function renderFooter() { document.getElementById('footerContent').innerHTML = `<div class="footer-section"><h3>${siteConfig.companyName}</h3><p>${siteConfig.description}</p></div><div class="footer-section"><h3>Contacto</h3><p>${siteConfig.address}</p><p>${siteConfig.phone}</p></div><div class="footer-section"><h3>Horario</h3><p>${siteConfig.schedule}</p></div><div class="footer-section"><h3>Síguenos</h3>${siteConfig.facebook ? `<a href="${siteConfig.facebook}" target="_blank">Facebook</a>` : ''}${siteConfig.instagram ? `<a href="${siteConfig.instagram}" target="_blank">Instagram</a>` : ''}${siteConfig.tiktok ? `<a href="${siteConfig.tiktok}" target="_blank">TikTok</a>` : ''}</div></div>`; document.getElementById('footerBottom').innerHTML = `<p>&copy; 2026 ${siteConfig.companyName}. Todos los derechos reservados.</p>`; }
+        function renderFooter() { document.getElementById('footerContent').innerHTML = `<div class="footer-section"><h3>${siteConfig.companyName}</h3><p>${siteConfig.description}</p><p style="margin-top:0.5rem; color:#FFC107; font-weight:bold;">El primer taller con tienda online de Ciudad Bolívar</p></div><div class="footer-section"><h3>Contacto</h3><p>${siteConfig.address}</p><p>${siteConfig.phone}</p><a href="https://wa.me/584148700616" target="_blank" style="color:#25d366; font-weight:bold;">WhatsApp directo →</a></div><div class="footer-section"><h3>Horario</h3><p>${siteConfig.schedule}</p></div><div class="footer-section"><h3>Síguenos</h3>${siteConfig.facebook ? `<a href="${siteConfig.facebook}" target="_blank">Facebook</a>` : ''}${siteConfig.instagram ? `<a href="${siteConfig.instagram}" target="_blank">Instagram</a>` : ''}${siteConfig.tiktok ? `<a href="${siteConfig.tiktok}" target="_blank">TikTok</a>` : ''}<p style="margin-top:1rem; font-size:0.8rem; color:#666;">Próximamente en redes</p></div></div>`; document.getElementById('footerBottom').innerHTML = `<p>&copy; 2026 ${siteConfig.companyName}. Todos los derechos reservados. | Ciudad Bolívar, Venezuela</p>`; }
         window.closeModal = function(id) { document.getElementById(id).classList.remove('active'); };
         document.addEventListener('keydown', function(e) { if (e.key === 'Escape') { document.querySelectorAll('.modal.active').forEach(m => m.classList.remove('active')); document.getElementById('cartSidebar').classList.remove('active'); } });
         const savedGuest = localStorage.getItem('akira_guest'); if (savedGuest) { try { currentUser = JSON.parse(savedGuest); } catch(e) {} }
-        loadData(); renderFooter();
+        
+        // Inicializar
+        loadData(); 
+        renderFooter();
+        updateCountdown();
+        setInterval(updateCountdown, 60000); // Actualizar cada minuto
     </script>
 </body>
 </html>
