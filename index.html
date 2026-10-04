@@ -47,11 +47,11 @@
         /* HERO DINÁMICO */
         .hero-section { position: relative; min-height: 400px; display: flex; align-items: center; justify-content: center; text-align: center; overflow: hidden; }
         .hero-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-size: cover; background-position: center; }
-        .hero-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); }
+        .hero-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
         .hero-content { position: relative; z-index: 2; padding: 3rem 1.5rem; max-width: 900px; }
-        .hero-title { font-size: 2.5rem; font-weight: bold; margin-bottom: 1rem; line-height: 1.2; }
-        .hero-subtitle { font-size: 1.2rem; margin-bottom: 2rem; opacity: 0.95; }
-        .hero-cta { display: inline-block; background: #dc3545; color: white; padding: 1rem 2rem; border-radius: 25px; text-decoration: none; font-weight: bold; transition: transform 0.3s; }
+        .hero-title { font-weight: bold; margin-bottom: 1rem; line-height: 1.2; }
+        .hero-subtitle { margin-bottom: 2rem; opacity: 0.95; }
+        .hero-cta { display: inline-block; padding: 1rem 2rem; border-radius: 25px; text-decoration: none; font-weight: bold; transition: transform 0.3s; }
         .hero-cta:hover { transform: scale(1.05); }
 
         .section { padding: 2rem 1.5rem; max-width: 1400px; margin: 0 auto; }
@@ -113,6 +113,9 @@
         .cart-total-row.total { font-size: 1.2rem; font-weight: bold; color: #dc3545; border-top: 1px solid #ddd; padding-top: 0.8rem; margin-top: 0.5rem; }
         .cart-total-row.discount { color: #28a745; font-weight: bold; }
         .checkout-btn { width: 100%; background: #dc3545; color: white; border: none; padding: 1rem; border-radius: 25px; font-size: 1rem; font-weight: bold; cursor: pointer; margin-top: 1rem; }
+        .delivery-selector { display: flex; gap: 0.8rem; margin: 1rem 0; }
+        .delivery-option { flex: 1; padding: 1rem 0.5rem; border: 2px solid #ddd; border-radius: 12px; cursor: pointer; text-align: center; font-size: 0.85rem; font-weight: 600; background: white; }
+        .delivery-option.active { border-color: #dc3545; background: #dc3545; color: white; }
 
         .auth-modal .modal-content { max-width: 450px; padding: 2rem; }
         .auth-modal h2 { color: #dc3545; margin-bottom: 1.5rem; text-align: center; }
@@ -123,9 +126,6 @@
         .guest-btn { width: 100%; background: white; color: #dc3545; border: 2px solid #dc3545; padding: 0.9rem; border-radius: 25px; font-size: 1rem; font-weight: bold; cursor: pointer; margin-top: 0.5rem; }
 
         .checkout-modal .modal-content { max-width: 600px; }
-        .delivery-selector { display: flex; gap: 0.8rem; margin: 1rem 0; }
-        .delivery-option { flex: 1; padding: 1rem 0.5rem; border: 2px solid #ddd; border-radius: 12px; cursor: pointer; text-align: center; font-size: 0.85rem; font-weight: 600; background: white; }
-        .delivery-option.active { border-color: #dc3545; background: #dc3545; color: white; }
         .map-link-box { background: #fff5f5; padding: 1rem; border-radius: 16px; margin: 1rem 0; text-align: center; }
         .map-link-box a { color: #dc3545; font-weight: bold; text-decoration: none; }
 
@@ -175,15 +175,15 @@
         @media (max-width: 900px) {
             .product-detail { grid-template-columns: 1fr; }
             .featured-grid { grid-template-columns: repeat(2, 1fr); }
-            .hero-title { font-size: 1.8rem; }
+            .hero-title { font-size: 1.8rem !important; }
         }
         @media (max-width: 600px) {
             .top-header { padding: 0.6rem 1rem; }
             .header-logo { font-size: 1rem; }
             .featured-grid { grid-template-columns: 1fr; }
             .delivery-selector { flex-direction: column; }
-            .hero-title { font-size: 1.5rem; }
-            .hero-subtitle { font-size: 1rem; }
+            .hero-title { font-size: 1.5rem !important; }
+            .hero-subtitle { font-size: 1rem !important; }
         }
     </style>
 </head>
@@ -198,11 +198,11 @@
         </div>
         <div class="header-right">
             <button class="header-btn" id="accountBtn" onclick="handleAccount()">
-                <span class="icon" id="accountIcon">👤</span>
+                <span class="icon" id="accountIcon"></span>
                 <span id="accountText">Cuenta</span>
             </button>
             <button class="header-btn" onclick="toggleCart()">
-                <span class="icon"></span>
+                <span class="icon">🛒</span>
                 <span>Carrito</span>
                 <span class="cart-badge" id="cartCount">0</span>
             </button>
@@ -235,7 +235,7 @@
     <!-- PRODUCTOS RECOMENDADOS (primera vista) -->
     <div class="section" id="recommendedSection">
         <h2 class="section-title">⭐ <span class="highlight">Recomendados</span></h2>
-        <p class="section-subtitle">Los repuestos más solicitados por nuestros clientes</p>
+        <p class="section-subtitle">Los repuestos más solicitados</p>
         <div class="featured-grid" id="recommendedContainer">
             <div class="loading">Cargando productos...</div>
         </div>
@@ -255,10 +255,9 @@
         <div class="modal-content">
             <button class="modal-close" onclick="closeModal('authModal')">×</button>
             <h2>Crea tu Cuenta</h2>
-            <p style="text-align:center; color:#666; margin-bottom:1rem; font-size:0.9rem;">Guarda tu historial y recibe notificaciones</p>
             <div class="form-group"><label>Nombre</label><input type="text" id="guestName" placeholder="Tu nombre"></div>
             <div class="form-group"><label>Teléfono</label><input type="tel" id="guestPhone" placeholder="Tu teléfono"></div>
-            <div class="form-group"><label>Contraseña (opcional)</label><input type="password" id="guestPassword" placeholder="Crea una contraseña"></div>
+            <div class="form-group"><label>Contraseña (opcional)</label><input type="password" id="guestPassword"></div>
             <button class="auth-btn" onclick="loginAsGuest()">Crear Cuenta</button>
             <button class="guest-btn" onclick="closeModal('authModal')">Cancelar</button>
         </div>
@@ -280,7 +279,7 @@
                 <div class="delivery-zone-selector" id="deliveryZonesList"></div>
             </div>
             <div id="deliveryFields" style="display:none; padding: 0 1.5rem;">
-                <div class="form-group"><label>Dirección</label><input type="text" id="deliveryAddressInput" placeholder="Calle, número, referencia..."></div>
+                <div class="form-group"><label>Dirección</label><input type="text" id="deliveryAddressInput" placeholder="Calle, número..."></div>
                 <div class="form-group">
                     <label>Ubicación GPS</label>
                     <button class="auth-btn" style="background:#28a745;" onclick="getLocation()">Obtener ubicación</button>
@@ -578,7 +577,7 @@
                 const snapshot = await getDocs(collection(db, 'products')); products = []; snapshot.forEach(d => products.push({ id: d.id, ...d.data() }));
                 const brandsSnap = await getDocs(collection(db, 'brands')); let brands = []; brandsSnap.forEach(d => brands.push({ id: d.id, ...d.data() }));
                 
-                applySiteConfig(); renderDrawerMenu(); renderBanners(); renderRecommended(); renderFooterBrands(brands); updateCartUI(); updateHeaderButtons(); updateWhatsAppLinks();
+                applySiteConfig(); renderDrawerMenu(); renderRecommended(); renderFooterBrands(brands); updateCartUI(); updateHeaderButtons(); updateWhatsAppLinks();
             } catch (error) { console.error('Error:', error); }
         }
 
@@ -593,7 +592,14 @@
             section.style.display = 'flex';
             if (heroConfig.backgroundImage) {
                 bg.style.backgroundImage = `url('${heroConfig.backgroundImage}')`;
-                overlay.style.background = heroConfig.overlayColor || 'rgba(0,0,0,0.5)';
+                const opacity = (heroConfig.overlayOpacity || 50) / 100;
+                overlay.style.background = heroConfig.overlayColor ? heroConfig.overlayColor.replace(')', `, ${opacity})`).replace('rgb', 'rgba').replace('#', '') : `rgba(0,0,0,${opacity})`;
+                if (heroConfig.overlayColor && heroConfig.overlayColor.startsWith('#')) {
+                    const r = parseInt(heroConfig.overlayColor.slice(1,3), 16);
+                    const g = parseInt(heroConfig.overlayColor.slice(3,5), 16);
+                    const b = parseInt(heroConfig.overlayColor.slice(5,7), 16);
+                    overlay.style.background = `rgba(${r},${g},${b},${opacity})`;
+                }
             } else {
                 bg.style.background = 'linear-gradient(135deg, #dc3545 0%, #8b0000 100%)';
                 overlay.style.display = 'none';
@@ -602,12 +608,13 @@
             if (heroConfig.title) {
                 title.textContent = heroConfig.title;
                 title.style.color = heroConfig.titleColor || 'white';
+                title.style.fontSize = (heroConfig.titleSize || 48) + 'px';
                 title.style.fontFamily = heroConfig.titleFont || "'Segoe UI', sans-serif";
             }
             if (heroConfig.subtitle) {
                 subtitle.textContent = heroConfig.subtitle;
                 subtitle.style.color = heroConfig.subtitleColor || '#ddd';
-                subtitle.style.fontFamily = heroConfig.subtitleFont || "'Segoe UI', sans-serif";
+                subtitle.style.fontSize = (heroConfig.subtitleSize || 20) + 'px';
             }
             if (heroConfig.ctaText) cta.textContent = heroConfig.ctaText;
             if (heroConfig.ctaLink) cta.href = heroConfig.ctaLink;
@@ -622,9 +629,6 @@
             const activeBrands = brands.filter(b => b.image); 
             if (activeBrands.length === 0) { container.style.display = 'none'; return; } 
             container.innerHTML = activeBrands.map(b => `<div class="footer-brand-logo"><img src="${b.image}" alt="${b.name}"></div>`).join(''); 
-        }
-        function renderBanners() { 
-            // Banners eliminados del flujo principal, se manejan en hero
         }
         function calculateDiscountedPrice(price, discount) { if (!discount || discount <= 0) return price; return price - (price * discount / 100); }
         function formatPrices(price, discount) { const finalPrice = calculateDiscountedPrice(price, discount); const priceBs = finalPrice * bcvRate; return { finalPrice, priceBs, hasDiscount: discount && discount > 0 }; }
@@ -660,7 +664,7 @@
             if (hasDiscount) priceBox = `<div class="detail-price-box"><div class="detail-offer-badge">OFERTA -${product.discount}%</div><div style="font-size:1rem;color:#999;text-decoration:line-through;">Antes: $${Number(product.price).toFixed(2)}</div><div class="detail-price-usd">$${finalPrice.toFixed(2)}</div><div class="detail-price-bs">Bs. ${priceBs.toFixed(2)} (BCV: ${bcvRate})</div></div>`;
             else priceBox = `<div class="detail-price-box"><div class="detail-price-usd">$${finalPrice.toFixed(2)}</div><div class="detail-price-bs">Bs. ${priceBs.toFixed(2)} (BCV: ${bcvRate})</div></div>`;
             const specs = [];
-            if (product.code) specs.push(['Código', product.code]); if (product.brand) specs.push(['Marca', product.brand]); if (product.partNumber) specs.push(['N° Parte', product.partNumber]); if (product.category) specs.push(['Categoría', product.category]); if (product.subcategory) specs.push(['Subcategoría', product.subcategory]); if (product.vehicle) specs.push(['Compatible', product.vehicle]); if (product.diameter) specs.push(['Diámetro', product.diameter]); if (product.length) specs.push(['Largo', product.length]); if (product.width) specs.push(['Ancho', product.width]); if (product.height) specs.push(['Alto', product.height]); if (product.weight) specs.push(['Peso', product.weight]); if (product.material) specs.push(['Material', product.material]); if (product.voltage) specs.push(['Voltaje', product.voltage]); if (product.power) specs.push(['Potencia', product.power]); if (product.thread) specs.push(['Rosca', product.thread]); specs.push(['Stock', `${product.stock} unidades`]);
+            if (product.code) specs.push(['Código', product.code]); if (product.brand) specs.push(['Marca', product.brand]); if (product.category) specs.push(['Categoría', product.category]); if (product.subcategory) specs.push(['Subcategoría', product.subcategory]); if (product.vehicle) specs.push(['Compatible', product.vehicle]); specs.push(['Stock', `${product.stock} unidades`]);
             const specsHtml = specs.length > 0 ? `<h3 style="color:#dc3545; margin:1rem 0 0.5rem;">Ficha Técnica</h3><table class="specs-table">${specs.map(s => `<tr><td>${s[0]}</td><td>${s[1]}</td></tr>`).join('')}</table>` : '';
             document.getElementById('productDetailContent').innerHTML = `<button class="modal-close" onclick="closeModal('productDetailModal')">×</button><div class="product-detail"><div class="product-detail-image">${imageHtml}</div><div class="product-detail-info">${product.code ? `<div style="color:#dc3545;font-size:0.9rem;">Código: ${product.code}</div>` : ''}<h2>${product.name}</h2>${priceBox}<div style="color: ${product.stock === 0 ? '#dc3545' : product.stock < 5 ? '#FFC107' : '#28a745'}; font-weight:bold; margin:0.5rem 0;">${product.stock === 0 ? 'No disponible' : product.stock < 5 ? `¡Últimas ${product.stock}!` : `Disponible: ${product.stock}`}</div>${product.description ? `<h3 style="color:#dc3545; margin:1rem 0 0.5rem;">Descripción</h3><div class="detail-description">${product.description}</div>` : ''}${specsHtml}</div></div><div class="detail-actions"><button class="featured-add-btn" style="flex:1; padding:1rem;" onclick="addToCart('${product.id}'); closeModal('productDetailModal')" ${product.stock === 0 ? 'disabled' : ''}>${product.stock === 0 ? 'Consultar' : 'Agregar al carrito'}</button></div>`;
             document.getElementById('productDetailModal').classList.add('active');
