@@ -55,6 +55,7 @@
         .alert-info { background: #e3f2fd; border: 1px solid #90caf9; color: #1565c0; padding: 0.8rem; border-radius: 8px; margin-bottom: 1rem; font-size: 0.85rem; }
         .alert-warning { background: #fff3cd; border: 1px solid #ffc107; color: #856404; padding: 0.8rem; border-radius: 8px; margin-bottom: 1rem; font-size: 0.85rem; }
         .alert-success { background: #d4edda; border: 1px solid #c3e6cb; color: #155724; padding: 0.8rem; border-radius: 8px; margin-bottom: 1rem; font-size: 0.85rem; }
+        .alert-error { background: #f8d7da; border: 1px solid #f5c6cb; color: #721c24; padding: 0.8rem; border-radius: 8px; margin-bottom: 1rem; font-size: 0.85rem; }
         .login-container { max-width: 400px; margin: 4rem auto; padding: 2rem; background: white; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
         .login-container h2 { color: #dc3545; margin-bottom: 1.5rem; text-align: center; }
         .login-container .login-icon { font-size: 4rem; text-align: center; margin-bottom: 1rem; }
@@ -113,21 +114,16 @@
         .whatsapp-btn:hover { background: #128C7E; }
         .notify-btn { background: #2196F3; color: white; border: none; padding: 0.7rem 1rem; border-radius: 8px; cursor: pointer; font-weight: 600; margin-top: 0.5rem; margin-right: 0.5rem; }
         .notify-btn:hover { background: #1976D2; }
-        
-        /* Vista previa */
         .preview-container { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; height: calc(100vh - 200px); }
         .preview-editor { overflow-y: auto; }
         .preview-frame { border: 2px solid #dc3545; border-radius: 12px; overflow: hidden; background: white; }
         .preview-frame iframe { width: 100%; height: 100%; border: none; }
-        
-        /* Drawer editor */
         .drawer-editor-item { background: #f8f8f8; padding: 1rem; border-radius: 8px; margin-bottom: 0.5rem; }
         .drawer-editor-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; }
         .drawer-editor-controls { display: flex; gap: 0.3rem; }
         .drawer-editor-controls button { background: #dc3545; color: white; border: none; width: 30px; height: 30px; border-radius: 5px; cursor: pointer; font-size: 1rem; }
         .drawer-editor-controls button:hover { background: #c82333; }
         .drawer-sub-item { margin-left: 2rem; margin-top: 0.5rem; }
-        
         @media (max-width: 768px) {
             body { flex-direction: column; }
             .admin-sidebar { width: 100%; height: auto; position: relative; }
@@ -166,23 +162,23 @@
             </div>
             <div class="admin-menu">
                 <div class="admin-menu-item active" data-section="preview">👁️ Vista Previa</div>
-                <div class="admin-menu-item" data-section="hero"> Hero/Portada</div>
-                <div class="admin-menu-item" data-section="drawer">☰ Menú Drawer</div>
-                <div class="admin-menu-item" data-section="dashboard">📊 Dashboard</div>
-                <div class="admin-menu-item" data-section="orders"> Pedidos</div>
-                <div class="admin-menu-item" data-section="drivers">️ Domiciliarios</div>
-                <div class="admin-menu-item" data-section="customers">👥 Clientes</div>
-                <div class="admin-menu-item" data-section="products">🛒 Productos</div>
+                <div class="admin-menu-item" data-section="hero">🎨 Hero/Portada</div>
+                <div class="admin-menu-item" data-section="drawer"> Menú Drawer</div>
+                <div class="admin-menu-item" data-section="dashboard"> Dashboard</div>
+                <div class="admin-menu-item" data-section="orders">📦 Pedidos</div>
+                <div class="admin-menu-item" data-section="drivers">🏍️ Domiciliarios</div>
+                <div class="admin-menu-item" data-section="customers"> Clientes</div>
+                <div class="admin-menu-item" data-section="products"> Productos</div>
                 <div class="admin-menu-item" data-section="vehicles"> Vehículos</div>
                 <div class="admin-menu-item" data-section="brands">️ Marcas</div>
-                <div class="admin-menu-item" data-section="banners">🖼️ Banners</div>
+                <div class="admin-menu-item" data-section="banners">️ Banners</div>
                 <div class="admin-menu-item" data-section="coupons">🎟️ Cupones</div>
                 <div class="admin-menu-item" data-section="delivery">📍 Zonas Delivery</div>
                 <div class="admin-menu-item" data-section="reviews">⭐ Reseñas</div>
-                <div class="admin-menu-item" data-section="footer">📄 Pie de página</div>
+                <div class="admin-menu-item" data-section="footer"> Pie de página</div>
                 <div class="admin-menu-item" data-section="appearance">🎨 Apariencia</div>
-                <div class="admin-menu-item" data-section="settings">️ Configuración</div>
-                <div class="admin-menu-item" data-section="export"> Exportar</div>
+                <div class="admin-menu-item" data-section="settings">⚙️ Configuración</div>
+                <div class="admin-menu-item" data-section="export">💾 Exportar</div>
                 <div class="admin-menu-item" id="logoutBtn" style="margin-top:2rem; background:#dc3545;">🚪 Salir</div>
             </div>
         </aside>
@@ -197,17 +193,7 @@
                         <div class="admin-card">
                             <h3>Controles Rápidos</h3>
                             <button class="btn btn-primary" id="btnRefreshPreview" style="width:100%; margin-bottom:1rem;">🔄 Recargar Vista Previa</button>
-                            <button class="btn btn-secondary" id="btnOpenStore" style="width:100%;"> Abrir Tienda en Nueva Pestaña</button>
-                        </div>
-                        <div class="admin-card">
-                            <h3>Secciones Editables</h3>
-                            <p style="margin-bottom:1rem;">Usa el menú lateral para editar:</p>
-                            <ul style="list-style:none; line-height:2;">
-                                <li>🎨 <strong>Hero/Portada</strong> - Imagen y textos principales</li>
-                                <li>☰ <strong>Menú Drawer</strong> - Categorías y vehículos</li>
-                                <li> <strong>Productos</strong> - Catálogo completo</li>
-                                <li> <strong>Pie de página</strong> - Información de contacto</li>
-                            </ul>
+                            <button class="btn btn-secondary" id="btnOpenStore" style="width:100%;">🌐 Abrir Tienda en Nueva Pestaña</button>
                         </div>
                     </div>
                     <div class="preview-frame">
@@ -216,10 +202,10 @@
                 </div>
             </div>
 
-            <!-- HERO/PORTADA -->
+            <!-- HERO -->
             <div class="admin-section" id="section-hero">
                 <h2 class="section-title">Hero / Portada Principal</h2>
-                <div class="alert-info">Esta es la primera sección que ven los clientes. Configúrala para causar impacto.</div>
+                <div class="alert-info">Esta es la primera sección que ven los clientes.</div>
                 
                 <div class="admin-card">
                     <h3>Visibilidad</h3>
@@ -237,10 +223,12 @@
                         <div class="image-preview" id="heroBgPreview"><div style="color:#999;">Sin imagen</div></div>
                     </div>
                     <div class="form-group">
-                        <label>Color de overlay (opacidad sobre la imagen)</label>
+                        <label>Color de overlay</label>
                         <input type="color" id="heroOverlayColor" value="#000000">
+                    </div>
+                    <div class="form-group">
+                        <label>Opacidad del overlay: <span id="opacityValue">50</span>%</label>
                         <input type="range" id="heroOverlayOpacity" min="0" max="100" value="50" style="width:100%;">
-                        <div class="hint">Opacidad: <span id="opacityValue">50</span>%</div>
                     </div>
                 </div>
 
@@ -259,16 +247,6 @@
                             <label>Tamaño de fuente (px)</label>
                             <input type="number" id="heroTitleSize" value="48" min="20" max="100">
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <label>Tipografía</label>
-                        <select id="heroTitleFont">
-                            <option value="'Segoe UI', sans-serif">Segoe UI (Moderna)</option>
-                            <option value="Arial, sans-serif">Arial (Clásica)</option>
-                            <option value="Georgia, serif">Georgia (Elegante)</option>
-                            <option value="'Courier New', monospace">Courier (Técnica)</option>
-                            <option value="Impact, sans-serif">Impact (Bold)</option>
-                        </select>
                     </div>
                 </div>
 
@@ -610,7 +588,6 @@
                         <div class="form-group"><label>Marca del Repuesto</label><input type="text" id="productBrand"></div>
                     </div>
                     <div class="form-group"><label>Nombre *</label><input type="text" id="productName" required></div>
-                    <div class="form-group"><label>Número de Parte</label><input type="text" id="productPartNumber"></div>
                     <div class="form-group"><label>Descripción *</label><textarea id="productDescription" required></textarea></div>
                     <div class="checkbox-group"><input type="checkbox" id="productRecommended"><label for="productRecommended" style="margin:0;">Marcar como RECOMENDADO</label></div>
                 </div>
@@ -619,20 +596,6 @@
                     <div class="form-row">
                         <div class="form-group"><label>Categoría *</label><select id="productCategory" required><option value="">Seleccionar...</option></select></div>
                         <div class="form-group"><label>Subcategoría *</label><select id="productSubcategory" required><option value="">Seleccionar...</option></select></div>
-                    </div>
-                    <div class="form-group">
-                        <label>Vehículos Compatibles</label>
-                        <div style="display:flex; gap:0.5rem; margin-bottom:0.5rem;">
-                            <select id="productVehicleBrand" style="flex:1; padding:0.7rem; border:1px solid #ddd; border-radius:8px;">
-                                <option value="">Seleccionar marca...</option>
-                            </select>
-                            <select id="productVehicleModel" style="flex:1; padding:0.7rem; border:1px solid #ddd; border-radius:8px;">
-                                <option value="">Seleccionar modelo...</option>
-                            </select>
-                        </div>
-                        <button type="button" class="btn btn-small btn-primary" id="btnAddVehicle">Agregar vehículo</button>
-                        <div id="selectedVehicles" style="margin-top:0.5rem; display:flex; flex-wrap:wrap; gap:0.5rem;"></div>
-                        <input type="hidden" id="productVehicle">
                     </div>
                 </div>
                 <div class="form-section">
@@ -647,24 +610,6 @@
                         <div class="form-group"><label>% Descuento (Oferta)</label><input type="number" id="productDiscount" min="0" max="100" placeholder="0"></div>
                     </div>
                     <div class="form-group"><label>Stock *</label><input type="number" id="productStock" required></div>
-                </div>
-                <div class="form-section">
-                    <h3>Especificaciones Técnicas</h3>
-                    <div class="form-row-3">
-                        <div class="form-group"><label>Diámetro</label><input type="text" id="specDiameter"></div>
-                        <div class="form-group"><label>Largo</label><input type="text" id="specLength"></div>
-                        <div class="form-group"><label>Ancho</label><input type="text" id="specWidth"></div>
-                    </div>
-                    <div class="form-row-3">
-                        <div class="form-group"><label>Alto</label><input type="text" id="specHeight"></div>
-                        <div class="form-group"><label>Peso</label><input type="text" id="specWeight"></div>
-                        <div class="form-group"><label>Material</label><input type="text" id="specMaterial"></div>
-                    </div>
-                    <div class="form-row-3">
-                        <div class="form-group"><label>Voltaje</label><input type="text" id="specVoltage"></div>
-                        <div class="form-group"><label>Potencia</label><input type="text" id="specPower"></div>
-                        <div class="form-group"><label>Rosca</label><input type="text" id="specThread"></div>
-                    </div>
                 </div>
                 <div class="form-section">
                     <h3>Imágenes (hasta 5)</h3>
@@ -709,9 +654,11 @@
     <script>
         document.getElementById('loginForm').addEventListener('submit', function(e) {
             e.preventDefault();
+            console.log('Login attempt');
             document.getElementById('loginScreen').style.display = 'none';
             document.getElementById('adminPanel').classList.remove('hidden');
             document.getElementById('adminPanel').style.display = 'flex';
+            // Disparar evento para que el módulo cargue los datos
             window.dispatchEvent(new Event('adminLoggedIn'));
         });
 
@@ -784,37 +731,52 @@
             { id: 'chevrolet', name: 'Chevrolet', image: null }
         ];
 
+        // Esperar a que el admin haga login
         window.addEventListener('adminLoggedIn', async () => {
             console.log('Admin logged in, loading data...');
-            await loadAll();
+            try {
+                await loadAll();
+                console.log('Data loaded successfully');
+            } catch (error) {
+                console.error('Error loading data:', error);
+                alert('Error cargando datos: ' + error.message);
+            }
         });
 
+        // Navegación entre secciones
         window.addEventListener('sectionChanged', (e) => {
             const section = e.detail;
+            console.log('Section changed:', section);
             if (section === 'customers') loadCustomers();
             if (section === 'drivers') renderDrivers();
             if (section === 'drawer') renderDrawerEditor();
         });
 
         async function loadAll() { 
-            await loadBcvRate(); 
-            await loadLogo(); 
-            await loadPickupMaps(); 
-            await loadWhatsapp(); 
-            await loadBanners(); 
-            await loadSiteConfig(); 
-            await loadHero();
-            await loadDrawerMenu();
-            await loadVehicles(); 
-            await loadBrands(); 
-            await loadProducts(); 
-            await loadOrders(); 
-            await loadReviews(); 
-            await loadCoupons(); 
-            await loadDeliveryZones(); 
-            await loadDrivers(); 
-            await loadCustomers(); 
-            await loadDashboard(); 
+            console.log('Loading all data...');
+            try {
+                await loadBcvRate(); 
+                await loadLogo(); 
+                await loadPickupMaps(); 
+                await loadWhatsapp(); 
+                await loadBanners(); 
+                await loadSiteConfig(); 
+                await loadHero();
+                await loadDrawerMenu();
+                await loadVehicles(); 
+                await loadBrands(); 
+                await loadProducts(); 
+                await loadOrders(); 
+                await loadReviews(); 
+                await loadCoupons(); 
+                await loadDeliveryZones(); 
+                await loadDrivers(); 
+                await loadCustomers(); 
+                await loadDashboard();
+                console.log('All data loaded');
+            } catch (error) {
+                console.error('Error in loadAll:', error);
+            }
         }
 
         // HERO
@@ -828,7 +790,6 @@
                     document.getElementById('heroSubtitle').value = heroConfig.subtitle || '';
                     document.getElementById('heroTitleColor').value = heroConfig.titleColor || '#ffffff';
                     document.getElementById('heroTitleSize').value = heroConfig.titleSize || 48;
-                    document.getElementById('heroTitleFont').value = heroConfig.titleFont || "'Segoe UI', sans-serif";
                     document.getElementById('heroSubtitleColor').value = heroConfig.subtitleColor || '#dddddd';
                     document.getElementById('heroSubtitleSize').value = heroConfig.subtitleSize || 20;
                     document.getElementById('heroCtaText').value = heroConfig.ctaText || 'Ver productos';
@@ -860,27 +821,29 @@
         });
 
         document.getElementById('btnSaveHero').addEventListener('click', async () => {
-            const heroData = {
-                visible: document.getElementById('heroVisible').checked,
-                title: document.getElementById('heroTitle').value,
-                subtitle: document.getElementById('heroSubtitle').value,
-                titleColor: document.getElementById('heroTitleColor').value,
-                titleSize: parseInt(document.getElementById('heroTitleSize').value),
-                titleFont: document.getElementById('heroTitleFont').value,
-                subtitleColor: document.getElementById('heroSubtitleColor').value,
-                subtitleSize: parseInt(document.getElementById('heroSubtitleSize').value),
-                ctaText: document.getElementById('heroCtaText').value,
-                ctaLink: document.getElementById('heroCtaLink').value,
-                backgroundImage: heroConfig.backgroundImage || null,
-                overlayColor: document.getElementById('heroOverlayColor').value,
-                overlayOpacity: parseInt(document.getElementById('heroOverlayOpacity').value),
-                updatedAt: new Date().toISOString()
-            };
             try {
+                const heroData = {
+                    visible: document.getElementById('heroVisible').checked,
+                    title: document.getElementById('heroTitle').value,
+                    subtitle: document.getElementById('heroSubtitle').value,
+                    titleColor: document.getElementById('heroTitleColor').value,
+                    titleSize: parseInt(document.getElementById('heroTitleSize').value),
+                    subtitleColor: document.getElementById('heroSubtitleColor').value,
+                    subtitleSize: parseInt(document.getElementById('heroSubtitleSize').value),
+                    ctaText: document.getElementById('heroCtaText').value,
+                    ctaLink: document.getElementById('heroCtaLink').value,
+                    backgroundImage: heroConfig.backgroundImage || null,
+                    overlayColor: document.getElementById('heroOverlayColor').value,
+                    overlayOpacity: parseInt(document.getElementById('heroOverlayOpacity').value),
+                    updatedAt: new Date().toISOString()
+                };
                 await setDoc(doc(db, 'settings', 'hero'), heroData);
                 alert('✅ Hero guardado. Recarga la vista previa para ver los cambios.');
                 document.getElementById('previewFrame').src = 'index.html?t=' + Date.now();
-            } catch (error) { alert('Error: ' + error.message); }
+            } catch (error) { 
+                alert('Error: ' + error.message);
+                console.error(error);
+            }
         });
 
         // DRAWER MENU
@@ -1025,7 +988,10 @@
                 await setDoc(doc(db, 'settings', 'drawerMenu'), { categories: drawerMenu, updatedAt: new Date().toISOString() });
                 renderDrawerEditor();
                 alert('✅ Menú actualizado');
-            } catch (error) { alert('Error: ' + error.message); }
+            } catch (error) { 
+                alert('Error: ' + error.message);
+                console.error(error);
+            }
         }
 
         document.getElementById('btnAddCategory').addEventListener('click', async () => {
@@ -1037,57 +1003,81 @@
             await saveDrawerMenu();
         });
 
-        // RESTO DE FUNCIONES (BCV, WhatsApp, etc.)
+        // BCV
         async function loadBcvRate() { try { const rateDoc = await getDoc(doc(db, 'settings', 'bcvRate')); if (rateDoc.exists()) bcvRate = rateDoc.data().value; document.getElementById('currentRate').textContent = `Bs. ${bcvRate} por $1`; } catch (error) { console.log('Error tasa:', error); } }
         document.getElementById('btnUpdateBcv').addEventListener('click', async () => { const newRate = parseFloat(document.getElementById('bcvRateInput').value); if (!newRate || newRate <= 0) { alert('Ingresa una tasa válida'); return; } try { await setDoc(doc(db, 'settings', 'bcvRate'), { value: newRate, updatedAt: new Date().toISOString() }); bcvRate = newRate; document.getElementById('currentRate').textContent = `Bs. ${bcvRate} por $1`; document.getElementById('bcvRateInput').value = ''; alert('✅ Tasa BCV actualizada'); } catch (error) { alert('Error: ' + error.message); } });
 
+        // Pickup Maps
         async function loadPickupMaps() { try { const pickupDoc = await getDoc(doc(db, 'settings', 'pickupMaps')); if (pickupDoc.exists()) document.getElementById('pickupMapsInput').value = pickupDoc.data().url || ''; } catch (error) { console.log('Error pickup:', error); } }
         document.getElementById('btnSavePickup').addEventListener('click', async () => { const url = document.getElementById('pickupMapsInput').value.trim(); if (!url) { alert('Ingresa un link válido'); return; } try { await setDoc(doc(db, 'settings', 'pickupMaps'), { url: url, updatedAt: new Date().toISOString() }); alert('✅ Ubicación de pickup actualizada'); } catch (error) { alert('Error: ' + error.message); } });
 
+        // WhatsApp
         async function loadWhatsapp() { try { const waDoc = await getDoc(doc(db, 'settings', 'whatsapp')); if (waDoc.exists() && waDoc.data().number) { whatsappNumber = waDoc.data().number; } document.getElementById('whatsappNumber').value = whatsappNumber; } catch (error) { console.log('Error whatsapp:', error); } }
         document.getElementById('btnSaveWhatsapp').addEventListener('click', async () => { const num = document.getElementById('whatsappNumber').value.trim(); if (!num) { alert('Ingresa un número'); return; } const cleanNum = num.replace(/\D/g, ''); if (cleanNum.length < 10) { alert('El número debe tener al menos 10 dígitos'); return; } try { await setDoc(doc(db, 'settings', 'whatsapp'), { number: cleanNum, updatedAt: new Date().toISOString() }); whatsappNumber = cleanNum; alert(`✅ Número actualizado: +${cleanNum}`); } catch (error) { alert('Error: ' + error.message); } });
 
+        // Logo
         async function loadLogo() { try { const logoDoc = await getDoc(doc(db, 'settings', 'logo')); if (logoDoc.exists()) document.getElementById('adminLogoPreview').innerHTML = `<img src="${logoDoc.data().image}">`; } catch (error) { console.log('Logo:', error); } }
         document.getElementById('btnChangeLogo').addEventListener('click', () => document.getElementById('adminLogoUpload').click());
         document.getElementById('adminLogoUpload').addEventListener('change', async (e) => { const file = e.target.files[0]; if (!file) return; if (file.size > 1 * 1024 * 1024) { alert('Máximo 1MB'); return; } const reader = new FileReader(); reader.onload = async (ev) => { try { await setDoc(doc(db, 'settings', 'logo'), { image: ev.target.result, updatedAt: new Date().toISOString() }); document.getElementById('adminLogoPreview').innerHTML = `<img src="${ev.target.result}">`; alert('✅ Logo actualizado'); } catch (error) { alert('Error: ' + error.message); } }; reader.readAsDataURL(file); });
 
+        // Banners
         async function loadBanners() { try { const bannersDoc = await getDoc(doc(db, 'settings', 'banners')); if (bannersDoc.exists()) banners = bannersDoc.data().images || []; renderBannerPreviews(); } catch (error) { console.log('Banners:', error); } }
         function renderBannerPreviews() { const grid = document.getElementById('bannerPreviewGrid'); const html = banners.length === 0 ? '<p style="color:#666;text-align:center;grid-column:1/-1;">No hay banners.</p>' : banners.map((banner, i) => `<div class="banner-preview-item"><img src="${banner}"><button class="remove-btn" data-index="${i}">×</button><div style="padding:0.5rem;font-size:0.8rem;text-align:center;">Banner ${i+1}</div></div>`).join(''); if (grid) grid.innerHTML = html; grid.querySelectorAll('.remove-btn').forEach(btn => btn.addEventListener('click', async () => { if (!confirm('¿Eliminar este banner?')) return; const idx = parseInt(btn.getAttribute('data-index')); banners.splice(idx, 1); try { await setDoc(doc(db, 'settings', 'banners'), { images: banners }); renderBannerPreviews(); alert('Banner eliminado'); } catch (error) { alert('Error: ' + error.message); } })); }
         document.getElementById('bannerImageInput').addEventListener('change', async (e) => { const file = e.target.files[0]; if (!file) return; if (banners.length >= 5) { alert('Máximo 5 banners'); e.target.value = ''; return; } if (file.size > 1 * 1024 * 1024) { alert('Máximo 1MB'); e.target.value = ''; return; } const reader = new FileReader(); reader.onload = async (ev) => { banners.push(ev.target.result); try { await setDoc(doc(db, 'settings', 'banners'), { images: banners }); renderBannerPreviews(); alert('✅ Banner agregado'); } catch (error) { alert('Error: ' + error.message); } }; reader.readAsDataURL(file); e.target.value = ''; });
 
+        // Site Config
         async function loadSiteConfig() { try { const configDoc = await getDoc(doc(db, 'settings', 'siteConfig')); if (configDoc.exists()) siteConfig = { ...siteConfig, ...configDoc.data() }; document.getElementById('cfgCompanyName').value = siteConfig.companyName; document.getElementById('cfgSlogan').value = siteConfig.slogan; document.getElementById('cfgDescription').value = siteConfig.description; document.getElementById('cfgAddress').value = siteConfig.address; document.getElementById('cfgPhone').value = siteConfig.phone; document.getElementById('cfgSchedule').value = siteConfig.schedule; document.getElementById('cfgFacebook').value = siteConfig.facebook || ''; document.getElementById('cfgInstagram').value = siteConfig.instagram || ''; document.getElementById('cfgTiktok').value = siteConfig.tiktok || ''; } catch (error) { console.log('Config:', error); } }
         document.getElementById('btnSaveConfig').addEventListener('click', async () => { const config = { companyName: document.getElementById('cfgCompanyName').value, slogan: document.getElementById('cfgSlogan').value, description: document.getElementById('cfgDescription').value, address: document.getElementById('cfgAddress').value, phone: document.getElementById('cfgPhone').value, schedule: document.getElementById('cfgSchedule').value, facebook: document.getElementById('cfgFacebook').value, instagram: document.getElementById('cfgInstagram').value, tiktok: document.getElementById('cfgTiktok').value, updatedAt: new Date().toISOString() }; try { await setDoc(doc(db, 'settings', 'siteConfig'), config); siteConfig = { ...siteConfig, ...config }; alert('✅ Configuración guardada'); } catch (error) { alert('Error: ' + error.message); } });
 
+        // Vehicles
         async function loadVehicles() { try { const vehiclesDoc = await getDoc(doc(db, 'settings', 'vehicles')); if (vehiclesDoc.exists()) { vehicles = vehiclesDoc.data().brands || {}; } else { vehicles = { "Toyota": ["Corolla", "Hilux", "Yaris", "Fortuner"], "Nissan": ["Versa", "Sentra", "Frontier", "X-Trail"], "Chevrolet": ["Aveo", "Cruze", "Captiva", "Silverado"], "Ford": ["Fiesta", "Focus", "Ranger", "Explorer"], "Hyundai": ["Tucson", "Creta", "Accent", "Santa Fe"], "Kia": ["Rio", "Sportage", "Picanto", "Seltos"], "Mitsubishi": ["L200", "Outlander", "Montero", "ASX"] }; await setDoc(doc(db, 'settings', 'vehicles'), { brands: vehicles }); } renderVehicles(); } catch (error) { console.error('Vehículos:', error); } }
         function renderVehicles() { const list = document.getElementById('vehiclesList'); if (Object.keys(vehicles).length === 0) { list.innerHTML = '<p style="text-align:center;color:#666;padding:1rem">No hay marcas registradas.</p>'; return; } let html = ''; for (const [brand, models] of Object.entries(vehicles)) { html += `<div class="admin-item" style="flex-direction:column; align-items:stretch;"><div style="display:flex; justify-content:space-between; align-items:center; width:100%;"><strong style="font-size:1.1rem; color:#dc3545;">${brand}</strong><button class="btn btn-small btn-secondary" data-brand="${brand}" data-action="delete-brand">Eliminar marca</button></div><div style="margin-top:1rem; padding:1rem; background:white; border-radius:8px; width:100%;"><div style="display:flex; gap:0.5rem; margin-bottom:1rem;"><input type="text" id="newModel-${brand}" placeholder="Nuevo modelo" style="flex:1; padding:0.5rem; border:1px solid #ddd; border-radius:8px;"><button class="btn btn-small btn-primary" data-brand="${brand}" data-action="add-model">Agregar modelo</button></div><div style="display:flex; flex-wrap:wrap; gap:0.5rem;">${models.map(model => `<span class="vehicle-tag">${model}<button data-brand="${brand}" data-model="${model}" data-action="delete-model">×</button></span>`).join('')}</div></div></div>`; } list.innerHTML = html; list.querySelectorAll('[data-action="delete-brand"]').forEach(btn => btn.addEventListener('click', async () => { const brand = btn.getAttribute('data-brand'); if (!confirm(`¿Eliminar "${brand}"?`)) return; delete vehicles[brand]; try { await setDoc(doc(db, 'settings', 'vehicles'), { brands: vehicles }); renderVehicles(); alert('Marca eliminada'); } catch (error) { alert('Error: ' + error.message); } })); list.querySelectorAll('[data-action="add-model"]').forEach(btn => btn.addEventListener('click', async () => { const brand = btn.getAttribute('data-brand'); const input = document.getElementById(`newModel-${brand}`); const model = input.value.trim(); if (!model) { alert('Ingresa el nombre del modelo'); return; } if (vehicles[brand].includes(model)) { alert('Este modelo ya existe'); return; } vehicles[brand].push(model); try { await setDoc(doc(db, 'settings', 'vehicles'), { brands: vehicles }); input.value = ''; renderVehicles(); alert('✅ Modelo agregado'); } catch (error) { alert('Error: ' + error.message); } })); list.querySelectorAll('[data-action="delete-model"]').forEach(btn => btn.addEventListener('click', async () => { const brand = btn.getAttribute('data-brand'); const model = btn.getAttribute('data-model'); if (!confirm(`¿Eliminar "${model}"?`)) return; vehicles[brand] = vehicles[brand].filter(m => m !== model); try { await setDoc(doc(db, 'settings', 'vehicles'), { brands: vehicles }); renderVehicles(); alert('Modelo eliminado'); } catch (error) { alert('Error: ' + error.message); } })); }
         document.getElementById('btnAddVehicleBrand').addEventListener('click', async () => { const brand = document.getElementById('newVehicleBrand').value.trim(); if (!brand) { alert('Ingresa el nombre de la marca'); return; } if (vehicles[brand]) { alert('Esta marca ya existe'); return; } vehicles[brand] = []; try { await setDoc(doc(db, 'settings', 'vehicles'), { brands: vehicles }); document.getElementById('newVehicleBrand').value = ''; renderVehicles(); alert('✅ Marca agregada'); } catch (error) { alert('Error: ' + error.message); } });
 
+        // Brands
         async function loadBrands() { try { const snapshot = await getDocs(collection(db, 'brands')); if (snapshot.empty) { brands = defaultBrands; for (const brand of defaultBrands) await setDoc(doc(db, 'brands', brand.id), brand); } else { brands = []; snapshot.forEach(docSnap => brands.push({ id: docSnap.id, ...docSnap.data() })); } renderAdminBrands(); } catch (error) { console.error('Marcas:', error); } }
         function renderAdminBrands() { const list = document.getElementById('adminBrandsList'); list.innerHTML = brands.map(brand => { const thumbHtml = brand.image ? `<img src="${brand.image}">` : ''; return `<div class="admin-item"><div class="admin-info"><div class="admin-thumb">${thumbHtml}</div><div><strong>${brand.name}</strong><br><small style="color:#666">${brand.image ? 'Imagen cargada' : 'Sin imagen'}</small></div></div><div class="admin-actions"><button class="btn btn-small btn-primary" data-brand-id="${brand.id}">${brand.image ? 'Cambiar' : 'Agregar Imagen'}</button></div></div>`; }).join(''); list.querySelectorAll('[data-brand-id]').forEach(btn => btn.addEventListener('click', () => { const brandId = btn.getAttribute('data-brand-id'); const brand = brands.find(b => b.id === brandId); document.getElementById('brandModalTitle').textContent = `Imagen: ${brand.name}`; document.getElementById('editBrandId').value = brandId; document.getElementById('currentBrandImageData').value = brand.image || ''; if (brand.image) { document.getElementById('brandImagePreview').innerHTML = `<img src="${brand.image}">`; } else { document.getElementById('brandImagePreview').innerHTML = '<div style="color:#999;">Selecciona una imagen</div>'; } document.getElementById('brandImageInput').value = ''; document.getElementById('brandModal').classList.add('active'); })); }
         document.getElementById('brandImageInput').addEventListener('change', (e) => { const file = e.target.files[0]; if (file) { if (file.size > 1 * 1024 * 1024) { alert('Máximo 1MB'); e.target.value = ''; return; } const reader = new FileReader(); reader.onload = (ev) => { document.getElementById('currentBrandImageData').value = ev.target.result; document.getElementById('brandImagePreview').innerHTML = `<img src="${ev.target.result}">`; }; reader.readAsDataURL(file); } });
         document.getElementById('brandForm').addEventListener('submit', async (e) => { e.preventDefault(); const brandId = document.getElementById('editBrandId').value; const imageData = document.getElementById('currentBrandImageData').value; try { await updateDoc(doc(db, 'brands', brandId), { image: imageData || null }); await loadBrands(); document.getElementById('brandModal').classList.remove('active'); alert('✅ Imagen guardada'); } catch (error) { alert('Error: ' + error.message); } });
 
+        // Colors
         document.getElementById('btnSaveColors').addEventListener('click', async () => { const colors = { primary: document.getElementById('colorPrimary').value, accent: document.getElementById('colorAccent').value, background: document.getElementById('colorBg').value }; try { await setDoc(doc(db, 'settings', 'colors'), colors); alert('✅ Colores guardados'); } catch (error) { alert('Error: ' + error.message); } });
 
+        // Products
         function populateCategorySelect() { const select = document.getElementById('productCategory'); select.innerHTML = '<option value="">Seleccionar...</option>'; for (const category of Object.keys(CATEGORIES)) { select.innerHTML += `<option value="${category}">${category}</option>`; } }
-        function populateVehicleBrandSelect() { const select = document.getElementById('productVehicleBrand'); select.innerHTML = '<option value="">Seleccionar marca...</option>'; for (const brand of Object.keys(vehicles)) { select.innerHTML += `<option value="${brand}">${brand}</option>`; } }
         document.getElementById('productCategory').addEventListener('change', () => { const category = document.getElementById('productCategory').value; const subSelect = document.getElementById('productSubcategory'); subSelect.innerHTML = '<option value="">Seleccionar subcategoría...</option>'; if (category && CATEGORIES[category]) { CATEGORIES[category].forEach(sub => { subSelect.innerHTML += `<option value="${sub}">${sub}</option>`; }); } });
-        document.getElementById('productVehicleBrand').addEventListener('change', () => { const brand = document.getElementById('productVehicleBrand').value; const modelSelect = document.getElementById('productVehicleModel'); modelSelect.innerHTML = '<option value="">Seleccionar modelo...</option>'; if (brand && vehicles[brand]) { vehicles[brand].forEach(model => { modelSelect.innerHTML += `<option value="${model}">${model}</option>`; }); } });
-        document.getElementById('btnAddVehicle').addEventListener('click', () => { const brand = document.getElementById('productVehicleBrand').value; const model = document.getElementById('productVehicleModel').value; if (!brand || !model) { alert('Selecciona marca y modelo'); return; } const vehicleText = `${brand} ${model}`; if (!selectedVehiclesList.includes(vehicleText)) { selectedVehiclesList.push(vehicleText); renderSelectedVehicles(); } document.getElementById('productVehicleBrand').value = ''; document.getElementById('productVehicleModel').value = ''; });
-        function renderSelectedVehicles() { const container = document.getElementById('selectedVehicles'); container.innerHTML = selectedVehiclesList.map((v, i) => `<span class="vehicle-tag">${v}<button type="button" data-idx="${i}">×</button></span>`).join(''); document.getElementById('productVehicle').value = selectedVehiclesList.join(', '); container.querySelectorAll('button').forEach(btn => btn.addEventListener('click', () => { const idx = parseInt(btn.getAttribute('data-idx')); selectedVehiclesList.splice(idx, 1); renderSelectedVehicles(); })); }
         document.getElementById('productCostPrice').addEventListener('input', calculateSalePrice);
         document.getElementById('productMargin').addEventListener('input', calculateSalePrice);
         function calculateSalePrice() { const cost = parseFloat(document.getElementById('productCostPrice').value) || 0; const margin = parseFloat(document.getElementById('productMargin').value) || 0; if (margin >= 100) { document.getElementById('productPrice').value = '0.00'; alert('El margen no puede ser 100% o más'); return; } const salePrice = cost / (1 - margin / 100); document.getElementById('productPrice').value = salePrice.toFixed(2); }
 
         async function loadProducts() { try { const snapshot = await getDocs(collection(db, 'products')); products = []; snapshot.forEach(docSnap => products.push({ id: docSnap.id, ...docSnap.data() })); document.getElementById('statProducts').textContent = products.length; renderAdminProducts(); } catch (error) { console.error('Productos:', error); } }
-        function renderAdminProducts(filter = '') { const list = document.getElementById('adminProductList'); let filtered = products; if (filter) { const q = filter.toLowerCase(); filtered = products.filter(p => p.name.toLowerCase().includes(q) || (p.code && p.code.toLowerCase().includes(q))); } if (filtered.length === 0) { list.innerHTML = '<p style="text-align:center;color:#666;padding:1rem">No hay productos.</p>'; return; } list.innerHTML = filtered.map(product => { const images = product.images || (product.image ? [product.image] : []); const thumbHtml = images.length > 0 ? `<img src="${images[0]}">` : ''; const offerText = product.discount && product.discount > 0 ? ` | -${product.discount}%` : ''; const recText = product.recommended ? ' | RECOMENDADO' : ''; const marginText = product.costPrice && product.margin ? ` | Compra: $${Number(product.costPrice).toFixed(2)} + ${product.margin}%` : ''; const vehicleText = product.vehicle ? ` | ${product.vehicle}` : ''; return `<div class="admin-item"><div class="admin-info"><div class="admin-thumb">${thumbHtml}</div><div><strong>${product.name}</strong>${recText}<br><small style="color:#dc3545">Código: ${product.code || 'Sin código'}</small><br><small style="color:#666">Venta: $${Number(product.price).toFixed(2)}${offerText}${marginText}${vehicleText} | Stock: ${product.stock}</small></div></div><div class="admin-actions"><button class="btn btn-small btn-primary" data-edit="${product.id}">Editar</button><button class="btn btn-small btn-secondary" data-delete="${product.id}">Eliminar</button></div></div>`; }).join(''); list.querySelectorAll('[data-edit]').forEach(btn => btn.addEventListener('click', () => editProduct(btn.getAttribute('data-edit')))); list.querySelectorAll('[data-delete]').forEach(btn => btn.addEventListener('click', async () => { if (!confirm('¿Eliminar este producto?')) return; try { await deleteDoc(doc(db, 'products', btn.getAttribute('data-delete'))); await loadProducts(); await loadDashboard(); alert('Producto eliminado'); } catch (error) { alert('Error: ' + error.message); } })); }
+        function renderAdminProducts(filter = '') { const list = document.getElementById('adminProductList'); let filtered = products; if (filter) { const q = filter.toLowerCase(); filtered = products.filter(p => p.name.toLowerCase().includes(q) || (p.code && p.code.toLowerCase().includes(q))); } if (filtered.length === 0) { list.innerHTML = '<p style="text-align:center;color:#666;padding:1rem">No hay productos.</p>'; return; } list.innerHTML = filtered.map(product => { const images = product.images || (product.image ? [product.image] : []); const thumbHtml = images.length > 0 ? `<img src="${images[0]}">` : ''; const offerText = product.discount && product.discount > 0 ? ` | -${product.discount}%` : ''; const recText = product.recommended ? ' | RECOMENDADO' : ''; const marginText = product.costPrice && product.margin ? ` | Compra: $${Number(product.costPrice).toFixed(2)} + ${product.margin}%` : ''; return `<div class="admin-item"><div class="admin-info"><div class="admin-thumb">${thumbHtml}</div><div><strong>${product.name}</strong>${recText}<br><small style="color:#dc3545">Código: ${product.code || 'Sin código'}</small><br><small style="color:#666">Venta: $${Number(product.price).toFixed(2)}${offerText}${marginText} | Stock: ${product.stock}</small></div></div><div class="admin-actions"><button class="btn btn-small btn-primary" data-edit="${product.id}">Editar</button><button class="btn btn-small btn-secondary" data-delete="${product.id}">Eliminar</button></div></div>`; }).join(''); list.querySelectorAll('[data-edit]').forEach(btn => btn.addEventListener('click', () => editProduct(btn.getAttribute('data-edit')))); list.querySelectorAll('[data-delete]').forEach(btn => btn.addEventListener('click', async () => { if (!confirm('¿Eliminar este producto?')) return; try { await deleteDoc(doc(db, 'products', btn.getAttribute('data-delete'))); await loadProducts(); await loadDashboard(); alert('Producto eliminado'); } catch (error) { alert('Error: ' + error.message); } })); }
         document.getElementById('adminProductSearch').addEventListener('input', (e) => renderAdminProducts(e.target.value));
-        function editProduct(productId) { const product = products.find(p => p.id === productId); populateCategorySelect(); populateVehicleBrandSelect(); currentProductImages = product.images || (product.image ? [product.image] : []); selectedVehiclesList = product.vehicle ? product.vehicle.split(', ').map(v => v.trim()) : []; document.getElementById('productModalTitle').textContent = 'Editar Producto'; document.getElementById('editProductId').value = product.id; document.getElementById('productCode').value = product.code || ''; document.getElementById('productBrand').value = product.brand || ''; document.getElementById('productName').value = product.name; document.getElementById('productPartNumber').value = product.partNumber || ''; document.getElementById('productDescription').value = product.description || ''; document.getElementById('productCostPrice').value = product.costPrice || ''; document.getElementById('productMargin').value = product.margin || ''; document.getElementById('productPrice').value = product.price; document.getElementById('productDiscount').value = product.discount || ''; document.getElementById('productStock').value = product.stock; document.getElementById('productCategory').value = product.category || ''; document.getElementById('productCategory').dispatchEvent(new Event('change')); document.getElementById('productSubcategory').value = product.subcategory || ''; document.getElementById('productRecommended').checked = product.recommended || false; document.getElementById('specDiameter').value = product.diameter || ''; document.getElementById('specLength').value = product.length || ''; document.getElementById('specWidth').value = product.width || ''; document.getElementById('specHeight').value = product.height || ''; document.getElementById('specWeight').value = product.weight || ''; document.getElementById('specMaterial').value = product.material || ''; document.getElementById('specVoltage').value = product.voltage || ''; document.getElementById('specPower').value = product.power || ''; document.getElementById('specThread').value = product.thread || ''; renderProductImages(); renderSelectedVehicles(); document.getElementById('productModal').classList.add('active'); }
+        function editProduct(productId) { const product = products.find(p => p.id === productId); populateCategorySelect(); currentProductImages = product.images || (product.image ? [product.image] : []); document.getElementById('productModalTitle').textContent = 'Editar Producto'; document.getElementById('editProductId').value = product.id; document.getElementById('productCode').value = product.code || ''; document.getElementById('productBrand').value = product.brand || ''; document.getElementById('productName').value = product.name; document.getElementById('productDescription').value = product.description || ''; document.getElementById('productCostPrice').value = product.costPrice || ''; document.getElementById('productMargin').value = product.margin || ''; document.getElementById('productPrice').value = product.price; document.getElementById('productDiscount').value = product.discount || ''; document.getElementById('productStock').value = product.stock; document.getElementById('productCategory').value = product.category || ''; document.getElementById('productCategory').dispatchEvent(new Event('change')); document.getElementById('productSubcategory').value = product.subcategory || ''; document.getElementById('productRecommended').checked = product.recommended || false; renderProductImages(); document.getElementById('productModal').classList.add('active'); }
         function renderProductImages() { const container = document.getElementById('productImagesContainer'); if (currentProductImages.length === 0) { container.innerHTML = '<div style="color:#999;">No hay imágenes</div>'; return; } container.innerHTML = currentProductImages.map((img, i) => `<div class="img-thumb"><img src="${img}"><button type="button" class="remove-img" data-idx="${i}">×</button></div>`).join(''); container.querySelectorAll('.remove-img').forEach(btn => btn.addEventListener('click', () => { currentProductImages.splice(parseInt(btn.getAttribute('data-idx')), 1); renderProductImages(); })); }
         document.getElementById('productImageInput').addEventListener('change', (e) => { const file = e.target.files[0]; if (!file) return; if (currentProductImages.length >= 5) { alert('Máximo 5 imágenes'); e.target.value = ''; return; } if (file.size > 1 * 1024 * 1024) { alert('Máximo 1MB'); e.target.value = ''; return; } const reader = new FileReader(); reader.onload = (ev) => { currentProductImages.push(ev.target.result); renderProductImages(); }; reader.readAsDataURL(file); e.target.value = ''; });
-        document.getElementById('btnAddProduct').addEventListener('click', () => { populateCategorySelect(); populateVehicleBrandSelect(); currentProductImages = []; selectedVehiclesList = []; document.getElementById('productModalTitle').textContent = 'Agregar Producto'; document.getElementById('editProductId').value = ''; ['productCode','productBrand','productName','productPartNumber','productDescription','productCostPrice','productMargin','productPrice','productDiscount','productStock','productVehicle','specDiameter','specLength','specWidth','specHeight','specWeight','specMaterial','specVoltage','specPower','specThread'].forEach(id => { document.getElementById(id).value = ''; }); document.getElementById('productCategory').value = ''; document.getElementById('productSubcategory').value = ''; document.getElementById('productRecommended').checked = false; document.getElementById('productImagesContainer').innerHTML = ''; document.getElementById('selectedVehicles').innerHTML = ''; document.getElementById('productModal').classList.add('active'); });
-        document.getElementById('productForm').addEventListener('submit', async (e) => { e.preventDefault(); const saveBtn = document.getElementById('saveProductBtn'); saveBtn.disabled = true; saveBtn.textContent = 'Guardando...'; const editId = document.getElementById('editProductId').value; const costPrice = parseFloat(document.getElementById('productCostPrice').value) || 0; const margin = parseFloat(document.getElementById('productMargin').value) || 0; const salePrice = parseFloat(document.getElementById('productPrice').value) || 0; const discount = parseFloat(document.getElementById('productDiscount').value) || 0; const productData = { code: document.getElementById('productCode').value, brand: document.getElementById('productBrand').value, name: document.getElementById('productName').value, partNumber: document.getElementById('productPartNumber').value, description: document.getElementById('productDescription').value, costPrice: costPrice, margin: margin, price: salePrice, discount: discount, stock: parseInt(document.getElementById('productStock').value), category: document.getElementById('productCategory').value, subcategory: document.getElementById('productSubcategory').value, vehicle: document.getElementById('productVehicle').value, recommended: document.getElementById('productRecommended').checked, diameter: document.getElementById('specDiameter').value, length: document.getElementById('specLength').value, width: document.getElementById('specWidth').value, height: document.getElementById('specHeight').value, weight: document.getElementById('specWeight').value, material: document.getElementById('specMaterial').value, voltage: document.getElementById('specVoltage').value, power: document.getElementById('specPower').value, thread: document.getElementById('specThread').value, images: currentProductImages.length > 0 ? currentProductImages : null, image: currentProductImages.length > 0 ? currentProductImages[0] : null, updatedAt: new Date().toISOString() }; try { if (editId) { await updateDoc(doc(db, 'products', editId), productData); } else { productData.createdAt = new Date().toISOString(); await addDoc(collection(db, 'products'), productData); } await loadProducts(); await loadDashboard(); document.getElementById('productModal').classList.remove('active'); alert('✅ Producto guardado'); } catch (error) { alert('Error: ' + error.message); } saveBtn.disabled = false; saveBtn.textContent = 'Guardar Producto'; });
+        document.getElementById('btnAddProduct').addEventListener('click', () => { populateCategorySelect(); currentProductImages = []; document.getElementById('productModalTitle').textContent = 'Agregar Producto'; document.getElementById('editProductId').value = ''; ['productCode','productBrand','productName','productDescription','productCostPrice','productMargin','productPrice','productDiscount','productStock','specDiameter','specLength','specWidth','specHeight','specWeight','specMaterial','specVoltage','specPower','specThread'].forEach(id => { document.getElementById(id).value = ''; }); document.getElementById('productCategory').value = ''; document.getElementById('productSubcategory').value = ''; document.getElementById('productRecommended').checked = false; document.getElementById('productImagesContainer').innerHTML = ''; document.getElementById('productModal').classList.add('active'); });
+        document.getElementById('productForm').addEventListener('submit', async (e) => { e.preventDefault(); const saveBtn = document.getElementById('saveProductBtn'); saveBtn.disabled = true; saveBtn.textContent = 'Guardando...'; const editId = document.getElementById('editProductId').value; const costPrice = parseFloat(document.getElementById('productCostPrice').value) || 0; const margin = parseFloat(document.getElementById('productMargin').value) || 0; const salePrice = parseFloat(document.getElementById('productPrice').value) || 0; const discount = parseFloat(document.getElementById('productDiscount').value) || 0; const productData = { code: document.getElementById('productCode').value, brand: document.getElementById('productBrand').value, name: document.getElementById('productName').value, description: document.getElementById('productDescription').value, costPrice: costPrice, margin: margin, price: salePrice, discount: discount, stock: parseInt(document.getElementById('productStock').value), category: document.getElementById('productCategory').value, subcategory: document.getElementById('productSubcategory').value, recommended: document.getElementById('productRecommended').checked, images: currentProductImages.length > 0 ? currentProductImages : null, image: currentProductImages.length > 0 ? currentProductImages[0] : null, updatedAt: new Date().toISOString() }; try { if (editId) { await updateDoc(doc(db, 'products', editId), productData); } else { productData.createdAt = new Date().toISOString(); await addDoc(collection(db, 'products'), productData); } await loadProducts(); await loadDashboard(); document.getElementById('productModal').classList.remove('active'); alert('✅ Producto guardado'); } catch (error) { alert('Error: ' + error.message); } saveBtn.disabled = false; saveBtn.textContent = 'Guardar Producto'; });
 
+        // Orders
         async function loadOrders() { try { const snapshot = await getDocs(collection(db, 'orders')); orders = []; snapshot.forEach(docSnap => orders.push({ id: docSnap.id, ...docSnap.data() })); renderOrders(); } catch (error) { console.error('Pedidos:', error); } }
-        function renderOrders() { const list = document.getElementById('ordersList'); const filter = document.getElementById('filterOrderStatus').value; const searchQuery = (document.getElementById('searchOrderCode').value || '').toLowerCase().trim(); let filtered = orders; if (filter) filtered = filtered.filter(o => o.status === filter); if (searchQuery) { filtered = filtered.filter(o => { const code = (o.customerCode || '').toLowerCase(); const name = (o.userName || '').toLowerCase(); const phone = (o.userPhone || '').toLowerCase(); const orderId = o.id.toLowerCase(); return code.includes(searchQuery) || name.includes(searchQuery) || phone.includes(searchQuery) || orderId.includes(searchQuery); }); } if (filtered.length === 0) { list.innerHTML = '<p style="text-align:center;color:#666;padding:1rem">No hay pedidos.</p>'; return; } list.innerHTML = filtered.sort((a,b) => new Date(b.date) - new Date(a.date)).map(order => { const statusText = { pending: 'Pendiente', shipped: 'En camino', delivered: 'Entregado', cancelled: 'Cancelado' }[order.status] || order.status; return `<div class="order-item"><div class="order-header"><div><strong>Pedido #${order.id.slice(-6)}</strong><br><small style="color:#666">${order.userName || 'Cliente'} -  ${order.userPhone || 'Sin teléfono'}</small><br><small style="color:#666">${new Date(order.date).toLocaleString()}</small>${order.customerCode ? `<br><small style="color:#dc3545;">Código cliente: <strong>${order.customerCode}</strong></small>` : ''}</div><span class="order-status ${order.status}">${statusText}</span></div><div style="margin:0.5rem 0;"><strong>Total: $${Number(order.total).toFixed(2)}</strong> | ${order.deliveryMode === 'pickup' ? 'Pickup' : 'Delivery'}${order.deliveryZone ? ' - ' + order.deliveryZone : ''}${order.couponCode ? ` | Cupón: ${order.couponCode}` : ''}${order.driverName ? `<br><small style="color:#9C27B0;">️ Domiciliario: ${order.driverName}</small>` : ''}</div><div style="display:flex; gap:0.5rem; flex-wrap:wrap;"><button class="btn btn-small btn-primary" data-view="${order.id}">Ver detalle</button><button class="btn btn-small btn-warning" data-status="${order.id}|shipped">Marcar enviado</button><button class="btn btn-small btn-success" data-status="${order.id}|delivered">Marcar entregado</button><button class="btn btn-small btn-secondary" data-status="${order.id}|cancelled">Cancelar</button><button class="btn btn-small" style="background:#999;color:white;" data-delete-order="${order.id}">🗑️ Eliminar</button></div></div>`; }).join(''); list.querySelectorAll('[data-view]').forEach(btn => btn.addEventListener('click', () => viewOrderDetail(btn.getAttribute('data-view')))); list.querySelectorAll('[data-status]').forEach(btn => btn.addEventListener('click', async () => { const [orderId, status] = btn.getAttribute('data-status').split('|'); if (!confirm(`¿Cambiar estado a "${status}"?`)) return; try { await updateDoc(doc(db, 'orders', orderId), { status: status }); await loadOrders(); await loadDashboard(); alert('✅ Estado actualizado'); } catch (error) { alert('Error: ' + error.message); } })); list.querySelectorAll('[data-delete-order]').forEach(btn => btn.addEventListener('click', async () => { const orderId = btn.getAttribute('data-delete-order'); if (!confirm('¿Eliminar este pedido permanentemente?')) return; try { await deleteDoc(doc(db, 'orders', orderId)); await loadOrders(); await loadDashboard(); alert('✅ Pedido eliminado'); } catch (error) { alert('Error: ' + error.message); } })); }
-        function viewOrderDetail(orderId) { const order = orders.find(o => o.id === orderId); if (!order) return; const statusText = { pending: 'Pendiente', shipped: 'En camino', delivered: 'Entregado', cancelled: 'Cancelado' }[order.status] || order.status; const driversOptions = drivers.map(d => `<option value="${d.id}" ${order.driverId === d.id ? 'selected' : ''}>${d.name} - ${d.phone}</option>`).join(''); document.getElementById('orderDetailContent').innerHTML = `<button class="modal-close" onclick="document.getElementById('orderDetailModal').classList.remove('active')">×</button><h2 style="color:#dc3545;">Pedido #${order.id.slice(-6)}</h2><div style="margin:1rem 0;"><strong>Cliente:</strong> ${order.userName || 'N/A'}<br><strong>Teléfono:</strong> ${order.userPhone || 'N/A'}${order.customerCode ? `<br><strong>Código Cliente:</strong> ${order.customerCode}` : ''}<br><strong>Fecha:</strong> ${new Date(order.date).toLocaleString()}<br><strong>Estado:</strong> <span class="order-status ${order.status}">${statusText}</span><br><strong>Entrega:</strong> ${order.deliveryMode === 'pickup' ? 'Pickup en tienda' : 'Delivery' + (order.deliveryZone ? ' - ' + order.deliveryZone : '')}</div>${order.address ? `<div style="margin:1rem 0;"><strong>Dirección:</strong> ${order.address}</div>` : ''}${order.gpsLat ? `<div style="margin:1rem 0;"><strong>GPS:</strong> <a href="https://maps.google.com/?q=${order.gpsLat},${order.gpsLng}" target="_blank">Ver en mapa</a></div>` : ''}<h3 style="margin:1rem 0 0.5rem; color:#dc3545;">Productos</h3><div style="background:#f8f8f8; padding:1rem; border-radius:8px;">${order.items.map(item => `<div style="padding:0.5rem 0; border-bottom:1px solid #eee;">${item.name} x${item.quantity} = $${(Number(item.price) * item.quantity).toFixed(2)}</div>`).join('')}</div><div style="margin-top:1rem; padding:1rem; background:#fff5f5; border-radius:8px;"><div style="display:flex; justify-content:space-between; margin-bottom:0.5rem;"><span>Subtotal:</span><span>$${Number(order.subtotal).toFixed(2)}</span></div>${order.discount > 0 ? `<div style="display:flex; justify-content:space-between; margin-bottom:0.5rem; color:#28a745;"><span>Descuento (${order.couponCode}):</span><span>-$${Number(order.discount).toFixed(2)}</span></div>` : ''}<div style="display:flex; justify-content:space-between; margin-bottom:0.5rem;"><span>IVA (16%):</span><span>$${Number(order.iva).toFixed(2)}</span></div>${order.deliveryFee > 0 ? `<div style="display:flex; justify-content:space-between; margin-bottom:0.5rem;"><span>Delivery:</span><span>$${Number(order.deliveryFee).toFixed(2)}</span></div>` : ''}<div style="display:flex; justify-content:space-between; font-size:1.3rem; font-weight:bold; color:#dc3545; border-top:1px solid #ddd; padding-top:0.5rem; margin-top:0.5rem;"><span>TOTAL:</span><span>$${Number(order.total).toFixed(2)}</span></div></div><div class="driver-assignment"><h4 style="margin-bottom:0.5rem;">Asignar Domiciliario</h4><select id="driverSelect-${order.id}"><option value="">-- Seleccionar domiciliario --</option>${driversOptions}</select><button class="btn btn-small btn-primary" id="btnAssignDriver-${order.id}">Asignar</button>${order.driverName ? `<div style="margin-top:1rem; padding:1rem; background:white; border-radius:8px;"><strong>Domiciliario asignado:</strong> ${order.driverName}<br><strong>Teléfono:</strong> ${order.driverPhone || 'N/A'}</div>` : ''}<div style="margin-top:1rem;"><button class="whatsapp-btn" id="btnSendDriver-${order.id}">📱 Enviar mensaje al domiciliario</button><button class="whatsapp-btn" style="background:#25d366;" id="btnSendCustomer-${order.id}">💬 Enviar mensaje al cliente</button></div></div><div style="margin-top:1rem; padding:1rem; background:#f8f8f8; border-radius:8px;"><h4 style="margin-bottom:0.5rem; color:#666;">Eliminar pedido</h4><p style="font-size:0.85rem; color:#666; margin-bottom:0.5rem;">Esta acción es permanente y no se puede deshacer.</p><button class="btn btn-small" style="background:#999;color:white;" id="btnDeleteOrder-${order.id}">🗑️ Eliminar este pedido</button></div>`; document.getElementById('orderDetailModal').classList.add('active'); setTimeout(() => { document.getElementById(`btnAssignDriver-${order.id}`).addEventListener('click', async () => { const driverId = document.getElementById(`driverSelect-${order.id}`).value; if (!driverId) { alert('Selecciona un domiciliario'); return; } const driver = drivers.find(d => d.id === driverId); if (!driver) return; try { await updateDoc(doc(db, 'orders', order.id), { driverId: driver.id, driverName: driver.n
+        function renderOrders() { const list = document.getElementById('ordersList'); const filter = document.getElementById('filterOrderStatus').value; const searchQuery = (document.getElementById('searchOrderCode').value || '').toLowerCase().trim(); let filtered = orders; if (filter) filtered = filtered.filter(o => o.status === filter); if (searchQuery) { filtered = filtered.filter(o => { const code = (o.customerCode || '').toLowerCase(); const name = (o.userName || '').toLowerCase(); const phone = (o.userPhone || '').toLowerCase(); const orderId = o.id.toLowerCase(); return code.includes(searchQuery) || name.includes(searchQuery) || phone.includes(searchQuery) || orderId.includes(searchQuery); }); } if (filtered.length === 0) { list.innerHTML = '<p style="text-align:center;color:#666;padding:1rem">No hay pedidos.</p>'; return; } list.innerHTML = filtered.sort((a,b) => new Date(b.date) - new Date(a.date)).map(order => { const statusText = { pending: 'Pendiente', shipped: 'En camino', delivered: 'Entregado', cancelled: 'Cancelado' }[order.status] || order.status; return `<div class="order-item"><div class="order-header"><div><strong>Pedido #${order.id.slice(-6)}</strong><br><small style="color:#666">${order.userName || 'Cliente'} - 📞 ${order.userPhone || 'Sin teléfono'}</small><br><small style="color:#666">${new Date(order.date).toLocaleString()}</small>${order.customerCode ? `<br><small style="color:#dc3545;">Código cliente: <strong>${order.customerCode}</strong></small>` : ''}</div><span class="order-status ${order.status}">${statusText}</span></div><div style="margin:0.5rem 0;"><strong>Total: $${Number(order.total).toFixed(2)}</strong> | ${order.deliveryMode === 'pickup' ? 'Pickup' : 'Delivery'}${order.deliveryZone ? ' - ' + order.deliveryZone : ''}${order.couponCode ? ` | Cupón: ${order.couponCode}` : ''}${order.driverName ? `<br><small style="color:#9C27B0;">🏍️ Domiciliario: ${order.driverName}</small>` : ''}</div><div style="display:flex; gap:0.5rem; flex-wrap:wrap;"><button class="btn btn-small btn-primary" data-view="${order.id}">Ver detalle</button><button class="btn btn-small btn-warning" data-status="${order.id}|shipped">Marcar enviado</button><button class="btn btn-small btn-success" data-status="${order.id}|delivered">Marcar entregado</button><button class="btn btn-small btn-secondary" data-status="${order.id}|cancelled">Cancelar</button><button class="btn btn-small" style="background:#999;color:white;" data-delete-order="${order.id}">️ Eliminar</button></div></div>`; }).join(''); list.querySelectorAll('[data-view]').forEach(btn => btn.addEventListener('click', () => viewOrderDetail(btn.getAttribute('data-view')))); list.querySelectorAll('[data-status]').forEach(btn => btn.addEventListener('click', async () => { const [orderId, status] = btn.getAttribute('data-status').split('|'); if (!confirm(`¿Cambiar estado a "${status}"?`)) return; try { await updateDoc(doc(db, 'orders', orderId), { status: status }); await loadOrders(); await loadDashboard(); alert('✅ Estado actualizado'); } catch (error) { alert('Error: ' + error.message); } })); list.querySelectorAll('[data-delete-order]').forEach(btn => btn.addEventListener('click', async () => { const orderId = btn.getAttribute('data-delete-order'); if (!confirm('¿Eliminar este pedido permanentemente?')) return; try { await deleteDoc(doc(db, 'orders', orderId)); await loadOrders(); await loadDashboard(); alert('✅ Pedido eliminado'); } catch (error) { alert('Error: ' + error.message); } })); }
+        function viewOrderDetail(orderId) { const order = orders.find(o => o.id === orderId); if (!order) return; const statusText = { pending: 'Pendiente', shipped: 'En camino', delivered: 'Entregado', cancelled: 'Cancelado' }[order.status] || order.status; document.getElementById('orderDetailContent').innerHTML = `<button class="modal-close" onclick="document.getElementById('orderDetailModal').classList.remove('active')">×</button><h2 style="color:#dc3545;">Pedido #${order.id.slice(-6)}</h2><div style="margin:1rem 0;"><strong>Cliente:</strong> ${order.userName || 'N/A'}<br><strong>Teléfono:</strong> ${order.userPhone || 'N/A'}${order.customerCode ? `<br><strong>Código Cliente:</strong> ${order.customerCode}` : ''}<br><strong>Fecha:</strong> ${new Date(order.date).toLocaleString()}<br><strong>Estado:</strong> <span class="order-status ${order.status}">${statusText}</span><br><strong>Entrega:</strong> ${order.deliveryMode === 'pickup' ? 'Pickup en tienda' : 'Delivery' + (order.deliveryZone ? ' - ' + order.deliveryZone : '')}</div>${order.address ? `<div style="margin:1rem 0;"><strong>Dirección:</strong> ${order.address}</div>` : ''}${order.gpsLat ? `<div style="margin:1rem 0;"><strong>GPS:</strong> <a href="https://maps.google.com/?q=${order.gpsLat},${order.gpsLng}" target="_blank">Ver en mapa</a></div>` : ''}<h3 style="margin:1rem 0 0.5rem; color:#dc3545;">Productos</h3><div style="background:#f8f8f8; padding:1rem; border-radius:8px;">${order.items.map(item => `<div style="padding:0.5rem 0; border-bottom:1px solid #eee;">${item.name} x${item.quantity} = $${(Number(item.price) * item.quantity).toFixed(2)}</div>`).join('')}</div><div style="margin-top:1rem; padding:1rem; background:#fff5f5; border-radius:8px;"><div style="display:flex; justify-content:space-between; margin-bottom:0.5rem;"><span>Subtotal:</span><span>$${Number(order.subtotal).toFixed(2)}</span></div>${order.discount > 0 ? `<div style="display:flex; justify-content:space-between; margin-bottom:0.5rem; color:#28a745;"><span>Descuento (${order.couponCode}):</span><span>-$${Number(order.discount).toFixed(2)}</span></div>` : ''}<div style="display:flex; justify-content:space-between; margin-bottom:0.5rem;"><span>IVA (16%):</span><span>$${Number(order.iva).toFixed(2)}</span></div>${order.deliveryFee > 0 ? `<div style="display:flex; justify-content:space-between; margin-bottom:0.5rem;"><span>Delivery:</span><span>$${Number(order.deliveryFee).toFixed(2)}</span></div>` : ''}<div style="display:flex; justify-content:space-between; font-size:1.3rem; font-weight:bold; color:#dc3545; border-top:1px solid #ddd; padding-top:0.5rem; margin-top:0.5rem;"><span>TOTAL:</span><span>$${Number(order.total).toFixed(2)}</span></div></div><div style="margin-top:1rem; padding:1rem; background:#f8f8f8; border-radius:8px;"><h4 style="margin-bottom:0.5rem; color:#666;">Eliminar pedido</h4><p style="font-size:0.85rem; color:#666; margin-bottom:0.5rem;">Esta acción es permanente y no se puede deshacer.</p><button class="btn btn-small" style="background:#999;color:white;" id="btnDeleteOrder-${order.id}">🗑️ Eliminar este pedido</button></div>`; document.getElementById('orderDetailModal').classList.add('active'); setTimeout(() => { document.getElementById(`btnDeleteOrder-${order.id}`).addEventListener('click', async () => { if (!confirm('¿Eliminar este pedido permanentemente?')) return; try { await deleteDoc(doc(db, 'orders', order.id)); await loadOrders(); await loadDashboard(); document.getElementById('orderDetailModal').classList.remove('active'); alert('✅ Pedido eliminado'); } catch (error) { alert('Error: ' + error.message); } }); }, 100); }
+
+        // Drivers
+        async function loadDrivers() { try { const snapshot = await getDocs(collection(db, 'drivers')); drivers = []; snapshot.forEach(docSnap => drivers.push({ id: docSnap.id, ...docSnap.data() })); renderDrivers(); } catch (error) { console.error('Domiciliarios:', error); } }
+        function renderDrivers() { const list = document.getElementById('driversList'); if (drivers.length === 0) { list.innerHTML = '<p style="text-align:center;color:#666;padding:1rem">No hay domiciliarios registrados.</p>'; return; } list.innerHTML = drivers.map(driver => { const todayOrders = orders.filter(o => o.driverId === driver.id && new Date(o.date).toDateString() === new Date().toDateString()); const todayEarnings = todayOrders.reduce((sum, o) => sum + (Number(o.driverCommission) || 0), 0); return `<div class="driver-card"><div class="driver-info"><strong>${driver.name}</strong><br><small>📞 ${driver.phone} | 💰 $${Number(driver.commission).toFixed(2)} por entrega</small><br><small style="color:#28a745;">Hoy: ${todayOrders.length} entregas | $${todayEarnings.toFixed(2)}</small></div><div class="admin-actions"><button class="btn btn-small btn-secondary" data-delete-driver="${driver.id}">Eliminar</button></div></div>`; }).join(''); list.querySelectorAll('[data-delete-driver]').forEach(btn => btn.addEventListener('click', async () => { if (!confirm('¿Eliminar este domiciliario?')) return; try { await deleteDoc(doc(db, 'drivers', btn.getAttribute('data-delete-driver'))); await loadDrivers(); alert('Domiciliario eliminado'); } catch (error) { alert('Error: ' + error.message); } })); }
+        document.getElementById('btnAddDriver').addEventListener('click', async () => { const name = document.getElementById('driverName').value.trim(); const phone = document.getElementById('driverPhone').value.trim(); const commission = parseFloat(document.getElementById('driverCommission').value); if (!name || !phone || !commission) { alert('Completa todos los campos'); return; } try { await addDoc(collection(db, 'drivers'), { name, phone, commission, createdAt: new Date().toISOString() }); document.getElementById('driverName').value = ''; document.getElementById('driverPhone').value = ''; document.getElementById('driverCommission').value = ''; await loadDrivers(); alert('✅ Domiciliario agregado'); } catch (error) { alert('Error: ' + error.message); } });
+
+        // Customers
+        async function loadCustomers() { try { const customersSnap = await getDocs(collection(db, 'customers')); customers = []; customersSnap.forEach(docSnap => customers.push({ id: docSnap.id, ...docSnap.data() })); renderCustomers(); } catch (error) { console.error('Clientes:', error); } }
+        function renderCustomers(filter = '') { const tbody = document.getElementById('customersList'); let filtered = customers; if (filter) { const q = filter.toLowerCase(); filtered = customers.filter(c => (c.name || '').toLowerCase().includes(q) || (c.phone || '').includes(q) || (c.customerCode || '').toLowerCase().includes(q)); } if (filtered.length === 0) { tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#666;">No hay clientes registrados</td></tr>'; return; } const customerMap = {}; orders.forEach(order => { const key = order.userPhone || order.userName; if (!key) return; if (!customerMap[key]) { customerMap[key] = { name: order.userName || 'N/A', phone: order.userPhone || 'N/A', customerCode: order.customerCode || '', orders: 0, total: 0 }; } customerMap[key].orders++; customerMap[key].total += Number(order.total) || 0; }); tbody.innerHTML = filtered.map(c => { const data = customerMap[c.phone] || customerMap[c.name] || { orders: 0, total: 0, customerCode: c.customerCode || '' }; return `<tr><td>${c.customerCode || data.customerCode || '-'}</td><td>${c.name}</td><td>${c.phone}</td><td>${data.orders}</td><td>$${data.total.toFixed(2)}</td></tr>`; }).join(''); }
+        document.getElementById('searchCustomer').addEventListener('input', (e) => renderCustomers(e.target.value));
+
+        // Reviews
+        async function loadReviews() { try { const snapshot = await getDocs(collection(db, 'reviews')); reviews = []; snapshot.forEach(docSnap => reviews.push({ id: docSnap.id, ...docSnap.data() })); renderReviews(); } catch (error) { console.error('Reseñas:', error); } }
+        function renderReviews() { const list = document.getElementById('reviewsList'); if (reviews.length === 0) { list.innerHTML = '<p style="text-align:center;color:#666;padding:1rem">No hay reseñas.</p>'; return; } list.innerHTML = reviews.sort((a,b) => new Date(b.date) - new Date(a.date)).map(review => { const product = products.find(p => p.id === review.productId); return `<div class="review-item"><div class="review-header"><strong>${review.userName}</strong><span style="color:#666;">${new Date(review.date).toLocaleDateString()}</span></div><div class="review-stars">${'★'.repeat(review.rating)}${'☆'.repeat(5-review.rating)}</div><div style="margin:0.5rem 0;">${review.text}</div><div style="font-size:0.85rem; color:#666;">Producto: ${product ? product.name : 'Desconocido'}</div><div style="margin-top:0.5rem;"><button class="btn btn-small btn-secondary" data-delete-review="${review.id}">Eliminar</button></div></div>`; }).join(''); list.querySelectorAll('[data-delete-review]').forEach(btn => btn.addEventListener('click', async () => { if (!confirm('¿Eliminar esta reseña?')) return; try { await deleteDoc(doc(db, 'reviews', btn.getAttribute('data-delete-review'))); await loadReviews(); alert('Reseña eliminada'); } catch (error) { alert('Error: ' + error.message); } })); }
+
+        // Coupons
+        async function loadCoupons() { try { const snapshot = await getDocs(collection(db, 'coupons')); coupons = []; snapshot.forEach(docSnap => coupons.push({ id: docSnap.id, ...docSnap.data() })); renderCoupons(); } catch (error) { console.error('Cupones:', error); } }
+        function renderCoupons() { const list = document.getElementById('couponsList'); if (coupons.length === 0) { list.innerHTML = '<p style="text-align:center;color:#666;padding:1rem">No hay cupones.</p>'; return; } list.innerHTML = coupons.map(coupon => `<div class="admin-item"><div class="admin-info"><div><strong>${coupon.code}</strong><br><small style="color:#666">${coupon.discount}% de descuento | Usos: ${coupon.uses || 0}/${coupon.maxUses || '∞'}</small></div></div><div class="admin-actions"><button class="btn btn-small btn-secondary" data-delete-coupon="${coupon.id}">Eliminar</button></div></div>`).join(''); list.querySelectorAll('[data-delete-coupon]').forEach(btn => btn.addEventListener('click', async () => { if (!confirm('¿Eliminar este cupón?')) return; try { await deleteDoc(doc(db, 'coupons', btn.getAttribute('data-delete-coupon'))); await loadCoupons(); alert('Cupón eliminado'); } catch (error) { alert('Error: ' + error.messag
