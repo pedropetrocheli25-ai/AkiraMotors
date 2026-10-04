@@ -87,12 +87,11 @@
         .color-picker-row { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; }
         .color-picker-row input[type="color"] { width: 60px; height: 40px; border: none; cursor: pointer; }
         .color-picker-row label { flex: 1; font-weight: 600; }
-        .table-responsive { overflow-x: auto; }
-        table { width: 100%; border-collapse: separate; border-spacing: 0 0.5rem; }
-        th, td { padding: 1rem 0.8rem; text-align: left; }
-        th { background: #f8f8f8; font-weight: 600; color: #333; border-bottom: 2px solid #dc3545; }
-        td { background: white; border-bottom: 1px solid #eee; }
-        tr:hover td { background: #f5f5f5; }
+        .appearance-preview { background: #f8f8f8; padding: 1rem; border-radius: 8px; margin-top: 1rem; border: 2px dashed #ddd; }
+        .appearance-preview .preview-btn { padding: 0.5rem 1rem; border-radius: 8px; border: none; cursor: pointer; margin-right: 0.5rem; }
+        .appearance-preview .preview-header { padding: 0.8rem; border-radius: 8px; margin-bottom: 0.5rem; color: white; font-weight: bold; }
+        .appearance-preview .preview-footer { padding: 0.8rem; border-radius: 8px; color: white; }
+        .appearance-preview .preview-text { padding: 0.5rem; border-radius: 4px; margin-bottom: 0.5rem; }
         @media (max-width: 768px) {
             body { flex-direction: column; }
             .admin-sidebar { width: 100%; height: auto; position: relative; }
@@ -108,7 +107,7 @@
     <!-- LOGIN -->
     <div id="loginScreen" style="width:100%;">
         <div class="login-container">
-            <h2>🔐 Acceso Administrador</h2>
+            <h2> Acceso Administrador</h2>
             <form onsubmit="adminLogin(event)">
                 <div class="form-group">
                     <label>Contraseña</label>
@@ -129,17 +128,17 @@
             </div>
             <div class="admin-menu">
                 <div class="admin-menu-item active" onclick="showSection('preview', event)">👁️ Vista Previa</div>
-                <div class="admin-menu-item" onclick="showSection('hero', event)">🎨 Hero/Portada</div>
-                <div class="admin-menu-item" onclick="showSection('drawer', event)"> Menú Drawer</div>
+                <div class="admin-menu-item" onclick="showSection('hero', event)"> Hero/Portada</div>
+                <div class="admin-menu-item" onclick="showSection('drawer', event)">☰ Menú Drawer</div>
                 <div class="admin-menu-item" onclick="showSection('categories', event)">📂 Categorías y Subcategorías</div>
-                <div class="admin-menu-item" onclick="showSection('dashboard', event)"> Dashboard</div>
+                <div class="admin-menu-item" onclick="showSection('dashboard', event)">📊 Dashboard</div>
                 <div class="admin-menu-item" onclick="showSection('orders', event)">📦 Pedidos</div>
                 <div class="admin-menu-item" onclick="showSection('drivers', event)">🏍️ Domiciliarios</div>
                 <div class="admin-menu-item" onclick="showSection('customers', event)">👥 Clientes</div>
                 <div class="admin-menu-item" onclick="showSection('products', event)">🛒 Productos</div>
                 <div class="admin-menu-item" onclick="showSection('vehicles', event)">🚗 Vehículos</div>
-                <div class="admin-menu-item" onclick="showSection('brands', event)">🏷️ Marcas</div>
-                <div class="admin-menu-item" onclick="showSection('banners', event)">️ Banners</div>
+                <div class="admin-menu-item" onclick="showSection('brands', event)">️ Marcas</div>
+                <div class="admin-menu-item" onclick="showSection('banners', event)">🖼️ Banners</div>
                 <div class="admin-menu-item" onclick="showSection('coupons', event)">🎟️ Cupones</div>
                 <div class="admin-menu-item" onclick="showSection('delivery', event)">📍 Zonas Delivery</div>
                 <div class="admin-menu-item" onclick="showSection('reviews', event)">⭐ Reseñas</div>
@@ -160,7 +159,7 @@
                         <div class="admin-card">
                             <h3>Controles</h3>
                             <button class="btn btn-primary" onclick="refreshPreview()" style="width:100%; margin-bottom:1rem;">🔄 Recargar Vista</button>
-                            <button class="btn btn-secondary" onclick="window.open('index.html', '_blank')" style="width:100%;"> Abrir en Nueva Pestaña</button>
+                            <button class="btn btn-secondary" onclick="window.open('index.html', '_blank')" style="width:100%;">🌐 Abrir en Nueva Pestaña</button>
                         </div>
                     </div>
                     <div class="preview-frame">
@@ -217,7 +216,7 @@
             <!-- MENÚ DRAWER -->
             <div class="admin-section" id="section-drawer">
                 <h2 class="section-title">Menú Drawer (Categorías de Navegación)</h2>
-                <div class="alert-info">Estructura: Categoría → Marca → Modelo</div>
+                <div class="alert-info">Estructura: Categoría → Marca → Modelo. Lo que configures aquí también aparecerá como categorías al agregar productos.</div>
                 <div class="admin-card">
                     <h3>Agregar Categoría</h3>
                     <div class="form-row">
@@ -231,7 +230,7 @@
             <!-- CATEGORÍAS Y SUBCATEGORÍAS -->
             <div class="admin-section" id="section-categories">
                 <h2 class="section-title">Categorías y Subcategorías de Productos</h2>
-                <div class="alert-info">Estas categorías se usarán al agregar productos.</div>
+                <div class="alert-info">Estas categorías se usarán al agregar productos. Se sincronizan automáticamente con el Menú Drawer.</div>
                 <div class="admin-card">
                     <h3>Agregar Subcategoría</h3>
                     <div class="form-row">
@@ -401,116 +400,169 @@
                 </div>
             </div>
 
-            <!-- APARIENCIA -->
+            <!-- APARIENCIA (NUEVA SECCIÓN COMPLETA) -->
             <div class="admin-section" id="section-appearance">
                 <h2 class="section-title">🎨 Apariencia de la Página</h2>
-                <div class="alert-info">Personaliza todos los colores, tipografías y estilos de tu tienda.</div>
+                <div class="alert-info">Personaliza todos los colores, tipografías y estilos de tu tienda. Los cambios se aplican al recargar la vista previa.</div>
                 
                 <div class="admin-card">
                     <h3>🎨 Colores Principales</h3>
-                    <div class="color-picker-row"><label>Color Primario:</label><input type="color" id="appPrimaryColor" value="#dc3545"></div>
-                    <div class="color-picker-row"><label>Color de Acento:</label><input type="color" id="appAccentColor" value="#FFC107"></div>
-                    <div class="color-picker-row"><label>Color de Fondo:</label><input type="color" id="appBgColor" value="#f5f5f5"></div>
-                    <div class="color-picker-row"><label>Color de Tarjetas:</label><input type="color" id="appCardColor" value="#ffffff"></div>
-                </div>
-
-                <div class="admin-card">
-                    <h3> Tipografía y Textos</h3>
-                    <div class="form-group"><label>Tipografía General</label><select id="appFontFamily"><option value="'Segoe UI', Tahoma, sans-serif">Segoe UI</option><option value="Arial, sans-serif">Arial</option><option value="Georgia, serif">Georgia</option></select></div>
-                    <div class="form-row">
-                        <div class="form-group"><label>Tamaño base (px)</label><input type="number" id="appFontSize" value="16" min="12" max="24"></div>
-                        <div class="form-group"><label>Color de texto</label><input type="color" id="appTextColor" value="#333333"></div>
+                    <div class="color-picker-row">
+                        <label>Color Primario (botones, header, acentos):</label>
+                        <input type="color" id="appPrimaryColor" value="#dc3545">
+                    </div>
+                    <div class="color-picker-row">
+                        <label>Color de Acento (ofertas, badges):</label>
+                        <input type="color" id="appAccentColor" value="#FFC107">
+                    </div>
+                    <div class="color-picker-row">
+                        <label>Color de Fondo de la página:</label>
+                        <input type="color" id="appBgColor" value="#f5f5f5">
+                    </div>
+                    <div class="color-picker-row">
+                        <label>Color de Fondo de tarjetas:</label>
+                        <input type="color" id="appCardColor" value="#ffffff">
                     </div>
                 </div>
 
                 <div class="admin-card">
-                    <h3>🔝 Encabezado</h3>
+                    <h3>📝 Tipografía y Textos</h3>
+                    <div class="form-group">
+                        <label>Tipografía General</label>
+                        <select id="appFontFamily">
+                            <option value="'Segoe UI', Tahoma, sans-serif">Segoe UI (Moderna - Recomendada)</option>
+                            <option value="Arial, sans-serif">Arial (Clásica)</option>
+                            <option value="Georgia, serif">Georgia (Elegante)</option>
+                            <option value="'Courier New', monospace">Courier (Técnica)</option>
+                            <option value="Verdana, sans-serif">Verdana (Legible)</option>
+                            <option value="'Times New Roman', serif">Times New Roman (Formal)</option>
+                        </select>
+                    </div>
                     <div class="form-row">
-                        <div class="form-group"><label>Color de fondo</label><input type="color" id="appHeaderBgColor" value="#dc3545"></div>
-                        <div class="form-group"><label>Color de texto</label><input type="color" id="appHeaderTextColor" value="#ffffff"></div>
+                        <div class="form-group">
+                            <label>Tamaño de fuente base (px)</label>
+                            <input type="number" id="appFontSize" value="16" min="12" max="24">
+                        </div>
+                        <div class="form-group">
+                            <label>Color de texto principal</label>
+                            <input type="color" id="appTextColor" value="#333333">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Color de texto secundario</label>
+                            <input type="color" id="appTextSecondaryColor" value="#666666">
+                        </div>
+                        <div class="form-group">
+                            <label>Color de enlaces</label>
+                            <input type="color" id="appLinkColor" value="#dc3545">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="admin-card">
+                    <h3>🔝 Encabezado (Header)</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Color de fondo del header</label>
+                            <input type="color" id="appHeaderBgColor" value="#dc3545">
+                        </div>
+                        <div class="form-group">
+                            <label>Color de texto del header</label>
+                            <input type="color" id="appHeaderTextColor" value="#ffffff">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Altura del header (px)</label>
+                        <input type="number" id="appHeaderHeight" value="60" min="40" max="100">
                     </div>
                 </div>
 
                 <div class="admin-card">
                     <h3>🔘 Botones</h3>
                     <div class="form-row">
-                        <div class="form-group"><label>Color de fondo</label><input type="color" id="appBtnPrimaryBg" value="#dc3545"></div>
-                        <div class="form-group"><label>Color de texto</label><input type="color" id="appBtnTextColor" value="#ffffff"></div>
+                        <div class="form-group">
+                            <label>Color de fondo de botones primarios</label>
+                            <input type="color" id="appBtnPrimaryBg" value="#dc3545">
+                        </div>
+                        <div class="form-group">
+                            <label>Color de texto de botones</label>
+                            <input type="color" id="appBtnTextColor" value="#ffffff">
+                        </div>
                     </div>
                     <div class="form-row">
-                        <div class="form-group"><label>Border radius (px)</label><input type="number" id="appBtnRadius" value="20" min="0" max="50"></div>
-                        <div class="form-group"><label>Tamaño fuente (px)</label><input type="number" id="appBtnFontSize" value="14" min="10" max="20"></div>
+                        <div class="form-group">
+                            <label>Border radius de botones (px)</label>
+                            <input type="number" id="appBtnRadius" value="20" min="0" max="50">
+                        </div>
+                        <div class="form-group">
+                            <label>Tamaño de fuente de botones (px)</label>
+                            <input type="number" id="appBtnFontSize" value="14" min="10" max="20">
+                        </div>
                     </div>
                 </div>
 
                 <div class="admin-card">
-                    <h3>👣 Pie de Página</h3>
+                    <h3>📦 Tarjetas de Producto</h3>
                     <div class="form-row">
-                        <div class="form-group"><label>Color de fondo</label><input type="color" id="appFooterBgColor" value="#1a1a1a"></div>
-                        <div class="form-group"><label>Color de texto</label><input type="color" id="appFooterTextColor" value="#cccccc"></div>
+                        <div class="form-group">
+                            <label>Border radius de tarjetas (px)</label>
+                            <input type="number" id="appCardRadius" value="16" min="0" max="30">
+                        </div>
+                        <div class="form-group">
+                            <label>Sombra de tarjetas</label>
+                            <select id="appCardShadow">
+                                <option value="none">Sin sombra</option>
+                                <option value="0 2px 8px rgba(0,0,0,0.08)">Suave</option>
+                                <option value="0 4px 12px rgba(0,0,0,0.12)">Media</option>
+                                <option value="0 8px 24px rgba(0,0,0,0.16)">Fuerte</option>
+                            </select>
+                        </div>
                     </div>
-                    <div class="form-group"><label>Color de títulos</label><input type="color" id="appFooterTitleColor" value="#FFC107"></div>
                 </div>
 
-                <button class="btn btn-primary" onclick="saveAppearance()" style="width:100%; padding:1rem;">💾 Guardar Apariencia</button>
+                <div class="admin-card">
+                    <h3>👣 Pie de Página (Footer)</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Color de fondo del footer</label>
+                            <input type="color" id="appFooterBgColor" value="#1a1a1a">
+                        </div>
+                        <div class="form-group">
+                            <label>Color de texto del footer</label>
+                            <input type="color" id="appFooterTextColor" value="#cccccc">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Color de títulos del footer</label>
+                        <input type="color" id="appFooterTitleColor" value="#FFC107">
+                    </div>
+                </div>
+
+                <div class="admin-card">
+                    <h3>👁️ Vista Previa de los Cambios</h3>
+                    <div class="appearance-preview" id="appearancePreview">
+                        <div class="preview-header" id="previewHeader">Encabezado de ejemplo</div>
+                        <div class="preview-text" id="previewText">Texto principal de ejemplo</div>
+                        <div class="preview-text" id="previewTextSecondary" style="color: #666;">Texto secundario de ejemplo</div>
+                        <button class="preview-btn" id="previewBtn">Botón de ejemplo</button>
+                        <div class="preview-footer" id="previewFooter" style="margin-top: 1rem;">Pie de página de ejemplo</div>
+                    </div>
+                </div>
+
+                <button class="btn btn-primary" onclick="saveAppearance()" style="width:100%; padding:1rem;">💾 Guardar Configuración de Apariencia</button>
             </div>
 
             <!-- CONFIGURACIÓN -->
             <div class="admin-section" id="section-settings">
                 <h2 class="section-title">Configuración</h2>
-                
-                <!-- PRECIO BCV -->
                 <div class="admin-card">
-                    <h3>💱 Precio BCV (Dólar Oficial)</h3>
-                    <div class="alert-info"><strong>Importante:</strong> Este precio se usará para calcular los montos en bolívares en toda la web.</div>
-                    <div class="form-group">
-                        <label>Modo de actualización</label>
-                        <select id="bcvMode" onchange="toggleBcvMode()">
-                            <option value="manual">Manual (ingresar precio)</option>
-                            <option value="api">Automático (API externa)</option>
-                        </select>
-                    </div>
-                    <div id="bcvManualSection">
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label>Precio BCV actual (Bs por $)</label>
-                                <input type="number" id="bcvRateInput" step="0.01" placeholder="Ej: 36.50">
-                            </div>
-                            <div class="form-group" style="display:flex; align-items:flex-end;">
-                                <button class="btn btn-primary" onclick="updateBcvRate()" style="width:100%;">Actualizar Manual</button>
-                            </div>
-                        </div>
-                    </div>
-                    <div id="bcvApiSection" style="display:none;">
-                        <div class="form-group">
-                            <label>URL de API de precio dólar</label>
-                            <input type="url" id="bcvApiUrl" placeholder="https://api.example.com/dolar">
-                            <div class="hint">La API debe retornar un JSON con el campo "price" o "rate"</div>
-                        </div>
-                        <div class="form-group">
-                            <label>Frecuencia de actualización</label>
-                            <select id="bcvApiFrequency">
-                                <option value="3600000">Cada hora</option>
-                                <option value="86400000">Cada día</option>
-                                <option value="43200000">Cada 12 horas</option>
-                            </select>
-                        </div>
-                        <button class="btn btn-primary" onclick="saveBcvApi()">Guardar Configuración API</button>
-                        <button class="btn btn-secondary" onclick="testBcvApi()" style="margin-left:0.5rem;">Probar API</button>
-                    </div>
-                    <div style="margin-top:1rem; padding:1rem; background:#f0f8ff; border-radius:8px;">
-                        <strong>Precio BCV actual:</strong> <span id="currentBcvDisplay" style="color:#dc3545; font-size:1.2rem; font-weight:bold;">Cargando...</span>
-                    </div>
-                </div>
-                
-                <div class="admin-card">
-                    <h3>📍 Pickup Maps</h3>
+                    <h3>Pickup Maps</h3>
                     <input type="url" id="pickupMapsInput" placeholder="https://maps.google.com/?q=..." style="margin-bottom:1rem;">
                     <button class="btn btn-primary" onclick="updatePickupMaps()">Guardar</button>
                 </div>
-                
                 <div class="admin-card">
-                    <h3>📱 WhatsApp</h3>
+                    <h3>WhatsApp</h3>
                     <div class="alert-info"><strong>Importante:</strong> Este número se usará en TODA la web. Incluye código de país sin +. Ej: 584148700616</div>
                     <input type="text" id="whatsappNumber" placeholder="584148700616" style="margin-bottom:1rem;">
                     <button class="btn btn-primary" onclick="saveWhatsapp()">Guardar</button>
@@ -569,7 +621,7 @@
                 
                 <div class="form-section">
                     <h3>Compatibilidad Vehicular</h3>
-                    <div class="alert-info">Selecciona la marca y modelo de los vehículos compatibles.</div>
+                    <div class="alert-info">Selecciona la marca y modelo de los vehículos compatibles. Los datos vienen de la sección "Vehículos".</div>
                     <div class="form-row">
                         <div class="form-group">
                             <label>Marca del Vehículo *</label>
@@ -600,7 +652,7 @@
                 
                 <div class="form-section">
                     <h3>Precio</h3>
-                    <div class="alert-warning"><strong>Fórmula correcta:</strong> Precio Venta = Precio Compra / (1 - Margen/100)<br>Ejemplo: $100 / (1 - 0.30) = $142.86</div>
+                    <div class="alert-warning"><strong>Fórmula correcta:</strong> Precio Venta = Precio Compra / (1 - Margen/100)<br>Ejemplo: $100 / (1 - 0.30) = $142.86 (ganancia real del 30% sobre el precio de venta)</div>
                     <div class="form-row">
                         <div class="form-group"><label>Costo ($) *</label><input type="number" id="productCostPrice" step="0.01" required oninput="calculateSalePrice()"></div>
                         <div class="form-group"><label>Margen de Ganancia (%) *</label><input type="number" id="productMargin" step="1" required oninput="calculateSalePrice()"></div>
@@ -644,20 +696,30 @@
         <div class="modal-content" id="orderDetailContent"></div>
     </div>
 
-    <!-- SCRIPT DE LOGIN -->
+    <!-- ============================================ -->
+    <!-- SCRIPT DE LOGIN (ANTES DE FIREBASE) -->
+    <!-- ============================================ -->
     <script>
         const ADMIN_PASSWORD = 'fjat21';
         
         window.adminLogin = function(event) {
             event.preventDefault();
             const password = document.getElementById('adminPassword').value;
+            console.log('Intentando login con:', password);
             if (password === ADMIN_PASSWORD) {
+                console.log('Login exitoso');
                 document.getElementById('loginScreen').style.display = 'none';
                 document.getElementById('adminPanel').classList.remove('hidden');
                 document.getElementById('adminPanel').style.display = 'flex';
                 document.getElementById('adminPassword').value = '';
-                setTimeout(function() { if (typeof loadAll === 'function') loadAll(); }, 500);
-            } else { alert('❌ Contraseña incorrecta. Intenta con: fjat21'); }
+                setTimeout(function() {
+                    if (typeof loadAll === 'function') {
+                        loadAll();
+                    }
+                }, 500);
+            } else {
+                alert('❌ Contraseña incorrecta. Intenta con: fjat21');
+            }
         };
 
         window.logoutAdmin = function() {
@@ -682,10 +744,12 @@
             document.getElementById('previewFrame').src = 'index.html?t=' + Date.now();
         };
 
-        window.closeModal = function(id) { document.getElementById(id).classList.remove('active'); };
+        window.closeModal = function(id) { 
+            document.getElementById(id).classList.remove('active'); 
+        };
     </script>
 
-    <!-- Firebase -->
+    <!-- Firebase Compat -->
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
     
@@ -707,8 +771,32 @@
         let bcvRate = 36.5;
         let siteConfig = { companyName: 'AKIRA MOTORS', slogan: 'Repuestos', description: '', address: '', phone: '', schedule: '', facebook: '', instagram: '', tiktok: '' };
         let whatsappNumber = '584148700616';
-        let currentProductImages = [], currentSpecifications = [], currentCompatibility = [];
-        let appearanceConfig = { primaryColor: '#dc3545', accentColor: '#FFC107', bgColor: '#f5f5f5', cardColor: '#ffffff', fontFamily: "'Segoe UI', Tahoma, sans-serif", fontSize: 16, textColor: '#333333', textSecondaryColor: '#666666', linkColor: '#dc3545', headerBgColor: '#dc3545', headerTextColor: '#ffffff', headerHeight: 60, btnPrimaryBg: '#dc3545', btnTextColor: '#ffffff', btnRadius: 20, btnFontSize: 14, cardRadius: 16, cardShadow: '0 2px 8px rgba(0,0,0,0.08)', footerBgColor: '#1a1a1a', footerTextColor: '#cccccc', footerTitleColor: '#FFC107' };
+        let currentProductImages = [];
+        let currentSpecifications = [];
+        let currentCompatibility = [];
+        let appearanceConfig = {
+            primaryColor: '#dc3545',
+            accentColor: '#FFC107',
+            bgColor: '#f5f5f5',
+            cardColor: '#ffffff',
+            fontFamily: "'Segoe UI', Tahoma, sans-serif",
+            fontSize: 16,
+            textColor: '#333333',
+            textSecondaryColor: '#666666',
+            linkColor: '#dc3545',
+            headerBgColor: '#dc3545',
+            headerTextColor: '#ffffff',
+            headerHeight: 60,
+            btnPrimaryBg: '#dc3545',
+            btnTextColor: '#ffffff',
+            btnRadius: 20,
+            btnFontSize: 14,
+            cardRadius: 16,
+            cardShadow: '0 2px 8px rgba(0,0,0,0.08)',
+            footerBgColor: '#1a1a1a',
+            footerTextColor: '#cccccc',
+            footerTitleColor: '#FFC107'
+        };
 
         const defaultBrands = [
             { id: 'mitsubishi', name: 'Mitsubishi', image: null },
@@ -718,348 +806,148 @@
             { id: 'chevrolet', name: 'Chevrolet', image: null }
         ];
 
-        // ============================================
-        // FUNCIONES HELPER SEGURAS - CORREGIDAS
-        // ============================================
-        
-        // Para INPUTS, SELECTS, TEXTAREAS (usan .value)
-        const setInputValue = (id, value) => {
-            const el = document.getElementById(id);
-            if (el && (el.tagName === 'INPUT' || el.tagName === 'SELECT' || el.tagName === 'TEXTAREA')) {
-                try { el.value = value !== undefined && value !== null ? value : ''; } catch(e) {}
-            }
-        };
-        
-        // Para DIVS, SPANS, P (usan .textContent)
-        const setTextContent = (id, value) => {
-            const el = document.getElementById(id);
-            if (el && (el.tagName === 'DIV' || el.tagName === 'SPAN' || el.tagName === 'P' || el.tagName === 'STRONG')) {
-                try { el.textContent = value !== undefined && value !== null ? value : ''; } catch(e) {}
-            }
-        };
-        
-        // Para CHECKBOXES (usan .checked)
-        const setCheckbox = (id, value) => {
-            const el = document.getElementById(id);
-            if (el && el.type === 'checkbox') {
-                try { el.checked = !!value; } catch(e) {}
-            }
-        };
-        
-        // Para leer INPUTS
-        const getInputValue = (id, defaultValue) => {
-            const el = document.getElementById(id);
-            if (el && (el.tagName === 'INPUT' || el.tagName === 'SELECT' || el.tagName === 'TEXTAREA')) {
-                return el.value !== undefined && el.value !== null && el.value !== '' ? el.value : defaultValue;
-            }
-            return defaultValue;
-        };
-        
-        const getIntValue = (id, defaultValue) => {
-            const val = getInputValue(id, defaultValue);
-            const num = parseInt(val);
-            return isNaN(num) ? defaultValue : num;
-        };
-        
-        const getCheckboxValue = (id, defaultValue) => {
-            const el = document.getElementById(id);
-            if (el && el.type === 'checkbox') return el.checked;
-            return defaultValue;
-        };
-
-        // ============================================
-        // CARGA PRINCIPAL - Cada función protegida
-        // ============================================
         async function loadAll() { 
-            console.log('🚀 Iniciando carga de datos...');
-            try { await loadBcvRate(); console.log('✅ BCV cargado'); } catch(e) { console.error('❌ Error BCV:', e); }
-            try { await loadLogo(); console.log('✅ Logo cargado'); } catch(e) { console.error('❌ Error Logo:', e); }
-            try { await loadPickupMaps(); console.log('✅ Pickup cargado'); } catch(e) { console.error('❌ Error Pickup:', e); }
-            try { await loadWhatsapp(); console.log('✅ WhatsApp cargado'); } catch(e) { console.error('❌ Error WhatsApp:', e); }
-            try { await loadBanners(); console.log('✅ Banners cargados'); } catch(e) { console.error('❌ Error Banners:', e); }
-            try { await loadSiteConfig(); console.log('✅ Config cargada'); } catch(e) { console.error('❌ Error Config:', e); }
-            try { await loadHero(); console.log('✅ Hero cargado'); } catch(e) { console.error('❌ Error Hero:', e); }
-            try { await loadDrawerMenu(); console.log('✅ Drawer cargado'); } catch(e) { console.error('❌ Error Drawer:', e); }
-            try { await loadVehicles(); console.log('✅ Vehículos cargados'); } catch(e) { console.error('❌ Error Vehicles:', e); }
-            try { await loadBrands(); console.log('✅ Marcas cargadas'); } catch(e) { console.error('❌ Error Brands:', e); }
-            try { await loadProducts(); console.log('✅ Productos cargados'); } catch(e) { console.error('❌ Error Products:', e); }
-            try { await loadOrders(); console.log('✅ Pedidos cargados'); } catch(e) { console.error('❌ Error Orders:', e); }
-            try { await loadReviews(); console.log('✅ Reseñas cargadas'); } catch(e) { console.error('❌ Error Reviews:', e); }
-            try { await loadCoupons(); console.log('✅ Cupones cargados'); } catch(e) { console.error('❌ Error Coupons:', e); }
-            try { await loadDeliveryZones(); console.log('✅ Zonas cargadas'); } catch(e) { console.error('❌ Error Zones:', e); }
-            try { await loadDrivers(); console.log('✅ Domiciliarios cargados'); } catch(e) { console.error('❌ Error Drivers:', e); }
-            try { await loadCustomers(); console.log('✅ Clientes cargados'); } catch(e) { console.error('❌ Error Customers:', e); }
-            try { await loadAppearance(); console.log('✅ Apariencia cargada'); } catch(e) { console.error('❌ Error Appearance:', e); }
-            try { await loadDashboard(); console.log('✅ Dashboard cargado'); } catch(e) { console.error('❌ Error Dashboard:', e); }
-            console.log(' Carga completa exitosa');
+            console.log('Cargando todos los datos...');
+            await loadBcvRate(); 
+            await loadLogo(); 
+            await loadPickupMaps(); 
+            await loadWhatsapp(); 
+            await loadBanners(); 
+            await loadSiteConfig(); 
+            await loadHero(); 
+            await loadDrawerMenu(); 
+            await loadVehicles(); 
+            await loadBrands(); 
+            await loadProducts(); 
+            await loadOrders(); 
+            await loadReviews(); 
+            await loadCoupons(); 
+            await loadDeliveryZones(); 
+            await loadDrivers(); 
+            await loadCustomers();
+            await loadAppearance();
+            await loadDashboard();
+            console.log('Todos los datos cargados');
         }
 
-        // ============================================
         // APARIENCIA
-        // ============================================
         async function loadAppearance() {
             try {
                 const appDoc = await db.collection('settings').doc('appearance').get();
                 if (appDoc.exists) {
-                    const data = appDoc.data();
-                    for (const key in appearanceConfig) {
-                        if (data[key] !== undefined) appearanceConfig[key] = data[key];
-                    }
+                    appearanceConfig = { ...appearanceConfig, ...appDoc.data() };
                 }
-                
-                // Usar setInputValue para inputs de color, number, select
-                setInputValue('appPrimaryColor', appearanceConfig.primaryColor);
-                setInputValue('appAccentColor', appearanceConfig.accentColor);
-                setInputValue('appBgColor', appearanceConfig.bgColor);
-                setInputValue('appCardColor', appearanceConfig.cardColor);
-                setInputValue('appFontFamily', appearanceConfig.fontFamily);
-                setInputValue('appFontSize', appearanceConfig.fontSize);
-                setInputValue('appTextColor', appearanceConfig.textColor);
-                setInputValue('appHeaderBgColor', appearanceConfig.headerBgColor);
-                setInputValue('appHeaderTextColor', appearanceConfig.headerTextColor);
-                setInputValue('appBtnPrimaryBg', appearanceConfig.btnPrimaryBg);
-                setInputValue('appBtnTextColor', appearanceConfig.btnTextColor);
-                setInputValue('appBtnRadius', appearanceConfig.btnRadius);
-                setInputValue('appBtnFontSize', appearanceConfig.btnFontSize);
-                setInputValue('appFooterBgColor', appearanceConfig.footerBgColor);
-                setInputValue('appFooterTextColor', appearanceConfig.footerTextColor);
-                setInputValue('appFooterTitleColor', appearanceConfig.footerTitleColor);
-            } catch (error) { 
-                console.error('Error cargando apariencia:', error); 
-            }
+                // Cargar valores en los inputs
+                document.getElementById('appPrimaryColor').value = appearanceConfig.primaryColor;
+                document.getElementById('appAccentColor').value = appearanceConfig.accentColor;
+                document.getElementById('appBgColor').value = appearanceConfig.bgColor;
+                document.getElementById('appCardColor').value = appearanceConfig.cardColor;
+                document.getElementById('appFontFamily').value = appearanceConfig.fontFamily;
+                document.getElementById('appFontSize').value = appearanceConfig.fontSize;
+                document.getElementById('appTextColor').value = appearanceConfig.textColor;
+                document.getElementById('appTextSecondaryColor').value = appearanceConfig.textSecondaryColor;
+                document.getElementById('appLinkColor').value = appearanceConfig.linkColor;
+                document.getElementById('appHeaderBgColor').value = appearanceConfig.headerBgColor;
+                document.getElementById('appHeaderTextColor').value = appearanceConfig.headerTextColor;
+                document.getElementById('appHeaderHeight').value = appearanceConfig.headerHeight;
+                document.getElementById('appBtnPrimaryBg').value = appearanceConfig.btnPrimaryBg;
+                document.getElementById('appBtnTextColor').value = appearanceConfig.btnTextColor;
+                document.getElementById('appBtnRadius').value = appearanceConfig.btnRadius;
+                document.getElementById('appBtnFontSize').value = appearanceConfig.btnFontSize;
+                document.getElementById('appCardRadius').value = appearanceConfig.cardRadius;
+                document.getElementById('appCardShadow').value = appearanceConfig.cardShadow;
+                document.getElementById('appFooterBgColor').value = appearanceConfig.footerBgColor;
+                document.getElementById('appFooterTextColor').value = appearanceConfig.footerTextColor;
+                document.getElementById('appFooterTitleColor').value = appearanceConfig.footerTitleColor;
+                updateAppearancePreview();
+            } catch (error) { console.log('Error loading appearance:', error); }
         }
+
+        function updateAppearancePreview() {
+            const preview = document.getElementById('appearancePreview');
+            const header = document.getElementById('previewHeader');
+            const text = document.getElementById('previewText');
+            const textSec = document.getElementById('previewTextSecondary');
+            const btn = document.getElementById('previewBtn');
+            const footer = document.getElementById('previewFooter');
+            
+            preview.style.background = appearanceConfig.cardColor;
+            preview.style.fontFamily = appearanceConfig.fontFamily;
+            preview.style.fontSize = appearanceConfig.fontSize + 'px';
+            
+            header.style.background = appearanceConfig.headerBgColor;
+            header.style.color = appearanceConfig.headerTextColor;
+            header.style.height = appearanceConfig.headerHeight + 'px';
+            header.style.display = 'flex';
+            header.style.alignItems = 'center';
+            header.style.padding = '0 1rem';
+            
+            text.style.color = appearanceConfig.textColor;
+            textSec.style.color = appearanceConfig.textSecondaryColor;
+            
+            btn.style.background = appearanceConfig.btnPrimaryBg;
+            btn.style.color = appearanceConfig.btnTextColor;
+            btn.style.borderRadius = appearanceConfig.btnRadius + 'px';
+            btn.style.fontSize = appearanceConfig.btnFontSize + 'px';
+            btn.style.padding = '0.5rem 1rem';
+            
+            footer.style.background = appearanceConfig.footerBgColor;
+            footer.style.color = appearanceConfig.footerTextColor;
+            footer.style.padding = '1rem';
+            footer.style.borderRadius = '8px';
+        }
+
+        // Listeners para actualizar preview en tiempo real
+        ['appPrimaryColor', 'appAccentColor', 'appBgColor', 'appCardColor', 'appFontFamily', 'appFontSize', 'appTextColor', 'appTextSecondaryColor', 'appLinkColor', 'appHeaderBgColor', 'appHeaderTextColor', 'appHeaderHeight', 'appBtnPrimaryBg', 'appBtnTextColor', 'appBtnRadius', 'appBtnFontSize', 'appCardRadius', 'appCardShadow', 'appFooterBgColor', 'appFooterTextColor', 'appFooterTitleColor'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) {
+                el.addEventListener('input', function() {
+                    const key = id.replace('app', '').replace(/([A-Z])/g, (m) => m.toLowerCase()).replace(/^./, c => c.toLowerCase());
+                    const configKey = {
+                        'primaryColor': 'primaryColor', 'accentColor': 'accentColor', 'bgColor': 'bgColor', 'cardColor': 'cardColor',
+                        'fontFamily': 'fontFamily', 'fontSize': 'fontSize', 'textColor': 'textColor', 'textSecondaryColor': 'textSecondaryColor',
+                        'linkColor': 'linkColor', 'headerBgColor': 'headerBgColor', 'headerTextColor': 'headerTextColor', 'headerHeight': 'headerHeight',
+                        'btnPrimaryBg': 'btnPrimaryBg', 'btnTextColor': 'btnTextColor', 'btnRadius': 'btnRadius', 'btnFontSize': 'btnFontSize',
+                        'cardRadius': 'cardRadius', 'cardShadow': 'cardShadow', 'footerBgColor': 'footerBgColor', 'footerTextColor': 'footerTextColor',
+                        'footerTitleColor': 'footerTitleColor'
+                    }[key];
+                    if (configKey) {
+                        appearanceConfig[configKey] = el.type === 'number' ? parseInt(el.value) : el.value;
+                        updateAppearancePreview();
+                    }
+                });
+            }
+        });
 
         window.saveAppearance = async function() {
             try {
-                appearanceConfig = {
-                    primaryColor: getInputValue('appPrimaryColor', '#dc3545'),
-                    accentColor: getInputValue('appAccentColor', '#FFC107'),
-                    bgColor: getInputValue('appBgColor', '#f5f5f5'),
-                    cardColor: getInputValue('appCardColor', '#ffffff'),
-                    fontFamily: getInputValue('appFontFamily', "'Segoe UI', Tahoma, sans-serif"),
-                    fontSize: getIntValue('appFontSize', 16),
-                    textColor: getInputValue('appTextColor', '#333333'),
-                    textSecondaryColor: '#666666',
-                    linkColor: '#dc3545',
-                    headerBgColor: getInputValue('appHeaderBgColor', '#dc3545'),
-                    headerTextColor: getInputValue('appHeaderTextColor', '#ffffff'),
-                    headerHeight: getIntValue('appHeaderHeight', 60),
-                    btnPrimaryBg: getInputValue('appBtnPrimaryBg', '#dc3545'),
-                    btnTextColor: getInputValue('appBtnTextColor', '#ffffff'),
-                    btnRadius: getIntValue('appBtnRadius', 20),
-                    btnFontSize: getIntValue('appBtnFontSize', 14),
-                    cardRadius: 16,
-                    cardShadow: '0 2px 8px rgba(0,0,0,0.08)',
-                    footerBgColor: getInputValue('appFooterBgColor', '#1a1a1a'),
-                    footerTextColor: getInputValue('appFooterTextColor', '#cccccc'),
-                    footerTitleColor: getInputValue('appFooterTitleColor', '#FFC107')
-                };
                 await db.collection('settings').doc('appearance').set(appearanceConfig);
-                alert('✅ Apariencia guardada');
+                alert('✅ Configuración de apariencia guardada');
                 refreshPreview();
             } catch (error) { alert('Error: ' + error.message); }
         };
 
-        // ============================================
-        // BCV
-        // ============================================
-        window.toggleBcvMode = function() {
-            const mode = getInputValue('bcvMode', 'manual');
-            const manualSection = document.getElementById('bcvManualSection');
-            const apiSection = document.getElementById('bcvApiSection');
-            if (manualSection) manualSection.style.display = mode === 'manual' ? 'block' : 'none';
-            if (apiSection) apiSection.style.display = mode === 'api' ? 'block' : 'none';
-        };
-
-        window.saveBcvApi = async function() {
-            const apiUrl = getInputValue('bcvApiUrl', '');
-            const frequency = getIntValue('bcvApiFrequency', 3600000);
-            if (!apiUrl) { alert('Ingresa la URL de la API'); return; }
-            try {
-                await db.collection('settings').doc('bcvConfig').set({ mode: 'api', apiUrl, frequency, updatedAt: new Date().toISOString() });
-                alert('✅ Configuración API guardada');
-            } catch (error) { alert('Error: ' + error.message); }
-        };
-
-        window.testBcvApi = async function() {
-            const apiUrl = getInputValue('bcvApiUrl', '');
-            if (!apiUrl) { alert('Ingresa la URL primero'); return; }
-            try {
-                const response = await fetch(apiUrl);
-                const data = await response.json();
-                const price = data.price || data.rate || data.value;
-                if (price) alert(`✅ API funcionando! Precio: ${price} Bs/$`);
-                else alert('️ API respondió pero no tiene campo "price" o "rate"');
-            } catch (error) { alert('❌ Error: ' + error.message); }
-        };
-
-        async function loadBcvRate() { 
-            try { 
-                const rateDoc = await db.collection('settings').doc('bcvRate').get(); 
-                if (rateDoc.exists) {
-                    bcvRate = rateDoc.data().value;
-                    // CORRECCIÓN: currentBcvDisplay es un SPAN, usar setTextContent
-                    setTextContent('currentBcvDisplay', `${bcvRate} Bs/$`);
-                }
-                const configDoc = await db.collection('settings').doc('bcvConfig').get();
-                if (configDoc.exists) {
-                    const config = configDoc.data();
-                    setInputValue('bcvMode', config.mode || 'manual');
-                    setInputValue('bcvApiUrl', config.apiUrl || '');
-                    setInputValue('bcvApiFrequency', config.frequency || '3600000');
-                    toggleBcvMode();
-                }
-            } catch (error) { console.error('Error tasa:', error); } 
-        }
-        
-        window.updateBcvRate = async function() { 
-            const newRate = parseFloat(getInputValue('bcvRateInput', '')); 
-            if (!newRate || newRate <= 0) { alert('Tasa inválida'); return; } 
-            try { 
-                await db.collection('settings').doc('bcvRate').set({ value: newRate }); 
-                bcvRate = newRate; 
-                setTextContent('currentBcvDisplay', `${bcvRate} Bs/$`);
-                setInputValue('bcvRateInput', ''); 
-                alert('✅ Tasa actualizada'); 
-            } catch (error) { alert('Error: ' + error.message); } 
-        };
-
-        // ============================================
-        // PICKUP MAPS
-        // ============================================
-        async function loadPickupMaps() { 
-            try { 
-                const doc = await db.collection('settings').doc('pickupMaps').get(); 
-                if (doc.exists) setInputValue('pickupMapsInput', doc.data().url || ''); 
-            } catch (e) {} 
-        }
-        window.updatePickupMaps = async function() { 
-            const url = getInputValue('pickupMapsInput', '').trim(); 
-            if (!url) { alert('Ingresa link'); return; } 
-            try { await db.collection('settings').doc('pickupMaps').set({ url }); alert('✅ Guardado'); } catch (e) { alert('Error: ' + e.message); } 
-        };
-
-        // ============================================
-        // WHATSAPP
-        // ============================================
-        async function loadWhatsapp() { 
-            try { 
-                const doc = await db.collection('settings').doc('whatsapp').get(); 
-                if (doc.exists && doc.data().number) { 
-                    whatsappNumber = doc.data().number; 
-                    setInputValue('whatsappNumber', whatsappNumber); 
-                } 
-            } catch (e) {} 
-        }
-        window.saveWhatsapp = async function() { 
-            const num = getInputValue('whatsappNumber', '').trim(); 
-            if (!num) { alert('Ingresa número'); return; } 
-            try { await db.collection('settings').doc('whatsapp').set({ number: num }); whatsappNumber = num; alert('✅ Guardado'); } catch (e) { alert('Error: ' + e.message); } 
-        };
-
-        // ============================================
-        // LOGO
-        // ============================================
-        async function loadLogo() { 
-            try { 
-                const doc = await db.collection('settings').doc('logo').get(); 
-                if (doc.exists) { 
-                    const p = document.getElementById('adminLogoPreview'); 
-                    if (p) p.innerHTML = `<img src="${doc.data().image}">`; 
-                } 
-            } catch (e) {} 
-        }
-
-        // ============================================
-        // BANNERS
-        // ============================================
-        async function loadBanners() { 
-            try { 
-                const doc = await db.collection('settings').doc('banners').get(); 
-                if (doc.exists) banners = doc.data().images || []; 
-                renderBannerPreviews(); 
-            } catch (e) {} 
-        }
-        function renderBannerPreviews() { 
-            const g = document.getElementById('bannerPreviewGrid'); 
-            if (!g) return; 
-            g.innerHTML = banners.length === 0 ? '<p style="color:#666;text-align:center;">Sin banners</p>' : banners.map((b, i) => `<div style="position:relative;"><img src="${b}" style="width:100%;height:120px;object-fit:cover;border-radius:8px;"><button onclick="removeBanner(${i})" style="position:absolute;top:5px;right:5px;background:#dc3545;color:white;border:none;width:28px;height:28px;border-radius:50%;cursor:pointer;">×</button></div>`).join(''); 
-        }
-        window.addBanner = async function() { 
-            const f = document.getElementById('bannerImageInput').files[0]; 
-            if (!f) { alert('Selecciona imagen'); return; } 
-            if (banners.length >= 5) { alert('Máximo 5'); return; } 
-            if (f.size > 1024*1024) { alert('Máximo 1MB'); return; } 
-            const r = new FileReader(); 
-            r.onload = async (e) => { 
-                banners.push(e.target.result); 
-                try { await db.collection('settings').doc('banners').set({ images: banners }); renderBannerPreviews(); document.getElementById('bannerImageInput').value = ''; alert('✅ Agregado'); } catch (err) { alert('Error: ' + err.message); } 
-            }; 
-            r.readAsDataURL(f); 
-        };
-        window.removeBanner = async function(i) { 
-            if (!confirm('¿Eliminar?')) return; 
-            banners.splice(i, 1); 
-            try { await db.collection('settings').doc('banners').set({ images: banners }); renderBannerPreviews(); alert('✅ Eliminado'); } catch (e) { alert('Error: ' + e.message); } 
-        };
-
-        // ============================================
-        // SITE CONFIG
-        // ============================================
-        async function loadSiteConfig() { 
-            try { 
-                const doc = await db.collection('settings').doc('siteConfig').get(); 
-                if (doc.exists) siteConfig = { ...siteConfig, ...doc.data() }; 
-                setInputValue('cfgCompanyName', siteConfig.companyName);
-                setInputValue('cfgSlogan', siteConfig.slogan);
-                setInputValue('cfgDescription', siteConfig.description);
-                setInputValue('cfgAddress', siteConfig.address);
-                setInputValue('cfgPhone', siteConfig.phone);
-                setInputValue('cfgSchedule', siteConfig.schedule);
-                setInputValue('cfgFacebook', siteConfig.facebook || '');
-                setInputValue('cfgInstagram', siteConfig.instagram || '');
-                setInputValue('cfgTiktok', siteConfig.tiktok || '');
-            } catch (e) {} 
-        }
-        window.saveSiteConfig = async function() { 
-            const c = { 
-                companyName: getInputValue('cfgCompanyName', ''), 
-                slogan: getInputValue('cfgSlogan', ''), 
-                description: getInputValue('cfgDescription', ''), 
-                address: getInputValue('cfgAddress', ''), 
-                phone: getInputValue('cfgPhone', ''), 
-                schedule: getInputValue('cfgSchedule', ''), 
-                facebook: getInputValue('cfgFacebook', ''), 
-                instagram: getInputValue('cfgInstagram', ''), 
-                tiktok: getInputValue('cfgTiktok', '') 
-            }; 
-            try { await db.collection('settings').doc('siteConfig').set(c); siteConfig = { ...siteConfig, ...c }; alert('✅ Guardado'); } catch (e) { alert('Error: ' + e.message); } 
-        };
-
-        // ============================================
         // HERO
-        // ============================================
         async function loadHero() {
             try {
-                const doc = await db.collection('settings').doc('hero').get();
-                if (doc.exists) {
-                    heroConfig = doc.data();
-                    setCheckbox('heroVisible', heroConfig.visible || false);
-                    setInputValue('heroTitle', heroConfig.title || '');
-                    setInputValue('heroSubtitle', heroConfig.subtitle || '');
-                    setInputValue('heroTitleColor', heroConfig.titleColor || '#ffffff');
-                    setInputValue('heroTitleSize', heroConfig.titleSize || 48);
-                    setInputValue('heroTitleFont', heroConfig.titleFont || "'Segoe UI', sans-serif");
-                    setInputValue('heroSubtitleColor', heroConfig.subtitleColor || '#dddddd');
-                    setInputValue('heroSubtitleSize', heroConfig.subtitleSize || 20);
-                    setInputValue('heroCtaText', heroConfig.ctaText || '');
-                    setInputValue('heroCtaLink', heroConfig.ctaLink || '');
+                const heroDoc = await db.collection('settings').doc('hero').get();
+                if (heroDoc.exists) {
+                    heroConfig = heroDoc.data();
+                    document.getElementById('heroVisible').checked = heroConfig.visible || false;
+                    document.getElementById('heroTitle').value = heroConfig.title || '';
+                    document.getElementById('heroSubtitle').value = heroConfig.subtitle || '';
+                    document.getElementById('heroTitleColor').value = heroConfig.titleColor || '#ffffff';
+                    document.getElementById('heroTitleSize').value = heroConfig.titleSize || 48;
+                    document.getElementById('heroTitleFont').value = heroConfig.titleFont || "'Segoe UI', sans-serif";
+                    document.getElementById('heroSubtitleColor').value = heroConfig.subtitleColor || '#dddddd';
+                    document.getElementById('heroSubtitleSize').value = heroConfig.subtitleSize || 20;
+                    document.getElementById('heroCtaText').value = heroConfig.ctaText || '';
+                    document.getElementById('heroCtaLink').value = heroConfig.ctaLink || '';
                     if (heroConfig.backgroundImage) {
-                        const preview = document.getElementById('heroBgPreview');
-                        if (preview) preview.innerHTML = `<img src="${heroConfig.backgroundImage}">`;
+                        document.getElementById('heroBgPreview').innerHTML = `<img src="${heroConfig.backgroundImage}">`;
                     }
                 }
-            } catch (error) { console.error('Error loading hero:', error); }
+            } catch (error) { console.log('Error loading hero:', error); }
         }
 
         document.getElementById('heroBgImage').addEventListener('change', function(e) {
@@ -1069,8 +957,7 @@
             const reader = new FileReader();
             reader.onload = function(ev) {
                 heroConfig.backgroundImage = ev.target.result;
-                const preview = document.getElementById('heroBgPreview');
-                if (preview) preview.innerHTML = `<img src="${ev.target.result}">`;
+                document.getElementById('heroBgPreview').innerHTML = `<img src="${ev.target.result}">`;
             };
             reader.readAsDataURL(file);
         });
@@ -1078,16 +965,16 @@
         window.saveHero = async function() {
             try {
                 const heroData = {
-                    visible: getCheckboxValue('heroVisible', false),
-                    title: getInputValue('heroTitle', ''),
-                    subtitle: getInputValue('heroSubtitle', ''),
-                    titleColor: getInputValue('heroTitleColor', '#ffffff'),
-                    titleSize: getIntValue('heroTitleSize', 48),
-                    titleFont: getInputValue('heroTitleFont', "'Segoe UI', sans-serif"),
-                    subtitleColor: getInputValue('heroSubtitleColor', '#dddddd'),
-                    subtitleSize: getIntValue('heroSubtitleSize', 20),
-                    ctaText: getInputValue('heroCtaText', ''),
-                    ctaLink: getInputValue('heroCtaLink', ''),
+                    visible: document.getElementById('heroVisible').checked,
+                    title: document.getElementById('heroTitle').value,
+                    subtitle: document.getElementById('heroSubtitle').value,
+                    titleColor: document.getElementById('heroTitleColor').value,
+                    titleSize: parseInt(document.getElementById('heroTitleSize').value),
+                    titleFont: document.getElementById('heroTitleFont').value,
+                    subtitleColor: document.getElementById('heroSubtitleColor').value,
+                    subtitleSize: parseInt(document.getElementById('heroSubtitleSize').value),
+                    ctaText: document.getElementById('heroCtaText').value,
+                    ctaLink: document.getElementById('heroCtaLink').value,
                     backgroundImage: heroConfig.backgroundImage || null,
                     updatedAt: new Date().toISOString()
                 };
@@ -1097,14 +984,12 @@
             } catch (error) { alert('Error: ' + error.message); }
         };
 
-        // ============================================
         // DRAWER MENU
-        // ============================================
         async function loadDrawerMenu() {
             try {
-                const doc = await db.collection('settings').doc('drawerMenu').get();
-                if (doc.exists) {
-                    drawerMenu = doc.data().categories || [];
+                const drawerDoc = await db.collection('settings').doc('drawerMenu').get();
+                if (drawerDoc.exists) {
+                    drawerMenu = drawerDoc.data().categories || [];
                 } else {
                     drawerMenu = [
                         { name: "Amortiguadores y Suspensión", brands: [
@@ -1123,7 +1008,6 @@
 
         window.renderDrawerEditor = function() {
             const container = document.getElementById('drawerEditor');
-            if (!container) return;
             if (drawerMenu.length === 0) {
                 container.innerHTML = '<p style="text-align:center;color:#666;padding:2rem;">No hay categorías</p>';
                 return;
@@ -1195,11 +1079,11 @@
 
         window.addBrand = async function(catIdx) {
             const input = document.getElementById(`newBrand-${catIdx}`);
-            const name = input ? input.value.trim() : '';
+            const name = input.value.trim();
             if (!name) { alert('Ingresa nombre'); return; }
             if (!drawerMenu[catIdx].brands) drawerMenu[catIdx].brands = [];
             drawerMenu[catIdx].brands.push({ name, models: [] });
-            if (input) input.value = '';
+            input.value = '';
             await saveDrawerMenu();
         };
 
@@ -1219,11 +1103,11 @@
 
         window.addModel = async function(catIdx, brandIdx) {
             const input = document.getElementById(`newModel-${catIdx}-${brandIdx}`);
-            const name = input ? input.value.trim() : '';
+            const name = input.value.trim();
             if (!name) { alert('Ingresa nombre'); return; }
             if (!drawerMenu[catIdx].brands[brandIdx].models) drawerMenu[catIdx].brands[brandIdx].models = [];
             drawerMenu[catIdx].brands[brandIdx].models.push(name);
-            if (input) input.value = '';
+            input.value = '';
             await saveDrawerMenu();
         };
 
@@ -1242,27 +1126,22 @@
         }
 
         window.addCategory = async function() {
-            const name = getInputValue('newCategoryName', '').trim();
+            const name = document.getElementById('newCategoryName').value.trim();
             if (!name) { alert('Ingresa nombre'); return; }
             drawerMenu.push({ name, brands: [] });
-            setInputValue('newCategoryName', '');
+            document.getElementById('newCategoryName').value = '';
             await saveDrawerMenu();
         };
 
-        // ============================================
         // CATEGORÍAS Y SUBCATEGORÍAS
-        // ============================================
         window.renderCategoriesEditor = function() {
             const select = document.getElementById('newSubcatCategory');
-            if (select) {
-                select.innerHTML = '<option value="">Seleccionar categoría...</option>';
-                drawerMenu.forEach((cat, idx) => {
-                    select.innerHTML += `<option value="${idx}">${cat.name}</option>`;
-                });
-            }
+            select.innerHTML = '<option value="">Seleccionar categoría...</option>';
+            drawerMenu.forEach((cat, idx) => {
+                select.innerHTML += `<option value="${idx}">${cat.name}</option>`;
+            });
             
             const container = document.getElementById('categoriesEditor');
-            if (!container) return;
             if (drawerMenu.length === 0) {
                 container.innerHTML = '<p style="text-align:center;color:#666;padding:2rem;">No hay categorías. Agrega categorías primero en "Menú Drawer".</p>';
                 return;
@@ -1294,17 +1173,16 @@
         };
 
         window.addSubcategory = async function() {
-            const catIdx = getInputValue('newSubcatCategory', '');
-            const name = getInputValue('newSubcatName', '').trim();
+            const catIdx = document.getElementById('newSubcatCategory').value;
+            const name = document.getElementById('newSubcatName').value.trim();
             if (catIdx === '') { alert('Selecciona una categoría'); return; }
             if (!name) { alert('Ingresa el nombre de la subcategoría'); return; }
             
-            const idx = parseInt(catIdx);
-            if (!drawerMenu[idx].subcategories) drawerMenu[idx].subcategories = [];
-            if (drawerMenu[idx].subcategories.includes(name)) { alert('Esta subcategoría ya existe'); return; }
+            if (!drawerMenu[catIdx].subcategories) drawerMenu[catIdx].subcategories = [];
+            if (drawerMenu[catIdx].subcategories.includes(name)) { alert('Esta subcategoría ya existe'); return; }
             
-            drawerMenu[idx].subcategories.push(name);
-            setInputValue('newSubcatName', '');
+            drawerMenu[catIdx].subcategories.push(name);
+            document.getElementById('newSubcatName').value = '';
             
             try {
                 await db.collection('settings').doc('drawerMenu').set({ categories: drawerMenu, updatedAt: new Date().toISOString() });
@@ -1323,304 +1201,284 @@
             } catch (error) { alert('Error: ' + error.message); }
         };
 
-        // ============================================
-        // VEHICLES
-        // ============================================
-        async function loadVehicles() { 
-            try { 
-                const doc = await db.collection('settings').doc('vehicles').get(); 
-                if (doc.exists) vehicles = doc.data().brands || {}; 
-                else { 
-                    vehicles = { "Toyota": ["Corolla", "Hilux", "Yaris"], "Nissan": ["Versa", "Sentra", "Frontier"], "Chevrolet": ["Aveo", "Cruze", "Captiva"], "Ford": ["Fiesta", "Focus", "Ranger"], "Hyundai": ["Tucson", "Creta", "Accent"], "Kia": ["Rio", "Sportage", "Picanto"], "Mitsubishi": ["L200", "Outlander", "Montero"] }; 
-                    await db.collection('settings').doc('vehicles').set({ brands: vehicles }); 
-                } 
-                renderVehicles(); 
-            } catch (e) {} 
-        }
-        function renderVehicles() { 
-            const l = document.getElementById('vehiclesList'); 
-            if (!l) return;
-            if (Object.keys(vehicles).length === 0) { l.innerHTML = '<p style="text-align:center;color:#666;padding:1rem">Sin marcas</p>'; return; } 
-            let h = ''; 
-            for (const [b, m] of Object.entries(vehicles)) h += `<div class="admin-item" style="flex-direction:column;align-items:stretch;"><div style="display:flex;justify-content:space-between;align-items:center;width:100%;"><strong style="color:#dc3545;">${b}</strong><button class="btn btn-small btn-secondary" onclick="deleteVehicleBrand('${b}')">Eliminar</button></div><div style="margin-top:1rem;padding:1rem;background:white;border-radius:8px;width:100%;"><div style="display:flex;gap:0.5rem;margin-bottom:1rem;"><input type="text" id="newModel-${b}" placeholder="Modelo" style="flex:1;padding:0.5rem;border:1px solid #ddd;border-radius:8px;"><button class="btn btn-small btn-primary" onclick="addVehicleModel('${b}')">+ Modelo</button></div><div style="display:flex;flex-wrap:wrap;gap:0.5rem;">${m.map(x => `<span class="vehicle-tag">${x}<button onclick="deleteVehicleModel('${b}','${x}')">×</button></span>`).join('')}</div></div></div>`; 
-            l.innerHTML = h; 
-        }
-        window.addVehicleBrand = async function() { 
-            const b = getInputValue('newVehicleBrand', '').trim(); 
-            if (!b) { alert('Ingresa nombre'); return; } 
-            if (vehicles[b]) { alert('Ya existe'); return; } 
-            vehicles[b] = []; 
-            try { await db.collection('settings').doc('vehicles').set({ brands: vehicles }); setInputValue('newVehicleBrand', ''); renderVehicles(); alert('✅ Agregado'); } catch (e) { alert('Error: ' + e.message); } 
-        };
-        window.deleteVehicleBrand = async function(b) { 
-            if (!confirm('¿Eliminar?')) return; 
-            delete vehicles[b]; 
-            try { await db.collection('settings').doc('vehicles').set({ brands: vehicles }); renderVehicles(); alert('✅ Eliminado'); } catch (e) { alert('Error: ' + e.message); } 
-        };
-        window.addVehicleModel = async function(b) { 
-            const i = document.getElementById(`newModel-${b}`); 
-            const m = i ? i.value.trim() : ''; 
-            if (!m) { alert('Ingresa nombre'); return; } 
-            if (vehicles[b].includes(m)) { alert('Ya existe'); return; } 
-            vehicles[b].push(m); 
-            try { await db.collection('settings').doc('vehicles').set({ brands: vehicles }); if (i) i.value = ''; renderVehicles(); alert('✅ Agregado'); } catch (e) { alert('Error: ' + e.message); } 
-        };
-        window.deleteVehicleModel = async function(b, m) { 
-            if (!confirm('¿Eliminar?')) return; 
-            vehicles[b] = vehicles[b].filter(x => x !== m); 
-            try { await db.collection('settings').doc('vehicles').set({ brands: vehicles }); renderVehicles(); alert('✅ Eliminado'); } catch (e) { alert('Error: ' + e.message); } 
-        };
+        // BCV
+        async function loadBcvRate() { try { const rateDoc = await db.collection('settings').doc('bcvRate').get(); if (rateDoc.exists) bcvRate = rateDoc.data().value; } catch (error) { console.log('Error tasa:', error); } }
 
-        // ============================================
-        // BRANDS
-        // ============================================
-        async function loadBrands() { 
-            try { 
-                const s = await db.collection('brands').get(); 
-                if (s.empty) { brands = defaultBrands; for (const b of defaultBrands) await db.collection('brands').doc(b.id).set(b); } 
-                else { brands = []; s.forEach(d => brands.push({ id: d.id, ...d.data() })); } 
-                renderAdminBrands(); 
-            } catch (e) {} 
-        }
-        function renderAdminBrands() { 
-            const l = document.getElementById('adminBrandsList'); 
-            if (!l) return;
-            l.innerHTML = brands.map(b => { 
-                const t = b.image ? `<img src="${b.image}">` : ''; 
-                return `<div class="admin-item"><div class="admin-info"><div class="admin-thumb">${t}</div><div><strong>${b.name}</strong><br><small style="color:#666">${b.image ? 'Con imagen' : 'Sin imagen'}</small></div></div><div class="admin-actions"><button class="btn btn-small btn-primary" onclick="editBrandImage('${b.id}')">${b.image ? 'Cambiar' : 'Agregar'}</button></div></div>`; 
-            }).join(''); 
-        }
-        window.editBrandImage = function(id) { 
-            const b = brands.find(x => x.id === id); 
-            setTextContent('brandModalTitle', `Imagen: ${b.name}`);
-            setInputValue('editBrandId', id);
-            setInputValue('currentBrandImageData', b.image || '');
-            const preview = document.getElementById('brandImagePreview');
-            if (preview) preview.innerHTML = b.image ? `<img src="${b.image}">` : '<div style="color:#999;">Sin imagen</div>';
-            setInputValue('brandImageInput', '');
-            document.getElementById('brandModal').classList.add('active'); 
-        };
-        window.previewBrandImage = function(e) { 
-            const f = e.target.files[0]; 
-            if (!f) return; 
-            if (f.size > 1024*1024) { alert('Máximo 1MB'); e.target.value = ''; return; } 
-            const r = new FileReader(); 
-            r.onload = (ev) => { 
-                setInputValue('currentBrandImageData', ev.target.result);
-                const preview = document.getElementById('brandImagePreview');
-                if (preview) preview.innerHTML = `<img src="${ev.target.result}">`;
-            }; 
-            r.readAsDataURL(f); 
-        };
-        window.saveBrandImage = async function(e) { 
-            e.preventDefault(); 
-            const id = getInputValue('editBrandId', ''); 
-            const img = getInputValue('currentBrandImageData', ''); 
-            try { await db.collection('brands').doc(id).update({ image: img || null }); await loadBrands(); closeModal('brandModal'); alert('✅ Guardado'); } catch (err) { alert('Error: ' + err.message); } 
-        };
+        // Pickup Maps
+        async function loadPickupMaps() { try { const pickupDoc = await db.collection('settings').doc('pickupMaps').get(); if (pickupDoc.exists) document.getElementById('pickupMapsInput').value = pickupDoc.data().url || ''; } catch (error) { console.log('Error pickup:', error); } }
+        window.updatePickupMaps = async function() { const url = document.getElementById('pickupMapsInput').value.trim(); if (!url) { alert('Ingresa link'); return; } try { await db.collection('settings').doc('pickupMaps').set({ url: url }); alert('✅ Guardado'); } catch (error) { alert('Error: ' + error.message); } };
 
-        // ============================================
-        // PRODUCTS
-        // ============================================
+        // WhatsApp
+        async function loadWhatsapp() { try { const waDoc = await db.collection('settings').doc('whatsapp').get(); if (waDoc.exists && waDoc.data().number) { whatsappNumber = waDoc.data().number; document.getElementById('whatsappNumber').value = whatsappNumber; } } catch (error) { console.log('Error whatsapp:', error); } }
+        window.saveWhatsapp = async function() { const num = document.getElementById('whatsappNumber').value.trim(); if (!num) { alert('Ingresa número'); return; } try { await db.collection('settings').doc('whatsapp').set({ number: num }); whatsappNumber = num; alert('✅ Guardado'); } catch (error) { alert('Error: ' + error.message); } };
+
+        // Logo
+        async function loadLogo() { try { const logoDoc = await db.collection('settings').doc('logo').get(); if (logoDoc.exists) { const preview = document.getElementById('adminLogoPreview'); if (preview) preview.innerHTML = `<img src="${logoDoc.data().image}">`; } } catch (error) { console.log('Logo:', error); } }
+
+        // Banners
+        async function loadBanners() { try { const bannersDoc = await db.collection('settings').doc('banners').get(); if (bannersDoc.exists) banners = bannersDoc.data().images || []; renderBannerPreviews(); } catch (error) { console.log('Banners:', error); } }
+        function renderBannerPreviews() { const grid = document.getElementById('bannerPreviewGrid'); if (!grid) return; const html = banners.length === 0 ? '<p style="color:#666;text-align:center;">Sin banners</p>' : banners.map((banner, i) => `<div style="position:relative;"><img src="${banner}" style="width:100%;height:120px;object-fit:cover;border-radius:8px;"><button onclick="removeBanner(${i})" style="position:absolute;top:5px;right:5px;background:#dc3545;color:white;border:none;width:28px;height:28px;border-radius:50%;cursor:pointer;">×</button></div>`).join(''); grid.innerHTML = html; }
+        window.addBanner = async function() { const fileInput = document.getElementById('bannerImageInput'); const file = fileInput.files[0]; if (!file) { alert('Selecciona imagen'); return; } if (banners.length >= 5) { alert('Máximo 5'); return; } if (file.size > 1024 * 1024) { alert('Máximo 1MB'); return; } const reader = new FileReader(); reader.onload = async function(e) { banners.push(e.target.result); try { await db.collection('settings').doc('banners').set({ images: banners }); renderBannerPreviews(); fileInput.value = ''; alert('✅ Agregado'); } catch (error) { alert('Error: ' + error.message); } }; reader.readAsDataURL(file); };
+        window.removeBanner = async function(index) { if (!confirm('¿Eliminar?')) return; banners.splice(index, 1); try { await db.collection('settings').doc('banners').set({ images: banners }); renderBannerPreviews(); alert('✅ Eliminado'); } catch (error) { alert('Error: ' + error.message); } };
+
+        // Site Config
+        async function loadSiteConfig() { try { const configDoc = await db.collection('settings').doc('siteConfig').get(); if (configDoc.exists) siteConfig = { ...siteConfig, ...configDoc.data() }; document.getElementById('cfgCompanyName').value = siteConfig.companyName; document.getElementById('cfgSlogan').value = siteConfig.slogan; document.getElementById('cfgDescription').value = siteConfig.description; document.getElementById('cfgAddress').value = siteConfig.address; document.getElementById('cfgPhone').value = siteConfig.phone; document.getElementById('cfgSchedule').value = siteConfig.schedule; document.getElementById('cfgFacebook').value = siteConfig.facebook || ''; document.getElementById('cfgInstagram').value = siteConfig.instagram || ''; document.getElementById('cfgTiktok').value = siteConfig.tiktok || ''; } catch (error) { console.log('Config:', error); } }
+        window.saveSiteConfig = async function() { const config = { companyName: document.getElementById('cfgCompanyName').value, slogan: document.getElementById('cfgSlogan').value, description: document.getElementById('cfgDescription').value, address: document.getElementById('cfgAddress').value, phone: document.getElementById('cfgPhone').value, schedule: document.getElementById('cfgSchedule').value, facebook: document.getElementById('cfgFacebook').value, instagram: document.getElementById('cfgInstagram').value, tiktok: document.getElementById('cfgTiktok').value }; try { await db.collection('settings').doc('siteConfig').set(config); siteConfig = { ...siteConfig, ...config }; alert('✅ Guardado'); } catch (error) { alert('Error: ' + error.message); } };
+
+        // Vehicles
+        async function loadVehicles() { try { const vehiclesDoc = await db.collection('settings').doc('vehicles').get(); if (vehiclesDoc.exists) { vehicles = vehiclesDoc.data().brands || {}; } else { vehicles = { "Toyota": ["Corolla", "Hilux", "Yaris"], "Nissan": ["Versa", "Sentra", "Frontier"], "Chevrolet": ["Aveo", "Cruze", "Captiva"], "Ford": ["Fiesta", "Focus", "Ranger"], "Hyundai": ["Tucson", "Creta", "Accent"], "Kia": ["Rio", "Sportage", "Picanto"], "Mitsubishi": ["L200", "Outlander", "Montero"] }; await db.collection('settings').doc('vehicles').set({ brands: vehicles }); } renderVehicles(); } catch (error) { console.error('Vehículos:', error); } }
+        function renderVehicles() { const list = document.getElementById('vehiclesList'); if (Object.keys(vehicles).length === 0) { list.innerHTML = '<p style="text-align:center;color:#666;padding:1rem">Sin marcas</p>'; return; } let html = ''; for (const [brand, models] of Object.entries(vehicles)) { html += `<div class="admin-item" style="flex-direction:column; align-items:stretch;"><div style="display:flex; justify-content:space-between; align-items:center; width:100%;"><strong style="color:#dc3545;">${brand}</strong><button class="btn btn-small btn-secondary" onclick="deleteVehicleBrand('${brand}')">Eliminar</button></div><div style="margin-top:1rem; padding:1rem; background:white; border-radius:8px; width:100%;"><div style="display:flex; gap:0.5rem; margin-bottom:1rem;"><input type="text" id="newModel-${brand}" placeholder="Modelo" style="flex:1; padding:0.5rem; border:1px solid #ddd; border-radius:8px;"><button class="btn btn-small btn-primary" onclick="addVehicleModel('${brand}')">+ Modelo</button></div><div style="display:flex; flex-wrap:wrap; gap:0.5rem;">${models.map(model => `<span class="vehicle-tag">${model}<button onclick="deleteVehicleModel('${brand}', '${model}')">×</button></span>`).join('')}</div></div></div>`; } list.innerHTML = html; }
+        window.addVehicleBrand = async function() { const brand = document.getElementById('newVehicleBrand').value.trim(); if (!brand) { alert('Ingresa nombre'); return; } if (vehicles[brand]) { alert('Ya existe'); return; } vehicles[brand] = []; try { await db.collection('settings').doc('vehicles').set({ brands: vehicles }); document.getElementById('newVehicleBrand').value = ''; renderVehicles(); alert('✅ Agregado'); } catch (error) { alert('Error: ' + error.message); } };
+        window.deleteVehicleBrand = async function(brand) { if (!confirm('¿Eliminar?')) return; delete vehicles[brand]; try { await db.collection('settings').doc('vehicles').set({ brands: vehicles }); renderVehicles(); alert('✅ Eliminado'); } catch (error) { alert('Error: ' + error.message); } };
+        window.addVehicleModel = async function(brand) { const modelInput = document.getElementById(`newModel-${brand}`); const model = modelInput.value.trim(); if (!model) { alert('Ingresa nombre'); return; } if (vehicles[brand].includes(model)) { alert('Ya existe'); return; } vehicles[brand].push(model); try { await db.collection('settings').doc('vehicles').set({ brands: vehicles }); modelInput.value = ''; renderVehicles(); alert('✅ Agregado'); } catch (error) { alert('Error: ' + error.message); } };
+        window.deleteVehicleModel = async function(brand, model) { if (!confirm('¿Eliminar?')) return; vehicles[brand] = vehicles[brand].filter(m => m !== model); try { await db.collection('settings').doc('vehicles').set({ brands: vehicles }); renderVehicles(); alert('✅ Eliminado'); } catch (error) { alert('Error: ' + error.message); } };
+
+        // Brands
+        async function loadBrands() { try { const snapshot = await db.collection('brands').get(); if (snapshot.empty) { brands = defaultBrands; for (const brand of defaultBrands) await db.collection('brands').doc(brand.id).set(brand); } else { brands = []; snapshot.forEach(docSnap => brands.push({ id: docSnap.id, ...docSnap.data() })); } renderAdminBrands(); } catch (error) { console.error('Marcas:', error); } }
+        function renderAdminBrands() { const list = document.getElementById('adminBrandsList'); list.innerHTML = brands.map(brand => { const thumbHtml = brand.image ? `<img src="${brand.image}">` : ''; return `<div class="admin-item"><div class="admin-info"><div class="admin-thumb">${thumbHtml}</div><div><strong>${brand.name}</strong><br><small style="color:#666">${brand.image ? 'Con imagen' : 'Sin imagen'}</small></div></div><div class="admin-actions"><button class="btn btn-small btn-primary" onclick="editBrandImage('${brand.id}')">${brand.image ? 'Cambiar' : 'Agregar'}</button></div></div>`; }).join(''); }
+        window.editBrandImage = function(brandId) { const brand = brands.find(b => b.id === brandId); document.getElementById('brandModalTitle').textContent = `Imagen: ${brand.name}`; document.getElementById('editBrandId').value = brandId; document.getElementById('currentBrandImageData').value = brand.image || ''; if (brand.image) { document.getElementById('brandImagePreview').innerHTML = `<img src="${brand.image}">`; } else { document.getElementById('brandImagePreview').innerHTML = '<div style="color:#999;">Sin imagen</div>'; } document.getElementById('brandImageInput').value = ''; document.getElementById('brandModal').classList.add('active'); };
+        window.previewBrandImage = function(event) { const file = event.target.files[0]; if (file) { if (file.size > 1024 * 1024) { alert('Máximo 1MB'); event.target.value = ''; return; } const reader = new FileReader(); reader.onload = function(e) { document.getElementById('currentBrandImageData').value = e.target.result; document.getElementById('brandImagePreview').innerHTML = `<img src="${e.target.result}">`; }; reader.readAsDataURL(file); } };
+        window.saveBrandImage = async function(event) { event.preventDefault(); const brandId = document.getElementById('editBrandId').value; const imageData = document.getElementById('currentBrandImageData').value; try { await db.collection('brands').doc(brandId).update({ image: imageData || null }); await loadBrands(); closeModal('brandModal'); alert('✅ Guardado'); } catch (error) { alert('Error: ' + error.message); } };
+
+        // Products
         function populateCategorySelect() { 
-            const s = document.getElementById('productCategory'); 
-            if (!s) return;
-            s.innerHTML = '<option value="">Seleccionar...</option>'; 
-            drawerMenu.forEach((c, i) => s.innerHTML += `<option value="${c.name}">${c.name}</option>`); 
+            const select = document.getElementById('productCategory'); 
+            select.innerHTML = '<option value="">Seleccionar...</option>'; 
+            drawerMenu.forEach((cat, idx) => {
+                select.innerHTML += `<option value="${cat.name}">${cat.name}</option>`;
+            });
         }
-        function populateCompatBrandSelect() { 
-            const s = document.getElementById('compatBrand'); 
-            if (!s) return;
-            s.innerHTML = '<option value="">Seleccionar marca...</option>'; 
-            for (const b of Object.keys(vehicles)) s.innerHTML += `<option value="${b}">${b}</option>`; 
-        }
+        
         window.updateSubcategoryOptions = function() { 
-            const c = getInputValue('productCategory', '');
-            const s = document.getElementById('productSubcategory'); 
-            if (!s) return;
-            s.innerHTML = '<option value="">Seleccionar...</option>'; 
-            const cat = drawerMenu.find(x => x.name === c); 
-            if (cat && cat.subcategories) cat.subcategories.forEach(sub => s.innerHTML += `<option value="${sub}">${sub}</option>`); 
+            const category = document.getElementById('productCategory').value;
+            const subSelect = document.getElementById('productSubcategory'); 
+            subSelect.innerHTML = '<option value="">Seleccionar...</option>'; 
+            
+            const cat = drawerMenu.find(c => c.name === category);
+            if (cat && cat.subcategories) {
+                cat.subcategories.forEach(sub => {
+                    subSelect.innerHTML += `<option value="${sub}">${sub}</option>`;
+                });
+            }
         };
-        window.updateCompatModels = function() { 
-            const b = getInputValue('compatBrand', '');
-            const s = document.getElementById('compatModel'); 
-            if (!s) return;
-            s.innerHTML = '<option value="">Seleccionar modelo...</option>'; 
-            if (b && vehicles[b]) vehicles[b].forEach(m => s.innerHTML += `<option value="${m}">${m}</option>`); 
-        };
-        window.calculateSalePrice = function() { 
-            const c = parseFloat(getInputValue('productCostPrice', '0')) || 0; 
-            const m = parseFloat(getInputValue('productMargin', '0')) || 0; 
-            if (m >= 100) { setInputValue('productPrice', '0'); alert('Margen no puede ser 100%+'); return; } 
-            setInputValue('productPrice', (c / (1 - m / 100)).toFixed(2)); 
-        };
-        window.addSpecification = function() { 
-            const k = getInputValue('specKey', '').trim(); 
-            const v = getInputValue('specValue', '').trim(); 
-            if (!k || !v) { alert('Completa ambos'); return; } 
-            currentSpecifications.push({ key: k, value: v }); 
-            setInputValue('specKey', '');
-            setInputValue('specValue', '');
-            renderSpecifications(); 
-        };
-        function renderSpecifications() { 
-            const c = document.getElementById('specificationsContainer'); 
-            if (!c) return;
-            c.innerHTML = currentSpecifications.map((s, i) => `<span class="spec-tag"><strong>${s.key}:</strong> ${s.value}<button type="button" onclick="removeSpecification(${i})">×</button></span>`).join(''); 
-        }
-        window.removeSpecification = function(i) { currentSpecifications.splice(i, 1); renderSpecifications(); };
-        window.addCompatibility = function() { 
-            const b = getInputValue('compatBrand', '');
-            const m = getInputValue('compatModel', '');
-            const y = getInputValue('compatYears', '').trim();
-            const e = getInputValue('compatEngine', '').trim();
-            const n = getInputValue('compatNotes', '').trim();
-            if (!b || !m) { alert('Selecciona marca y modelo'); return; } 
-            currentCompatibility.push({ brand: b, model: m, years: y, engine: e, notes: n }); 
-            setInputValue('compatBrand', '');
-            setInputValue('compatModel', '');
-            setInputValue('compatYears', '');
-            setInputValue('compatEngine', '');
-            setInputValue('compatNotes', '');
-            renderCompatibility(); 
-        };
-        function renderCompatibility() { 
-            const c = document.getElementById('compatibilityContainer'); 
-            if (!c) return;
-            c.innerHTML = currentCompatibility.map((x, i) => `<div class="compat-row"><div style="display:flex;justify-content:space-between;align-items:center;"><div><strong>${x.brand} ${x.model}</strong> <small style="color:#666;">(${x.years || 'N/A'}) ${x.engine ? '- ' + x.engine : ''}</small>${x.notes ? `<br><small style="color:#0066cc;">${x.notes}</small>` : ''}</div><button type="button" class="btn btn-small btn-secondary" onclick="removeCompatibility(${i})">Eliminar</button></div></div>`).join(''); 
-        }
-        window.removeCompatibility = function(i) { currentCompatibility.splice(i, 1); renderCompatibility(); };
 
-        async function loadProducts() { 
-            try { 
-                const s = await db.collection('products').get(); 
-                products = []; 
-                s.forEach(d => products.push({ id: d.id, ...d.data() })); 
-                setTextContent('statProducts', products.length);
-                renderAdminProducts(); 
-            } catch (e) {} 
+        // Compatibilidad vehicular - usa selects de vehículos
+        function populateCompatBrandSelect() {
+            const select = document.getElementById('compatBrand');
+            select.innerHTML = '<option value="">Seleccionar marca...</option>';
+            for (const brand of Object.keys(vehicles)) {
+                select.innerHTML += `<option value="${brand}">${brand}</option>`;
+            }
         }
-        function renderAdminProducts(f = '') { 
-            const l = document.getElementById('adminProductList'); 
-            if (!l) return;
-            let fl = products; 
-            if (f) { const q = f.toLowerCase(); fl = products.filter(p => p.name.toLowerCase().includes(q) || (p.code && p.code.toLowerCase().includes(q))); } 
-            if (fl.length === 0) { l.innerHTML = '<p style="text-align:center;color:#666;padding:1rem">Sin productos</p>'; return; } 
-            l.innerHTML = fl.map(p => { 
-                const imgs = p.images || (p.image ? [p.image] : []); 
-                const t = imgs.length > 0 ? `<img src="${imgs[0]}">` : ''; 
-                const o = p.discount && p.discount > 0 ? ` | -${p.discount}%` : ''; 
-                const r = p.recommended ? ' | RECOMENDADO' : ''; 
-                return `<div class="admin-item"><div class="admin-info"><div class="admin-thumb">${t}</div><div><strong>${p.name}</strong>${r}<br><small style="color:#dc3545">Código: ${p.code || 'N/A'}</small><br><small style="color:#666">$${Number(p.price).toFixed(2)}${o} | Stock: ${p.stock}</small></div></div><div class="admin-actions"><button class="btn btn-small btn-primary" onclick="editProduct('${p.id}')">Editar</button><button class="btn btn-small btn-secondary" onclick="deleteProduct('${p.id}')">Eliminar</button></div></div>`; 
-            }).join(''); 
+
+        window.updateCompatModels = function() {
+            const brand = document.getElementById('compatBrand').value;
+            const modelSelect = document.getElementById('compatModel');
+            modelSelect.innerHTML = '<option value="">Seleccionar modelo...</option>';
+            if (brand && vehicles[brand]) {
+                vehicles[brand].forEach(model => {
+                    modelSelect.innerHTML += `<option value="${model}">${model}</option>`;
+                });
+            }
+        };
+        
+        window.calculateSalePrice = function() { 
+            const cost = parseFloat(document.getElementById('productCostPrice').value) || 0; 
+            const margin = parseFloat(document.getElementById('productMargin').value) || 0; 
+            if (margin >= 100) { document.getElementById('productPrice').value = '0'; alert('Margen no puede ser 100%+'); return; } 
+            // Fórmula correcta: ganancia real sobre el precio de venta
+            const salePrice = cost / (1 - margin / 100); 
+            document.getElementById('productPrice').value = salePrice.toFixed(2); 
+        };
+
+        window.addSpecification = function() {
+            const key = document.getElementById('specKey').value.trim();
+            const value = document.getElementById('specValue').value.trim();
+            if (!key || !value) { alert('Completa característica y especificación'); return; }
+            currentSpecifications.push({ key, value });
+            document.getElementById('specKey').value = '';
+            document.getElementById('specValue').value = '';
+            renderSpecifications();
+        };
+        
+        function renderSpecifications() {
+            const container = document.getElementById('specificationsContainer');
+            container.innerHTML = currentSpecifications.map((spec, i) => 
+                `<span class="spec-tag"><strong>${spec.key}:</strong> ${spec.value}<button type="button" onclick="removeSpecification(${i})">×</button></span>`
+            ).join('');
         }
-        const searchInput = document.getElementById('adminProductSearch');
-        if (searchInput) searchInput.addEventListener('input', function(e) { renderAdminProducts(e.target.value); });
+        
+        window.removeSpecification = function(index) {
+            currentSpecifications.splice(index, 1);
+            renderSpecifications();
+        };
+        
+        window.addCompatibility = function() {
+            const brand = document.getElementById('compatBrand').value;
+            const model = document.getElementById('compatModel').value;
+            const years = document.getElementById('compatYears').value.trim();
+            const engine = document.getElementById('compatEngine').value.trim();
+            const notes = document.getElementById('compatNotes').value.trim();
+            if (!brand || !model) { alert('Selecciona marca y modelo'); return; }
+            currentCompatibility.push({ brand, model, years, engine, notes });
+            document.getElementById('compatBrand').value = '';
+            document.getElementById('compatModel').value = '';
+            document.getElementById('compatYears').value = '';
+            document.getElementById('compatEngine').value = '';
+            document.getElementById('compatNotes').value = '';
+            renderCompatibility();
+        };
+        
+        function renderCompatibility() {
+            const container = document.getElementById('compatibilityContainer');
+            container.innerHTML = currentCompatibility.map((c, i) => 
+                `<div class="compat-row">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <div>
+                            <strong>${c.brand} ${c.model}</strong> 
+                            <small style="color:#666;">(${c.years || 'N/A'}) ${c.engine ? '- ' + c.engine : ''}</small>
+                            ${c.notes ? `<br><small style="color:#0066cc;">${c.notes}</small>` : ''}
+                        </div>
+                        <button type="button" class="btn btn-small btn-secondary" onclick="removeCompatibility(${i})">Eliminar</button>
+                    </div>
+                </div>`
+            ).join('');
+        }
+        
+        window.removeCompatibility = function(index) {
+            currentCompatibility.splice(index, 1);
+            renderCompatibility();
+        };
+
+        async function loadProducts() { try { const snapshot = await db.collection('products').get(); products = []; snapshot.forEach(docSnap => products.push({ id: docSnap.id, ...docSnap.data() })); document.getElementById('statProducts').textContent = products.length; renderAdminProducts(); } catch (error) { console.error('Productos:', error); } }
+        function renderAdminProducts(filter = '') { const list = document.getElementById('adminProductList'); let filtered = products; if (filter) { const q = filter.toLowerCase(); filtered = products.filter(p => p.name.toLowerCase().includes(q) || (p.code && p.code.toLowerCase().includes(q))); } if (filtered.length === 0) { list.innerHTML = '<p style="text-align:center;color:#666;padding:1rem">Sin productos</p>'; return; } list.innerHTML = filtered.map(product => { const images = product.images || (product.image ? [product.image] : []); const thumbHtml = images.length > 0 ? `<img src="${images[0]}">` : ''; const offerText = product.discount && product.discount > 0 ? ` | -${product.discount}%` : ''; const recText = product.recommended ? ' | RECOMENDADO' : ''; return `<div class="admin-item"><div class="admin-info"><div class="admin-thumb">${thumbHtml}</div><div><strong>${product.name}</strong>${recText}<br><small style="color:#dc3545">Código: ${product.code || 'N/A'}</small><br><small style="color:#666">$${Number(product.price).toFixed(2)}${offerText} | Stock: ${product.stock}</small></div></div><div class="admin-actions"><button class="btn btn-small btn-primary" onclick="editProduct('${product.id}')">Editar</button><button class="btn btn-small btn-secondary" onclick="deleteProduct('${product.id}')">Eliminar</button></div></div>`; }).join(''); }
+        document.getElementById('adminProductSearch').addEventListener('input', function(e) { renderAdminProducts(e.target.value); });
         
         window.openAddProductModal = function() { 
             populateCategorySelect(); 
             populateCompatBrandSelect();
-            currentProductImages = []; 
-            currentSpecifications = []; 
-            currentCompatibility = []; 
-            setTextContent('productModalTitle', 'Agregar Producto');
-            setInputValue('editProductId', '');
-            ['productCode','productBrand','productName','productDescription','productPartNumber','productCostPrice','productMargin','productPrice','productDiscount','productStock','productSearchTerms'].forEach(id => setInputValue(id, ''));
-            setInputValue('productPosition', '');
-            setInputValue('productSide', '');
-            setInputValue('productCondition', 'Nuevo');
-            setInputValue('productCategory', '');
-            setInputValue('productSubcategory', '');
-            const rec = document.getElementById('productRecommended');
-            if (rec) rec.checked = false;
-            const imgContainer = document.getElementById('productImagesContainer');
-            if (imgContainer) imgContainer.innerHTML = '';
-            const specContainer = document.getElementById('specificationsContainer');
-            if (specContainer) specContainer.innerHTML = '';
-            const compatContainer = document.getElementById('compatibilityContainer');
-            if (compatContainer) compatContainer.innerHTML = '';
-            setInputValue('compatBrand', '');
-            const compatModel = document.getElementById('compatModel');
-            if (compatModel) compatModel.innerHTML = '<option value="">Seleccionar modelo...</option>';
-            setInputValue('compatYears', '');
-            setInputValue('compatEngine', '');
-            setInputValue('compatNotes', '');
+            currentProductImages = [];
+            currentSpecifications = [];
+            currentCompatibility = [];
+            document.getElementById('productModalTitle').textContent = 'Agregar Producto'; 
+            document.getElementById('editProductId').value = ''; 
+            document.getElementById('productCode').value = ''; 
+            document.getElementById('productBrand').value = ''; 
+            document.getElementById('productName').value = ''; 
+            document.getElementById('productDescription').value = ''; 
+            document.getElementById('productPartNumber').value = '';
+            document.getElementById('productPosition').value = '';
+            document.getElementById('productSide').value = '';
+            document.getElementById('productCondition').value = 'Nuevo';
+            document.getElementById('productCostPrice').value = ''; 
+            document.getElementById('productMargin').value = ''; 
+            document.getElementById('productPrice').value = ''; 
+            document.getElementById('productDiscount').value = ''; 
+            document.getElementById('productStock').value = ''; 
+            document.getElementById('productCategory').value = ''; 
+            document.getElementById('productSubcategory').value = ''; 
+            document.getElementById('productSearchTerms').value = '';
+            document.getElementById('productRecommended').checked = false; 
+            document.getElementById('productImagesContainer').innerHTML = ''; 
+            document.getElementById('specificationsContainer').innerHTML = '';
+            document.getElementById('compatibilityContainer').innerHTML = '';
+            document.getElementById('compatBrand').value = '';
+            document.getElementById('compatModel').innerHTML = '<option value="">Seleccionar modelo...</option>';
+            document.getElementById('compatYears').value = '';
+            document.getElementById('compatEngine').value = '';
+            document.getElementById('compatNotes').value = '';
             document.getElementById('productModal').classList.add('active'); 
         };
         
-        window.editProduct = function(id) { 
-            const p = products.find(x => x.id === id); 
+        window.editProduct = function(productId) { 
+            const product = products.find(p => p.id === productId); 
             populateCategorySelect(); 
             populateCompatBrandSelect();
-            currentProductImages = p.images || (p.image ? [p.image] : []);
-            currentSpecifications = p.specifications || [];
-            currentCompatibility = p.compatibility || [];
-            setTextContent('productModalTitle', 'Editar Producto');
-            setInputValue('editProductId', p.id);
-            setInputValue('productCode', p.code || '');
-            setInputValue('productBrand', p.brand || '');
-            setInputValue('productName', p.name);
-            setInputValue('productDescription', p.description || '');
-            setInputValue('productPartNumber', p.attributes?.partNumber || '');
-            setInputValue('productPosition', p.attributes?.position || '');
-            setInputValue('productSide', p.attributes?.side || '');
-            setInputValue('productCondition', p.attributes?.condition || 'Nuevo');
-            setInputValue('productCostPrice', p.costPrice || '');
-            setInputValue('productMargin', p.margin || '');
-            setInputValue('productPrice', p.price);
-            setInputValue('productDiscount', p.discount || '');
-            setInputValue('productStock', p.stock);
-            setInputValue('productCategory', p.category || '');
+            currentProductImages = product.images || (product.image ? [product.image] : []);
+            currentSpecifications = product.specifications || [];
+            currentCompatibility = product.compatibility || [];
+            document.getElementById('productModalTitle').textContent = 'Editar Producto'; 
+            document.getElementById('editProductId').value = product.id; 
+            document.getElementById('productCode').value = product.code || ''; 
+            document.getElementById('productBrand').value = product.brand || ''; 
+            document.getElementById('productName').value = product.name; 
+            document.getElementById('productDescription').value = product.description || ''; 
+            document.getElementById('productPartNumber').value = product.attributes?.partNumber || '';
+            document.getElementById('productPosition').value = product.attributes?.position || '';
+            document.getElementById('productSide').value = product.attributes?.side || '';
+            document.getElementById('productCondition').value = product.attributes?.condition || 'Nuevo';
+            document.getElementById('productCostPrice').value = product.costPrice || ''; 
+            document.getElementById('productMargin').value = product.margin || ''; 
+            document.getElementById('productPrice').value = product.price; 
+            document.getElementById('productDiscount').value = product.discount || ''; 
+            document.getElementById('productStock').value = product.stock; 
+            document.getElementById('productCategory').value = product.category || ''; 
             updateSubcategoryOptions();
-            setInputValue('productSubcategory', p.subcategory || '');
-            setInputValue('productSearchTerms', p.searchTerms || '');
-            const rec = document.getElementById('productRecommended');
-            if (rec) rec.checked = p.recommended || false;
+            document.getElementById('productSubcategory').value = product.subcategory || ''; 
+            document.getElementById('productSearchTerms').value = product.searchTerms || '';
+            document.getElementById('productRecommended').checked = product.recommended || false; 
             renderProductImages();
             renderSpecifications();
             renderCompatibility();
             document.getElementById('productModal').classList.add('active'); 
         };
         
-        function renderProductImages() { 
-            const c = document.getElementById('productImagesContainer'); 
-            if (!c) return;
-            if (currentProductImages.length === 0) { c.innerHTML = '<div style="color:#999;">Sin imágenes</div>'; return; } 
-            c.innerHTML = currentProductImages.map((img, i) => `<div style="position:relative;"><img src="${img}" style="width:80px;height:80px;object-fit:cover;border-radius:8px;"><button type="button" onclick="removeProductImage(${i})" style="position:absolute;top:2px;right:2px;background:#dc3545;color:white;border:none;width:20px;height:20px;border-radius:50%;cursor:pointer;">×</button></div>`).join(''); 
-        }
-        window.addProductImages = function(e) { 
-            Array.from(e.target.files).forEach(f => { 
-                if (currentProductImages.length >= 5) { alert('Máximo 5'); return; } 
-                if (f.size > 1024*1024) { alert('Máximo 1MB'); return; } 
-                const r = new FileReader(); 
-                r.onload = (ev) => { currentProductImages.push(ev.target.result); renderProductImages(); }; 
-                r.readAsDataURL(f); 
-            }); 
-            e.target.value = ''; 
-        };
-        window.removeProductImage = function(i) { currentProductImages.splice(i, 1); renderProductImages(); };
+        function renderProductImages() { const container = document.getElementById('productImagesContainer'); if (currentProductImages.length === 0) { container.innerHTML = '<div style="color:#999;">Sin imágenes</div>'; return; } container.innerHTML = currentProductImages.map((img, i) => `<div style="position:relative;"><img src="${img}" style="width:80px;height:80px;object-fit:cover;border-radius:8px;"><button type="button" onclick="removeProductImage(${i})" style="position:absolute;top:2px;right:2px;background:#dc3545;color:white;border:none;width:20px;height:20px;border-radius:50%;cursor:pointer;">×</button></div>`).join(''); }
+        window.addProductImages = function(event) { const files = Array.from(event.target.files); files.forEach(file => { if (currentProductImages.length >= 5) { alert('Máximo 5'); return; } if (file.size > 1024 * 1024) { alert('Máximo 1MB'); return; } const reader = new FileReader(); reader.onload = function(e) { currentProductImages.push(e.target.result); renderProductImages(); }; reader.readAsDataURL(file); }); event.target.value = ''; };
+        window.removeProductImage = function(index) { currentProductImages.splice(index, 1); renderProductImages(); };
         
-        window.saveProduct = async function(e) { 
-            e.preventDefault(); 
-            const id = getInputValue('editProductId', '');
-            const cost = parseFloat(getInputValue('productCostPrice', '0')) || 0;
-            const margin = parseFloat(getInputValue('productMargin', '0')) || 0;
-            const price = parseFloat(getInputValue('productPrice', '0')) || 0;
-            const discount = parseFloat(getInputValue('productDiscount', '0')) || 0;
-            const attrs = { 
-                category: getInputValue('productCategory', ''), 
-                subcategory: getInputValue('productSubcategory', ''), 
-                brand: getInputValue('productBrand', ''), 
-                partNumber: getInputValue('productPartNumber', ''), 
-                position: getInputValue('productPosition', ''), 
-                side: getInputValue('productSide', ''), 
-                condition: getInputValue('productCondition', 'Nuevo') 
+        window.saveProduct = async function(event) { 
+            event.preventDefault(); 
+            const editId = document.getElementById('editProductId').value; 
+            const costPrice = parseFloat(document.getElementById('productCostPrice').value) || 0; 
+            const margin = parseFloat(document.getElementById('productMargin').value) || 0; 
+            const salePrice = parseFloat(document.getElementById('productPrice').value) || 0; 
+            const discount = parseFloat(document.getElementById('productDiscount').value) || 0; 
+            
+            const attributes = {
+                category: document.getElementById('productCategory').value,
+                subcategory: document.getElementById('productSubcategory').value,
+                brand: document.getElementById('productBrand').value,
+                partNumber: document.getElementById('productPartNumber').value,
+                position: document.getElementById('productPosition').value,
+                side: document.getElementById('productSide').value,
+                condition: document.getElementById('productCondition').value
             };
-            const data = { 
-                code: getInputValue('productCode', ''), 
-                brand: getInputValue('productBrand', ''), 
-                name: getInputValue('productName', ''), 
-                description: getInputValue('productDescription', ''), 
-                costPrice: cost, 
-                margin,
+            
+            const productData = { 
+                code: document.getElementById('productCode').value, 
+                brand: document.getElementById('productBrand').value, 
+                name: document.getElementById('productName').value, 
+                description: document.getElementById('productDescription').value, 
+                costPrice: costPrice, 
+                margin: margin, 
+                price: salePrice, 
+                discount: discount, 
+                stock: parseInt(document.getElementById('productStock').value), 
+                category: document.getElementById('productCategory').value, 
+                subcategory: document.getElementById('productSubcategory').value, 
+                recommended: document.getElementById('productRecommended').checked, 
+                attributes: attributes,
+                specifications: currentSpecifications,
+                compatibility: currentCompatibility,
+                searchTerms: document.getElementById('productSearchTerms').value,
+                images: currentProductImages.length > 0 ? currentProductImages : null, 
+                image: currentProductImages.length > 0 ? currentProductImages[0] : null, 
+                updatedAt: new Date().toISOString() 
+            }; 
+            
+            try { 
+                if (editId) { 
+                    await db.collection('products').doc(editId).update(productData); 
+                } else { 
+                    productData.createdAt = new Date().toISOString(); 
+                    await db.collection('products').add(productData); 
+                } 
+                await loadProducts(); 
+                await loadDashboard(); 
+                closeModal('productModal'); 
+                alert('✅ Producto guardado con ficha técnica completa'); 
+            } catch (error) { alert('Error: ' + error.message); } 
+        };
+        
+        window.deleteProduct = async function(productId) { if (!confirm('¿Eliminar?')) return; try { await db.collection('products').doc(productId).delete(); await loadProducts(); await loadDashboard(); alert('✅
