@@ -55,16 +55,65 @@
         .hero-cta:hover { transform: scale(1.05); }
 
         .section { padding: 2rem 1.5rem; max-width: 1400px; margin: 0 auto; }
-        .section-title { font-size: 1.8rem; margin-bottom: 1.5rem; color: #1a1a1a; text-align: center; }
+        .section-title { font-size: 1.8rem; margin-bottom: 1rem; color: #1a1a1a; text-align: center; }
         .section-title .highlight { color: #dc3545; }
         .section-subtitle { text-align: center; color: #666; margin-bottom: 2rem; }
-        .featured-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1rem; }
-        .featured-card { background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.08); transition: all 0.3s; cursor: pointer; }
-        .featured-card:hover { transform: translateY(-5px); box-shadow: 0 8px 25px rgba(220,53,69,0.2); }
-        .featured-image { width: 100%; height: 200px; background: #f8f8f8; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; }
-        .featured-image img { width: 100%; height: 100%; object-fit: contain; padding: 15px; }
-        .featured-info { padding: 1rem; }
-        .featured-name { font-size: 1rem; font-weight: 600; margin-bottom: 0.5rem; color: #333; min-height: 2.5rem; }
+        
+        /* GRID UNIFORME DE PRODUCTOS */
+        .featured-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); 
+            gap: 1.5rem;
+            justify-items: center;
+            align-items: stretch;
+        }
+        .featured-card { 
+            background: white; 
+            border-radius: 16px; 
+            overflow: hidden; 
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08); 
+            transition: all 0.3s; 
+            cursor: pointer; 
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            max-width: 300px;
+            height: 100%;
+        }
+        .featured-card:hover { 
+            transform: translateY(-5px); 
+            box-shadow: 0 8px 25px rgba(220,53,69,0.2); 
+        }
+        .featured-image { 
+            width: 100%; 
+            height: 220px;
+            background: #f8f8f8; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            overflow: hidden; 
+            position: relative; 
+            flex-shrink: 0;
+        }
+        .featured-image img { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: contain; 
+            padding: 15px; 
+        }
+        .featured-info { 
+            padding: 1rem; 
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+        .featured-name { 
+            font-size: 1rem; 
+            font-weight: 600; 
+            margin-bottom: 0.5rem; 
+            color: #333; 
+            min-height: 2.5rem; 
+        }
         .featured-price { font-size: 1.3rem; color: #dc3545; font-weight: bold; }
         .featured-price-bs { font-size: 0.85rem; color: #666; }
         .featured-price-original { font-size: 0.85rem; color: #999; text-decoration: line-through; margin-right: 0.5rem; }
@@ -74,13 +123,25 @@
         .featured-stock.in { color: #28a745; }
         .featured-stock.low { color: #FFC107; font-weight: bold; }
         .featured-stock.out { color: #dc3545; }
-        .featured-add-btn { width: 100%; background: #dc3545; color: white; border: none; padding: 0.7rem; border-radius: 20px; cursor: pointer; font-weight: 600; margin-top: 0.5rem; }
+        .featured-add-btn { 
+            width: 100%; 
+            background: #dc3545; 
+            color: white; 
+            border: none; 
+            padding: 0.8rem; 
+            border-radius: 20px; 
+            cursor: pointer; 
+            font-weight: 600; 
+            margin-top: auto;
+            font-size: 0.95rem;
+        }
         .featured-add-btn:hover { background: #c82333; }
         .featured-add-btn:disabled { background: #ccc; cursor: not-allowed; }
 
+        /* DETALLE DE PRODUCTO CON FICHA TÉCNICA */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 3000; align-items: center; justify-content: center; padding: 1rem; }
         .modal.active { display: flex; }
-        .modal-content { background: white; border-radius: 20px; max-width: 900px; width: 100%; max-height: 90vh; overflow-y: auto; position: relative; }
+        .modal-content { background: white; border-radius: 20px; max-width: 950px; width: 100%; max-height: 90vh; overflow-y: auto; position: relative; }
         .modal-close { position: absolute; top: 1rem; right: 1rem; background: #dc3545; color: white; border: none; width: 35px; height: 35px; border-radius: 50%; font-size: 1.2rem; cursor: pointer; z-index: 10; }
         .product-detail { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; padding: 2rem; }
         .product-detail-image { background: #f8f8f8; border-radius: 16px; display: flex; align-items: center; justify-content: center; min-height: 300px; }
@@ -91,11 +152,45 @@
         .detail-price-bs { font-size: 1.1rem; color: #666; }
         .detail-offer-badge { background: #dc3545; color: white; padding: 0.3rem 0.8rem; border-radius: 15px; font-size: 0.85rem; display: inline-block; margin: 0.5rem 0; }
         .detail-description { background: #f8f8f8; padding: 1rem; border-radius: 16px; margin: 1rem 0; color: #555; }
+        
+        /* FICHA TÉCNICA */
+        .tech-sheet { background: #f0f8ff; border: 1px solid #b0d4f1; border-radius: 12px; padding: 1rem; margin: 1rem 0; }
+        .tech-sheet h3 { color: #0066cc; margin-bottom: 0.8rem; font-size: 1.1rem; }
+        .tech-sheet .attributes { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-bottom: 1rem; }
+        .tech-sheet .attribute { background: white; padding: 0.5rem; border-radius: 8px; font-size: 0.85rem; }
+        .tech-sheet .attribute strong { color: #0066cc; display: block; font-size: 0.75rem; }
+        .tech-specs-table { width: 100%; border-collapse: collapse; margin: 0.5rem 0; }
+        .tech-specs-table tr { border-bottom: 1px solid #d0e4f7; }
+        .tech-specs-table td { padding: 0.5rem; font-size: 0.85rem; }
+        .tech-specs-table td:first-child { color: #0066cc; font-weight: 600; width: 45%; }
+        .compatibility-table { width: 100%; border-collapse: collapse; margin: 0.5rem 0; font-size: 0.8rem; }
+        .compatibility-table th { background: #0066cc; color: white; padding: 0.5rem; text-align: left; }
+        .compatibility-table td { padding: 0.5rem; border-bottom: 1px solid #d0e4f7; }
+        .search-terms { background: #fff8e1; padding: 0.8rem; border-radius: 8px; margin-top: 1rem; font-size: 0.8rem; color: #666; }
+        .search-terms strong { color: #ff9800; }
+        
         .specs-table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
         .specs-table tr { border-bottom: 1px solid #eee; }
         .specs-table td { padding: 0.6rem; }
         .specs-table td:first-child { color: #666; font-weight: 600; width: 40%; }
         .detail-actions { padding: 1.5rem 2rem; border-top: 1px solid #eee; }
+
+        /* RESEÑAS */
+        .reviews-section { padding: 1.5rem 2rem; border-top: 1px solid #eee; }
+        .reviews-section h3 { color: #dc3545; margin-bottom: 1rem; }
+        .review-form { background: #f8f8f8; padding: 1rem; border-radius: 12px; margin-bottom: 1rem; }
+        .review-form .stars-input { display: flex; gap: 0.3rem; margin: 0.5rem 0; }
+        .review-form .star { font-size: 1.8rem; color: #ddd; cursor: pointer; transition: color 0.2s; }
+        .review-form .star.active, .review-form .star:hover { color: #FFC107; }
+        .review-form textarea { width: 100%; padding: 0.7rem; border: 1px solid #ddd; border-radius: 8px; font-size: 0.9rem; resize: vertical; min-height: 60px; }
+        .review-form .char-count { font-size: 0.75rem; color: #666; text-align: right; margin-top: 0.3rem; }
+        .review-form button { background: #dc3545; color: white; border: none; padding: 0.6rem 1.2rem; border-radius: 20px; cursor: pointer; font-weight: 600; margin-top: 0.5rem; }
+        .review-item { background: #f8f8f8; padding: 1rem; border-radius: 12px; margin-bottom: 0.8rem; }
+        .review-item-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; }
+        .review-item-stars { color: #FFC107; font-size: 1.1rem; }
+        .review-item-text { font-size: 0.9rem; color: #333; margin: 0.3rem 0; }
+        .review-item-date { font-size: 0.75rem; color: #999; }
+        .review-item-user { font-weight: 600; color: #333; font-size: 0.9rem; }
 
         .cart-sidebar { position: fixed; right: -500px; top: 0; width: 450px; max-width: 100%; height: 100vh; background: white; box-shadow: -5px 0 20px rgba(0,0,0,0.2); transition: right 0.3s; z-index: 2000; display: flex; flex-direction: column; border-radius: 20px 0 0 20px; }
         .cart-sidebar.active { right: 0; }
@@ -130,11 +225,11 @@
         .map-link-box a { color: #dc3545; font-weight: bold; text-decoration: none; }
 
         .search-results-container { padding: 1rem 1.5rem; max-width: 1400px; margin: 0 auto; }
-        .search-results-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1rem; }
-        .search-result-card { background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.08); cursor: pointer; }
-        .search-result-image { width: 100%; height: 150px; background: #f8f8f8; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .search-results-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1.5rem; justify-items: center; }
+        .search-result-card { background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.08); cursor: pointer; width: 100%; max-width: 300px; display: flex; flex-direction: column; }
+        .search-result-image { width: 100%; height: 200px; background: #f8f8f8; display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0; }
         .search-result-image img { width: 100%; height: 100%; object-fit: contain; padding: 10px; }
-        .search-result-info { padding: 1rem; }
+        .search-result-info { padding: 1rem; flex: 1; display: flex; flex-direction: column; }
         .search-result-name { font-weight: 600; margin-bottom: 0.5rem; }
         .search-result-price { color: #dc3545; font-weight: bold; font-size: 1.1rem; }
 
@@ -174,8 +269,9 @@
 
         @media (max-width: 900px) {
             .product-detail { grid-template-columns: 1fr; }
-            .featured-grid { grid-template-columns: repeat(2, 1fr); }
+            .featured-grid { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
             .hero-title { font-size: 1.8rem !important; }
+            .tech-sheet .attributes { grid-template-columns: 1fr; }
         }
         @media (max-width: 600px) {
             .top-header { padding: 0.6rem 1rem; }
@@ -184,13 +280,14 @@
             .delivery-selector { flex-direction: column; }
             .hero-title { font-size: 1.5rem !important; }
             .hero-subtitle { font-size: 1rem !important; }
+            .search-results-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
     <div class="top-header">
         <div class="header-left">
-            <button class="menu-btn" onclick="toggleSidebar()">☰</button>
+            <button class="menu-btn" onclick="toggleSidebar()"></button>
             <div class="header-logo" id="headerLogo">
                 <div class="header-logo-img" id="headerLogoImg"></div>
                 <span id="headerCompanyName">AKIRA MOTORS</span>
@@ -221,7 +318,7 @@
         <div id="drawerMenu"></div>
     </aside>
 
-    <!-- HERO DINÁMICO (solo aparece si está configurado) -->
+    <!-- HERO DINÁMICO -->
     <div class="hero-section" id="heroSection" style="display:none;">
         <div class="hero-bg" id="heroBg"></div>
         <div class="hero-overlay" id="heroOverlay"></div>
@@ -232,9 +329,9 @@
         </div>
     </div>
 
-    <!-- PRODUCTOS RECOMENDADOS (primera vista) -->
+    <!-- PRODUCTOS RECOMENDADOS (sin estrella) -->
     <div class="section" id="recommendedSection">
-        <h2 class="section-title">⭐ <span class="highlight">Recomendados</span></h2>
+        <h2 class="section-title"><span class="highlight">Recomendados</span></h2>
         <p class="section-subtitle">Los repuestos más solicitados</p>
         <div class="featured-grid" id="recommendedContainer">
             <div class="loading">Cargando productos...</div>
@@ -289,7 +386,7 @@
             </div>
             <div id="pickupMapLink" style="display:none; padding: 0 1.5rem;">
                 <div class="map-link-box">
-                    <div style="font-size:2rem;margin-bottom:0.5rem;">📍</div>
+                    <div style="font-size:2rem;margin-bottom:0.5rem;"></div>
                     <div style="margin-bottom:0.5rem;">Ubicación de la tienda:</div>
                     <a href="#" id="pickupMapsLink" target="_blank">Ver en Google Maps</a>
                 </div>
@@ -365,6 +462,7 @@
         let heroConfig = { visible: false };
         let whatsappNumber = '584148700616';
         let siteConfig = { companyName: 'AKIRA MOTORS', slogan: 'Repuestos Automotrices', description: 'Tu tienda de repuestos en Ciudad Bolívar.', address: 'Calle Caracas, Local 70-E, Ciudad Bolívar', phone: '0414-8700616', schedule: 'Lun-Vie: 8AM-5PM', facebook: '', instagram: '', tiktok: '' };
+        let allReviews = [];
 
         let logoClickCount = 0, logoClickTimer;
         document.getElementById('headerLogo').addEventListener('click', function() {
@@ -577,6 +675,13 @@
                 const snapshot = await getDocs(collection(db, 'products')); products = []; snapshot.forEach(d => products.push({ id: d.id, ...d.data() }));
                 const brandsSnap = await getDocs(collection(db, 'brands')); let brands = []; brandsSnap.forEach(d => brands.push({ id: d.id, ...d.data() }));
                 
+                // Cargar reseñas
+                try {
+                    const reviewsSnap = await getDocs(collection(db, 'reviews'));
+                    allReviews = [];
+                    reviewsSnap.forEach(d => allReviews.push({ id: d.id, ...d.data() }));
+                } catch(e) { allReviews = []; }
+                
                 applySiteConfig(); renderDrawerMenu(); renderRecommended(); renderFooterBrands(brands); updateCartUI(); updateHeaderButtons(); updateWhatsAppLinks();
             } catch (error) { console.error('Error:', error); }
         }
@@ -593,12 +698,13 @@
             if (heroConfig.backgroundImage) {
                 bg.style.backgroundImage = `url('${heroConfig.backgroundImage}')`;
                 const opacity = (heroConfig.overlayOpacity || 50) / 100;
-                overlay.style.background = heroConfig.overlayColor ? heroConfig.overlayColor.replace(')', `, ${opacity})`).replace('rgb', 'rgba').replace('#', '') : `rgba(0,0,0,${opacity})`;
                 if (heroConfig.overlayColor && heroConfig.overlayColor.startsWith('#')) {
                     const r = parseInt(heroConfig.overlayColor.slice(1,3), 16);
                     const g = parseInt(heroConfig.overlayColor.slice(3,5), 16);
                     const b = parseInt(heroConfig.overlayColor.slice(5,7), 16);
                     overlay.style.background = `rgba(${r},${g},${b},${opacity})`;
+                } else {
+                    overlay.style.background = `rgba(0,0,0,${opacity})`;
                 }
             } else {
                 bg.style.background = 'linear-gradient(135deg, #dc3545 0%, #8b0000 100%)';
@@ -654,6 +760,65 @@
             }).join('');
         }
 
+        // GENERAR FICHA TÉCNICA AUTOMÁTICA
+        function generateTechSheetHTML(product) {
+            const attrs = product.attributes || {};
+            const specs = product.specifications || [];
+            const compatibility = product.compatibility || [];
+            const searchTerms = product.searchTerms || '';
+            
+            let html = '';
+            
+            // Atributos
+            if (Object.keys(attrs).length > 0) {
+                html += `<div class="tech-sheet"><h3>📋 Atributos del Repuesto</h3><div class="attributes">`;
+                const attrLabels = {
+                    'category': 'Categoría Principal',
+                    'subcategory': 'Subcategoría',
+                    'brand': 'Marca del Repuesto',
+                    'partNumber': 'N° Parte / OEM',
+                    'position': 'Posición',
+                    'side': 'Lado',
+                    'condition': 'Condición'
+                };
+                for (const [key, value] of Object.entries(attrs)) {
+                    if (value) {
+                        html += `<div class="attribute"><strong>${attrLabels[key] || key}</strong>${value}</div>`;
+                    }
+                }
+                html += `</div></div>`;
+            }
+            
+            // Especificaciones técnicas
+            if (specs.length > 0) {
+                html += `<div class="tech-sheet"><h3>️ Especificaciones Técnicas</h3><table class="tech-specs-table">`;
+                specs.forEach(spec => {
+                    if (spec.key && spec.value) {
+                        html += `<tr><td>${spec.key}</td><td>${spec.value}</td></tr>`;
+                    }
+                });
+                html += `</table></div>`;
+            }
+            
+            // Compatibilidad vehicular
+            if (compatibility.length > 0) {
+                html += `<div class="tech-sheet"><h3> Compatibilidad Vehicular</h3><table class="compatibility-table"><thead><tr><th>Marca</th><th>Modelo</th><th>Años</th><th>Motor</th><th>Notas</th></tr></thead><tbody>`;
+                compatibility.forEach(c => {
+                    if (c.brand || c.model) {
+                        html += `<tr><td>${c.brand || '-'}</td><td>${c.model || '-'}</td><td>${c.years || '-'}</td><td>${c.engine || '-'}</td><td>${c.notes || '-'}</td></tr>`;
+                    }
+                });
+                html += `</tbody></table></div>`;
+            }
+            
+            // Términos de búsqueda
+            if (searchTerms) {
+                html += `<div class="search-terms"><strong>🔍 Búsquedas frecuentes:</strong> ${searchTerms}</div>`;
+            }
+            
+            return html;
+        }
+
         window.openProductDetail = function(productId) {
             const product = products.find(p => p.id === productId); if (!product) return;
             const images = product.images || (product.image ? [product.image] : []);
@@ -663,11 +828,96 @@
             let priceBox = '';
             if (hasDiscount) priceBox = `<div class="detail-price-box"><div class="detail-offer-badge">OFERTA -${product.discount}%</div><div style="font-size:1rem;color:#999;text-decoration:line-through;">Antes: $${Number(product.price).toFixed(2)}</div><div class="detail-price-usd">$${finalPrice.toFixed(2)}</div><div class="detail-price-bs">Bs. ${priceBs.toFixed(2)} (BCV: ${bcvRate})</div></div>`;
             else priceBox = `<div class="detail-price-box"><div class="detail-price-usd">$${finalPrice.toFixed(2)}</div><div class="detail-price-bs">Bs. ${priceBs.toFixed(2)} (BCV: ${bcvRate})</div></div>`;
-            const specs = [];
-            if (product.code) specs.push(['Código', product.code]); if (product.brand) specs.push(['Marca', product.brand]); if (product.category) specs.push(['Categoría', product.category]); if (product.subcategory) specs.push(['Subcategoría', product.subcategory]); if (product.vehicle) specs.push(['Compatible', product.vehicle]); specs.push(['Stock', `${product.stock} unidades`]);
-            const specsHtml = specs.length > 0 ? `<h3 style="color:#dc3545; margin:1rem 0 0.5rem;">Ficha Técnica</h3><table class="specs-table">${specs.map(s => `<tr><td>${s[0]}</td><td>${s[1]}</td></tr>`).join('')}</table>` : '';
-            document.getElementById('productDetailContent').innerHTML = `<button class="modal-close" onclick="closeModal('productDetailModal')">×</button><div class="product-detail"><div class="product-detail-image">${imageHtml}</div><div class="product-detail-info">${product.code ? `<div style="color:#dc3545;font-size:0.9rem;">Código: ${product.code}</div>` : ''}<h2>${product.name}</h2>${priceBox}<div style="color: ${product.stock === 0 ? '#dc3545' : product.stock < 5 ? '#FFC107' : '#28a745'}; font-weight:bold; margin:0.5rem 0;">${product.stock === 0 ? 'No disponible' : product.stock < 5 ? `¡Últimas ${product.stock}!` : `Disponible: ${product.stock}`}</div>${product.description ? `<h3 style="color:#dc3545; margin:1rem 0 0.5rem;">Descripción</h3><div class="detail-description">${product.description}</div>` : ''}${specsHtml}</div></div><div class="detail-actions"><button class="featured-add-btn" style="flex:1; padding:1rem;" onclick="addToCart('${product.id}'); closeModal('productDetailModal')" ${product.stock === 0 ? 'disabled' : ''}>${product.stock === 0 ? 'Consultar' : 'Agregar al carrito'}</button></div>`;
+            
+            // Ficha técnica
+            const techSheetHtml = generateTechSheetHTML(product);
+            
+            // Reseñas del producto
+            const productReviews = allReviews.filter(r => r.productId === productId);
+            const avgRating = productReviews.length > 0 ? (productReviews.reduce((sum, r) => sum + r.rating, 0) / productReviews.length).toFixed(1) : 0;
+            
+            let reviewsHtml = `<div class="reviews-section"><h3>⭐ Reseñas (${productReviews.length}) - Promedio: ${avgRating}/5</h3>`;
+            
+            // Formulario de reseña
+            if (currentUser) {
+                const existingReview = productReviews.find(r => r.userId === currentUser.name || r.userPhone === currentUser.phone);
+                if (!existingReview) {
+                    reviewsHtml += `<div class="review-form">
+                        <label style="font-weight:600;">Tu calificación:</label>
+                        <div class="stars-input" id="starsInput-${productId}">
+                            <span class="star" data-value="1" onclick="selectRating(${productId}, 1)">★</span>
+                            <span class="star" data-value="2" onclick="selectRating(${productId}, 2)">★</span>
+                            <span class="star" data-value="3" onclick="selectRating(${productId}, 3)">★</span>
+                            <span class="star" data-value="4" onclick="selectRating(${productId}, 4)">★</span>
+                            <span class="star" data-value="5" onclick="selectRating(${productId}, 5)">★</span>
+                        </div>
+                        <textarea id="reviewText-${productId}" maxlength="150" placeholder="Escribe tu comentario (máx 150 caracteres)" oninput="updateCharCount(${productId})"></textarea>
+                        <div class="char-count" id="charCount-${productId}">0/150</div>
+                        <button onclick="submitReview('${productId}')">Publicar reseña</button>
+                    </div>`;
+                }
+            } else {
+                reviewsHtml += `<p style="font-size:0.85rem; color:#666; margin-bottom:1rem;">Inicia sesión para dejar una reseña.</p>`;
+            }
+            
+            // Lista de reseñas
+            if (productReviews.length > 0) {
+                reviewsHtml += productReviews.sort((a,b) => new Date(b.date) - new Date(a.date)).map(r => {
+                    const stars = '★'.repeat(r.rating) + '☆'.repeat(5 - r.rating);
+                    return `<div class="review-item">
+                        <div class="review-item-header">
+                            <span class="review-item-user">${r.userName || 'Cliente'}</span>
+                            <span class="review-item-stars">${stars}</span>
+                        </div>
+                        <div class="review-item-text">${r.text}</div>
+                        <div class="review-item-date">${new Date(r.date).toLocaleDateString()}</div>
+                    </div>`;
+                }).join('');
+            } else {
+                reviewsHtml += `<p style="font-size:0.85rem; color:#999;">Aún no hay reseñas. ¡Sé el primero!</p>`;
+            }
+            reviewsHtml += `</div>`;
+            
+            document.getElementById('productDetailContent').innerHTML = `<button class="modal-close" onclick="closeModal('productDetailModal')">×</button><div class="product-detail"><div class="product-detail-image">${imageHtml}</div><div class="product-detail-info">${product.code ? `<div style="color:#dc3545;font-size:0.9rem;">Código: ${product.code}</div>` : ''}<h2>${product.name}</h2>${priceBox}<div style="color: ${product.stock === 0 ? '#dc3545' : product.stock < 5 ? '#FFC107' : '#28a745'}; font-weight:bold; margin:0.5rem 0;">${product.stock === 0 ? 'No disponible' : product.stock < 5 ? `¡Últimas ${product.stock}!` : `Disponible: ${product.stock}`}</div>${product.description ? `<h3 style="color:#dc3545; margin:1rem 0 0.5rem;">Descripción</h3><div class="detail-description">${product.description}</div>` : ''}${techSheetHtml}</div></div>${reviewsHtml}<div class="detail-actions"><button class="featured-add-btn" style="flex:1; padding:1rem;" onclick="addToCart('${product.id}'); closeModal('productDetailModal')" ${product.stock === 0 ? 'disabled' : ''}>${product.stock === 0 ? 'Consultar' : 'Agregar al carrito'}</button></div>`;
             document.getElementById('productDetailModal').classList.add('active');
+        };
+
+        // Sistema de reseñas
+        let selectedRatings = {};
+        window.selectRating = function(productId, rating) {
+            selectedRatings[productId] = rating;
+            const stars = document.querySelectorAll(`#starsInput-${productId} .star`);
+            stars.forEach((star, idx) => {
+                star.classList.toggle('active', idx < rating);
+            });
+        };
+        window.updateCharCount = function(productId) {
+            const text = document.getElementById(`reviewText-${productId}`).value;
+            document.getElementById(`charCount-${productId}`).textContent = `${text.length}/150`;
+        };
+        window.submitReview = async function(productId) {
+            if (!currentUser) { alert('Inicia sesión primero'); return; }
+            const rating = selectedRatings[productId];
+            const text = document.getElementById(`reviewText-${productId}`).value.trim();
+            if (!rating) { alert('Selecciona una calificación'); return; }
+            if (!text || text.length < 5) { alert('Escribe un comentario (mín 5 caracteres)'); return; }
+            if (text.length > 150) { alert('Máximo 150 caracteres'); return; }
+            try {
+                await addDoc(collection(db, 'reviews'), {
+                    productId,
+                    userId: currentUser.name,
+                    userName: currentUser.name,
+                    userPhone: currentUser.phone,
+                    rating,
+                    text,
+                    date: new Date().toISOString()
+                });
+                alert('✅ Reseña publicada');
+                const reviewsSnap = await getDocs(collection(db, 'reviews'));
+                allReviews = [];
+                reviewsSnap.forEach(d => allReviews.push({ id: d.id, ...d.data() }));
+                openProductDetail(productId);
+            } catch (error) { alert('Error: ' + error.message); }
         };
 
         window.addToCart = function(productId) { 
