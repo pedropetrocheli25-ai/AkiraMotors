@@ -138,9 +138,9 @@
             <div class="admin-menu">
                 <div class="admin-menu-item active" onclick="showSection('preview', event)">👁️ Vista Previa</div>
                 <div class="admin-menu-item" onclick="showSection('hero', event)">🎨 Hero/Portada</div>
-                <div class="admin-menu-item" onclick="showSection('drawer', event)">☰ Menú Drawer</div>
+                <div class="admin-menu-item" onclick="showSection('drawer', event)"> Menú Drawer</div>
                 <div class="admin-menu-item" onclick="showSection('categories', event)">📂 Categorías y Subcategorías</div>
-                <div class="admin-menu-item" onclick="showSection('dashboard', event)">📊 Dashboard</div>
+                <div class="admin-menu-item" onclick="showSection('dashboard', event)"> Dashboard</div>
                 <div class="admin-menu-item" onclick="showSection('orders', event)">📦 Pedidos</div>
                 <div class="admin-menu-item" onclick="showSection('drivers', event)">🏍️ Domiciliarios</div>
                 <div class="admin-menu-item" onclick="showSection('customers', event)">👥 Clientes</div>
@@ -748,33 +748,44 @@
             await loadDashboard();
         }
 
-        // APARIENCIA
+        // APARIENCIA - Versión corregida que no rompe
         async function loadAppearance() {
             try {
                 const appDoc = await db.collection('settings').doc('appearance').get();
                 if (appDoc.exists) appearanceConfig = { ...appearanceConfig, ...appDoc.data() };
-                document.getElementById('appPrimaryColor').value = appearanceConfig.primaryColor;
-                document.getElementById('appAccentColor').value = appearanceConfig.accentColor;
-                document.getElementById('appBgColor').value = appearanceConfig.bgColor;
-                document.getElementById('appCardColor').value = appearanceConfig.cardColor;
-                document.getElementById('appFontFamily').value = appearanceConfig.fontFamily;
-                document.getElementById('appFontSize').value = appearanceConfig.fontSize;
-                document.getElementById('appTextColor').value = appearanceConfig.textColor;
-                document.getElementById('appTextSecondaryColor').value = appearanceConfig.textSecondaryColor;
-                document.getElementById('appLinkColor').value = appearanceConfig.linkColor;
-                document.getElementById('appHeaderBgColor').value = appearanceConfig.headerBgColor;
-                document.getElementById('appHeaderTextColor').value = appearanceConfig.headerTextColor;
-                document.getElementById('appHeaderHeight').value = appearanceConfig.headerHeight;
-                document.getElementById('appBtnPrimaryBg').value = appearanceConfig.btnPrimaryBg;
-                document.getElementById('appBtnTextColor').value = appearanceConfig.btnTextColor;
-                document.getElementById('appBtnRadius').value = appearanceConfig.btnRadius;
-                document.getElementById('appBtnFontSize').value = appearanceConfig.btnFontSize;
-                document.getElementById('appCardRadius').value = appearanceConfig.cardRadius;
-                document.getElementById('appCardShadow').value = appearanceConfig.cardShadow;
-                document.getElementById('appFooterBgColor').value = appearanceConfig.footerBgColor;
-                document.getElementById('appFooterTextColor').value = appearanceConfig.footerTextColor;
-                document.getElementById('appFooterTitleColor').value = appearanceConfig.footerTitleColor;
-            } catch (error) { console.log('Error loading appearance:', error); }
+                
+                // Función helper segura para asignar valores
+                const safeSet = (id, value) => {
+                    const el = document.getElementById(id);
+                    if (el) el.value = value;
+                };
+                
+                safeSet('appPrimaryColor', appearanceConfig.primaryColor);
+                safeSet('appAccentColor', appearanceConfig.accentColor);
+                safeSet('appBgColor', appearanceConfig.bgColor);
+                safeSet('appCardColor', appearanceConfig.cardColor);
+                safeSet('appFontFamily', appearanceConfig.fontFamily);
+                safeSet('appFontSize', appearanceConfig.fontSize);
+                safeSet('appTextColor', appearanceConfig.textColor);
+                safeSet('appTextSecondaryColor', appearanceConfig.textSecondaryColor);
+                safeSet('appLinkColor', appearanceConfig.linkColor);
+                safeSet('appHeaderBgColor', appearanceConfig.headerBgColor);
+                safeSet('appHeaderTextColor', appearanceConfig.headerTextColor);
+                safeSet('appHeaderHeight', appearanceConfig.headerHeight);
+                safeSet('appBtnPrimaryBg', appearanceConfig.btnPrimaryBg);
+                safeSet('appBtnTextColor', appearanceConfig.btnTextColor);
+                safeSet('appBtnRadius', appearanceConfig.btnRadius);
+                safeSet('appBtnFontSize', appearanceConfig.btnFontSize);
+                safeSet('appCardRadius', appearanceConfig.cardRadius);
+                safeSet('appCardShadow', appearanceConfig.cardShadow);
+                safeSet('appFooterBgColor', appearanceConfig.footerBgColor);
+                safeSet('appFooterTextColor', appearanceConfig.footerTextColor);
+                safeSet('appFooterTitleColor', appearanceConfig.footerTitleColor);
+                
+                console.log('Apariencia cargada correctamente');
+            } catch (error) { 
+                console.log('Error loading appearance:', error); 
+            }
         }
 
         window.saveAppearance = async function() {
@@ -834,7 +845,7 @@
                 const price = data.price || data.rate || data.value;
                 if (price) alert(`✅ API funcionando! Precio: ${price} Bs/$`);
                 else alert('⚠️ API respondió pero no tiene campo "price" o "rate"');
-            } catch (error) { alert('❌ Error: ' + error.message); }
+            } catch (error) { alert(' Error: ' + error.message); }
         };
 
         async function loadBcvRate() { 
@@ -959,7 +970,7 @@
                 </div>
                 
                 <div style="margin-top:1rem; padding:1rem; background:#e3f2fd; border-radius:8px; border-left:4px solid #2196F3;">
-                    <h4 style="margin-bottom:0.5rem; color:#2196F3;">🏍️ Asignar Domiciliario</h4>
+                    <h4 style="margin-bottom:0.5rem; color:#2196F3;">️ Asignar Domiciliario</h4>
                     <select id="driverSelect-${order.id}" style="width:100%; padding:0.5rem; border:1px solid #ddd; border-radius:8px; margin-bottom:0.5rem;">
                         <option value="">-- Seleccionar domiciliario --</option>
                         ${driversOptions}
@@ -976,7 +987,7 @@
                 
                 <div style="margin-top:1rem; padding:1rem; background:#f8f8f8; border-radius:8px;">
                     <h4 style="margin-bottom:0.5rem; color:#666;">Eliminar pedido permanentemente</h4>
-                    <button class="btn btn-small" style="background:#999;color:white;" onclick="deleteOrder('${order.id}'); closeModal('orderDetailModal');">️ Eliminar este pedido</button>
+                    <button class="btn btn-small" style="background:#999;color:white;" onclick="deleteOrder('${order.id}'); closeModal('orderDetailModal');">🗑️ Eliminar este pedido</button>
                 </div>
             `; 
             document.getElementById('orderDetailModal').classList.add('active'); 
@@ -1010,7 +1021,7 @@
             const order = orders.find(o => o.id === orderId);
             if (!order || !order.driverPhone) { alert('No hay domiciliario asignado'); return; }
             const cleanPhone = order.driverPhone.replace(/\D/g, '');
-            const message = `Hola ${order.driverName}!%0A%0ANuevo pedido para entregar:%0A📦 Pedido #${order.id.slice(-6)}%0A👤 Cliente: ${order.userName}%0A📞 Teléfono: ${order.userPhone}%0A📍 Dirección: ${order.address || 'Pickup en tienda'}%0A Total: $${order.total.toFixed(2)}%0A%0AEl pedido ya fue recogido. Por favor confirma cuando lo entregues.%0A%0AAkira Motors`;
+            const message = `Hola ${order.driverName}!%0A%0ANuevo pedido para entregar:%0A📦 Pedido #${order.id.slice(-6)}%0A👤 Cliente: ${order.userName}%0A📞 Teléfono: ${order.userPhone}%0A Dirección: ${order.address || 'Pickup en tienda'}%0A💰 Total: $${order.total.toFixed(2)}%0A%0AEl pedido ya fue recogido. Por favor confirma cuando lo entregues.%0A%0AAkira Motors`;
             window.open(`https://wa.me/${cleanPhone}?text=${message}`, '_blank');
         };
         
