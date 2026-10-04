@@ -87,20 +87,12 @@
         .color-picker-row { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; }
         .color-picker-row input[type="color"] { width: 60px; height: 40px; border: none; cursor: pointer; }
         .color-picker-row label { flex: 1; font-weight: 600; }
-        .appearance-preview { background: #f8f8f8; padding: 1rem; border-radius: 8px; margin-top: 1rem; border: 2px dashed #ddd; }
-        .appearance-preview .preview-btn { padding: 0.5rem 1rem; border-radius: 8px; border: none; cursor: pointer; margin-right: 0.5rem; }
-        .appearance-preview .preview-header { padding: 0.8rem; border-radius: 8px; margin-bottom: 0.5rem; color: white; font-weight: bold; }
-        .appearance-preview .preview-footer { padding: 0.8rem; border-radius: 8px; color: white; }
-        .appearance-preview .preview-text { padding: 0.5rem; border-radius: 4px; margin-bottom: 0.5rem; }
-        
-        /* MEJOR ESPACIADO PARA TABLA DE CLIENTES */
         .table-responsive { overflow-x: auto; }
         table { width: 100%; border-collapse: separate; border-spacing: 0 0.5rem; }
         th, td { padding: 1rem 0.8rem; text-align: left; }
         th { background: #f8f8f8; font-weight: 600; color: #333; border-bottom: 2px solid #dc3545; }
         td { background: white; border-bottom: 1px solid #eee; }
         tr:hover td { background: #f5f5f5; }
-        
         @media (max-width: 768px) {
             body { flex-direction: column; }
             .admin-sidebar { width: 100%; height: auto; position: relative; }
@@ -138,21 +130,21 @@
             <div class="admin-menu">
                 <div class="admin-menu-item active" onclick="showSection('preview', event)">👁️ Vista Previa</div>
                 <div class="admin-menu-item" onclick="showSection('hero', event)">🎨 Hero/Portada</div>
-                <div class="admin-menu-item" onclick="showSection('drawer', event)"> Menú Drawer</div>
+                <div class="admin-menu-item" onclick="showSection('drawer', event)">☰ Menú Drawer</div>
                 <div class="admin-menu-item" onclick="showSection('categories', event)">📂 Categorías y Subcategorías</div>
-                <div class="admin-menu-item" onclick="showSection('dashboard', event)"> Dashboard</div>
+                <div class="admin-menu-item" onclick="showSection('dashboard', event)">📊 Dashboard</div>
                 <div class="admin-menu-item" onclick="showSection('orders', event)">📦 Pedidos</div>
                 <div class="admin-menu-item" onclick="showSection('drivers', event)">🏍️ Domiciliarios</div>
                 <div class="admin-menu-item" onclick="showSection('customers', event)">👥 Clientes</div>
                 <div class="admin-menu-item" onclick="showSection('products', event)">🛒 Productos</div>
                 <div class="admin-menu-item" onclick="showSection('vehicles', event)">🚗 Vehículos</div>
-                <div class="admin-menu-item" onclick="showSection('brands', event)">🏷️ Marcas</div>
+                <div class="admin-menu-item" onclick="showSection('brands', event)">️ Marcas</div>
                 <div class="admin-menu-item" onclick="showSection('banners', event)">🖼️ Banners</div>
                 <div class="admin-menu-item" onclick="showSection('coupons', event)">🎟️ Cupones</div>
                 <div class="admin-menu-item" onclick="showSection('delivery', event)">📍 Zonas Delivery</div>
                 <div class="admin-menu-item" onclick="showSection('reviews', event)">⭐ Reseñas</div>
                 <div class="admin-menu-item" onclick="showSection('footer', event)">📄 Pie de página</div>
-                <div class="admin-menu-item" onclick="showSection('appearance', event)">🎨 Apariencia</div>
+                <div class="admin-menu-item" onclick="showSection('appearance', event)"> Apariencia</div>
                 <div class="admin-menu-item" onclick="showSection('settings', event)">⚙️ Configuración</div>
                 <div class="admin-menu-item" onclick="logoutAdmin()" style="margin-top:2rem; background:#dc3545;">🚪 Salir</div>
             </div>
@@ -168,7 +160,7 @@
                         <div class="admin-card">
                             <h3>Controles</h3>
                             <button class="btn btn-primary" onclick="refreshPreview()" style="width:100%; margin-bottom:1rem;">🔄 Recargar Vista</button>
-                            <button class="btn btn-secondary" onclick="window.open('index.html', '_blank')" style="width:100%;"> Abrir en Nueva Pestaña</button>
+                            <button class="btn btn-secondary" onclick="window.open('index.html', '_blank')" style="width:100%;">🌐 Abrir en Nueva Pestaña</button>
                         </div>
                     </div>
                     <div class="preview-frame">
@@ -225,7 +217,7 @@
             <!-- MENÚ DRAWER -->
             <div class="admin-section" id="section-drawer">
                 <h2 class="section-title">Menú Drawer (Categorías de Navegación)</h2>
-                <div class="alert-info">Estructura: Categoría → Marca → Modelo. Lo que configures aquí también aparecerá como categorías al agregar productos.</div>
+                <div class="alert-info">Estructura: Categoría → Marca → Modelo</div>
                 <div class="admin-card">
                     <h3>Agregar Categoría</h3>
                     <div class="form-row">
@@ -239,7 +231,7 @@
             <!-- CATEGORÍAS Y SUBCATEGORÍAS -->
             <div class="admin-section" id="section-categories">
                 <h2 class="section-title">Categorías y Subcategorías de Productos</h2>
-                <div class="alert-info">Estas categorías se usarán al agregar productos. Se sincronizan automáticamente con el Menú Drawer.</div>
+                <div class="alert-info">Estas categorías se usarán al agregar productos.</div>
                 <div class="admin-card">
                     <h3>Agregar Subcategoría</h3>
                     <div class="form-row">
@@ -577,7 +569,7 @@
                 
                 <div class="form-section">
                     <h3>Compatibilidad Vehicular</h3>
-                    <div class="alert-info">Selecciona la marca y modelo de los vehículos compatibles. Los datos vienen de la sección "Vehículos".</div>
+                    <div class="alert-info">Selecciona la marca y modelo de los vehículos compatibles.</div>
                     <div class="form-row">
                         <div class="form-group">
                             <label>Marca del Vehículo *</label>
@@ -608,7 +600,7 @@
                 
                 <div class="form-section">
                     <h3>Precio</h3>
-                    <div class="alert-warning"><strong>Fórmula correcta:</strong> Precio Venta = Precio Compra / (1 - Margen/100)<br>Ejemplo: $100 / (1 - 0.30) = $142.86 (ganancia real del 30% sobre el precio de venta)</div>
+                    <div class="alert-warning"><strong>Fórmula correcta:</strong> Precio Venta = Precio Compra / (1 - Margen/100)<br>Ejemplo: $100 / (1 - 0.30) = $142.86</div>
                     <div class="form-row">
                         <div class="form-group"><label>Costo ($) *</label><input type="number" id="productCostPrice" step="0.01" required oninput="calculateSalePrice()"></div>
                         <div class="form-group"><label>Margen de Ganancia (%) *</label><input type="number" id="productMargin" step="1" required oninput="calculateSalePrice()"></div>
@@ -726,40 +718,77 @@
             { id: 'chevrolet', name: 'Chevrolet', image: null }
         ];
 
+        // ============================================
+        // FUNCIONES HELPER SEGURAS (evitan errores null)
+        // ============================================
+        const safeSet = (id, value) => {
+            const el = document.getElementById(id);
+            if (el && value !== undefined && value !== null) {
+                try { el.value = value; } catch(e) {}
+            }
+        };
+        
+        const safeGet = (id, defaultValue) => {
+            const el = document.getElementById(id);
+            if (el && el.value !== undefined && el.value !== null && el.value !== '') {
+                return el.value;
+            }
+            return defaultValue;
+        };
+        
+        const safeGetInt = (id, defaultValue) => {
+            const val = safeGet(id, defaultValue);
+            const num = parseInt(val);
+            return isNaN(num) ? defaultValue : num;
+        };
+        
+        const safeGetBool = (id, defaultValue) => {
+            const el = document.getElementById(id);
+            if (el && el.type === 'checkbox') return el.checked;
+            return defaultValue;
+        };
+
+        // ============================================
+        // CARGA PRINCIPAL - Cada función con try/catch
+        // ============================================
         async function loadAll() { 
-            await loadBcvRate(); 
-            await loadLogo(); 
-            await loadPickupMaps(); 
-            await loadWhatsapp(); 
-            await loadBanners(); 
-            await loadSiteConfig(); 
-            await loadHero(); 
-            await loadDrawerMenu(); 
-            await loadVehicles(); 
-            await loadBrands(); 
-            await loadProducts(); 
-            await loadOrders(); 
-            await loadReviews(); 
-            await loadCoupons(); 
-            await loadDeliveryZones(); 
-            await loadDrivers(); 
-            await loadCustomers();
-            await loadAppearance();
-            await loadDashboard();
+            console.log('Iniciando carga de datos...');
+            try { await loadBcvRate(); } catch(e) { console.log('Error BCV:', e); }
+            try { await loadLogo(); } catch(e) { console.log('Error Logo:', e); }
+            try { await loadPickupMaps(); } catch(e) { console.log('Error Pickup:', e); }
+            try { await loadWhatsapp(); } catch(e) { console.log('Error WhatsApp:', e); }
+            try { await loadBanners(); } catch(e) { console.log('Error Banners:', e); }
+            try { await loadSiteConfig(); } catch(e) { console.log('Error Config:', e); }
+            try { await loadHero(); } catch(e) { console.log('Error Hero:', e); }
+            try { await loadDrawerMenu(); } catch(e) { console.log('Error Drawer:', e); }
+            try { await loadVehicles(); } catch(e) { console.log('Error Vehicles:', e); }
+            try { await loadBrands(); } catch(e) { console.log('Error Brands:', e); }
+            try { await loadProducts(); } catch(e) { console.log('Error Products:', e); }
+            try { await loadOrders(); } catch(e) { console.log('Error Orders:', e); }
+            try { await loadReviews(); } catch(e) { console.log('Error Reviews:', e); }
+            try { await loadCoupons(); } catch(e) { console.log('Error Coupons:', e); }
+            try { await loadDeliveryZones(); } catch(e) { console.log('Error Zones:', e); }
+            try { await loadDrivers(); } catch(e) { console.log('Error Drivers:', e); }
+            try { await loadCustomers(); } catch(e) { console.log('Error Customers:', e); }
+            try { await loadAppearance(); } catch(e) { console.log('Error Appearance:', e); }
+            try { await loadDashboard(); } catch(e) { console.log('Error Dashboard:', e); }
+            console.log('✅ Carga completa');
         }
 
-        // APARIENCIA - Versión corregida que no rompe
+        // ============================================
+        // APARIENCIA - 100% segura
+        // ============================================
         async function loadAppearance() {
             try {
                 const appDoc = await db.collection('settings').doc('appearance').get();
-                if (appDoc.exists) appearanceConfig = { ...appearanceConfig, ...appDoc.data() };
+                if (appDoc.exists) {
+                    const data = appDoc.data();
+                    for (const key in appearanceConfig) {
+                        if (data[key] !== undefined) appearanceConfig[key] = data[key];
+                    }
+                }
                 
-                // Función helper segura para asignar valores
-                const safeSet = (id, value) => {
-                    const el = document.getElementById(id);
-                    if (el) el.value = value;
-                };
-                
+                // Solo asignar a elementos que SÍ existen
                 safeSet('appPrimaryColor', appearanceConfig.primaryColor);
                 safeSet('appAccentColor', appearanceConfig.accentColor);
                 safeSet('appBgColor', appearanceConfig.bgColor);
@@ -767,51 +796,46 @@
                 safeSet('appFontFamily', appearanceConfig.fontFamily);
                 safeSet('appFontSize', appearanceConfig.fontSize);
                 safeSet('appTextColor', appearanceConfig.textColor);
-                safeSet('appTextSecondaryColor', appearanceConfig.textSecondaryColor);
-                safeSet('appLinkColor', appearanceConfig.linkColor);
                 safeSet('appHeaderBgColor', appearanceConfig.headerBgColor);
                 safeSet('appHeaderTextColor', appearanceConfig.headerTextColor);
-                safeSet('appHeaderHeight', appearanceConfig.headerHeight);
                 safeSet('appBtnPrimaryBg', appearanceConfig.btnPrimaryBg);
                 safeSet('appBtnTextColor', appearanceConfig.btnTextColor);
                 safeSet('appBtnRadius', appearanceConfig.btnRadius);
                 safeSet('appBtnFontSize', appearanceConfig.btnFontSize);
-                safeSet('appCardRadius', appearanceConfig.cardRadius);
-                safeSet('appCardShadow', appearanceConfig.cardShadow);
                 safeSet('appFooterBgColor', appearanceConfig.footerBgColor);
                 safeSet('appFooterTextColor', appearanceConfig.footerTextColor);
                 safeSet('appFooterTitleColor', appearanceConfig.footerTitleColor);
                 
-                console.log('Apariencia cargada correctamente');
+                console.log('✅ Apariencia cargada');
             } catch (error) { 
-                console.log('Error loading appearance:', error); 
+                console.log('⚠️ Error cargando apariencia (no crítico):', error); 
             }
         }
 
         window.saveAppearance = async function() {
             try {
                 appearanceConfig = {
-                    primaryColor: document.getElementById('appPrimaryColor').value,
-                    accentColor: document.getElementById('appAccentColor').value,
-                    bgColor: document.getElementById('appBgColor').value,
-                    cardColor: document.getElementById('appCardColor').value,
-                    fontFamily: document.getElementById('appFontFamily').value,
-                    fontSize: parseInt(document.getElementById('appFontSize').value),
-                    textColor: document.getElementById('appTextColor').value,
-                    textSecondaryColor: document.getElementById('appTextSecondaryColor').value,
-                    linkColor: document.getElementById('appLinkColor').value,
-                    headerBgColor: document.getElementById('appHeaderBgColor').value,
-                    headerTextColor: document.getElementById('appHeaderTextColor').value,
-                    headerHeight: parseInt(document.getElementById('appHeaderHeight').value),
-                    btnPrimaryBg: document.getElementById('appBtnPrimaryBg').value,
-                    btnTextColor: document.getElementById('appBtnTextColor').value,
-                    btnRadius: parseInt(document.getElementById('appBtnRadius').value),
-                    btnFontSize: parseInt(document.getElementById('appBtnFontSize').value),
-                    cardRadius: parseInt(document.getElementById('appCardRadius').value),
-                    cardShadow: document.getElementById('appCardShadow').value,
-                    footerBgColor: document.getElementById('appFooterBgColor').value,
-                    footerTextColor: document.getElementById('appFooterTextColor').value,
-                    footerTitleColor: document.getElementById('appFooterTitleColor').value
+                    primaryColor: safeGet('appPrimaryColor', '#dc3545'),
+                    accentColor: safeGet('appAccentColor', '#FFC107'),
+                    bgColor: safeGet('appBgColor', '#f5f5f5'),
+                    cardColor: safeGet('appCardColor', '#ffffff'),
+                    fontFamily: safeGet('appFontFamily', "'Segoe UI', Tahoma, sans-serif"),
+                    fontSize: safeGetInt('appFontSize', 16),
+                    textColor: safeGet('appTextColor', '#333333'),
+                    textSecondaryColor: '#666666',
+                    linkColor: '#dc3545',
+                    headerBgColor: safeGet('appHeaderBgColor', '#dc3545'),
+                    headerTextColor: safeGet('appHeaderTextColor', '#ffffff'),
+                    headerHeight: safeGetInt('appHeaderHeight', 60),
+                    btnPrimaryBg: safeGet('appBtnPrimaryBg', '#dc3545'),
+                    btnTextColor: safeGet('appBtnTextColor', '#ffffff'),
+                    btnRadius: safeGetInt('appBtnRadius', 20),
+                    btnFontSize: safeGetInt('appBtnFontSize', 14),
+                    cardRadius: 16,
+                    cardShadow: '0 2px 8px rgba(0,0,0,0.08)',
+                    footerBgColor: safeGet('appFooterBgColor', '#1a1a1a'),
+                    footerTextColor: safeGet('appFooterTextColor', '#cccccc'),
+                    footerTitleColor: safeGet('appFooterTitleColor', '#FFC107')
                 };
                 await db.collection('settings').doc('appearance').set(appearanceConfig);
                 alert('✅ Apariencia guardada');
@@ -819,25 +843,29 @@
             } catch (error) { alert('Error: ' + error.message); }
         };
 
+        // ============================================
         // BCV
+        // ============================================
         window.toggleBcvMode = function() {
-            const mode = document.getElementById('bcvMode').value;
-            document.getElementById('bcvManualSection').style.display = mode === 'manual' ? 'block' : 'none';
-            document.getElementById('bcvApiSection').style.display = mode === 'api' ? 'block' : 'none';
+            const mode = safeGet('bcvMode', 'manual');
+            const manualSection = document.getElementById('bcvManualSection');
+            const apiSection = document.getElementById('bcvApiSection');
+            if (manualSection) manualSection.style.display = mode === 'manual' ? 'block' : 'none';
+            if (apiSection) apiSection.style.display = mode === 'api' ? 'block' : 'none';
         };
 
         window.saveBcvApi = async function() {
-            const apiUrl = document.getElementById('bcvApiUrl').value.trim();
-            const frequency = document.getElementById('bcvApiFrequency').value;
+            const apiUrl = safeGet('bcvApiUrl', '');
+            const frequency = safeGetInt('bcvApiFrequency', 3600000);
             if (!apiUrl) { alert('Ingresa la URL de la API'); return; }
             try {
-                await db.collection('settings').doc('bcvConfig').set({ mode: 'api', apiUrl, frequency: parseInt(frequency), updatedAt: new Date().toISOString() });
+                await db.collection('settings').doc('bcvConfig').set({ mode: 'api', apiUrl, frequency, updatedAt: new Date().toISOString() });
                 alert('✅ Configuración API guardada');
             } catch (error) { alert('Error: ' + error.message); }
         };
 
         window.testBcvApi = async function() {
-            const apiUrl = document.getElementById('bcvApiUrl').value.trim();
+            const apiUrl = safeGet('bcvApiUrl', '');
             if (!apiUrl) { alert('Ingresa la URL primero'); return; }
             try {
                 const response = await fetch(apiUrl);
@@ -853,211 +881,781 @@
                 const rateDoc = await db.collection('settings').doc('bcvRate').get(); 
                 if (rateDoc.exists) {
                     bcvRate = rateDoc.data().value;
-                    const display = document.getElementById('currentBcvDisplay');
-                    if (display) display.textContent = `${bcvRate} Bs/$`;
+                    safeSet('currentBcvDisplay', `${bcvRate} Bs/$`);
                 }
                 const configDoc = await db.collection('settings').doc('bcvConfig').get();
                 if (configDoc.exists) {
                     const config = configDoc.data();
-                    document.getElementById('bcvMode').value = config.mode || 'manual';
-                    document.getElementById('bcvApiUrl').value = config.apiUrl || '';
-                    document.getElementById('bcvApiFrequency').value = config.frequency || '3600000';
+                    safeSet('bcvMode', config.mode || 'manual');
+                    safeSet('bcvApiUrl', config.apiUrl || '');
+                    safeSet('bcvApiFrequency', config.frequency || '3600000');
                     toggleBcvMode();
                 }
             } catch (error) { console.log('Error tasa:', error); } 
         }
         
         window.updateBcvRate = async function() { 
-            const newRate = parseFloat(document.getElementById('bcvRateInput').value); 
+            const newRate = parseFloat(safeGet('bcvRateInput', '')); 
             if (!newRate || newRate <= 0) { alert('Tasa inválida'); return; } 
             try { 
                 await db.collection('settings').doc('bcvRate').set({ value: newRate }); 
                 bcvRate = newRate; 
-                document.getElementById('currentBcvDisplay').textContent = `${bcvRate} Bs/$`;
-                document.getElementById('bcvRateInput').value = ''; 
+                safeSet('currentBcvDisplay', `${bcvRate} Bs/$`);
+                safeSet('bcvRateInput', ''); 
                 alert('✅ Tasa actualizada'); 
             } catch (error) { alert('Error: ' + error.message); } 
         };
 
-        // Pickup Maps
-        async function loadPickupMaps() { try { const doc = await db.collection('settings').doc('pickupMaps').get(); if (doc.exists) document.getElementById('pickupMapsInput').value = doc.data().url || ''; } catch (e) {} }
-        window.updatePickupMaps = async function() { const url = document.getElementById('pickupMapsInput').value.trim(); if (!url) { alert('Ingresa link'); return; } try { await db.collection('settings').doc('pickupMaps').set({ url }); alert('✅ Guardado'); } catch (e) { alert('Error: ' + e.message); } };
-
-        // WhatsApp
-        async function loadWhatsapp() { try { const doc = await db.collection('settings').doc('whatsapp').get(); if (doc.exists && doc.data().number) { whatsappNumber = doc.data().number; document.getElementById('whatsappNumber').value = whatsappNumber; } } catch (e) {} }
-        window.saveWhatsapp = async function() { const num = document.getElementById('whatsappNumber').value.trim(); if (!num) { alert('Ingresa número'); return; } try { await db.collection('settings').doc('whatsapp').set({ number: num }); whatsappNumber = num; alert('✅ Guardado'); } catch (e) { alert('Error: ' + e.message); } };
-
-        // Logo
-        async function loadLogo() { try { const doc = await db.collection('settings').doc('logo').get(); if (doc.exists) { const p = document.getElementById('adminLogoPreview'); if (p) p.innerHTML = `<img src="${doc.data().image}">`; } } catch (e) {} }
-
-        // Banners
-        async function loadBanners() { try { const doc = await db.collection('settings').doc('banners').get(); if (doc.exists) banners = doc.data().images || []; renderBannerPreviews(); } catch (e) {} }
-        function renderBannerPreviews() { const g = document.getElementById('bannerPreviewGrid'); if (!g) return; g.innerHTML = banners.length === 0 ? '<p style="color:#666;text-align:center;">Sin banners</p>' : banners.map((b, i) => `<div style="position:relative;"><img src="${b}" style="width:100%;height:120px;object-fit:cover;border-radius:8px;"><button onclick="removeBanner(${i})" style="position:absolute;top:5px;right:5px;background:#dc3545;color:white;border:none;width:28px;height:28px;border-radius:50%;cursor:pointer;">×</button></div>`).join(''); }
-        window.addBanner = async function() { const f = document.getElementById('bannerImageInput').files[0]; if (!f) { alert('Selecciona imagen'); return; } if (banners.length >= 5) { alert('Máximo 5'); return; } if (f.size > 1024*1024) { alert('Máximo 1MB'); return; } const r = new FileReader(); r.onload = async (e) => { banners.push(e.target.result); try { await db.collection('settings').doc('banners').set({ images: banners }); renderBannerPreviews(); document.getElementById('bannerImageInput').value = ''; alert('✅ Agregado'); } catch (err) { alert('Error: ' + err.message); } }; r.readAsDataURL(f); };
-        window.removeBanner = async function(i) { if (!confirm('¿Eliminar?')) return; banners.splice(i, 1); try { await db.collection('settings').doc('banners').set({ images: banners }); renderBannerPreviews(); alert('✅ Eliminado'); } catch (e) { alert('Error: ' + e.message); } };
-
-        // Site Config
-        async function loadSiteConfig() { try { const doc = await db.collection('settings').doc('siteConfig').get(); if (doc.exists) siteConfig = { ...siteConfig, ...doc.data() }; document.getElementById('cfgCompanyName').value = siteConfig.companyName; document.getElementById('cfgSlogan').value = siteConfig.slogan; document.getElementById('cfgDescription').value = siteConfig.description; document.getElementById('cfgAddress').value = siteConfig.address; document.getElementById('cfgPhone').value = siteConfig.phone; document.getElementById('cfgSchedule').value = siteConfig.schedule; document.getElementById('cfgFacebook').value = siteConfig.facebook || ''; document.getElementById('cfgInstagram').value = siteConfig.instagram || ''; document.getElementById('cfgTiktok').value = siteConfig.tiktok || ''; } catch (e) {} }
-        window.saveSiteConfig = async function() { const c = { companyName: document.getElementById('cfgCompanyName').value, slogan: document.getElementById('cfgSlogan').value, description: document.getElementById('cfgDescription').value, address: document.getElementById('cfgAddress').value, phone: document.getElementById('cfgPhone').value, schedule: document.getElementById('cfgSchedule').value, facebook: document.getElementById('cfgFacebook').value, instagram: document.getElementById('cfgInstagram').value, tiktok: document.getElementById('cfgTiktok').value }; try { await db.collection('settings').doc('siteConfig').set(c); siteConfig = { ...siteConfig, ...c }; alert('✅ Guardado'); } catch (e) { alert('Error: ' + e.message); } };
-
-        // Vehicles
-        async function loadVehicles() { try { const doc = await db.collection('settings').doc('vehicles').get(); if (doc.exists) vehicles = doc.data().brands || {}; else { vehicles = { "Toyota": ["Corolla", "Hilux", "Yaris"], "Nissan": ["Versa", "Sentra", "Frontier"], "Chevrolet": ["Aveo", "Cruze", "Captiva"], "Ford": ["Fiesta", "Focus", "Ranger"], "Hyundai": ["Tucson", "Creta", "Accent"], "Kia": ["Rio", "Sportage", "Picanto"], "Mitsubishi": ["L200", "Outlander", "Montero"] }; await db.collection('settings').doc('vehicles').set({ brands: vehicles }); } renderVehicles(); } catch (e) {} }
-        function renderVehicles() { const l = document.getElementById('vehiclesList'); if (Object.keys(vehicles).length === 0) { l.innerHTML = '<p style="text-align:center;color:#666;padding:1rem">Sin marcas</p>'; return; } let h = ''; for (const [b, m] of Object.entries(vehicles)) h += `<div class="admin-item" style="flex-direction:column;align-items:stretch;"><div style="display:flex;justify-content:space-between;align-items:center;width:100%;"><strong style="color:#dc3545;">${b}</strong><button class="btn btn-small btn-secondary" onclick="deleteVehicleBrand('${b}')">Eliminar</button></div><div style="margin-top:1rem;padding:1rem;background:white;border-radius:8px;width:100%;"><div style="display:flex;gap:0.5rem;margin-bottom:1rem;"><input type="text" id="newModel-${b}" placeholder="Modelo" style="flex:1;padding:0.5rem;border:1px solid #ddd;border-radius:8px;"><button class="btn btn-small btn-primary" onclick="addVehicleModel('${b}')">+ Modelo</button></div><div style="display:flex;flex-wrap:wrap;gap:0.5rem;">${m.map(x => `<span class="vehicle-tag">${x}<button onclick="deleteVehicleModel('${b}','${x}')">×</button></span>`).join('')}</div></div></div>`; l.innerHTML = h; }
-        window.addVehicleBrand = async function() { const b = document.getElementById('newVehicleBrand').value.trim(); if (!b) { alert('Ingresa nombre'); return; } if (vehicles[b]) { alert('Ya existe'); return; } vehicles[b] = []; try { await db.collection('settings').doc('vehicles').set({ brands: vehicles }); document.getElementById('newVehicleBrand').value = ''; renderVehicles(); alert('✅ Agregado'); } catch (e) { alert('Error: ' + e.message); } };
-        window.deleteVehicleBrand = async function(b) { if (!confirm('¿Eliminar?')) return; delete vehicles[b]; try { await db.collection('settings').doc('vehicles').set({ brands: vehicles }); renderVehicles(); alert('✅ Eliminado'); } catch (e) { alert('Error: ' + e.message); } };
-        window.addVehicleModel = async function(b) { const i = document.getElementById(`newModel-${b}`); const m = i.value.trim(); if (!m) { alert('Ingresa nombre'); return; } if (vehicles[b].includes(m)) { alert('Ya existe'); return; } vehicles[b].push(m); try { await db.collection('settings').doc('vehicles').set({ brands: vehicles }); i.value = ''; renderVehicles(); alert('✅ Agregado'); } catch (e) { alert('Error: ' + e.message); } };
-        window.deleteVehicleModel = async function(b, m) { if (!confirm('¿Eliminar?')) return; vehicles[b] = vehicles[b].filter(x => x !== m); try { await db.collection('settings').doc('vehicles').set({ brands: vehicles }); renderVehicles(); alert('✅ Eliminado'); } catch (e) { alert('Error: ' + e.message); } };
-
-        // Brands
-        async function loadBrands() { try { const s = await db.collection('brands').get(); if (s.empty) { brands = defaultBrands; for (const b of defaultBrands) await db.collection('brands').doc(b.id).set(b); } else { brands = []; s.forEach(d => brands.push({ id: d.id, ...d.data() })); } renderAdminBrands(); } catch (e) {} }
-        function renderAdminBrands() { const l = document.getElementById('adminBrandsList'); l.innerHTML = brands.map(b => { const t = b.image ? `<img src="${b.image}">` : ''; return `<div class="admin-item"><div class="admin-info"><div class="admin-thumb">${t}</div><div><strong>${b.name}</strong><br><small style="color:#666">${b.image ? 'Con imagen' : 'Sin imagen'}</small></div></div><div class="admin-actions"><button class="btn btn-small btn-primary" onclick="editBrandImage('${b.id}')">${b.image ? 'Cambiar' : 'Agregar'}</button></div></div>`; }).join(''); }
-        window.editBrandImage = function(id) { const b = brands.find(x => x.id === id); document.getElementById('brandModalTitle').textContent = `Imagen: ${b.name}`; document.getElementById('editBrandId').value = id; document.getElementById('currentBrandImageData').value = b.image || ''; document.getElementById('brandImagePreview').innerHTML = b.image ? `<img src="${b.image}">` : '<div style="color:#999;">Sin imagen</div>'; document.getElementById('brandImageInput').value = ''; document.getElementById('brandModal').classList.add('active'); };
-        window.previewBrandImage = function(e) { const f = e.target.files[0]; if (!f) return; if (f.size > 1024*1024) { alert('Máximo 1MB'); e.target.value = ''; return; } const r = new FileReader(); r.onload = (ev) => { document.getElementById('currentBrandImageData').value = ev.target.result; document.getElementById('brandImagePreview').innerHTML = `<img src="${ev.target.result}">`; }; r.readAsDataURL(f); };
-        window.saveBrandImage = async function(e) { e.preventDefault(); const id = document.getElementById('editBrandId').value; const img = document.getElementById('currentBrandImageData').value; try { await db.collection('brands').doc(id).update({ image: img || null }); await loadBrands(); closeModal('brandModal'); alert('✅ Guardado'); } catch (err) { alert('Error: ' + err.message); } };
-
-        // Products
-        function populateCategorySelect() { const s = document.getElementById('productCategory'); s.innerHTML = '<option value="">Seleccionar...</option>'; drawerMenu.forEach((c, i) => s.innerHTML += `<option value="${c.name}">${c.name}</option>`); }
-        function populateCompatBrandSelect() { const s = document.getElementById('compatBrand'); s.innerHTML = '<option value="">Seleccionar marca...</option>'; for (const b of Object.keys(vehicles)) s.innerHTML += `<option value="${b}">${b}</option>`; }
-        window.updateSubcategoryOptions = function() { const c = document.getElementById('productCategory').value; const s = document.getElementById('productSubcategory'); s.innerHTML = '<option value="">Seleccionar...</option>'; const cat = drawerMenu.find(x => x.name === c); if (cat && cat.subcategories) cat.subcategories.forEach(sub => s.innerHTML += `<option value="${sub}">${sub}</option>`); };
-        window.updateCompatModels = function() { const b = document.getElementById('compatBrand').value; const s = document.getElementById('compatModel'); s.innerHTML = '<option value="">Seleccionar modelo...</option>'; if (b && vehicles[b]) vehicles[b].forEach(m => s.innerHTML += `<option value="${m}">${m}</option>`); };
-        window.calculateSalePrice = function() { const c = parseFloat(document.getElementById('productCostPrice').value) || 0; const m = parseFloat(document.getElementById('productMargin').value) || 0; if (m >= 100) { document.getElementById('productPrice').value = '0'; alert('Margen no puede ser 100%+'); return; } document.getElementById('productPrice').value = (c / (1 - m / 100)).toFixed(2); };
-        window.addSpecification = function() { const k = document.getElementById('specKey').value.trim(); const v = document.getElementById('specValue').value.trim(); if (!k || !v) { alert('Completa ambos'); return; } currentSpecifications.push({ key: k, value: v }); document.getElementById('specKey').value = ''; document.getElementById('specValue').value = ''; renderSpecifications(); };
-        function renderSpecifications() { document.getElementById('specificationsContainer').innerHTML = currentSpecifications.map((s, i) => `<span class="spec-tag"><strong>${s.key}:</strong> ${s.value}<button type="button" onclick="removeSpecification(${i})">×</button></span>`).join(''); }
-        window.removeSpecification = function(i) { currentSpecifications.splice(i, 1); renderSpecifications(); };
-        window.addCompatibility = function() { const b = document.getElementById('compatBrand').value; const m = document.getElementById('compatModel').value; const y = document.getElementById('compatYears').value.trim(); const e = document.getElementById('compatEngine').value.trim(); const n = document.getElementById('compatNotes').value.trim(); if (!b || !m) { alert('Selecciona marca y modelo'); return; } currentCompatibility.push({ brand: b, model: m, years: y, engine: e, notes: n }); document.getElementById('compatBrand').value = ''; document.getElementById('compatModel').value = ''; document.getElementById('compatYears').value = ''; document.getElementById('compatEngine').value = ''; document.getElementById('compatNotes').value = ''; renderCompatibility(); };
-        function renderCompatibility() { document.getElementById('compatibilityContainer').innerHTML = currentCompatibility.map((c, i) => `<div class="compat-row"><div style="display:flex;justify-content:space-between;align-items:center;"><div><strong>${c.brand} ${c.model}</strong> <small style="color:#666;">(${c.years || 'N/A'}) ${c.engine ? '- ' + c.engine : ''}</small>${c.notes ? `<br><small style="color:#0066cc;">${c.notes}</small>` : ''}</div><button type="button" class="btn btn-small btn-secondary" onclick="removeCompatibility(${i})">Eliminar</button></div></div>`).join(''); }
-        window.removeCompatibility = function(i) { currentCompatibility.splice(i, 1); renderCompatibility(); };
-
-        async function loadProducts() { try { const s = await db.collection('products').get(); products = []; s.forEach(d => products.push({ id: d.id, ...d.data() })); document.getElementById('statProducts').textContent = products.length; renderAdminProducts(); } catch (e) {} }
-        function renderAdminProducts(f = '') { const l = document.getElementById('adminProductList'); let fl = products; if (f) { const q = f.toLowerCase(); fl = products.filter(p => p.name.toLowerCase().includes(q) || (p.code && p.code.toLowerCase().includes(q))); } if (fl.length === 0) { l.innerHTML = '<p style="text-align:center;color:#666;padding:1rem">Sin productos</p>'; return; } l.innerHTML = fl.map(p => { const imgs = p.images || (p.image ? [p.image] : []); const t = imgs.length > 0 ? `<img src="${imgs[0]}">` : ''; const o = p.discount && p.discount > 0 ? ` | -${p.discount}%` : ''; const r = p.recommended ? ' | RECOMENDADO' : ''; return `<div class="admin-item"><div class="admin-info"><div class="admin-thumb">${t}</div><div><strong>${p.name}</strong>${r}<br><small style="color:#dc3545">Código: ${p.code || 'N/A'}</small><br><small style="color:#666">$${Number(p.price).toFixed(2)}${o} | Stock: ${p.stock}</small></div></div><div class="admin-actions"><button class="btn btn-small btn-primary" onclick="editProduct('${p.id}')">Editar</button><button class="btn btn-small btn-secondary" onclick="deleteProduct('${p.id}')">Eliminar</button></div></div>`; }).join(''); }
-        document.getElementById('adminProductSearch').addEventListener('input', function(e) { renderAdminProducts(e.target.value); });
-        window.openAddProductModal = function() { populateCategorySelect(); populateCompatBrandSelect(); currentProductImages = []; currentSpecifications = []; currentCompatibility = []; document.getElementById('productModalTitle').textContent = 'Agregar Producto'; document.getElementById('editProductId').value = ''; ['productCode','productBrand','productName','productDescription','productPartNumber','productCostPrice','productMargin','productPrice','productDiscount','productStock','productSearchTerms'].forEach(id => document.getElementById(id).value = ''); document.getElementById('productPosition').value = ''; document.getElementById('productSide').value = ''; document.getElementById('productCondition').value = 'Nuevo'; document.getElementById('productCategory').value = ''; document.getElementById('productSubcategory').value = ''; document.getElementById('productRecommended').checked = false; document.getElementById('productImagesContainer').innerHTML = ''; document.getElementById('specificationsContainer').innerHTML = ''; document.getElementById('compatibilityContainer').innerHTML = ''; document.getElementById('compatBrand').value = ''; document.getElementById('compatModel').innerHTML = '<option value="">Seleccionar modelo...</option>'; document.getElementById('compatYears').value = ''; document.getElementById('compatEngine').value = ''; document.getElementById('compatNotes').value = ''; document.getElementById('productModal').classList.add('active'); };
-        window.editProduct = function(id) { const p = products.find(x => x.id === id); populateCategorySelect(); populateCompatBrandSelect(); currentProductImages = p.images || (p.image ? [p.image] : []); currentSpecifications = p.specifications || []; currentCompatibility = p.compatibility || []; document.getElementById('productModalTitle').textContent = 'Editar Producto'; document.getElementById('editProductId').value = p.id; document.getElementById('productCode').value = p.code || ''; document.getElementById('productBrand').value = p.brand || ''; document.getElementById('productName').value = p.name; document.getElementById('productDescription').value = p.description || ''; document.getElementById('productPartNumber').value = p.attributes?.partNumber || ''; document.getElementById('productPosition').value = p.attributes?.position || ''; document.getElementById('productSide').value = p.attributes?.side || ''; document.getElementById('productCondition').value = p.attributes?.condition || 'Nuevo'; document.getElementById('productCostPrice').value = p.costPrice || ''; document.getElementById('productMargin').value = p.margin || ''; document.getElementById('productPrice').value = p.price; document.getElementById('productDiscount').value = p.discount || ''; document.getElementById('productStock').value = p.stock; document.getElementById('productCategory').value = p.category || ''; updateSubcategoryOptions(); document.getElementById('productSubcategory').value = p.subcategory || ''; document.getElementById('productSearchTerms').value = p.searchTerms || ''; document.getElementById('productRecommended').checked = p.recommended || false; renderProductImages(); renderSpecifications(); renderCompatibility(); document.getElementById('productModal').classList.add('active'); };
-        function renderProductImages() { const c = document.getElementById('productImagesContainer'); if (currentProductImages.length === 0) { c.innerHTML = '<div style="color:#999;">Sin imágenes</div>'; return; } c.innerHTML = currentProductImages.map((img, i) => `<div style="position:relative;"><img src="${img}" style="width:80px;height:80px;object-fit:cover;border-radius:8px;"><button type="button" onclick="removeProductImage(${i})" style="position:absolute;top:2px;right:2px;background:#dc3545;color:white;border:none;width:20px;height:20px;border-radius:50%;cursor:pointer;">×</button></div>`).join(''); }
-        window.addProductImages = function(e) { Array.from(e.target.files).forEach(f => { if (currentProductImages.length >= 5) { alert('Máximo 5'); return; } if (f.size > 1024*1024) { alert('Máximo 1MB'); return; } const r = new FileReader(); r.onload = (ev) => { currentProductImages.push(ev.target.result); renderProductImages(); }; r.readAsDataURL(f); }); e.target.value = ''; };
-        window.removeProductImage = function(i) { currentProductImages.splice(i, 1); renderProductImages(); };
-        window.saveProduct = async function(e) { e.preventDefault(); const id = document.getElementById('editProductId').value; const cost = parseFloat(document.getElementById('productCostPrice').value) || 0; const margin = parseFloat(document.getElementById('productMargin').value) || 0; const price = parseFloat(document.getElementById('productPrice').value) || 0; const discount = parseFloat(document.getElementById('productDiscount').value) || 0; const attrs = { category: document.getElementById('productCategory').value, subcategory: document.getElementById('productSubcategory').value, brand: document.getElementById('productBrand').value, partNumber: document.getElementById('productPartNumber').value, position: document.getElementById('productPosition').value, side: document.getElementById('productSide').value, condition: document.getElementById('productCondition').value }; const data = { code: document.getElementById('productCode').value, brand: document.getElementById('productBrand').value, name: document.getElementById('productName').value, description: document.getElementById('productDescription').value, costPrice: cost, margin, price, discount, stock: parseInt(document.getElementById('productStock').value), category: document.getElementById('productCategory').value, subcategory: document.getElementById('productSubcategory').value, recommended: document.getElementById('productRecommended').checked, attributes: attrs, specifications: currentSpecifications, compatibility: currentCompatibility, searchTerms: document.getElementById('productSearchTerms').value, images: currentProductImages.length > 0 ? currentProductImages : null, image: currentProductImages.length > 0 ? currentProductImages[0] : null, updatedAt: new Date().toISOString() }; try { if (id) await db.collection('products').doc(id).update(data); else { data.createdAt = new Date().toISOString(); await db.collection('products').add(data); } await loadProducts(); await loadDashboard(); closeModal('productModal'); alert('✅ Producto guardado'); } catch (err) { alert('Error: ' + err.message); } };
-        window.deleteProduct = async function(id) { if (!confirm('¿Eliminar?')) return; try { await db.collection('products').doc(id).delete(); await loadProducts(); await loadDashboard(); alert('✅ Eliminado'); } catch (e) { alert('Error: ' + e.message); } };
-
-        // Orders
-        async function loadOrders() { try { const s = await db.collection('orders').get(); orders = []; s.forEach(d => orders.push({ id: d.id, ...d.data() })); renderOrders(); } catch (e) {} }
-        function renderOrders() { const l = document.getElementById('ordersList'); const f = document.getElementById('filterOrderStatus').value; const q = (document.getElementById('searchOrderCode').value || '').toLowerCase().trim(); let fl = orders; if (f) fl = fl.filter(o => o.status === f); if (q) fl = fl.filter(o => (o.customerCode||'').toLowerCase().includes(q) || (o.userName||'').toLowerCase().includes(q) || (o.userPhone||'').toLowerCase().includes(q)); if (fl.length === 0) { l.innerHTML = '<p style="text-align:center;color:#666;padding:1rem">Sin pedidos</p>'; return; } l.innerHTML = fl.sort((a,b) => new Date(b.date) - new Date(a.date)).map(o => { const st = { pending: 'Pendiente', shipped: 'En camino', delivered: 'Entregado', cancelled: 'Cancelado' }[o.status] || o.status; return `<div class="order-item"><div class="order-header"><div><strong>#${o.id.slice(-6)}</strong><br><small style="color:#666">${o.userName || 'Cliente'} - ${o.userPhone || 'N/A'}</small><br><small style="color:#666">${new Date(o.date).toLocaleString()}</small>${o.customerCode ? `<br><small style="color:#dc3545;">Código: ${o.customerCode}</small>` : ''}</div><span class="order-status ${o.status}">${st}</span></div><div style="margin:0.5rem 0;"><strong>$${Number(o.total).toFixed(2)}</strong> | ${o.deliveryMode === 'pickup' ? 'Pickup' : 'Delivery'}${o.driverName ? `<br><small style="color:#9C27B0;">${o.driverName}</small>` : ''}</div><div style="display:flex;gap:0.5rem;flex-wrap:wrap;"><button class="btn btn-small btn-primary" onclick="viewOrderDetail('${o.id}')">Ver</button><button class="btn btn-small btn-warning" onclick="updateOrderStatus('${o.id}','shipped')">Enviado</button><button class="btn btn-small btn-success" onclick="updateOrderStatus('${o.id}','delivered')">Entregado</button><button class="btn btn-small btn-secondary" onclick="updateOrderStatus('${o.id}','cancelled')">Cancelar</button><button class="btn btn-small" style="background:#999;color:white;" onclick="deleteOrder('${o.id}')">🗑️</button></div></div>`; }).join(''); }
-        document.getElementById('searchOrderCode').addEventListener('input', renderOrders);
-        document.getElementById('filterOrderStatus').addEventListener('change', renderOrders);
-        
-        window.viewOrderDetail = function(orderId) { 
-            const order = orders.find(o => o.id === orderId); 
-            if (!order) return; 
-            const statusText = { pending: 'Pendiente', shipped: 'En camino', delivered: 'Entregado', cancelled: 'Cancelado' }[order.status] || order.status;
-            const driversOptions = drivers.length > 0 ? drivers.map(d => `<option value="${d.id}" ${order.driverId === d.id ? 'selected' : ''}>${d.name} - ${d.phone}</option>`).join('') : '<option value="">No hay domiciliarios registrados</option>';
-            
-            document.getElementById('orderDetailContent').innerHTML = `
-                <button class="modal-close" onclick="closeModal('orderDetailModal')">×</button>
-                <h2 style="color:#dc3545;">Pedido #${order.id.slice(-6)}</h2>
-                <div style="margin:1rem 0;">
-                    <strong>Cliente:</strong> ${order.userName || 'N/A'}<br>
-                    <strong>Tel:</strong> ${order.userPhone || 'N/A'}
-                    ${order.customerCode ? `<br><strong>Código:</strong> ${order.customerCode}` : ''}
-                    <br><strong>Fecha:</strong> ${new Date(order.date).toLocaleString()}
-                    <br><strong>Estado:</strong> <span class="order-status ${order.status}">${statusText}</span>
-                </div>
-                <h3 style="margin:1rem 0 0.5rem; color:#dc3545;">Productos</h3>
-                <div style="background:#f8f8f8; padding:1rem; border-radius:8px;">
-                    ${order.items.map(item => `<div style="padding:0.5rem 0; border-bottom:1px solid #eee;">${item.name} x${item.quantity} = $${(Number(item.price) * item.quantity).toFixed(2)}</div>`).join('')}
-                </div>
-                <div style="margin-top:1rem; padding:1rem; background:#fff5f5; border-radius:8px;">
-                    <div style="display:flex; justify-content:space-between; font-size:1.3rem; font-weight:bold; color:#dc3545;"><span>TOTAL:</span><span>$${Number(order.total).toFixed(2)}</span></div>
-                </div>
-                
-                <div style="margin-top:1rem; padding:1rem; background:#e3f2fd; border-radius:8px; border-left:4px solid #2196F3;">
-                    <h4 style="margin-bottom:0.5rem; color:#2196F3;">️ Asignar Domiciliario</h4>
-                    <select id="driverSelect-${order.id}" style="width:100%; padding:0.5rem; border:1px solid #ddd; border-radius:8px; margin-bottom:0.5rem;">
-                        <option value="">-- Seleccionar domiciliario --</option>
-                        ${driversOptions}
-                    </select>
-                    <button class="btn btn-small btn-primary" onclick="assignDriverToOrder('${order.id}')">Asignar</button>
-                    ${order.driverName ? `<div style="margin-top:0.5rem; padding:0.5rem; background:white; border-radius:8px;"><strong>Domiciliario:</strong> ${order.driverName} - ${order.driverPhone || 'N/A'}</div>` : ''}
-                </div>
-                
-                <div style="margin-top:1rem; padding:1rem; background:#e8f5e9; border-radius:8px; border-left:4px solid #4CAF50;">
-                    <h4 style="margin-bottom:0.5rem; color:#4CAF50;">💬 Enviar Mensajes</h4>
-                    <button class="btn btn-small" style="background:#25d366; color:white; margin-right:0.5rem;" onclick="sendWhatsAppToCustomer('${order.id}')">📱 WhatsApp al Cliente</button>
-                    <button class="btn btn-small" style="background:#2196F3; color:white;" onclick="sendWhatsAppToDriver('${order.id}')">🏍️ WhatsApp al Domiciliario</button>
-                </div>
-                
-                <div style="margin-top:1rem; padding:1rem; background:#f8f8f8; border-radius:8px;">
-                    <h4 style="margin-bottom:0.5rem; color:#666;">Eliminar pedido permanentemente</h4>
-                    <button class="btn btn-small" style="background:#999;color:white;" onclick="deleteOrder('${order.id}'); closeModal('orderDetailModal');">🗑️ Eliminar este pedido</button>
-                </div>
-            `; 
-            document.getElementById('orderDetailModal').classList.add('active'); 
+        // ============================================
+        // PICKUP MAPS
+        // ============================================
+        async function loadPickupMaps() { 
+            try { 
+                const doc = await db.collection('settings').doc('pickupMaps').get(); 
+                if (doc.exists) safeSet('pickupMapsInput', doc.data().url || ''); 
+            } catch (e) {} 
+        }
+        window.updatePickupMaps = async function() { 
+            const url = safeGet('pickupMapsInput', '').trim(); 
+            if (!url) { alert('Ingresa link'); return; } 
+            try { await db.collection('settings').doc('pickupMaps').set({ url }); alert('✅ Guardado'); } catch (e) { alert('Error: ' + e.message); } 
         };
-        
-        window.assignDriverToOrder = async function(orderId) {
-            const driverId = document.getElementById(`driverSelect-${orderId}`).value;
-            if (!driverId) { alert('Selecciona un domiciliario'); return; }
-            const driver = drivers.find(d => d.id === driverId);
-            if (!driver) return;
-            if (!confirm(`¿Asignar a ${driver.name} y cambiar estado a "En camino"?`)) return;
+
+        // ============================================
+        // WHATSAPP
+        // ============================================
+        async function loadWhatsapp() { 
+            try { 
+                const doc = await db.collection('settings').doc('whatsapp').get(); 
+                if (doc.exists && doc.data().number) { 
+                    whatsappNumber = doc.data().number; 
+                    safeSet('whatsappNumber', whatsappNumber); 
+                } 
+            } catch (e) {} 
+        }
+        window.saveWhatsapp = async function() { 
+            const num = safeGet('whatsappNumber', '').trim(); 
+            if (!num) { alert('Ingresa número'); return; } 
+            try { await db.collection('settings').doc('whatsapp').set({ number: num }); whatsappNumber = num; alert('✅ Guardado'); } catch (e) { alert('Error: ' + e.message); } 
+        };
+
+        // ============================================
+        // LOGO
+        // ============================================
+        async function loadLogo() { 
+            try { 
+                const doc = await db.collection('settings').doc('logo').get(); 
+                if (doc.exists) { 
+                    const p = document.getElementById('adminLogoPreview'); 
+                    if (p) p.innerHTML = `<img src="${doc.data().image}">`; 
+                } 
+            } catch (e) {} 
+        }
+
+        // ============================================
+        // BANNERS
+        // ============================================
+        async function loadBanners() { 
+            try { 
+                const doc = await db.collection('settings').doc('banners').get(); 
+                if (doc.exists) banners = doc.data().images || []; 
+                renderBannerPreviews(); 
+            } catch (e) {} 
+        }
+        function renderBannerPreviews() { 
+            const g = document.getElementById('bannerPreviewGrid'); 
+            if (!g) return; 
+            g.innerHTML = banners.length === 0 ? '<p style="color:#666;text-align:center;">Sin banners</p>' : banners.map((b, i) => `<div style="position:relative;"><img src="${b}" style="width:100%;height:120px;object-fit:cover;border-radius:8px;"><button onclick="removeBanner(${i})" style="position:absolute;top:5px;right:5px;background:#dc3545;color:white;border:none;width:28px;height:28px;border-radius:50%;cursor:pointer;">×</button></div>`).join(''); 
+        }
+        window.addBanner = async function() { 
+            const f = document.getElementById('bannerImageInput').files[0]; 
+            if (!f) { alert('Selecciona imagen'); return; } 
+            if (banners.length >= 5) { alert('Máximo 5'); return; } 
+            if (f.size > 1024*1024) { alert('Máximo 1MB'); return; } 
+            const r = new FileReader(); 
+            r.onload = async (e) => { 
+                banners.push(e.target.result); 
+                try { await db.collection('settings').doc('banners').set({ images: banners }); renderBannerPreviews(); document.getElementById('bannerImageInput').value = ''; alert('✅ Agregado'); } catch (err) { alert('Error: ' + err.message); } 
+            }; 
+            r.readAsDataURL(f); 
+        };
+        window.removeBanner = async function(i) { 
+            if (!confirm('¿Eliminar?')) return; 
+            banners.splice(i, 1); 
+            try { await db.collection('settings').doc('banners').set({ images: banners }); renderBannerPreviews(); alert('✅ Eliminado'); } catch (e) { alert('Error: ' + e.message); } 
+        };
+
+        // ============================================
+        // SITE CONFIG
+        // ============================================
+        async function loadSiteConfig() { 
+            try { 
+                const doc = await db.collection('settings').doc('siteConfig').get(); 
+                if (doc.exists) siteConfig = { ...siteConfig, ...doc.data() }; 
+                safeSet('cfgCompanyName', siteConfig.companyName);
+                safeSet('cfgSlogan', siteConfig.slogan);
+                safeSet('cfgDescription', siteConfig.description);
+                safeSet('cfgAddress', siteConfig.address);
+                safeSet('cfgPhone', siteConfig.phone);
+                safeSet('cfgSchedule', siteConfig.schedule);
+                safeSet('cfgFacebook', siteConfig.facebook || '');
+                safeSet('cfgInstagram', siteConfig.instagram || '');
+                safeSet('cfgTiktok', siteConfig.tiktok || '');
+            } catch (e) {} 
+        }
+        window.saveSiteConfig = async function() { 
+            const c = { 
+                companyName: safeGet('cfgCompanyName', ''), 
+                slogan: safeGet('cfgSlogan', ''), 
+                description: safeGet('cfgDescription', ''), 
+                address: safeGet('cfgAddress', ''), 
+                phone: safeGet('cfgPhone', ''), 
+                schedule: safeGet('cfgSchedule', ''), 
+                facebook: safeGet('cfgFacebook', ''), 
+                instagram: safeGet('cfgInstagram', ''), 
+                tiktok: safeGet('cfgTiktok', '') 
+            }; 
+            try { await db.collection('settings').doc('siteConfig').set(c); siteConfig = { ...siteConfig, ...c }; alert('✅ Guardado'); } catch (e) { alert('Error: ' + e.message); } 
+        };
+
+        // ============================================
+        // HERO
+        // ============================================
+        async function loadHero() {
             try {
-                await db.collection('orders').doc(orderId).update({ driverId: driver.id, driverName: driver.name, driverPhone: driver.phone, driverCommission: driver.commission, status: 'shipped' });
-                await loadOrders();
-                await loadDashboard();
-                closeModal('orderDetailModal');
-                alert(`✅ ${driver.name} asignado`);
+                const doc = await db.collection('settings').doc('hero').get();
+                if (doc.exists) {
+                    heroConfig = doc.data();
+                    const el = document.getElementById('heroVisible');
+                    if (el) el.checked = heroConfig.visible || false;
+                    safeSet('heroTitle', heroConfig.title || '');
+                    safeSet('heroSubtitle', heroConfig.subtitle || '');
+                    safeSet('heroTitleColor', heroConfig.titleColor || '#ffffff');
+                    safeSet('heroTitleSize', heroConfig.titleSize || 48);
+                    safeSet('heroTitleFont', heroConfig.titleFont || "'Segoe UI', sans-serif");
+                    safeSet('heroSubtitleColor', heroConfig.subtitleColor || '#dddddd');
+                    safeSet('heroSubtitleSize', heroConfig.subtitleSize || 20);
+                    safeSet('heroCtaText', heroConfig.ctaText || '');
+                    safeSet('heroCtaLink', heroConfig.ctaLink || '');
+                    if (heroConfig.backgroundImage) {
+                        const preview = document.getElementById('heroBgPreview');
+                        if (preview) preview.innerHTML = `<img src="${heroConfig.backgroundImage}">`;
+                    }
+                }
+            } catch (error) { console.log('Error loading hero:', error); }
+        }
+
+        document.getElementById('heroBgImage').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            if (file.size > 2 * 1024 * 1024) { alert('Máximo 2MB'); return; }
+            const reader = new FileReader();
+            reader.onload = function(ev) {
+                heroConfig.backgroundImage = ev.target.result;
+                const preview = document.getElementById('heroBgPreview');
+                if (preview) preview.innerHTML = `<img src="${ev.target.result}">`;
+            };
+            reader.readAsDataURL(file);
+        });
+
+        window.saveHero = async function() {
+            try {
+                const heroData = {
+                    visible: safeGetBool('heroVisible', false),
+                    title: safeGet('heroTitle', ''),
+                    subtitle: safeGet('heroSubtitle', ''),
+                    titleColor: safeGet('heroTitleColor', '#ffffff'),
+                    titleSize: safeGetInt('heroTitleSize', 48),
+                    titleFont: safeGet('heroTitleFont', "'Segoe UI', sans-serif"),
+                    subtitleColor: safeGet('heroSubtitleColor', '#dddddd'),
+                    subtitleSize: safeGetInt('heroSubtitleSize', 20),
+                    ctaText: safeGet('heroCtaText', ''),
+                    ctaLink: safeGet('heroCtaLink', ''),
+                    backgroundImage: heroConfig.backgroundImage || null,
+                    updatedAt: new Date().toISOString()
+                };
+                await db.collection('settings').doc('hero').set(heroData);
+                alert('✅ Hero guardado');
+                refreshPreview();
             } catch (error) { alert('Error: ' + error.message); }
         };
+
+        // ============================================
+        // DRAWER MENU
+        // ============================================
+        async function loadDrawerMenu() {
+            try {
+                const doc = await db.collection('settings').doc('drawerMenu').get();
+                if (doc.exists) {
+                    drawerMenu = doc.data().categories || [];
+                } else {
+                    drawerMenu = [
+                        { name: "Amortiguadores y Suspensión", brands: [
+                            { name: "Toyota", models: ["Corolla", "Fortuner", "Landcruiser"] },
+                            { name: "Nissan", models: ["Sentra", "Frontier", "X-Trail"] }
+                        ]},
+                        { name: "Tren delantero y Dirección", brands: [
+                            { name: "Chevrolet", models: ["Aveo", "Cruze"] },
+                            { name: "Ford", models: ["Fiesta", "Ranger"] }
+                        ]}
+                    ];
+                    await db.collection('settings').doc('drawerMenu').set({ categories: drawerMenu });
+                }
+            } catch (error) { console.error('Error loading drawer:', error); }
+        }
+
+        window.renderDrawerEditor = function() {
+            const container = document.getElementById('drawerEditor');
+            if (!container) return;
+            if (drawerMenu.length === 0) {
+                container.innerHTML = '<p style="text-align:center;color:#666;padding:2rem;">No hay categorías</p>';
+                return;
+            }
+            
+            let html = '';
+            drawerMenu.forEach((cat, catIdx) => {
+                html += `<div class="drawer-editor-item">
+                    <div class="drawer-editor-header">
+                        <strong style="color:#dc3545;">${cat.name}</strong>
+                        <div class="drawer-editor-controls">
+                            <button onclick="moveCategory(${catIdx}, -1)">↑</button>
+                            <button onclick="moveCategory(${catIdx}, 1)">↓</button>
+                            <button onclick="deleteCategory(${catIdx})" style="background:#999;">×</button>
+                        </div>
+                    </div>
+                    <div style="margin-left:1rem;">
+                        <div style="display:flex; gap:0.5rem; margin-bottom:0.5rem;">
+                            <input type="text" id="newBrand-${catIdx}" placeholder="Marca" style="flex:1; padding:0.5rem; border:1px solid #ddd; border-radius:8px;">
+                            <button class="btn btn-small btn-primary" onclick="addBrand(${catIdx})">+ Marca</button>
+                        </div>`;
+                
+                if (cat.brands) {
+                    cat.brands.forEach((brand, brandIdx) => {
+                        html += `<div class="drawer-sub-item" style="background:white; padding:0.8rem; border-radius:8px; margin-bottom:0.5rem;">
+                            <div style="display:flex; justify-content:space-between; align-items:center;">
+                                <strong>${brand.name}</strong>
+                                <div class="drawer-editor-controls">
+                                    <button onclick="moveBrand(${catIdx}, ${brandIdx}, -1)" style="background:#FFC107; color:#333;">↑</button>
+                                    <button onclick="moveBrand(${catIdx}, ${brandIdx}, 1)" style="background:#FFC107; color:#333;">↓</button>
+                                    <button onclick="deleteBrand(${catIdx}, ${brandIdx})" style="background:#999;">×</button>
+                                </div>
+                            </div>
+                            <div style="margin-left:1rem; margin-top:0.5rem;">
+                                <div style="display:flex; gap:0.5rem;">
+                                    <input type="text" id="newModel-${catIdx}-${brandIdx}" placeholder="Modelo" style="flex:1; padding:0.4rem; border:1px solid #ddd; border-radius:8px;">
+                                    <button class="btn btn-small btn-primary" onclick="addModel(${catIdx}, ${brandIdx})">+ Modelo</button>
+                                </div>
+                                <div style="display:flex; flex-wrap:wrap; gap:0.3rem; margin-top:0.5rem;">`;
+                        
+                        if (brand.models) {
+                            brand.models.forEach((model, modelIdx) => {
+                                html += `<span class="vehicle-tag">${model}<button onclick="deleteModel(${catIdx}, ${brandIdx}, ${modelIdx})">×</button></span>`;
+                            });
+                        }
+                        
+                        html += `</div></div></div>`;
+                    });
+                }
+                
+                html += `</div></div>`;
+            });
+            
+            container.innerHTML = html;
+        };
+
+        window.moveCategory = async function(idx, direction) {
+            const newIdx = idx + direction;
+            if (newIdx < 0 || newIdx >= drawerMenu.length) return;
+            [drawerMenu[idx], drawerMenu[newIdx]] = [drawerMenu[newIdx], drawerMenu[idx]];
+            await saveDrawerMenu();
+        };
+
+        window.deleteCategory = async function(idx) {
+            if (!confirm('¿Eliminar?')) return;
+            drawerMenu.splice(idx, 1);
+            await saveDrawerMenu();
+        };
+
+        window.addBrand = async function(catIdx) {
+            const input = document.getElementById(`newBrand-${catIdx}`);
+            const name = input ? input.value.trim() : '';
+            if (!name) { alert('Ingresa nombre'); return; }
+            if (!drawerMenu[catIdx].brands) drawerMenu[catIdx].brands = [];
+            drawerMenu[catIdx].brands.push({ name, models: [] });
+            if (input) input.value = '';
+            await saveDrawerMenu();
+        };
+
+        window.moveBrand = async function(catIdx, brandIdx, direction) {
+            const brands = drawerMenu[catIdx].brands;
+            const newIdx = brandIdx + direction;
+            if (newIdx < 0 || newIdx >= brands.length) return;
+            [brands[brandIdx], brands[newIdx]] = [brands[newIdx], brands[brandIdx]];
+            await saveDrawerMenu();
+        };
+
+        window.deleteBrand = async function(catIdx, brandIdx) {
+            if (!confirm('¿Eliminar?')) return;
+            drawerMenu[catIdx].brands.splice(brandIdx, 1);
+            await saveDrawerMenu();
+        };
+
+        window.addModel = async function(catIdx, brandIdx) {
+            const input = document.getElementById(`newModel-${catIdx}-${brandIdx}`);
+            const name = input ? input.value.trim() : '';
+            if (!name) { alert('Ingresa nombre'); return; }
+            if (!drawerMenu[catIdx].brands[brandIdx].models) drawerMenu[catIdx].brands[brandIdx].models = [];
+            drawerMenu[catIdx].brands[brandIdx].models.push(name);
+            if (input) input.value = '';
+            await saveDrawerMenu();
+        };
+
+        window.deleteModel = async function(catIdx, brandIdx, modelIdx) {
+            if (!confirm('¿Eliminar?')) return;
+            drawerMenu[catIdx].brands[brandIdx].models.splice(modelIdx, 1);
+            await saveDrawerMenu();
+        };
+
+        async function saveDrawerMenu() {
+            try {
+                await db.collection('settings').doc('drawerMenu').set({ categories: drawerMenu, updatedAt: new Date().toISOString() });
+                renderDrawerEditor();
+                alert('✅ Menú actualizado');
+            } catch (error) { alert('Error: ' + error.message); }
+        }
+
+        window.addCategory = async function() {
+            const name = safeGet('newCategoryName', '').trim();
+            if (!name) { alert('Ingresa nombre'); return; }
+            drawerMenu.push({ name, brands: [] });
+            safeSet('newCategoryName', '');
+            await saveDrawerMenu();
+        };
+
+        // ============================================
+        // CATEGORÍAS Y SUBCATEGORÍAS
+        // ============================================
+        window.renderCategoriesEditor = function() {
+            const select = document.getElementById('newSubcatCategory');
+            if (select) {
+                select.innerHTML = '<option value="">Seleccionar categoría...</option>';
+                drawerMenu.forEach((cat, idx) => {
+                    select.innerHTML += `<option value="${idx}">${cat.name}</option>`;
+                });
+            }
+            
+            const container = document.getElementById('categoriesEditor');
+            if (!container) return;
+            if (drawerMenu.length === 0) {
+                container.innerHTML = '<p style="text-align:center;color:#666;padding:2rem;">No hay categorías. Agrega categorías primero en "Menú Drawer".</p>';
+                return;
+            }
+            
+            let html = '';
+            drawerMenu.forEach((cat, catIdx) => {
+                html += `<div class="drawer-editor-item">
+                    <div class="drawer-editor-header">
+                        <strong style="color:#dc3545;">${cat.name}</strong>
+                    </div>
+                    <div style="margin-left:1rem; margin-top:0.5rem;">`;
+                
+                if (cat.subcategories && cat.subcategories.length > 0) {
+                    cat.subcategories.forEach((sub, subIdx) => {
+                        html += `<div class="drawer-sub-item" style="background:white; padding:0.6rem; border-radius:8px; margin-bottom:0.3rem; display:flex; justify-content:space-between; align-items:center;">
+                            <span>${sub}</span>
+                            <button class="btn btn-small btn-secondary" onclick="deleteSubcategory(${catIdx}, ${subIdx})">Eliminar</button>
+                        </div>`;
+                    });
+                } else {
+                    html += `<div style="color:#999; font-size:0.85rem; padding:0.5rem;">Sin subcategorías</div>`;
+                }
+                
+                html += `</div></div>`;
+            });
+            
+            container.innerHTML = html;
+        };
+
+        window.addSubcategory = async function() {
+            const catIdx = safeGet('newSubcatCategory', '');
+            const name = safeGet('newSubcatName', '').trim();
+            if (catIdx === '') { alert('Selecciona una categoría'); return; }
+            if (!name) { alert('Ingresa el nombre de la subcategoría'); return; }
+            
+            const idx = parseInt(catIdx);
+            if (!drawerMenu[idx].subcategories) drawerMenu[idx].subcategories = [];
+            if (drawerMenu[idx].subcategories.includes(name)) { alert('Esta subcategoría ya existe'); return; }
+            
+            drawerMenu[idx].subcategories.push(name);
+            safeSet('newSubcatName', '');
+            
+            try {
+                await db.collection('settings').doc('drawerMenu').set({ categories: drawerMenu, updatedAt: new Date().toISOString() });
+                renderCategoriesEditor();
+                alert('✅ Subcategoría agregada');
+            } catch (error) { alert('Error: ' + error.message); }
+        };
+
+        window.deleteSubcategory = async function(catIdx, subIdx) {
+            if (!confirm('¿Eliminar esta subcategoría?')) return;
+            drawerMenu[catIdx].subcategories.splice(subIdx, 1);
+            try {
+                await db.collection('settings').doc('drawerMenu').set({ categories: drawerMenu, updatedAt: new Date().toISOString() });
+                renderCategoriesEditor();
+                alert('✅ Subcategoría eliminada');
+            } catch (error) { alert('Error: ' + error.message); }
+        };
+
+        // ============================================
+        // VEHICLES
+        // ============================================
+        async function loadVehicles() { 
+            try { 
+                const doc = await db.collection('settings').doc('vehicles').get(); 
+                if (doc.exists) vehicles = doc.data().brands || {}; 
+                else { 
+                    vehicles = { "Toyota": ["Corolla", "Hilux", "Yaris"], "Nissan": ["Versa", "Sentra", "Frontier"], "Chevrolet": ["Aveo", "Cruze", "Captiva"], "Ford": ["Fiesta", "Focus", "Ranger"], "Hyundai": ["Tucson", "Creta", "Accent"], "Kia": ["Rio", "Sportage", "Picanto"], "Mitsubishi": ["L200", "Outlander", "Montero"] }; 
+                    await db.collection('settings').doc('vehicles').set({ brands: vehicles }); 
+                } 
+                renderVehicles(); 
+            } catch (e) {} 
+        }
+        function renderVehicles() { 
+            const l = document.getElementById('vehiclesList'); 
+            if (!l) return;
+            if (Object.keys(vehicles).length === 0) { l.innerHTML = '<p style="text-align:center;color:#666;padding:1rem">Sin marcas</p>'; return; } 
+            let h = ''; 
+            for (const [b, m] of Object.entries(vehicles)) h += `<div class="admin-item" style="flex-direction:column;align-items:stretch;"><div style="display:flex;justify-content:space-between;align-items:center;width:100%;"><strong style="color:#dc3545;">${b}</strong><button class="btn btn-small btn-secondary" onclick="deleteVehicleBrand('${b}')">Eliminar</button></div><div style="margin-top:1rem;padding:1rem;background:white;border-radius:8px;width:100%;"><div style="display:flex;gap:0.5rem;margin-bottom:1rem;"><input type="text" id="newModel-${b}" placeholder="Modelo" style="flex:1;padding:0.5rem;border:1px solid #ddd;border-radius:8px;"><button class="btn btn-small btn-primary" onclick="addVehicleModel('${b}')">+ Modelo</button></div><div style="display:flex;flex-wrap:wrap;gap:0.5rem;">${m.map(x => `<span class="vehicle-tag">${x}<button onclick="deleteVehicleModel('${b}','${x}')">×</button></span>`).join('')}</div></div></div>`; 
+            l.innerHTML = h; 
+        }
+        window.addVehicleBrand = async function() { 
+            const b = safeGet('newVehicleBrand', '').trim(); 
+            if (!b) { alert('Ingresa nombre'); return; } 
+            if (vehicles[b]) { alert('Ya existe'); return; } 
+            vehicles[b] = []; 
+            try { await db.collection('settings').doc('vehicles').set({ brands: vehicles }); safeSet('newVehicleBrand', ''); renderVehicles(); alert('✅ Agregado'); } catch (e) { alert('Error: ' + e.message); } 
+        };
+        window.deleteVehicleBrand = async function(b) { 
+            if (!confirm('¿Eliminar?')) return; 
+            delete vehicles[b]; 
+            try { await db.collection('settings').doc('vehicles').set({ brands: vehicles }); renderVehicles(); alert('✅ Eliminado'); } catch (e) { alert('Error: ' + e.message); } 
+        };
+        window.addVehicleModel = async function(b) { 
+            const i = document.getElementById(`newModel-${b}`); 
+            const m = i ? i.value.trim() : ''; 
+            if (!m) { alert('Ingresa nombre'); return; } 
+            if (vehicles[b].includes(m)) { alert('Ya existe'); return; } 
+            vehicles[b].push(m); 
+            try { await db.collection('settings').doc('vehicles').set({ brands: vehicles }); if (i) i.value = ''; renderVehicles(); alert('✅ Agregado'); } catch (e) { alert('Error: ' + e.message); } 
+        };
+        window.deleteVehicleModel = async function(b, m) { 
+            if (!confirm('¿Eliminar?')) return; 
+            vehicles[b] = vehicles[b].filter(x => x !== m); 
+            try { await db.collection('settings').doc('vehicles').set({ brands: vehicles }); renderVehicles(); alert('✅ Eliminado'); } catch (e) { alert('Error: ' + e.message); } 
+        };
+
+        // ============================================
+        // BRANDS
+        // ============================================
+        async function loadBrands() { 
+            try { 
+                const s = await db.collection('brands').get(); 
+                if (s.empty) { brands = defaultBrands; for (const b of defaultBrands) await db.collection('brands').doc(b.id).set(b); } 
+                else { brands = []; s.forEach(d => brands.push({ id: d.id, ...d.data() })); } 
+                renderAdminBrands(); 
+            } catch (e) {} 
+        }
+        function renderAdminBrands() { 
+            const l = document.getElementById('adminBrandsList'); 
+            if (!l) return;
+            l.innerHTML = brands.map(b => { 
+                const t = b.image ? `<img src="${b.image}">` : ''; 
+                return `<div class="admin-item"><div class="admin-info"><div class="admin-thumb">${t}</div><div><strong>${b.name}</strong><br><small style="color:#666">${b.image ? 'Con imagen' : 'Sin imagen'}</small></div></div><div class="admin-actions"><button class="btn btn-small btn-primary" onclick="editBrandImage('${b.id}')">${b.image ? 'Cambiar' : 'Agregar'}</button></div></div>`; 
+            }).join(''); 
+        }
+        window.editBrandImage = function(id) { 
+            const b = brands.find(x => x.id === id); 
+            safeSet('brandModalTitle', `Imagen: ${b.name}`);
+            safeSet('editBrandId', id);
+            safeSet('currentBrandImageData', b.image || '');
+            const preview = document.getElementById('brandImagePreview');
+            if (preview) preview.innerHTML = b.image ? `<img src="${b.image}">` : '<div style="color:#999;">Sin imagen</div>';
+            safeSet('brandImageInput', '');
+            document.getElementById('brandModal').classList.add('active'); 
+        };
+        window.previewBrandImage = function(e) { 
+            const f = e.target.files[0]; 
+            if (!f) return; 
+            if (f.size > 1024*1024) { alert('Máximo 1MB'); e.target.value = ''; return; } 
+            const r = new FileReader(); 
+            r.onload = (ev) => { 
+                safeSet('currentBrandImageData', ev.target.result);
+                const preview = document.getElementById('brandImagePreview');
+                if (preview) preview.innerHTML = `<img src="${ev.target.result}">`;
+            }; 
+            r.readAsDataURL(f); 
+        };
+        window.saveBrandImage = async function(e) { 
+            e.preventDefault(); 
+            const id = safeGet('editBrandId', ''); 
+            const img = safeGet('currentBrandImageData', ''); 
+            try { await db.collection('brands').doc(id).update({ image: img || null }); await loadBrands(); closeModal('brandModal'); alert('✅ Guardado'); } catch (err) { alert('Error: ' + err.message); } 
+        };
+
+        // ============================================
+        // PRODUCTS
+        // ============================================
+        function populateCategorySelect() { 
+            const s = document.getElementById('productCategory'); 
+            if (!s) return;
+            s.innerHTML = '<option value="">Seleccionar...</option>'; 
+            drawerMenu.forEach((c, i) => s.innerHTML += `<option value="${c.name}">${c.name}</option>`); 
+        }
+        function populateCompatBrandSelect() { 
+            const s = document.getElementById('compatBrand'); 
+            if (!s) return;
+            s.innerHTML = '<option value="">Seleccionar marca...</option>'; 
+            for (const b of Object.keys(vehicles)) s.innerHTML += `<option value="${b}">${b}</option>`; 
+        }
+        window.updateSubcategoryOptions = function() { 
+            const c = safeGet('productCategory', '');
+            const s = document.getElementById('productSubcategory'); 
+            if (!s) return;
+            s.innerHTML = '<option value="">Seleccionar...</option>'; 
+            const cat = drawerMenu.find(x => x.name === c); 
+            if (cat && cat.subcategories) cat.subcategories.forEach(sub => s.innerHTML += `<option value="${sub}">${sub}</option>`); 
+        };
+        window.updateCompatModels = function() { 
+            const b = safeGet('compatBrand', '');
+            const s = document.getElementById('compatModel'); 
+            if (!s) return;
+            s.innerHTML = '<option value="">Seleccionar modelo...</option>'; 
+            if (b && vehicles[b]) vehicles[b].forEach(m => s.innerHTML += `<option value="${m}">${m}</option>`); 
+        };
+        window.calculateSalePrice = function() { 
+            const c = parseFloat(safeGet('productCostPrice', '0')) || 0; 
+            const m = parseFloat(safeGet('productMargin', '0')) || 0; 
+            if (m >= 100) { safeSet('productPrice', '0'); alert('Margen no puede ser 100%+'); return; } 
+            safeSet('productPrice', (c / (1 - m / 100)).toFixed(2)); 
+        };
+        window.addSpecification = function() { 
+            const k = safeGet('specKey', '').trim(); 
+            const v = safeGet('specValue', '').trim(); 
+            if (!k || !v) { alert('Completa ambos'); return; } 
+            currentSpecifications.push({ key: k, value: v }); 
+            safeSet('specKey', '');
+            safeSet('specValue', '');
+            renderSpecifications(); 
+        };
+        function renderSpecifications() { 
+            const c = document.getElementById('specificationsContainer'); 
+            if (!c) return;
+            c.innerHTML = currentSpecifications.map((s, i) => `<span class="spec-tag"><strong>${s.key}:</strong> ${s.value}<button type="button" onclick="removeSpecification(${i})">×</button></span>`).join(''); 
+        }
+        window.removeSpecification = function(i) { currentSpecifications.splice(i, 1); renderSpecifications(); };
+        window.addCompatibility = function() { 
+            const b = safeGet('compatBrand', '');
+            const m = safeGet('compatModel', '');
+            const y = safeGet('compatYears', '').trim();
+            const e = safeGet('compatEngine', '').trim();
+            const n = safeGet('compatNotes', '').trim();
+            if (!b || !m) { alert('Selecciona marca y modelo'); return; } 
+            currentCompatibility.push({ brand: b, model: m, years: y, engine: e, notes: n }); 
+            safeSet('compatBrand', '');
+            safeSet('compatModel', '');
+            safeSet('compatYears', '');
+            safeSet('compatEngine', '');
+            safeSet('compatNotes', '');
+            renderCompatibility(); 
+        };
+        function renderCompatibility() { 
+            const c = document.getElementById('compatibilityContainer'); 
+            if (!c) return;
+            c.innerHTML = currentCompatibility.map((x, i) => `<div class="compat-row"><div style="display:flex;justify-content:space-between;align-items:center;"><div><strong>${x.brand} ${x.model}</strong> <small style="color:#666;">(${x.years || 'N/A'}) ${x.engine ? '- ' + x.engine : ''}</small>${x.notes ? `<br><small style="color:#0066cc;">${x.notes}</small>` : ''}</div><button type="button" class="btn btn-small btn-secondary" onclick="removeCompatibility(${i})">Eliminar</button></div></div>`).join(''); 
+        }
+        window.removeCompatibility = function(i) { currentCompatibility.splice(i, 1); renderCompatibility(); };
+
+        async function loadProducts() { 
+            try { 
+                const s = await db.collection('products').get(); 
+                products = []; 
+                s.forEach(d => products.push({ id: d.id, ...d.data() })); 
+                safeSet('statProducts', products.length);
+                renderAdminProducts(); 
+            } catch (e) {} 
+        }
+        function renderAdminProducts(f = '') { 
+            const l = document.getElementById('adminProductList'); 
+            if (!l) return;
+            let fl = products; 
+            if (f) { const q = f.toLowerCase(); fl = products.filter(p => p.name.toLowerCase().includes(q) || (p.code && p.code.toLowerCase().includes(q))); } 
+            if (fl.length === 0) { l.innerHTML = '<p style="text-align:center;color:#666;padding:1rem">Sin productos</p>'; return; } 
+            l.innerHTML = fl.map(p => { 
+                const imgs = p.images || (p.image ? [p.image] : []); 
+                const t = imgs.length > 0 ? `<img src="${imgs[0]}">` : ''; 
+                const o = p.discount && p.discount > 0 ? ` | -${p.discount}%` : ''; 
+                const r = p.recommended ? ' | RECOMENDADO' : ''; 
+                return `<div class="admin-item"><div class="admin-info"><div class="admin-thumb">${t}</div><div><strong>${p.name}</strong>${r}<br><small style="color:#dc3545">Código: ${p.code || 'N/A'}</small><br><small style="color:#666">$${Number(p.price).toFixed(2)}${o} | Stock: ${p.stock}</small></div></div><div class="admin-actions"><button class="btn btn-small btn-primary" onclick="editProduct('${p.id}')">Editar</button><button class="btn btn-small btn-secondary" onclick="deleteProduct('${p.id}')">Eliminar</button></div></div>`; 
+            }).join(''); 
+        }
+        const searchInput = document.getElementById('adminProductSearch');
+        if (searchInput) searchInput.addEventListener('input', function(e) { renderAdminProducts(e.target.value); });
         
-        window.sendWhatsAppToCustomer = function(orderId) {
-            const order = orders.find(o => o.id === orderId);
-            if (!order || !order.userPhone) { alert('No hay teléfono del cliente'); return; }
-            const cleanPhone = order.userPhone.replace(/\D/g, '');
-            const statusText = { pending: 'pendiente de preparación', shipped: 'en camino 🚚', delivered: 'entregado ✅', cancelled: 'cancelado ❌' }[order.status];
-            const message = `Hola ${order.userName}!%0A%0ATu pedido #${order.id.slice(-6)} está ${statusText}.%0A%0A${order.driverName ? `Domiciliario: ${order.driverName}%0ATeléfono: ${order.driverPhone}%0A` : ''}Total: $${order.total.toFixed(2)}%0A%0AGracias por tu compra!%0AAkira Motors`;
-            window.open(`https://wa.me/${cleanPhone}?text=${message}`, '_blank');
+        window.openAddProductModal = function() { 
+            populateCategorySelect(); 
+            populateCompatBrandSelect();
+            currentProductImages = []; 
+            currentSpecifications = []; 
+            currentCompatibility = []; 
+            safeSet('productModalTitle', 'Agregar Producto');
+            safeSet('editProductId', '');
+            ['productCode','productBrand','productName','productDescription','productPartNumber','productCostPrice','productMargin','productPrice','productDiscount','productStock','productSearchTerms'].forEach(id => safeSet(id, ''));
+            safeSet('productPosition', '');
+            safeSet('productSide', '');
+            safeSet('productCondition', 'Nuevo');
+            safeSet('productCategory', '');
+            safeSet('productSubcategory', '');
+            const rec = document.getElementById('productRecommended');
+            if (rec) rec.checked = false;
+            const imgContainer = document.getElementById('productImagesContainer');
+            if (imgContainer) imgContainer.innerHTML = '';
+            const specContainer = document.getElementById('specificationsContainer');
+            if (specContainer) specContainer.innerHTML = '';
+            const compatContainer = document.getElementById('compatibilityContainer');
+            if (compatContainer) compatContainer.innerHTML = '';
+            safeSet('compatBrand', '');
+            const compatModel = document.getElementById('compatModel');
+            if (compatModel) compatModel.innerHTML = '<option value="">Seleccionar modelo...</option>';
+            safeSet('compatYears', '');
+            safeSet('compatEngine', '');
+            safeSet('compatNotes', '');
+            document.getElementById('productModal').classList.add('active'); 
         };
         
-        window.sendWhatsAppToDriver = function(orderId) {
-            const order = orders.find(o => o.id === orderId);
-            if (!order || !order.driverPhone) { alert('No hay domiciliario asignado'); return; }
-            const cleanPhone = order.driverPhone.replace(/\D/g, '');
-            const message = `Hola ${order.driverName}!%0A%0ANuevo pedido para entregar:%0A📦 Pedido #${order.id.slice(-6)}%0A👤 Cliente: ${order.userName}%0A📞 Teléfono: ${order.userPhone}%0A Dirección: ${order.address || 'Pickup en tienda'}%0A💰 Total: $${order.total.toFixed(2)}%0A%0AEl pedido ya fue recogido. Por favor confirma cuando lo entregues.%0A%0AAkira Motors`;
-            window.open(`https://wa.me/${cleanPhone}?text=${message}`, '_blank');
+        window.editProduct = function(id) { 
+            const p = products.find(x => x.id === id); 
+            populateCategorySelect(); 
+            populateCompatBrandSelect();
+            currentProductImages = p.images || (p.image ? [p.image] : []);
+            currentSpecifications = p.specifications || [];
+            currentCompatibility = p.compatibility || [];
+            safeSet('productModalTitle', 'Editar Producto');
+            safeSet('editProductId', p.id);
+            safeSet('productCode', p.code || '');
+            safeSet('productBrand', p.brand || '');
+            safeSet('productName', p.name);
+            safeSet('productDescription', p.description || '');
+            safeSet('productPartNumber', p.attributes?.partNumber || '');
+            safeSet('productPosition', p.attributes?.position || '');
+            safeSet('productSide', p.attributes?.side || '');
+            safeSet('productCondition', p.attributes?.condition || 'Nuevo');
+            safeSet('productCostPrice', p.costPrice || '');
+            safeSet('productMargin', p.margin || '');
+            safeSet('productPrice', p.price);
+            safeSet('productDiscount', p.discount || '');
+            safeSet('productStock', p.stock);
+            safeSet('productCategory', p.category || '');
+            updateSubcategoryOptions();
+            safeSet('productSubcategory', p.subcategory || '');
+            safeSet('productSearchTerms', p.searchTerms || '');
+            const rec = document.getElementById('productRecommended');
+            if (rec) rec.checked = p.recommended || false;
+            renderProductImages();
+            renderSpecifications();
+            renderCompatibility();
+            document.getElementById('productModal').classList.add('active'); 
         };
         
-        window.updateOrderStatus = async function(orderId, status) { if (!confirm(`¿Cambiar a "${status}"?`)) return; try { await db.collection('orders').doc(orderId).update({ status }); await loadOrders(); await loadDashboard(); alert('✅ Actualizado'); } catch (e) { alert('Error: ' + e.message); } };
-        window.deleteOrder = async function(orderId) { if (!confirm('¿Eliminar permanentemente?')) return; try { await db.collection('orders').doc(orderId).delete(); await loadOrders(); await loadDashboard(); alert('✅ Eliminado'); } catch (e) { alert('Error: ' + e.message); } };
+        function renderProductImages() { 
+            const c = document.getElementById('productImagesContainer'); 
+            if (!c) return;
+            if (currentProductImages.length === 0) { c.innerHTML = '<div style="color:#999;">Sin imágenes</div>'; return; } 
+            c.innerHTML = currentProductImages.map((img, i) => `<div style="position:relative;"><img src="${img}" style="width:80px;height:80px;object-fit:cover;border-radius:8px;"><button type="button" onclick="removeProductImage(${i})" style="position:absolute;top:2px;right:2px;background:#dc3545;color:white;border:none;width:20px;height:20px;border-radius:50%;cursor:pointer;">×</button></div>`).join(''); 
+        }
+        window.addProductImages = function(e) { 
+            Array.from(e.target.files).forEach(f => { 
+                if (currentProductImages.length >= 5) { alert('Máximo 5'); return; } 
+                if (f.size > 1024*1024) { alert('Máximo 1MB'); return; } 
+                const r = new FileReader(); 
+                r.onload = (ev) => { currentProductImages.push(ev.target.result); renderProductImages(); }; 
+                r.readAsDataURL(f); 
+            }); 
+            e.target.value = ''; 
+        };
+        window.removeProductImage = function(i) { currentProductImages.splice(i, 1); renderProductImages(); };
+        
+        window.saveProduct = async function(e) { 
+            e.preventDefault(); 
+            const id = safeGet('editProductId', '');
+            const cost = parseFloat(safeGet('productCostPrice', '0')) || 0;
+            const margin = parseFloat(safeGet('productMargin', '0')) || 0;
+            const price = parseFloat(safeGet('productPrice', '0')) || 0;
+            const discount = parseFloat(safeGet('productDiscount', '0')) || 0;
+            const attrs = { 
+                category: safeGet('productCategory', ''), 
+                subcategory: safeGet('productSubcategory', ''), 
+                brand: safeGet('productBrand', ''), 
+                partNumber: safeGet('productPartNumber', ''), 
+                position: safeGet('productPosition', ''), 
+                side: safeGet('productSide', ''), 
+                condition: safeGet('productCondition', 'Nuevo') 
+            };
+            const data = { 
+                code: safeGet('productCode', ''), 
+                brand: safeGet('productBrand', ''), 
+                name: safeGet('productName', ''), 
+                description: safeGet('productDescription', ''), 
+                costPrice: cost, 
+                margin, 
+                price, 
+                discount, 
+                stock: safeGetInt('productStock', 0), 
+                category: safeGet('productCategory', ''), 
+                subcategory: safeGet('productSubcategory', ''), 
+                recommended: safeGetBool('productRecommended', false), 
+                attributes: attrs, 
+                specifications: currentSpecifications, 
+                compatibility: currentCompatibility, 
+                searchTerms: safeGet('productSearchTerms', ''), 
+                images: currentProductImages.length > 0 ? currentProductImages : null, 
+                image: currentProductImages.length > 0 ? currentProductImages[0] : null, 
+                updatedAt: new Date().toISOString() 
+            }; 
+            try { 
+                if (id) await db.collection('products').doc(id).update(data); 
+                else { data.createdAt = new Date().toISOString(); await db.collection('products').add(data); } 
+                await loadProducts(); 
+                await loadDashboard(); 
+                closeModal('productModal'); 
+                alert('✅ Producto guardado'); 
+            } catch (err) { alert('Error: ' + err.message); } 
+        };
+        
+        window.deleteProduct = async function(id) { 
+            if (!confirm('¿Eliminar?')) return; 
+            try { await db.collection('products').doc(id).delete(); await loadProducts(); await loadDashboard(); alert('✅ Eliminado'); } catch (e) { alert('Error: ' + e.message); } 
+        };
 
-        // Drivers
-        async function loadDrivers() { try { const s = await db.collection('drivers').get(); drivers = []; s.forEach(d => drivers.push({ id: d.id, ...d.data() })); renderDrivers(); } catch (e) {} }
-        function renderDrivers() { const l = document.getElementById('driversList'); if (drivers.length === 0) { l.innerHTML = '<p style="text-align:center;color:#666;padding:1rem">Sin domiciliarios</p>'; return; } l.innerHTML = drivers.map(d => { const t = orders.filter(o => o.driverId === d.id && new Date(o.date).toDateString() === new Date().toDateString()); const e = t.reduce((s, o) => s + (Number(o.driverCommission) || 0), 0); return `<div class="driver-card"><div class="driver-info"><strong>${d.name}</strong><br><small>📞 ${d.phone} | 💰 $${Number(d.commission).toFixed(2)}</small><br><small style="color:#28a745;">Hoy: ${t.length} | $${e.toFixed(2)}</small></div><button class="btn btn-small btn-secondary" onclick="deleteDriver('${d.id}')">Eliminar</button></div>`; }).join(''); }
-        window.addDriver = async function() { const n = document.getElementById('driverName').value.trim(); const p = document.getElementById('driverPhone').value.trim(); const c = parseFloat(document.getElementById('driverCommission').value); if (!n || !p || !c) { alert('Completa todos'); return; } try { await db.collection('drivers').add({ name: n, phone: p, commission: c, createdAt: new Date().toISOString() }); document.getElementById('driverName').value = ''; document.getElementById('driverPhone').value = ''; document.getElementById('driverCommission').value = ''; await loadDrivers(); alert('✅ Agregado'); } catch (e) { alert('Error: ' + e.message); } };
-        window.deleteDriver = async function(id) { if (!confirm('¿Eliminar?')) return; try { await db.collection('drivers').doc(id).delete(); await loadDrivers(); alert('✅ Eliminado'); } catch (e) { alert('Error: ' + e.message); } };
-
-        // Customers
-        async function loadCustomers() { try { const s = await db.collection('customers').get(); customers = []; s.forEach(d => customers.push({ id: d.id, ...d.data() })); renderCustomers(); } catch (e) {} }
-        function renderCustomers(f = '') { const t = document.getElementById('customersList'); let fl = customers; if (f) { const q = f.toLowerCase(); fl = customers.filter(c => (c.name||'').toLowerCase().includes(q) || (c.phone||'').includes(q) || (c.customerCode||'').toLowerCase().includes(q)); } if (fl.length === 0) { t.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#666;">Sin clientes</td></tr>'; return; } const m = {}; orders.forEach(o => { const k = o.userPhone || o.userName; if (!k) return; if (!m[k]) m[k] = { name: o.userName || 'N/A', phone: o.userPhone || 'N/A', customerCode: o.customerCode || '', orders: 0, total: 0 }; m[k].orders++; m[k].total += Number(o.total) || 0; }); t.innerHTML = fl.map(c => { const d = m[c.phone] || m[c.name] || { orders: 0, total: 0, customerCode: c.customerCode || '' }; return `<tr><td>${c.customerCode || d.customerCode || '-'}</td><td>${c.name}</td><td>${c.phone}</td><td>${d.orders}</td><td>$${d.total.toFixed(2)}</td></tr>`; }).join(''); }
-        document.getElementById('searchCustomer').addEventListener('input', function(e) { renderCustomers(e.target.value); });
-
-        // Reviews
-        async function loadReviews() { try { const s = await db.collection('reviews').get(); reviews = []; s.forEach(d => reviews.push({ id: d.id, ...d.data() })); renderReviews(); } catch (e) {} }
-        function renderReviews() { const l = document.getElementById('reviewsList'); if (reviews.length === 0) { l.innerHTML = '<p style="text-align:center;color:#666;padding:1rem">Sin reseñas</p>'; return; } l.innerHTML = reviews.sort((a,b) => new Date(b.date) - new Date(a.date)).map(r => { const p = products.find(x => x.id === r.productId); return `<div class="review-item"><div class="review-header"><strong>${r.userName}</strong><span style="color:#666;">${new Date(r.date).toLocaleDateString()}</span></div><div style="color:#FFC107;">${'★'.repeat(r.rating)}${'☆'.repeat(5-r.rating)}</div><div style="margin:0.5rem 0;">${r.text}</div><div style="font-size:0.85rem; color:#666;">Producto: ${p ? p.name : 'N/A'}</div><button class="btn btn-small btn-secondary" onclick="deleteReview('${r.id}')" style="margin-top:0.5rem;">Eliminar</button></div>`; }).join(''); }
-        window.deleteReview = async function(id) { if (!confirm('¿Eliminar?')) return; try { await db.collection('reviews').doc(id).delete(); await loadReviews(); alert('✅ Eliminado'); } catch (e) { alert('Error: ' + e.message); } };
-
-        // Coupons
-        async function loadCoupons() { try { const s = await db.collection('coupons').get(); coupons = []; s.forEach(d => coupons.push({ id: d.id, ...d.data() })); renderCoupons(); } catch (e) {} }
-        function renderCoupons() { const l = document.getElementById('couponsList'); if (coupons.length === 0) { l.innerHTML = '<p style="text-align:center;color:#666;padding:1rem">Sin cupones</p>'; return; } l.innerHTML = coupons.map(c => `<div class="admin-item"><div class="admin-info"><div><strong>${c.code}</strong><br><small style="color:#666;">${c.discount}% | Usos: ${c.uses || 0}/${c.maxUses || '∞'}</small></div></div><button class="btn btn-small btn-secondary" onclick="deleteCoupon('${c.id}')">Eliminar</button></div>`).join(''); }
-        window.createCoupon = async function() { const c = document.getElementById('couponCode').value.trim().toUpperCase(); const d = parseInt(document.getElementById('couponDiscount').value); const m = parseInt(document.getElementById('couponMaxUses').value); if (!c || !d || !m) { alert('Completa todos'); return; } try { await db.collection('coupons').add({ code: c, discount: d, maxUses: m, uses: 0, createdAt: new Date().toISOString() }); document.getElementById('couponCode').value = ''; document.getElementById('couponDiscount').value = ''; document.getElementById('couponMaxUses').value = ''; await loadCoupons(); alert('✅ Creado'); } catch (e) { alert('Error: ' + e.message); } };
-        window.deleteCoupon = async function(id) { if (!confirm('¿Eliminar?')) return; try { await db.collection('coupons').doc(id).delete(); await loadCoupons(); alert('✅ Eliminado'); } catch (e) { alert('Error: ' + e.message); } };
-
-        // Delivery Zones
-        async function loadDeliveryZones() { try { const s = await db.collection('deliveryZones').get(); deliveryZones = []; s.forEach(d => deliveryZones.push({ id: d.id, ...d.data() })); renderDeliveryZones(); } catch (e) {} }
-        function renderDeliveryZones() { const l = document.getElementById('deliveryZonesList'); if (deliveryZones.length === 0) { l.innerHTML = '<p style="text-align:center;color:#666;padding:1rem">Sin zonas</p>'; return; } l.innerHTML = deliveryZones.map(z => `<div class="admin-item"><div class="admin-info"><div><strong>${z.name}</strong><br><small style="color:#666;">$${Number(z.cost).toFixed(2)} | ${z.time || 'N/A'}</small></div></div><button class="btn btn-small btn-secondary" onclick="deleteDeliveryZone('${z.id}')">Eliminar</button></div>`).join(''); }
-        window.addDeliveryZone = async function() { const n = document.getElementById('zoneName').value.trim(); const c = parseFloat(document.getElementById('zoneCost').value); const t = document.getElementById('zoneTime').value.trim(); if (!n || !c) { alert('Completa nombre y costo'); return; } try { await db.collection('deliveryZones').add({ name: n, cost: c, time: t, createdAt: new Date().toISOString() }); document.getElementById('zoneName').value = ''; document.getElementById('zoneCost').value = ''; document.getElementById('zoneTime').value = ''; await loadDeliveryZones(); alert('✅ Agregado'); } catch (e) { alert('Error: ' + e.message); } };
-        window.deleteDeliveryZone = async function(id) { if (!confirm('¿Eliminar?')) return; try { await db.collection('deliveryZones').doc(id).delete(); await loadDeliveryZones(); alert('✅ Eliminado'); } catch (e) { alert('Error: ' + e.message); } };
-
-        // Dashboard
-        async function loadDashboard() { const p = orders.filter(o => o.status === 'pending').length; document.getElementById('statProducts').textContent = products.length; document.getElementById('statOrdersPending').textContent = p; document.getElementById('statCustomers').textContent = customers.length; }
-    </script>
-</body>
-</html>
+        // ============================================
+        // ORDERS
+        // ============================================
+        async function loadOrders() { 
+            try { 
+                const s = await db.collection('orders').get(); 
+                orders = []; 
+                s.forEach(d => orders.push({ id: d.id, ...d.data() })); 
+                renderOrders(); 
+            } catch (e) {} 
+        }
+        function renderOrders() { 
+            const l = document.getElementById('ordersList'); 
+            if (!l) return;
+            const f = safeGet('filterOrderStatus', '');
+            const q = (safeGet('searchOrderCode', '') || '').toLowerCase().trim(); 
+            let fl = orders; 
+            if (f) fl = fl.filter(o => o.status === f); 
+            if (q) fl = fl.filter(o => (o.customerCode||'').toLowerCase().includes(q) || (o.userName||'').toLowerCase().includes(q) || (o.userPhone||'').toLowerCase().includes(q)); 
+            if (fl.length === 0) { l.innerHTML = '<p style="text-align:center;color:#666;padding:1rem">Sin pedidos</p>'; return; } 
+            l.innerHTML = fl.sort((a,b) => new Date(b.date) - new Date(a.date)).map(o => { 
+                const st = { pending: 'Pendiente', shipped: 'En camino', delivered: 'Entregado', cancelled: 'Cancelado' }[o.status] || o.status; 
+                return `<div class="order-item"><div class="
