@@ -32,6 +32,7 @@
         .form-group textarea { resize: vertical; min-height: 80px; }
         .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
         .form-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; }
+        .form-row-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 0.8rem; }
         .admin-item { display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: #f8f8f8; margin-bottom: 0.8rem; border-radius: 8px; flex-wrap: wrap; gap: 1rem; }
         .admin-info { display: flex; align-items: center; gap: 1rem; flex: 1; }
         .admin-thumb { width: 60px; height: 60px; background: #ddd; border-radius: 8px; overflow: hidden; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
@@ -39,7 +40,7 @@
         .admin-actions { display: flex; gap: 0.5rem; flex-wrap: wrap; }
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 3000; align-items: center; justify-content: center; padding: 1rem; }
         .modal.active { display: flex; }
-        .modal-content { background: white; padding: 2rem; border-radius: 12px; max-width: 800px; width: 100%; max-height: 90vh; overflow-y: auto; position: relative; }
+        .modal-content { background: white; padding: 2rem; border-radius: 12px; max-width: 900px; width: 100%; max-height: 90vh; overflow-y: auto; position: relative; }
         .modal-content h2 { color: #dc3545; margin-bottom: 1.5rem; }
         .modal-close { position: absolute; top: 1rem; right: 1rem; background: #dc3545; color: white; border: none; width: 35px; height: 35px; border-radius: 50%; font-size: 1.2rem; cursor: pointer; z-index: 10; }
         .form-section { background: #f8f8f8; padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem; border: 1px solid #eee; }
@@ -67,6 +68,9 @@
         .order-status.cancelled { background: #dc3545; color: white; }
         .vehicle-tag { background: #e3f2fd; color: #1565c0; padding: 0.3rem 0.8rem; border-radius: 15px; font-size: 0.85rem; display: inline-flex; align-items: center; gap: 0.5rem; margin: 0.2rem; }
         .vehicle-tag button { background: #dc3545; color: white; border: none; width: 18px; height: 18px; border-radius: 50%; cursor: pointer; font-size: 0.7rem; }
+        .spec-tag { background: #f0f8ff; color: #0066cc; padding: 0.3rem 0.8rem; border-radius: 15px; font-size: 0.8rem; display: inline-flex; align-items: center; gap: 0.5rem; margin: 0.2rem; border: 1px solid #b0d4f1; }
+        .spec-tag button { background: #0066cc; color: white; border: none; width: 18px; height: 18px; border-radius: 50%; cursor: pointer; font-size: 0.7rem; }
+        .compat-row { background: white; padding: 0.8rem; border-radius: 8px; margin-bottom: 0.5rem; border: 1px solid #eee; }
         .driver-card { background: #f8f8f8; padding: 1rem; border-radius: 8px; margin-bottom: 0.8rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
         .driver-info strong { font-size: 1.1rem; }
         .driver-info small { color: #666; }
@@ -88,7 +92,7 @@
             .admin-menu { display: flex; overflow-x: auto; padding: 0.5rem; }
             .admin-menu-item { white-space: nowrap; border-left: none; border-bottom: 3px solid transparent; }
             .admin-menu-item.active { border-left: none; border-bottom-color: white; }
-            .form-row, .form-row-3 { grid-template-columns: 1fr; }
+            .form-row, .form-row-3, .form-row-4 { grid-template-columns: 1fr; }
             .preview-container { grid-template-columns: 1fr; }
         }
     </style>
@@ -119,21 +123,22 @@
             <div class="admin-menu">
                 <div class="admin-menu-item active" onclick="showSection('preview', event)">👁️ Vista Previa</div>
                 <div class="admin-menu-item" onclick="showSection('hero', event)">🎨 Hero/Portada</div>
-                <div class="admin-menu-item" onclick="showSection('drawer', event)">☰ Menú Drawer</div>
-                <div class="admin-menu-item" onclick="showSection('dashboard', event)">📊 Dashboard</div>
+                <div class="admin-menu-item" onclick="showSection('drawer', event)"> Menú Drawer</div>
+                <div class="admin-menu-item" onclick="showSection('categories', event)">📂 Categorías y Subcategorías</div>
+                <div class="admin-menu-item" onclick="showSection('dashboard', event)"> Dashboard</div>
                 <div class="admin-menu-item" onclick="showSection('orders', event)">📦 Pedidos</div>
                 <div class="admin-menu-item" onclick="showSection('drivers', event)">🏍️ Domiciliarios</div>
                 <div class="admin-menu-item" onclick="showSection('customers', event)">👥 Clientes</div>
                 <div class="admin-menu-item" onclick="showSection('products', event)">🛒 Productos</div>
                 <div class="admin-menu-item" onclick="showSection('vehicles', event)">🚗 Vehículos</div>
-                <div class="admin-menu-item" onclick="showSection('brands', event)">️ Marcas</div>
-                <div class="admin-menu-item" onclick="showSection('banners', event)">🖼️ Banners</div>
+                <div class="admin-menu-item" onclick="showSection('brands', event)">🏷️ Marcas</div>
+                <div class="admin-menu-item" onclick="showSection('banners', event)">️ Banners</div>
                 <div class="admin-menu-item" onclick="showSection('coupons', event)">🎟️ Cupones</div>
                 <div class="admin-menu-item" onclick="showSection('delivery', event)">📍 Zonas Delivery</div>
                 <div class="admin-menu-item" onclick="showSection('reviews', event)">⭐ Reseñas</div>
                 <div class="admin-menu-item" onclick="showSection('footer', event)">📄 Pie de página</div>
-                <div class="admin-menu-item" onclick="showSection('settings', event)">️ Configuración</div>
-                <div class="admin-menu-item" onclick="logoutAdmin()" style="margin-top:2rem; background:#dc3545;">🚪 Salir</div>
+                <div class="admin-menu-item" onclick="showSection('settings', event)">⚙️ Configuración</div>
+                <div class="admin-menu-item" onclick="logoutAdmin()" style="margin-top:2rem; background:#dc3545;"> Salir</div>
             </div>
         </aside>
 
@@ -147,7 +152,7 @@
                         <div class="admin-card">
                             <h3>Controles</h3>
                             <button class="btn btn-primary" onclick="refreshPreview()" style="width:100%; margin-bottom:1rem;">🔄 Recargar Vista</button>
-                            <button class="btn btn-secondary" onclick="window.open('index.html', '_blank')" style="width:100%;"> Abrir en Nueva Pestaña</button>
+                            <button class="btn btn-secondary" onclick="window.open('index.html', '_blank')" style="width:100%;">🌐 Abrir en Nueva Pestaña</button>
                         </div>
                     </div>
                     <div class="preview-frame">
@@ -203,8 +208,8 @@
 
             <!-- MENÚ DRAWER -->
             <div class="admin-section" id="section-drawer">
-                <h2 class="section-title">Menú Drawer (Categorías)</h2>
-                <div class="alert-info">Estructura: Categoría → Marca → Modelo</div>
+                <h2 class="section-title">Menú Drawer (Categorías de Navegación)</h2>
+                <div class="alert-info">Estructura: Categoría → Marca → Modelo. Lo que configures aquí también aparecerá como categorías al agregar productos.</div>
                 <div class="admin-card">
                     <h3>Agregar Categoría</h3>
                     <div class="form-row">
@@ -212,7 +217,31 @@
                         <div class="form-group" style="display:flex; align-items:flex-end;"><button class="btn btn-primary" onclick="addCategory()" style="width:100%;">+ Agregar</button></div>
                     </div>
                 </div>
-                <div class="admin-card"><h3>Categorías</h3><div id="drawerEditor"></div></div>
+                <div class="admin-card"><h3>Categorías Configuradas</h3><div id="drawerEditor"></div></div>
+            </div>
+
+            <!-- CATEGORÍAS Y SUBCATEGORÍAS (NUEVA SECCIÓN) -->
+            <div class="admin-section" id="section-categories">
+                <h2 class="section-title">Categorías y Subcategorías de Productos</h2>
+                <div class="alert-info">Estas categorías se usarán al agregar productos. Se sincronizan automáticamente con el Menú Drawer.</div>
+                <div class="admin-card">
+                    <h3>Agregar Subcategoría</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Categoría Principal</label>
+                            <select id="newSubcatCategory"></select>
+                        </div>
+                        <div class="form-group">
+                            <label>Nombre de Subcategoría</label>
+                            <input type="text" id="newSubcatName" placeholder="Ej: Amortiguadores">
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" onclick="addSubcategory()">+ Agregar Subcategoría</button>
+                </div>
+                <div class="admin-card">
+                    <h3>Categorías y Subcategorías Configuradas</h3>
+                    <div id="categoriesEditor"></div>
+                </div>
             </div>
 
             <!-- DASHBOARD -->
@@ -284,578 +313,4 @@
             <!-- VEHÍCULOS -->
             <div class="admin-section" id="section-vehicles">
                 <h2 class="section-title">Vehículos</h2>
-                <div class="admin-card">
-                    <h3>Agregar Marca</h3>
-                    <div class="form-row">
-                        <div class="form-group"><label>Nombre</label><input type="text" id="newVehicleBrand"></div>
-                        <div class="form-group" style="display:flex; align-items:flex-end;"><button class="btn btn-primary" onclick="addVehicleBrand()" style="width:100%;">Agregar</button></div>
-                    </div>
-                </div>
-                <div class="admin-card"><h3>Marcas y Modelos</h3><div id="vehiclesList"></div></div>
-            </div>
-
-            <!-- MARCAS -->
-            <div class="admin-section" id="section-brands">
-                <h2 class="section-title">Marcas de Repuestos</h2>
-                <div class="admin-card"><div id="adminBrandsList"></div></div>
-            </div>
-
-            <!-- BANNERS -->
-            <div class="admin-section" id="section-banners">
-                <h2 class="section-title">Banners</h2>
-                <div class="admin-card">
-                    <div class="alert-info"><strong>Tamaños:</strong> Web: 1400x400px | Móvil: 750x1000px | Máx: 1MB | Máximo 5 imágenes</div>
-                    <input type="file" id="bannerImageInput" accept="image/*" style="margin-bottom:1rem;">
-                    <button class="btn btn-primary" onclick="addBanner()">Agregar Banner</button>
-                    <div id="bannerPreviewGrid" style="margin-top:1rem; display:grid; grid-template-columns:repeat(auto-fill, minmax(200px, 1fr)); gap:1rem;"></div>
-                </div>
-            </div>
-
-            <!-- CUPONES -->
-            <div class="admin-section" id="section-coupons">
-                <h2 class="section-title">Cupones</h2>
-                <div class="admin-card">
-                    <h3>Crear</h3>
-                    <div class="form-row-3">
-                        <div class="form-group"><label>Código</label><input type="text" id="couponCode"></div>
-                        <div class="form-group"><label>Descuento (%)</label><input type="number" id="couponDiscount" min="1" max="100"></div>
-                        <div class="form-group"><label>Usos máximos</label><input type="number" id="couponMaxUses" min="1"></div>
-                    </div>
-                    <button class="btn btn-primary" onclick="createCoupon()">Crear</button>
-                </div>
-                <div class="admin-card"><h3>Activos</h3><div id="couponsList"></div></div>
-            </div>
-
-            <!-- ZONAS DELIVERY -->
-            <div class="admin-section" id="section-delivery">
-                <h2 class="section-title">Zonas Delivery</h2>
-                <div class="admin-card">
-                    <h3>Agregar</h3>
-                    <div class="form-row-3">
-                        <div class="form-group"><label>Nombre</label><input type="text" id="zoneName"></div>
-                        <div class="form-group"><label>Costo ($)</label><input type="number" id="zoneCost" step="0.01"></div>
-                        <div class="form-group"><label>Tiempo</label><input type="text" id="zoneTime"></div>
-                    </div>
-                    <button class="btn btn-primary" onclick="addDeliveryZone()">Agregar</button>
-                </div>
-                <div class="admin-card"><h3>Zonas</h3><div id="deliveryZonesList"></div></div>
-            </div>
-
-            <!-- RESEÑAS -->
-            <div class="admin-section" id="section-reviews">
-                <h2 class="section-title">Reseñas</h2>
-                <div class="admin-card"><div id="reviewsList"></div></div>
-            </div>
-
-            <!-- PIE DE PÁGINA -->
-            <div class="admin-section" id="section-footer">
-                <h2 class="section-title">Pie de página</h2>
-                <div class="admin-card">
-                    <div class="form-group"><label>Nombre</label><input type="text" id="cfgCompanyName"></div>
-                    <div class="form-group"><label>Slogan</label><input type="text" id="cfgSlogan"></div>
-                    <div class="form-group"><label>Descripción</label><textarea id="cfgDescription"></textarea></div>
-                    <div class="form-group"><label>Dirección</label><input type="text" id="cfgAddress"></div>
-                    <div class="form-group"><label>Teléfono</label><input type="text" id="cfgPhone"></div>
-                    <div class="form-group"><label>Horario</label><input type="text" id="cfgSchedule"></div>
-                    <div class="form-group"><label>Facebook</label><input type="url" id="cfgFacebook"></div>
-                    <div class="form-group"><label>Instagram</label><input type="url" id="cfgInstagram"></div>
-                    <div class="form-group"><label>TikTok</label><input type="url" id="cfgTiktok"></div>
-                    <button class="btn btn-primary" onclick="saveSiteConfig()" style="width:100%; padding:1rem;">Guardar</button>
-                </div>
-            </div>
-
-            <!-- CONFIGURACIÓN -->
-            <div class="admin-section" id="section-settings">
-                <h2 class="section-title">Configuración</h2>
-                <div class="admin-card">
-                    <h3>Pickup Maps</h3>
-                    <input type="url" id="pickupMapsInput" placeholder="https://maps.google.com/?q=..." style="margin-bottom:1rem;">
-                    <button class="btn btn-primary" onclick="updatePickupMaps()">Guardar</button>
-                </div>
-                <div class="admin-card">
-                    <h3>WhatsApp</h3>
-                    <div class="alert-info"><strong>️ Importante:</strong> Este número se usará en TODA la web. Incluye código de país sin +. Ej: 584148700616</div>
-                    <input type="text" id="whatsappNumber" placeholder="584148700616" style="margin-bottom:1rem;">
-                    <button class="btn btn-primary" onclick="saveWhatsapp()">Guardar</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- MODAL PRODUCTO -->
-    <div class="modal" id="productModal">
-        <div class="modal-content">
-            <button class="modal-close" onclick="closeModal('productModal')">×</button>
-            <h2 id="productModalTitle">Producto</h2>
-            <form onsubmit="saveProduct(event)">
-                <div class="form-section">
-                    <h3>Básico</h3>
-                    <div class="form-row">
-                        <div class="form-group"><label>Código *</label><input type="text" id="productCode" required></div>
-                        <div class="form-group"><label>Marca</label><input type="text" id="productBrand"></div>
-                    </div>
-                    <div class="form-group"><label>Nombre *</label><input type="text" id="productName" required></div>
-                    <div class="form-group"><label>Descripción *</label><textarea id="productDescription" required></textarea></div>
-                    <div class="checkbox-group"><input type="checkbox" id="productRecommended"><label>Recomendado</label></div>
-                </div>
-                <div class="form-section">
-                    <h3>Categoría</h3>
-                    <div class="form-row">
-                        <div class="form-group"><label>Categoría *</label><select id="productCategory" required onchange="updateSubcategoryOptions()"></select></div>
-                        <div class="form-group"><label>Subcategoría *</label><select id="productSubcategory" required></select></div>
-                    </div>
-                </div>
-                <div class="form-section">
-                    <h3>Precio</h3>
-                    <div class="alert-warning"><strong>Fórmula:</strong> Precio Venta = Precio Compra / (1 - Margen/100)</div>
-                    <div class="form-row">
-                        <div class="form-group"><label>Costo ($) *</label><input type="number" id="productCostPrice" step="0.01" required oninput="calculateSalePrice()"></div>
-                        <div class="form-group"><label>Margen (%) *</label><input type="number" id="productMargin" step="1" required oninput="calculateSalePrice()"></div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group"><label>Venta ($)</label><input type="number" id="productPrice" step="0.01" required readonly style="background:#f0f0f0;"></div>
-                        <div class="form-group"><label>Descuento (%)</label><input type="number" id="productDiscount" min="0" max="100"></div>
-                    </div>
-                    <div class="form-group"><label>Stock *</label><input type="number" id="productStock" required></div>
-                </div>
-                <div class="form-section">
-                    <h3>Imágenes</h3>
-                    <input type="file" id="productImageInput" accept="image/*" multiple onchange="addProductImages(event)">
-                    <div id="productImagesContainer" style="display:flex; gap:0.5rem; flex-wrap:wrap; margin-top:0.5rem;"></div>
-                </div>
-                <input type="hidden" id="editProductId">
-                <button type="submit" class="btn btn-primary" style="width:100%; padding:1rem;">Guardar</button>
-            </form>
-        </div>
-    </div>
-
-    <!-- MODAL MARCA -->
-    <div class="modal" id="brandModal">
-        <div class="modal-content">
-            <button class="modal-close" onclick="closeModal('brandModal')">×</button>
-            <h2 id="brandModalTitle">Imagen de Marca</h2>
-            <form onsubmit="saveBrandImage(event)">
-                <input type="file" id="brandImageInput" accept="image/*" onchange="previewBrandImage(event)">
-                <div class="image-preview" id="brandImagePreview"></div>
-                <input type="hidden" id="editBrandId">
-                <input type="hidden" id="currentBrandImageData">
-                <button type="submit" class="btn btn-primary" style="width:100%">Guardar</button>
-            </form>
-        </div>
-    </div>
-
-    <!-- MODAL PEDIDO -->
-    <div class="modal" id="orderDetailModal">
-        <div class="modal-content" id="orderDetailContent"></div>
-    </div>
-
-    <!-- Firebase Compat (NO MÓDULO) -->
-    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
-    
-    <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyAU77yzh7Tm3RPuuvVcxlCt26u2LjmsBK0",
-            authDomain: "akiramotors-cc498.firebaseapp.com",
-            projectId: "akiramotors-cc498",
-            storageBucket: "akiramotors-cc498.firebasestorage.app",
-            messagingSenderId: "657064466850",
-            appId: "1:657064466850:web:2d1340db67f790d11ebafb"
-        };
-
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
-
-        const CATEGORIES = {
-            "Tren delantero y Dirección": ["Rotulas", "Muñones", "Terminales"],
-            "Amortiguadores y Suspensión": ["Amortiguadores", "Bases Amortiguador", "Mesetas", "Espirales"],
-            "Trasmisión": ["Puntas de tripoide", "Tricetas", "Embragues", "Bombines", "Crucetas"],
-            "Motor y componentes": ["Empacaduras", "Pistones y Anillos", "Kits de tiempo", "Válvulas y Taquetes", "Bomba de Aceite"],
-            "Sistema de Refrigeración": ["Bomba de agua", "Envases de refrigerantes"],
-            "Encendido y Sistema Eléctrico": ["Bujías y Cables de bujías", "Bobinas de encendido", "Sensores", "Relay y fusibles"],
-            "Inyección y Combustible": ["Bombas de Gasolina", "Filtros de Gasolina"]
-        };
-
-        let products = [], brands = [], banners = [], orders = [], reviews = [], coupons = [], deliveryZones = [], drivers = [], customers = [];
-        let vehicles = {}, drawerMenu = [], heroConfig = { visible: false, backgroundImage: null };
-        let bcvRate = 36.5;
-        const ADMIN_PASSWORD = 'fjat21';
-        let siteConfig = { companyName: 'AKIRA MOTORS', slogan: 'Repuestos', description: '', address: '', phone: '', schedule: '', facebook: '', instagram: '', tiktok: '' };
-        let whatsappNumber = '584148700616';
-        let currentProductImages = [];
-
-        const defaultBrands = [
-            { id: 'mitsubishi', name: 'Mitsubishi', image: null },
-            { id: 'ford', name: 'Ford', image: null },
-            { id: 'kia', name: 'Kia', image: null },
-            { id: 'hyundai', name: 'Hyundai', image: null },
-            { id: 'chevrolet', name: 'Chevrolet', image: null }
-        ];
-
-        // LOGIN - AHORA FUNCIONA
-        window.adminLogin = function(event) {
-            event.preventDefault();
-            const password = document.getElementById('adminPassword').value;
-            if (password === ADMIN_PASSWORD) {
-                document.getElementById('loginScreen').style.display = 'none';
-                document.getElementById('adminPanel').classList.remove('hidden');
-                document.getElementById('adminPanel').style.display = 'flex';
-                document.getElementById('adminPassword').value = '';
-                loadAll();
-            } else {
-                alert('❌ Contraseña incorrecta');
-            }
-        };
-
-        window.logoutAdmin = function() {
-            document.getElementById('adminPanel').style.display = 'none';
-            document.getElementById('adminPanel').classList.add('hidden');
-            document.getElementById('loginScreen').style.display = 'block';
-        };
-
-        window.showSection = function(sectionId, event) {
-            document.querySelectorAll('.admin-section').forEach(s => s.classList.remove('active'));
-            document.querySelectorAll('.admin-menu-item').forEach(m => m.classList.remove('active'));
-            document.getElementById('section-' + sectionId).classList.add('active');
-            if (event) event.currentTarget.classList.add('active');
-            if (sectionId === 'customers') loadCustomers();
-            if (sectionId === 'drivers') loadDrivers();
-            if (sectionId === 'drawer') renderDrawerEditor();
-        };
-
-        window.refreshPreview = function() {
-            document.getElementById('previewFrame').src = 'index.html?t=' + Date.now();
-        };
-
-        async function loadAll() {
-            await loadBcvRate();
-            await loadLogo();
-            await loadPickupMaps();
-            await loadWhatsapp();
-            await loadBanners();
-            await loadSiteConfig();
-            await loadHero();
-            await loadDrawerMenu();
-            await loadVehicles();
-            await loadBrands();
-            await loadProducts();
-            await loadOrders();
-            await loadReviews();
-            await loadCoupons();
-            await loadDeliveryZones();
-            await loadDrivers();
-            await loadCustomers();
-            await loadDashboard();
-        }
-
-        // HERO
-        async function loadHero() {
-            try {
-                const heroDoc = await db.collection('settings').doc('hero').get();
-                if (heroDoc.exists) {
-                    heroConfig = heroDoc.data();
-                    document.getElementById('heroVisible').checked = heroConfig.visible || false;
-                    document.getElementById('heroTitle').value = heroConfig.title || '';
-                    document.getElementById('heroSubtitle').value = heroConfig.subtitle || '';
-                    document.getElementById('heroTitleColor').value = heroConfig.titleColor || '#ffffff';
-                    document.getElementById('heroTitleSize').value = heroConfig.titleSize || 48;
-                    document.getElementById('heroTitleFont').value = heroConfig.titleFont || "'Segoe UI', sans-serif";
-                    document.getElementById('heroSubtitleColor').value = heroConfig.subtitleColor || '#dddddd';
-                    document.getElementById('heroSubtitleSize').value = heroConfig.subtitleSize || 20;
-                    document.getElementById('heroCtaText').value = heroConfig.ctaText || '';
-                    document.getElementById('heroCtaLink').value = heroConfig.ctaLink || '';
-                    if (heroConfig.backgroundImage) {
-                        document.getElementById('heroBgPreview').innerHTML = `<img src="${heroConfig.backgroundImage}">`;
-                    }
-                }
-            } catch (error) { console.log('Error loading hero:', error); }
-        }
-
-        document.getElementById('heroBgImage').addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (!file) return;
-            if (file.size > 2 * 1024 * 1024) { alert('Máximo 2MB'); return; }
-            const reader = new FileReader();
-            reader.onload = function(ev) {
-                heroConfig.backgroundImage = ev.target.result;
-                document.getElementById('heroBgPreview').innerHTML = `<img src="${ev.target.result}">`;
-            };
-            reader.readAsDataURL(file);
-        });
-
-        window.saveHero = async function() {
-            try {
-                const heroData = {
-                    visible: document.getElementById('heroVisible').checked,
-                    title: document.getElementById('heroTitle').value,
-                    subtitle: document.getElementById('heroSubtitle').value,
-                    titleColor: document.getElementById('heroTitleColor').value,
-                    titleSize: parseInt(document.getElementById('heroTitleSize').value),
-                    titleFont: document.getElementById('heroTitleFont').value,
-                    subtitleColor: document.getElementById('heroSubtitleColor').value,
-                    subtitleSize: parseInt(document.getElementById('heroSubtitleSize').value),
-                    ctaText: document.getElementById('heroCtaText').value,
-                    ctaLink: document.getElementById('heroCtaLink').value,
-                    backgroundImage: heroConfig.backgroundImage || null,
-                    updatedAt: new Date().toISOString()
-                };
-                await db.collection('settings').doc('hero').set(heroData);
-                alert('✅ Hero guardado');
-                refreshPreview();
-            } catch (error) { alert('Error: ' + error.message); }
-        };
-
-        // DRAWER MENU
-        async function loadDrawerMenu() {
-            try {
-                const drawerDoc = await db.collection('settings').doc('drawerMenu').get();
-                if (drawerDoc.exists) {
-                    drawerMenu = drawerDoc.data().categories || [];
-                } else {
-                    drawerMenu = [
-                        { name: "Amortiguadores y Suspensión", brands: [
-                            { name: "Toyota", models: ["Corolla", "Fortuner", "Landcruiser"] },
-                            { name: "Nissan", models: ["Sentra", "Frontier", "X-Trail"] }
-                        ]},
-                        { name: "Tren delantero y Dirección", brands: [
-                            { name: "Chevrolet", models: ["Aveo", "Cruze"] },
-                            { name: "Ford", models: ["Fiesta", "Ranger"] }
-                        ]}
-                    ];
-                    await db.collection('settings').doc('drawerMenu').set({ categories: drawerMenu });
-                }
-            } catch (error) { console.error('Error loading drawer:', error); }
-        }
-
-        window.renderDrawerEditor = function() {
-            const container = document.getElementById('drawerEditor');
-            if (drawerMenu.length === 0) {
-                container.innerHTML = '<p style="text-align:center;color:#666;padding:2rem;">No hay categorías</p>';
-                return;
-            }
-            
-            let html = '';
-            drawerMenu.forEach((cat, catIdx) => {
-                html += `<div class="drawer-editor-item">
-                    <div class="drawer-editor-header">
-                        <strong style="color:#dc3545;">${cat.name}</strong>
-                        <div class="drawer-editor-controls">
-                            <button onclick="moveCategory(${catIdx}, -1)">↑</button>
-                            <button onclick="moveCategory(${catIdx}, 1)">↓</button>
-                            <button onclick="deleteCategory(${catIdx})" style="background:#999;">×</button>
-                        </div>
-                    </div>
-                    <div style="margin-left:1rem;">
-                        <div style="display:flex; gap:0.5rem; margin-bottom:0.5rem;">
-                            <input type="text" id="newBrand-${catIdx}" placeholder="Marca" style="flex:1; padding:0.5rem; border:1px solid #ddd; border-radius:8px;">
-                            <button class="btn btn-small btn-primary" onclick="addBrand(${catIdx})">+ Marca</button>
-                        </div>`;
-                
-                if (cat.brands) {
-                    cat.brands.forEach((brand, brandIdx) => {
-                        html += `<div class="drawer-sub-item" style="background:white; padding:0.8rem; border-radius:8px; margin-bottom:0.5rem;">
-                            <div style="display:flex; justify-content:space-between; align-items:center;">
-                                <strong>${brand.name}</strong>
-                                <div class="drawer-editor-controls">
-                                    <button onclick="moveBrand(${catIdx}, ${brandIdx}, -1)" style="background:#FFC107; color:#333;">↑</button>
-                                    <button onclick="moveBrand(${catIdx}, ${brandIdx}, 1)" style="background:#FFC107; color:#333;">↓</button>
-                                    <button onclick="deleteBrand(${catIdx}, ${brandIdx})" style="background:#999;">×</button>
-                                </div>
-                            </div>
-                            <div style="margin-left:1rem; margin-top:0.5rem;">
-                                <div style="display:flex; gap:0.5rem;">
-                                    <input type="text" id="newModel-${catIdx}-${brandIdx}" placeholder="Modelo" style="flex:1; padding:0.4rem; border:1px solid #ddd; border-radius:8px;">
-                                    <button class="btn btn-small btn-primary" onclick="addModel(${catIdx}, ${brandIdx})">+ Modelo</button>
-                                </div>
-                                <div style="display:flex; flex-wrap:wrap; gap:0.3rem; margin-top:0.5rem;">`;
-                        
-                        if (brand.models) {
-                            brand.models.forEach((model, modelIdx) => {
-                                html += `<span class="vehicle-tag">${model}<button onclick="deleteModel(${catIdx}, ${brandIdx}, ${modelIdx})">×</button></span>`;
-                            });
-                        }
-                        
-                        html += `</div></div></div>`;
-                    });
-                }
-                
-                html += `</div></div>`;
-            });
-            
-            container.innerHTML = html;
-        };
-
-        window.moveCategory = async function(idx, direction) {
-            const newIdx = idx + direction;
-            if (newIdx < 0 || newIdx >= drawerMenu.length) return;
-            [drawerMenu[idx], drawerMenu[newIdx]] = [drawerMenu[newIdx], drawerMenu[idx]];
-            await saveDrawerMenu();
-        };
-
-        window.deleteCategory = async function(idx) {
-            if (!confirm('¿Eliminar?')) return;
-            drawerMenu.splice(idx, 1);
-            await saveDrawerMenu();
-        };
-
-        window.addBrand = async function(catIdx) {
-            const input = document.getElementById(`newBrand-${catIdx}`);
-            const name = input.value.trim();
-            if (!name) { alert('Ingresa nombre'); return; }
-            if (!drawerMenu[catIdx].brands) drawerMenu[catIdx].brands = [];
-            drawerMenu[catIdx].brands.push({ name, models: [] });
-            input.value = '';
-            await saveDrawerMenu();
-        };
-
-        window.moveBrand = async function(catIdx, brandIdx, direction) {
-            const brands = drawerMenu[catIdx].brands;
-            const newIdx = brandIdx + direction;
-            if (newIdx < 0 || newIdx >= brands.length) return;
-            [brands[brandIdx], brands[newIdx]] = [brands[newIdx], brands[brandIdx]];
-            await saveDrawerMenu();
-        };
-
-        window.deleteBrand = async function(catIdx, brandIdx) {
-            if (!confirm('¿Eliminar?')) return;
-            drawerMenu[catIdx].brands.splice(brandIdx, 1);
-            await saveDrawerMenu();
-        };
-
-        window.addModel = async function(catIdx, brandIdx) {
-            const input = document.getElementById(`newModel-${catIdx}-${brandIdx}`);
-            const name = input.value.trim();
-            if (!name) { alert('Ingresa nombre'); return; }
-            if (!drawerMenu[catIdx].brands[brandIdx].models) drawerMenu[catIdx].brands[brandIdx].models = [];
-            drawerMenu[catIdx].brands[brandIdx].models.push(name);
-            input.value = '';
-            await saveDrawerMenu();
-        };
-
-        window.deleteModel = async function(catIdx, brandIdx, modelIdx) {
-            if (!confirm('¿Eliminar?')) return;
-            drawerMenu[catIdx].brands[brandIdx].models.splice(modelIdx, 1);
-            await saveDrawerMenu();
-        };
-
-        async function saveDrawerMenu() {
-            try {
-                await db.collection('settings').doc('drawerMenu').set({ categories: drawerMenu, updatedAt: new Date().toISOString() });
-                renderDrawerEditor();
-                alert('✅ Actualizado');
-            } catch (error) { alert('Error: ' + error.message); }
-        }
-
-        window.addCategory = async function() {
-            const name = document.getElementById('newCategoryName').value.trim();
-            if (!name) { alert('Ingresa nombre'); return; }
-            drawerMenu.push({ name, brands: [] });
-            document.getElementById('newCategoryName').value = '';
-            await saveDrawerMenu();
-        };
-
-        // BCV
-        async function loadBcvRate() { try { const rateDoc = await db.collection('settings').doc('bcvRate').get(); if (rateDoc.exists) bcvRate = rateDoc.data().value; } catch (error) { console.log('Error tasa:', error); } }
-
-        // Pickup Maps
-        async function loadPickupMaps() { try { const pickupDoc = await db.collection('settings').doc('pickupMaps').get(); if (pickupDoc.exists) document.getElementById('pickupMapsInput').value = pickupDoc.data().url || ''; } catch (error) { console.log('Error pickup:', error); } }
-        window.updatePickupMaps = async function() { const url = document.getElementById('pickupMapsInput').value.trim(); if (!url) { alert('Ingresa link'); return; } try { await db.collection('settings').doc('pickupMaps').set({ url: url }); alert('✅ Guardado'); } catch (error) { alert('Error: ' + error.message); } };
-
-        // WhatsApp
-        async function loadWhatsapp() { try { const waDoc = await db.collection('settings').doc('whatsapp').get(); if (waDoc.exists && waDoc.data().number) { whatsappNumber = waDoc.data().number; document.getElementById('whatsappNumber').value = whatsappNumber; } } catch (error) { console.log('Error whatsapp:', error); } }
-        window.saveWhatsapp = async function() { const num = document.getElementById('whatsappNumber').value.trim(); if (!num) { alert('Ingresa número'); return; } try { await db.collection('settings').doc('whatsapp').set({ number: num }); whatsappNumber = num; alert('✅ Guardado'); } catch (error) { alert('Error: ' + error.message); } };
-
-        // Logo
-        async function loadLogo() { try { const logoDoc = await db.collection('settings').doc('logo').get(); if (logoDoc.exists) { const preview = document.getElementById('adminLogoPreview'); if (preview) preview.innerHTML = `<img src="${logoDoc.data().image}">`; } } catch (error) { console.log('Logo:', error); } }
-
-        // Banners
-        async function loadBanners() { try { const bannersDoc = await db.collection('settings').doc('banners').get(); if (bannersDoc.exists) banners = bannersDoc.data().images || []; renderBannerPreviews(); } catch (error) { console.log('Banners:', error); } }
-        function renderBannerPreviews() { const grid = document.getElementById('bannerPreviewGrid'); if (!grid) return; const html = banners.length === 0 ? '<p style="color:#666;text-align:center;">Sin banners</p>' : banners.map((banner, i) => `<div style="position:relative;"><img src="${banner}" style="width:100%;height:120px;object-fit:cover;border-radius:8px;"><button onclick="removeBanner(${i})" style="position:absolute;top:5px;right:5px;background:#dc3545;color:white;border:none;width:28px;height:28px;border-radius:50%;cursor:pointer;">×</button></div>`).join(''); grid.innerHTML = html; }
-        window.addBanner = async function() { const fileInput = document.getElementById('bannerImageInput'); const file = fileInput.files[0]; if (!file) { alert('Selecciona imagen'); return; } if (banners.length >= 5) { alert('Máximo 5'); return; } if (file.size > 1024 * 1024) { alert('Máximo 1MB'); return; } const reader = new FileReader(); reader.onload = async function(e) { banners.push(e.target.result); try { await db.collection('settings').doc('banners').set({ images: banners }); renderBannerPreviews(); fileInput.value = ''; alert('✅ Agregado'); } catch (error) { alert('Error: ' + error.message); } }; reader.readAsDataURL(file); };
-        window.removeBanner = async function(index) { if (!confirm('¿Eliminar?')) return; banners.splice(index, 1); try { await db.collection('settings').doc('banners').set({ images: banners }); renderBannerPreviews(); alert('✅ Eliminado'); } catch (error) { alert('Error: ' + error.message); } };
-
-        // Site Config
-        async function loadSiteConfig() { try { const configDoc = await db.collection('settings').doc('siteConfig').get(); if (configDoc.exists) siteConfig = { ...siteConfig, ...configDoc.data() }; document.getElementById('cfgCompanyName').value = siteConfig.companyName; document.getElementById('cfgSlogan').value = siteConfig.slogan; document.getElementById('cfgDescription').value = siteConfig.description; document.getElementById('cfgAddress').value = siteConfig.address; document.getElementById('cfgPhone').value = siteConfig.phone; document.getElementById('cfgSchedule').value = siteConfig.schedule; document.getElementById('cfgFacebook').value = siteConfig.facebook || ''; document.getElementById('cfgInstagram').value = siteConfig.instagram || ''; document.getElementById('cfgTiktok').value = siteConfig.tiktok || ''; } catch (error) { console.log('Config:', error); } }
-        window.saveSiteConfig = async function() { const config = { companyName: document.getElementById('cfgCompanyName').value, slogan: document.getElementById('cfgSlogan').value, description: document.getElementById('cfgDescription').value, address: document.getElementById('cfgAddress').value, phone: document.getElementById('cfgPhone').value, schedule: document.getElementById('cfgSchedule').value, facebook: document.getElementById('cfgFacebook').value, instagram: document.getElementById('cfgInstagram').value, tiktok: document.getElementById('cfgTiktok').value }; try { await db.collection('settings').doc('siteConfig').set(config); siteConfig = { ...siteConfig, ...config }; alert('✅ Guardado'); } catch (error) { alert('Error: ' + error.message); } };
-
-        // Vehicles
-        async function loadVehicles() { try { const vehiclesDoc = await db.collection('settings').doc('vehicles').get(); if (vehiclesDoc.exists) { vehicles = vehiclesDoc.data().brands || {}; } else { vehicles = { "Toyota": ["Corolla", "Hilux", "Yaris"], "Nissan": ["Versa", "Sentra", "Frontier"], "Chevrolet": ["Aveo", "Cruze", "Captiva"], "Ford": ["Fiesta", "Focus", "Ranger"], "Hyundai": ["Tucson", "Creta", "Accent"], "Kia": ["Rio", "Sportage", "Picanto"], "Mitsubishi": ["L200", "Outlander", "Montero"] }; await db.collection('settings').doc('vehicles').set({ brands: vehicles }); } renderVehicles(); } catch (error) { console.error('Vehículos:', error); } }
-        function renderVehicles() { const list = document.getElementById('vehiclesList'); if (Object.keys(vehicles).length === 0) { list.innerHTML = '<p style="text-align:center;color:#666;padding:1rem">Sin marcas</p>'; return; } let html = ''; for (const [brand, models] of Object.entries(vehicles)) { html += `<div class="admin-item" style="flex-direction:column; align-items:stretch;"><div style="display:flex; justify-content:space-between; align-items:center; width:100%;"><strong style="color:#dc3545;">${brand}</strong><button class="btn btn-small btn-secondary" onclick="deleteVehicleBrand('${brand}')">Eliminar</button></div><div style="margin-top:1rem; padding:1rem; background:white; border-radius:8px; width:100%;"><div style="display:flex; gap:0.5rem; margin-bottom:1rem;"><input type="text" id="newModel-${brand}" placeholder="Modelo" style="flex:1; padding:0.5rem; border:1px solid #ddd; border-radius:8px;"><button class="btn btn-small btn-primary" onclick="addVehicleModel('${brand}')">+ Modelo</button></div><div style="display:flex; flex-wrap:wrap; gap:0.5rem;">${models.map(model => `<span class="vehicle-tag">${model}<button onclick="deleteVehicleModel('${brand}', '${model}')">×</button></span>`).join('')}</div></div></div>`; } list.innerHTML = html; }
-        window.addVehicleBrand = async function() { const brand = document.getElementById('newVehicleBrand').value.trim(); if (!brand) { alert('Ingresa nombre'); return; } if (vehicles[brand]) { alert('Ya existe'); return; } vehicles[brand] = []; try { await db.collection('settings').doc('vehicles').set({ brands: vehicles }); document.getElementById('newVehicleBrand').value = ''; renderVehicles(); alert('✅ Agregado'); } catch (error) { alert('Error: ' + error.message); } };
-        window.deleteVehicleBrand = async function(brand) { if (!confirm('¿Eliminar?')) return; delete vehicles[brand]; try { await db.collection('settings').doc('vehicles').set({ brands: vehicles }); renderVehicles(); alert('✅ Eliminado'); } catch (error) { alert('Error: ' + error.message); } };
-        window.addVehicleModel = async function(brand) { const modelInput = document.getElementById(`newModel-${brand}`); const model = modelInput.value.trim(); if (!model) { alert('Ingresa nombre'); return; } if (vehicles[brand].includes(model)) { alert('Ya existe'); return; } vehicles[brand].push(model); try { await db.collection('settings').doc('vehicles').set({ brands: vehicles }); modelInput.value = ''; renderVehicles(); alert('✅ Agregado'); } catch (error) { alert('Error: ' + error.message); } };
-        window.deleteVehicleModel = async function(brand, model) { if (!confirm('¿Eliminar?')) return; vehicles[brand] = vehicles[brand].filter(m => m !== model); try { await db.collection('settings').doc('vehicles').set({ brands: vehicles }); renderVehicles(); alert('✅ Eliminado'); } catch (error) { alert('Error: ' + error.message); } };
-
-        // Brands
-        async function loadBrands() { try { const snapshot = await db.collection('brands').get(); if (snapshot.empty) { brands = defaultBrands; for (const brand of defaultBrands) await db.collection('brands').doc(brand.id).set(brand); } else { brands = []; snapshot.forEach(docSnap => brands.push({ id: docSnap.id, ...docSnap.data() })); } renderAdminBrands(); } catch (error) { console.error('Marcas:', error); } }
-        function renderAdminBrands() { const list = document.getElementById('adminBrandsList'); list.innerHTML = brands.map(brand => { const thumbHtml = brand.image ? `<img src="${brand.image}">` : ''; return `<div class="admin-item"><div class="admin-info"><div class="admin-thumb">${thumbHtml}</div><div><strong>${brand.name}</strong><br><small style="color:#666">${brand.image ? 'Con imagen' : 'Sin imagen'}</small></div></div><div class="admin-actions"><button class="btn btn-small btn-primary" onclick="editBrandImage('${brand.id}')">${brand.image ? 'Cambiar' : 'Agregar'}</button></div></div>`; }).join(''); }
-        window.editBrandImage = function(brandId) { const brand = brands.find(b => b.id === brandId); document.getElementById('brandModalTitle').textContent = `Imagen: ${brand.name}`; document.getElementById('editBrandId').value = brandId; document.getElementById('currentBrandImageData').value = brand.image || ''; if (brand.image) { document.getElementById('brandImagePreview').innerHTML = `<img src="${brand.image}">`; } else { document.getElementById('brandImagePreview').innerHTML = '<div style="color:#999;">Sin imagen</div>'; } document.getElementById('brandImageInput').value = ''; document.getElementById('brandModal').classList.add('active'); };
-        window.previewBrandImage = function(event) { const file = event.target.files[0]; if (file) { if (file.size > 1024 * 1024) { alert('Máximo 1MB'); event.target.value = ''; return; } const reader = new FileReader(); reader.onload = function(e) { document.getElementById('currentBrandImageData').value = e.target.result; document.getElementById('brandImagePreview').innerHTML = `<img src="${e.target.result}">`; }; reader.readAsDataURL(file); } };
-        window.saveBrandImage = async function(event) { event.preventDefault(); const brandId = document.getElementById('editBrandId').value; const imageData = document.getElementById('currentBrandImageData').value; try { await db.collection('brands').doc(brandId).update({ image: imageData || null }); await loadBrands(); closeModal('brandModal'); alert('✅ Guardado'); } catch (error) { alert('Error: ' + error.message); } };
-
-        // Products
-        function populateCategorySelect() { const select = document.getElementById('productCategory'); select.innerHTML = '<option value="">Seleccionar...</option>'; for (const category of Object.keys(CATEGORIES)) { select.innerHTML += `<option value="${category}">${category}</option>`; } }
-        window.updateSubcategoryOptions = function() { const category = document.getElementById('productCategory').value; const subSelect = document.getElementById('productSubcategory'); subSelect.innerHTML = '<option value="">Seleccionar...</option>'; if (category && CATEGORIES[category]) { CATEGORIES[category].forEach(sub => { subSelect.innerHTML += `<option value="${sub}">${sub}</option>`; }); } };
-        window.calculateSalePrice = function() { const cost = parseFloat(document.getElementById('productCostPrice').value) || 0; const margin = parseFloat(document.getElementById('productMargin').value) || 0; if (margin >= 100) { document.getElementById('productPrice').value = '0'; alert('Margen no puede ser 100%+'); return; } const salePrice = cost / (1 - margin / 100); document.getElementById('productPrice').value = salePrice.toFixed(2); };
-
-        async function loadProducts() { try { const snapshot = await db.collection('products').get(); products = []; snapshot.forEach(docSnap => products.push({ id: docSnap.id, ...docSnap.data() })); document.getElementById('statProducts').textContent = products.length; renderAdminProducts(); } catch (error) { console.error('Productos:', error); } }
-        function renderAdminProducts(filter = '') { const list = document.getElementById('adminProductList'); let filtered = products; if (filter) { const q = filter.toLowerCase(); filtered = products.filter(p => p.name.toLowerCase().includes(q) || (p.code && p.code.toLowerCase().includes(q))); } if (filtered.length === 0) { list.innerHTML = '<p style="text-align:center;color:#666;padding:1rem">Sin productos</p>'; return; } list.innerHTML = filtered.map(product => { const images = product.images || (product.image ? [product.image] : []); const thumbHtml = images.length > 0 ? `<img src="${images[0]}">` : ''; const offerText = product.discount && product.discount > 0 ? ` | -${product.discount}%` : ''; const recText = product.recommended ? ' | RECOMENDADO' : ''; return `<div class="admin-item"><div class="admin-info"><div class="admin-thumb">${thumbHtml}</div><div><strong>${product.name}</strong>${recText}<br><small style="color:#dc3545">Código: ${product.code || 'N/A'}</small><br><small style="color:#666">$${Number(product.price).toFixed(2)}${offerText} | Stock: ${product.stock}</small></div></div><div class="admin-actions"><button class="btn btn-small btn-primary" onclick="editProduct('${product.id}')">Editar</button><button class="btn btn-small btn-secondary" onclick="deleteProduct('${product.id}')">Eliminar</button></div></div>`; }).join(''); }
-        document.getElementById('adminProductSearch').addEventListener('input', function(e) { renderAdminProducts(e.target.value); });
-        window.openAddProductModal = function() { populateCategorySelect(); currentProductImages = []; document.getElementById('productModalTitle').textContent = 'Agregar Producto'; document.getElementById('editProductId').value = ''; document.getElementById('productCode').value = ''; document.getElementById('productBrand').value = ''; document.getElementById('productName').value = ''; document.getElementById('productDescription').value = ''; document.getElementById('productCostPrice').value = ''; document.getElementById('productMargin').value = ''; document.getElementById('productPrice').value = ''; document.getElementById('productDiscount').value = ''; document.getElementById('productStock').value = ''; document.getElementById('productCategory').value = ''; document.getElementById('productSubcategory').value = ''; document.getElementById('productRecommended').checked = false; document.getElementById('productImagesContainer').innerHTML = ''; document.getElementById('productModal').classList.add('active'); };
-        window.editProduct = function(productId) { const product = products.find(p => p.id === productId); populateCategorySelect(); currentProductImages = product.images || (product.image ? [product.image] : []); document.getElementById('productModalTitle').textContent = 'Editar Producto'; document.getElementById('editProductId').value = product.id; document.getElementById('productCode').value = product.code || ''; document.getElementById('productBrand').value = product.brand || ''; document.getElementById('productName').value = product.name; document.getElementById('productDescription').value = product.description || ''; document.getElementById('productCostPrice').value = product.costPrice || ''; document.getElementById('productMargin').value = product.margin || ''; document.getElementById('productPrice').value = product.price; document.getElementById('productDiscount').value = product.discount || ''; document.getElementById('productStock').value = product.stock; document.getElementById('productCategory').value = product.category || ''; updateSubcategoryOptions(); document.getElementById('productSubcategory').value = product.subcategory || ''; document.getElementById('productRecommended').checked = product.recommended || false; renderProductImages(); document.getElementById('productModal').classList.add('active'); };
-        function renderProductImages() { const container = document.getElementById('productImagesContainer'); if (currentProductImages.length === 0) { container.innerHTML = '<div style="color:#999;">Sin imágenes</div>'; return; } container.innerHTML = currentProductImages.map((img, i) => `<div style="position:relative;"><img src="${img}" style="width:80px;height:80px;object-fit:cover;border-radius:8px;"><button type="button" onclick="removeProductImage(${i})" style="position:absolute;top:2px;right:2px;background:#dc3545;color:white;border:none;width:20px;height:20px;border-radius:50%;cursor:pointer;">×</button></div>`).join(''); }
-        window.addProductImages = function(event) { const files = Array.from(event.target.files); files.forEach(file => { if (currentProductImages.length >= 5) { alert('Máximo 5'); return; } if (file.size > 1024 * 1024) { alert('Máximo 1MB'); return; } const reader = new FileReader(); reader.onload = function(e) { currentProductImages.push(e.target.result); renderProductImages(); }; reader.readAsDataURL(file); }); event.target.value = ''; };
-        window.removeProductImage = function(index) { currentProductImages.splice(index, 1); renderProductImages(); };
-        window.saveProduct = async function(event) { event.preventDefault(); const editId = document.getElementById('editProductId').value; const costPrice = parseFloat(document.getElementById('productCostPrice').value) || 0; const margin = parseFloat(document.getElementById('productMargin').value) || 0; const salePrice = parseFloat(document.getElementById('productPrice').value) || 0; const discount = parseFloat(document.getElementById('productDiscount').value) || 0; const productData = { code: document.getElementById('productCode').value, brand: document.getElementById('productBrand').value, name: document.getElementById('productName').value, description: document.getElementById('productDescription').value, costPrice: costPrice, margin: margin, price: salePrice, discount: discount, stock: parseInt(document.getElementById('productStock').value), category: document.getElementById('productCategory').value, subcategory: document.getElementById('productSubcategory').value, recommended: document.getElementById('productRecommended').checked, images: currentProductImages.length > 0 ? currentProductImages : null, image: currentProductImages.length > 0 ? currentProductImages[0] : null, updatedAt: new Date().toISOString() }; try { if (editId) { await db.collection('products').doc(editId).update(productData); } else { productData.createdAt = new Date().toISOString(); await db.collection('products').add(productData); } await loadProducts(); await loadDashboard(); closeModal('productModal'); alert('✅ Guardado'); } catch (error) { alert('Error: ' + error.message); } };
-        window.deleteProduct = async function(productId) { if (!confirm('¿Eliminar?')) return; try { await db.collection('products').doc(productId).delete(); await loadProducts(); await loadDashboard(); alert('✅ Eliminado'); } catch (error) { alert('Error: ' + error.message); } };
-
-        // Orders
-        async function loadOrders() { try { const snapshot = await db.collection('orders').get(); orders = []; snapshot.forEach(docSnap => orders.push({ id: docSnap.id, ...docSnap.data() })); renderOrders(); } catch (error) { console.error('Pedidos:', error); } }
-        function renderOrders() { const list = document.getElementById('ordersList'); const filter = document.getElementById('filterOrderStatus').value; const searchQuery = (document.getElementById('searchOrderCode').value || '').toLowerCase().trim(); let filtered = orders; if (filter) filtered = filtered.filter(o => o.status === filter); if (searchQuery) { filtered = filtered.filter(o => { const code = (o.customerCode || '').toLowerCase(); const name = (o.userName || '').toLowerCase(); const phone = (o.userPhone || '').toLowerCase(); return code.includes(searchQuery) || name.includes(searchQuery) || phone.includes(searchQuery); }); } if (filtered.length === 0) { list.innerHTML = '<p style="text-align:center;color:#666;padding:1rem">Sin pedidos</p>'; return; } list.innerHTML = filtered.sort((a,b) => new Date(b.date) - new Date(a.date)).map(order => { const statusText = { pending: 'Pendiente', shipped: 'En camino', delivered: 'Entregado', cancelled: 'Cancelado' }[order.status] || order.status; return `<div class="order-item"><div class="order-header"><div><strong>#${order.id.slice(-6)}</strong><br><small style="color:#666">${order.userName || 'Cliente'} - ${order.userPhone || 'N/A'}</small><br><small style="color:#666">${new Date(order.date).toLocaleString()}</small>${order.customerCode ? `<br><small style="color:#dc3545;">Código: ${order.customerCode}</small>` : ''}</div><span class="order-status ${order.status}">${statusText}</span></div><div style="margin:0.5rem 0;"><strong>$${Number(order.total).toFixed(2)}</strong> | ${order.deliveryMode === 'pickup' ? 'Pickup' : 'Delivery'}${order.driverName ? `<br><small style="color:#9C27B0;">${order.driverName}</small>` : ''}</div><div style="display:flex; gap:0.5rem; flex-wrap:wrap;"><button class="btn btn-small btn-primary" onclick="viewOrderDetail('${order.id}')">Ver</button><button class="btn btn-small btn-warning" onclick="updateOrderStatus('${order.id}', 'shipped')">Enviado</button><button class="btn btn-small btn-success" onclick="updateOrderStatus('${order.id}', 'delivered')">Entregado</button><button class="btn btn-small btn-secondary" onclick="updateOrderStatus('${order.id}', 'cancelled')">Cancelar</button><button class="btn btn-small" style="background:#999;color:white;" onclick="deleteOrder('${order.id}')">🗑️</button></div></div>`; }).join(''); }
-        document.getElementById('searchOrderCode').addEventListener('input', renderOrders);
-        document.getElementById('filterOrderStatus').addEventListener('change', renderOrders);
-        window.viewOrderDetail = function(orderId) { const order = orders.find(o => o.id === orderId); if (!order) return; const statusText = { pending: 'Pendiente', shipped: 'En camino', delivered: 'Entregado', cancelled: 'Cancelado' }[order.status] || order.status; document.getElementById('orderDetailContent').innerHTML = `<button class="modal-close" onclick="closeModal('orderDetailModal')">×</button><h2 style="color:#dc3545;">Pedido #${order.id.slice(-6)}</h2><div style="margin:1rem 0;"><strong>Cliente:</strong> ${order.userName || 'N/A'}<br><strong>Tel:</strong> ${order.userPhone || 'N/A'}${order.customerCode ? `<br><strong>Código:</strong> ${order.customerCode}` : ''}<br><strong>Fecha:</strong> ${new Date(order.date).toLocaleString()}<br><strong>Estado:</strong> <span class="order-status ${order.status}">${statusText}</span></div><h3 style="margin:1rem 0 0.5rem; color:#dc3545;">Productos</h3><div style="background:#f8f8f8; padding:1rem; border-radius:8px;">${order.items.map(item => `<div style="padding:0.5rem 0; border-bottom:1px solid #eee;">${item.name} x${item.quantity} = $${(Number(item.price) * item.quantity).toFixed(2)}</div>`).join('')}</div><div style="margin-top:1rem; padding:1rem; background:#fff5f5; border-radius:8px;"><div style="display:flex; justify-content:space-between; font-size:1.3rem; font-weight:bold; color:#dc3545;"><span>TOTAL:</span><span>$${Number(order.total).toFixed(2)}</span></div></div><div style="margin-top:1rem; padding:1rem; background:#f8f8f8; border-radius:8px;"><h4 style="margin-bottom:0.5rem; color:#666;">Eliminar pedido</h4><button class="btn btn-small" style="background:#999;color:white;" onclick="deleteOrder('${order.id}'); closeModal('orderDetailModal');">️ Eliminar</button></div>`; document.getElementById('orderDetailModal').classList.add('active'); };
-        window.updateOrderStatus = async function(orderId, status) { if (!confirm(`¿Cambiar a "${status}"?`)) return; try { await db.collection('orders').doc(orderId).update({ status }); await loadOrders(); await loadDashboard(); alert('✅ Actualizado'); } catch (error) { alert('Error: ' + error.message); } };
-        window.deleteOrder = async function(orderId) { if (!confirm('¿Eliminar permanentemente?')) return; try { await db.collection('orders').doc(orderId).delete(); await loadOrders(); await loadDashboard(); alert('✅ Eliminado'); } catch (error) { alert('Error: ' + error.message); } };
-
-        // Drivers
-        async function loadDrivers() { try { const snapshot = await db.collection('drivers').get(); drivers = []; snapshot.forEach(docSnap => drivers.push({ id: docSnap.id, ...docSnap.data() })); renderDrivers(); } catch (error) { console.error('Domiciliarios:', error); } }
-        function renderDrivers() { const list = document.getElementById('driversList'); if (drivers.length === 0) { list.innerHTML = '<p style="text-align:center;color:#666;padding:1rem">Sin domiciliarios</p>'; return; } list.innerHTML = drivers.map(driver => { const todayOrders = orders.filter(o => o.driverId === driver.id && new Date(o.date).toDateString() === new Date().toDateString()); const todayEarnings = todayOrders.reduce((sum, o) => sum + (Number(o.driverCommission) || 0), 0); return `<div class="driver-card"><div class="driver-info"><strong>${driver.name}</strong><br><small>📞 ${driver.phone} | 💰 $${Number(driver.commission).toFixed(2)}</small><br><small style="color:#28a745;">Hoy: ${todayOrders.length} | $${todayEarnings.toFixed(2)}</small></div><button class="btn btn-small btn-secondary" onclick="deleteDriver('${driver.id}')">Eliminar</button></div>`; }).join(''); }
-        window.addDriver = async function() { const name = document.getElementById('driverName').value.trim(); const phone = document.getElementById('driverPhone').value.trim(); const commission = parseFloat(document.getElementById('driverCommission').value); if (!name || !phone || !commission) { alert('Completa todos'); return; } try { await db.collection('drivers').add({ name, phone, commission, createdAt: new Date().toISOString() }); document.getElementById('driverName').value = ''; document.getElementById('driverPhone').value = ''; document.getElementById('driverCommission').value = ''; await loadDrivers(); alert('✅ Agregado'); } catch (error) { alert('Error: ' + error.message); } };
-        window.deleteDriver = async function(driverId) { if (!confirm('¿Eliminar?')) return; try { await db.collection('drivers').doc(driverId).delete(); await loadDrivers(); alert('✅ Eliminado'); } catch (error) { alert('Error: ' + error.message); } };
-
-        // Customers
-        async function loadCustomers() { try { const customersSnap = await db.collection('customers').get(); customers = []; customersSnap.forEach(docSnap => customers.push({ id: docSnap.id, ...docSnap.data() })); renderCustomers(); } catch (error) { console.error('Clientes:', error); } }
-        function renderCustomers(filter = '') { const tbody = document.getElementById('customersList'); let filtered = customers; if (filter) { const q = filter.toLowerCase(); filtered = customers.filter(c => (c.name || '').toLowerCase().includes(q) || (c.phone || '').includes(q) || (c.customerCode || '').toLowerCase().includes(q)); } if (filtered.length === 0) { tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#666;">Sin clientes</td></tr>'; return; } const customerMap = {}; orders.forEach(order => { const key = order.userPhone || order.userName; if (!key) return; if (!customerMap[key]) customerMap[key] = { name: order.userName || 'N/A', phone: order.userPhone || 'N/A', customerCode: order.customerCode || '', orders: 0, total: 0 }; customerMap[key].orders++; customerMap[key].total += Number(order.total) || 0; }); tbody.innerHTML = filtered.map(c => { const data = customerMap[c.phone] || customerMap[c.name] || { orders: 0, total: 0, customerCode: c.customerCode || '' }; return `<tr><td>${c.customerCode || data.customerCode || '-'}</td><td>${c.name}</td><td>${c.phone}</td><td>${data.orders}</td><td>$${data.total.toFixed(2)}</td></tr>`; }).join(''); }
-        document.getElementById('searchCustomer').addEventListener('input', function(e) { renderCustomers(e.target.value); });
-
-        // Reviews
-        async function loadReviews() { try { const snapshot = await db.collection('reviews').get(); reviews = []; snapshot.forEach(docSnap => reviews.push({ id: docSnap.id, ...docSnap.data() })); renderReviews(); } catch (error) { console.error('Reseñas:', error); } }
-        function renderReviews() { const list = document.getElementById('reviewsList'); if (reviews.length === 0) { list.innerHTML = '<p style="text-align:center;color:#666;padding:1rem">Sin reseñas</p>'; return; } list.innerHTML = reviews.sort((a,b) => new Date(b.date) - new Date(a.date)).map(review => { const product = products.find(p => p.id === review.productId); return `<div class="review-item"><div class="review-header"><strong>${review.userName}</strong><span style="color:#666;">${new Date(review.date).toLocaleDateString()}</span></div><div style="color:#FFC107;">${'★'.repeat(review.rating)}${'☆'.repeat(5-review.rating)}</div><div style="margin:0.5rem 0;">${review.text}</div><div style="font-size:0.85rem; color:#666;">Producto: ${product ? product.name : 'N/A'}</div><button class="btn btn-small btn-secondary" onclick="deleteReview('${review.id}')" style="margin-top:0.5rem;">Eliminar</button></div>`; }).join(''); }
-        window.deleteReview = async function(reviewId) { if (!confirm('¿Eliminar?')) return; try { await db.collection('reviews').doc(reviewId).delete(); await loadReviews(); alert('✅ Eliminado'); } catch (error) { alert('Error: ' + error.message); } };
-
-        // Coupons
-        async function loadCoupons() { try { const snapshot = await db.collection('coupons').get(); coupons = []; snapshot.forEach(docSnap => coupons.push({ id: docSnap.id, ...docSnap.data() })); renderCoupons(); } catch (error) { console.error('Cupones:', error); } }
-        function renderCoupons() { const list = document.getElementById('couponsList'); if (coupons.length === 0) { list.innerHTML = '<p style="text-align:center;color:#666;padding:1rem">Sin cupones</p>'; return; } list.innerHTML = coupons.map(coupon => `<div class="admin-item"><div class="admin-info"><div><strong>${coupon.code}</strong><br><small style="color:#666;">${coupon.discount}% | Usos: ${coupon.uses || 0}/${coupon.maxUses || '∞'}</small></div></div><button class="btn btn-small btn-secondary" onclick="deleteCoupon('${coupon.id}')">Eliminar</button></div>`).join(''); }
-        window.createCoupon = async function() { const code = document.getElementById('couponCode').value.trim().toUpperCase(); const discount = parseInt(document.getElementById('couponDiscount').value); const maxUses = parseInt(document.getElementById('couponMaxUses').value); if (!code || !discount || !maxUses) { alert('Completa todos'); return; } try { await db.collection('coupons').add({ code, discount, maxUses, uses: 0, createdAt: new Date().toISOString() }); document.getElementById('couponCode').value = ''; document.getElementById('couponDiscount').value = ''; document.getElementById('couponMaxUses').value = ''; await loadCoupons(); alert('✅ Creado'); } catch (error) { alert('Error: ' + error.message); } };
-        window.deleteCoupon = async function(couponId) { if (!confirm('¿Eliminar?')) return; try { await db.collection('coupons').doc(couponId).delete(); await loadCoupons(); alert('✅ Eliminado'); } catch (error) { alert('Error: ' + error.message); } };
-
-        // Delivery Zones
-        async function loadDeliveryZones() { try { const snapshot = await db.collection('deliveryZones').get(); deliveryZones = []; snapshot.forEach(docSnap => deliveryZones.push({ id: docSnap.id, ...docSnap.data() })); renderDeliveryZones(); } catch (error) { console.error('Zonas:', error); } }
-        function renderDeliveryZones() { const list = document.getElementById('deliveryZonesList'); if (deliveryZones.length === 0) { list.innerHTML = '<p style="text-align:center;color:#666;padding:1rem">Sin zonas</p>'; return; } list.innerHTML = deliveryZones.map(zone => `<div class="admin-item"><div class="admin-info"><div><strong>${zone.name}</strong><br><small style="color:#666;">$${Number(zone.cost).toFixed(2)} | ${zone.time || 'N/A'}</small></div></div><button class="btn btn-small btn-secondary" onclick="deleteDeliveryZone('${zone.id}')">Eliminar</button></div>`).join(''); }
-        window.addDeliveryZone = async function() { const name = document.getElementById('zoneName').value.trim(); const cost = parseFloat(document.getElementById('zoneCost').value); const time = document.getElementById('zoneTime').value.trim(); if (!name || !cost) { alert('Completa nombre y costo'); return; } try { await db.collection('deliveryZones').add({ name, cost, time, createdAt: new Date().toISOString() }); document.getElementById('zoneName').value = ''; document.getElementById('zoneCost').value = ''; document.getElementById('zoneTime').value = ''; await loadDeliveryZones(); alert('✅ Agregado'); } catch (error) { alert('Error: ' + error.message); } };
-        window.deleteDeliveryZone = async function(zoneId) { if (!confirm('¿Eliminar?')) return; try { await db.collection('deliveryZones').doc(zoneId).delete(); await loadDeliveryZones(); alert('✅ Eliminado'); } catch (error) { alert('Error: ' + error.message); } };
-
-        // Dashboard
-        async function loadDashboard() {
-            const today = new Date(); today.setHours(0,0,0,0);
-            const ordersPending = orders.filter(o => o.status === 'pending').length;
-            document.getElementById('statProducts').textContent = products.length;
-            document.getElementById('statOrdersPending').textContent = ordersPending;
-            document.getElementById('statCustomers').textContent = customers.length;
-        }
-
-        window.closeModal = function(id) { document.getElementById(id).classList.remove('active'); };
-    </script>
-</body>
-</html>
+                <div class="admin
