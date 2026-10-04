@@ -220,7 +220,7 @@
         .auth-btn { width: 100%; background: #dc3545; color: white; border: none; padding: 0.9rem; border-radius: 25px; font-size: 1rem; font-weight: bold; cursor: pointer; margin-top: 0.5rem; }
         .guest-btn { width: 100%; background: white; color: #dc3545; border: 2px solid #dc3545; padding: 0.9rem; border-radius: 25px; font-size: 1rem; font-weight: bold; cursor: pointer; margin-top: 0.5rem; }
 
-        .checkout-modal .modal-content { max-width: 600px; max-height: 95vh; overflow-y: auto; }
+        .checkout-modal .modal-content { max-width: 600px; }
         .map-link-box { background: #fff5f5; padding: 1rem; border-radius: 16px; margin: 1rem 0; text-align: center; }
         .map-link-box a { color: #dc3545; font-weight: bold; text-decoration: none; }
 
@@ -287,7 +287,7 @@
 <body>
     <div class="top-header">
         <div class="header-left">
-            <button class="menu-btn" onclick="toggleSidebar()">☰</button>
+            <button class="menu-btn" onclick="toggleSidebar()"></button>
             <div class="header-logo" id="headerLogo">
                 <div class="header-logo-img" id="headerLogoImg"></div>
                 <span id="headerCompanyName">AKIRA MOTORS</span>
@@ -318,7 +318,7 @@
         <div id="drawerMenu"></div>
     </aside>
 
-    <!-- HERO DINÁMICO (solo aparece si está configurado) -->
+    <!-- HERO DINÁMICO -->
     <div class="hero-section" id="heroSection" style="display:none;">
         <div class="hero-bg" id="heroBg"></div>
         <div class="hero-overlay" id="heroOverlay"></div>
@@ -361,16 +361,21 @@
     </div>
 
     <div class="modal checkout-modal" id="checkoutModal">
-        <div class="modal-content" style="max-height: 95vh; overflow-y: auto;">
+        <div class="modal-content">
             <button class="modal-close" onclick="closeModal('checkoutModal')">×</button>
-            <h2 style="color:#dc3545; text-align:center; margin-bottom:1.5rem; padding: 0 1rem;">Finalizar Compra</h2>
-            
-            <!-- Sección de ubicación (solo si es delivery) -->
-            <div id="checkoutDeliverySection" style="display:none; padding: 0 1.5rem;">
-                <div id="deliveryZonesSection" style="margin-bottom:1rem;">
-                    <h3 style="margin-bottom:0.8rem;">Selecciona tu zona:</h3>
-                    <div class="delivery-zone-selector" id="deliveryZonesList"></div>
+            <h2 style="color:#dc3545; text-align:center; margin-bottom:1.5rem;">Finalizar Compra</h2>
+            <div style="padding: 0 1.5rem;">
+                <h3 style="margin-bottom:0.8rem;">Método de entrega:</h3>
+                <div class="delivery-selector">
+                    <div class="delivery-option active" id="checkoutPickup" onclick="selectCheckoutDelivery('pickup')">Pickup en tienda</div>
+                    <div class="delivery-option" id="checkoutDelivery" onclick="selectCheckoutDelivery('delivery')">Delivery</div>
                 </div>
+            </div>
+            <div id="deliveryZonesSection" style="display:none; padding: 0 1.5rem;">
+                <h3 style="margin-bottom:0.8rem;">Selecciona tu zona:</h3>
+                <div class="delivery-zone-selector" id="deliveryZonesList"></div>
+            </div>
+            <div id="deliveryFields" style="display:none; padding: 0 1.5rem;">
                 <div class="form-group"><label>Dirección</label><input type="text" id="deliveryAddressInput" placeholder="Calle, número..."></div>
                 <div class="form-group">
                     <label>Ubicación GPS</label>
@@ -379,15 +384,13 @@
                     <input type="hidden" id="gpsLat"><input type="hidden" id="gpsLng">
                 </div>
             </div>
-            
-            <div id="checkoutPickupSection" style="display:none; padding: 0 1.5rem;">
+            <div id="pickupMapLink" style="display:none; padding: 0 1.5rem;">
                 <div class="map-link-box">
-                    <div style="font-size:2rem;margin-bottom:0.5rem;">📍</div>
+                    <div style="font-size:2rem;margin-bottom:0.5rem;"></div>
                     <div style="margin-bottom:0.5rem;">Ubicación de la tienda:</div>
                     <a href="#" id="pickupMapsLink" target="_blank">Ver en Google Maps</a>
                 </div>
             </div>
-            
             <div id="checkoutTotals" style="margin:1rem 1.5rem;"></div>
             <button class="checkout-btn" onclick="confirmOrder()" style="margin: 0 1.5rem 1.5rem;">Confirmar por WhatsApp</button>
         </div>
@@ -788,7 +791,7 @@
             
             // Especificaciones técnicas
             if (specs.length > 0) {
-                html += `<div class="tech-sheet"><h3>⚙️ Especificaciones Técnicas</h3><table class="tech-specs-table">`;
+                html += `<div class="tech-sheet"><h3>️ Especificaciones Técnicas</h3><table class="tech-specs-table">`;
                 specs.forEach(spec => {
                     if (spec.key && spec.value) {
                         html += `<tr><td>${spec.key}</td><td>${spec.value}</td></tr>`;
@@ -799,7 +802,7 @@
             
             // Compatibilidad vehicular
             if (compatibility.length > 0) {
-                html += `<div class="tech-sheet"><h3>🚗 Compatibilidad Vehicular</h3><table class="compatibility-table"><thead><tr><th>Marca</th><th>Modelo</th><th>Años</th><th>Motor</th><th>Notas</th></tr></thead><tbody>`;
+                html += `<div class="tech-sheet"><h3> Compatibilidad Vehicular</h3><table class="compatibility-table"><thead><tr><th>Marca</th><th>Modelo</th><th>Años</th><th>Motor</th><th>Notas</th></tr></thead><tbody>`;
                 compatibility.forEach(c => {
                     if (c.brand || c.model) {
                         html += `<tr><td>${c.brand || '-'}</td><td>${c.model || '-'}</td><td>${c.years || '-'}</td><td>${c.engine || '-'}</td><td>${c.notes || '-'}</td></tr>`;
@@ -1032,21 +1035,18 @@
         window.openCheckout = function() { 
             if (cart.length === 0) { alert('Carrito vacío'); return; } 
             if (!currentUser) { alert('Crea tu cuenta primero'); document.getElementById('authModal').classList.add('active'); return; } 
-            
-            // Mostrar sección correcta según modo seleccionado en carrito
-            if (deliveryMode === 'delivery') {
-                document.getElementById('checkoutDeliverySection').style.display = 'block';
-                document.getElementById('checkoutPickupSection').style.display = 'none';
-                renderDeliveryZones();
-            } else {
-                document.getElementById('checkoutDeliverySection').style.display = 'none';
-                document.getElementById('checkoutPickupSection').style.display = 'block';
-                if (pickupMapsUrl) document.getElementById('pickupMapsLink').href = pickupMapsUrl;
-            }
-            
+            selectCheckoutDelivery(deliveryMode); updateCheckoutTotals(); document.getElementById('checkoutModal').classList.add('active'); toggleCart(); 
+        };
+        window.selectCheckoutDelivery = function(mode) { 
+            checkoutDeliveryMode = mode; selectedDeliveryZone = null; 
+            document.getElementById('checkoutPickup').classList.toggle('active', mode === 'pickup'); 
+            document.getElementById('checkoutDelivery').classList.toggle('active', mode === 'delivery'); 
+            document.getElementById('deliveryFields').style.display = mode === 'delivery' ? 'block' : 'none'; 
+            document.getElementById('pickupMapLink').style.display = mode === 'pickup' ? 'block' : 'none'; 
+            document.getElementById('deliveryZonesSection').style.display = mode === 'delivery' ? 'block' : 'none'; 
+            if (mode === 'pickup' && pickupMapsUrl) document.getElementById('pickupMapsLink').href = pickupMapsUrl; 
+            if (mode === 'delivery') renderDeliveryZones(); 
             updateCheckoutTotals(); 
-            document.getElementById('checkoutModal').classList.add('active'); 
-            toggleCart(); 
         };
         function renderDeliveryZones() {
             const container = document.getElementById('deliveryZonesList');
