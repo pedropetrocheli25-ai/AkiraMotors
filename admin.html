@@ -130,21 +130,21 @@
             <div class="admin-menu">
                 <div class="admin-menu-item active" onclick="showSection('preview', event)">👁️ Vista Previa</div>
                 <div class="admin-menu-item" onclick="showSection('hero', event)">🎨 Hero/Portada</div>
-                <div class="admin-menu-item" onclick="showSection('drawer', event)">☰ Menú Drawer</div>
+                <div class="admin-menu-item" onclick="showSection('drawer', event)"> Menú Drawer</div>
                 <div class="admin-menu-item" onclick="showSection('categories', event)">📂 Categorías y Subcategorías</div>
-                <div class="admin-menu-item" onclick="showSection('dashboard', event)">📊 Dashboard</div>
+                <div class="admin-menu-item" onclick="showSection('dashboard', event)"> Dashboard</div>
                 <div class="admin-menu-item" onclick="showSection('orders', event)">📦 Pedidos</div>
                 <div class="admin-menu-item" onclick="showSection('drivers', event)">🏍️ Domiciliarios</div>
                 <div class="admin-menu-item" onclick="showSection('customers', event)">👥 Clientes</div>
                 <div class="admin-menu-item" onclick="showSection('products', event)">🛒 Productos</div>
                 <div class="admin-menu-item" onclick="showSection('vehicles', event)">🚗 Vehículos</div>
-                <div class="admin-menu-item" onclick="showSection('brands', event)">️ Marcas</div>
-                <div class="admin-menu-item" onclick="showSection('banners', event)">🖼️ Banners</div>
+                <div class="admin-menu-item" onclick="showSection('brands', event)">🏷️ Marcas</div>
+                <div class="admin-menu-item" onclick="showSection('banners', event)">️ Banners</div>
                 <div class="admin-menu-item" onclick="showSection('coupons', event)">🎟️ Cupones</div>
                 <div class="admin-menu-item" onclick="showSection('delivery', event)">📍 Zonas Delivery</div>
                 <div class="admin-menu-item" onclick="showSection('reviews', event)">⭐ Reseñas</div>
                 <div class="admin-menu-item" onclick="showSection('footer', event)">📄 Pie de página</div>
-                <div class="admin-menu-item" onclick="showSection('appearance', event)"> Apariencia</div>
+                <div class="admin-menu-item" onclick="showSection('appearance', event)">🎨 Apariencia</div>
                 <div class="admin-menu-item" onclick="showSection('settings', event)">⚙️ Configuración</div>
                 <div class="admin-menu-item" onclick="logoutAdmin()" style="margin-top:2rem; background:#dc3545;">🚪 Salir</div>
             </div>
@@ -160,7 +160,7 @@
                         <div class="admin-card">
                             <h3>Controles</h3>
                             <button class="btn btn-primary" onclick="refreshPreview()" style="width:100%; margin-bottom:1rem;">🔄 Recargar Vista</button>
-                            <button class="btn btn-secondary" onclick="window.open('index.html', '_blank')" style="width:100%;">🌐 Abrir en Nueva Pestaña</button>
+                            <button class="btn btn-secondary" onclick="window.open('index.html', '_blank')" style="width:100%;"> Abrir en Nueva Pestaña</button>
                         </div>
                     </div>
                     <div class="preview-frame">
@@ -415,7 +415,7 @@
                 </div>
 
                 <div class="admin-card">
-                    <h3>📝 Tipografía y Textos</h3>
+                    <h3> Tipografía y Textos</h3>
                     <div class="form-group"><label>Tipografía General</label><select id="appFontFamily"><option value="'Segoe UI', Tahoma, sans-serif">Segoe UI</option><option value="Arial, sans-serif">Arial</option><option value="Georgia, serif">Georgia</option></select></div>
                     <div class="form-row">
                         <div class="form-group"><label>Tamaño base (px)</label><input type="number" id="appFontSize" value="16" min="12" max="24"></div>
@@ -719,64 +719,83 @@
         ];
 
         // ============================================
-        // FUNCIONES HELPER SEGURAS (evitan errores null)
+        // FUNCIONES HELPER SEGURAS - CORREGIDAS
         // ============================================
-        const safeSet = (id, value) => {
+        
+        // Para INPUTS, SELECTS, TEXTAREAS (usan .value)
+        const setInputValue = (id, value) => {
             const el = document.getElementById(id);
-            if (el && value !== undefined && value !== null) {
-                try { el.value = value; } catch(e) {}
+            if (el && (el.tagName === 'INPUT' || el.tagName === 'SELECT' || el.tagName === 'TEXTAREA')) {
+                try { el.value = value !== undefined && value !== null ? value : ''; } catch(e) {}
             }
         };
         
-        const safeGet = (id, defaultValue) => {
+        // Para DIVS, SPANS, P (usan .textContent)
+        const setTextContent = (id, value) => {
             const el = document.getElementById(id);
-            if (el && el.value !== undefined && el.value !== null && el.value !== '') {
-                return el.value;
+            if (el && (el.tagName === 'DIV' || el.tagName === 'SPAN' || el.tagName === 'P' || el.tagName === 'STRONG')) {
+                try { el.textContent = value !== undefined && value !== null ? value : ''; } catch(e) {}
+            }
+        };
+        
+        // Para CHECKBOXES (usan .checked)
+        const setCheckbox = (id, value) => {
+            const el = document.getElementById(id);
+            if (el && el.type === 'checkbox') {
+                try { el.checked = !!value; } catch(e) {}
+            }
+        };
+        
+        // Para leer INPUTS
+        const getInputValue = (id, defaultValue) => {
+            const el = document.getElementById(id);
+            if (el && (el.tagName === 'INPUT' || el.tagName === 'SELECT' || el.tagName === 'TEXTAREA')) {
+                return el.value !== undefined && el.value !== null && el.value !== '' ? el.value : defaultValue;
             }
             return defaultValue;
         };
         
-        const safeGetInt = (id, defaultValue) => {
-            const val = safeGet(id, defaultValue);
+        const getIntValue = (id, defaultValue) => {
+            const val = getInputValue(id, defaultValue);
             const num = parseInt(val);
             return isNaN(num) ? defaultValue : num;
         };
         
-        const safeGetBool = (id, defaultValue) => {
+        const getCheckboxValue = (id, defaultValue) => {
             const el = document.getElementById(id);
             if (el && el.type === 'checkbox') return el.checked;
             return defaultValue;
         };
 
         // ============================================
-        // CARGA PRINCIPAL - Cada función con try/catch
+        // CARGA PRINCIPAL - Cada función protegida
         // ============================================
         async function loadAll() { 
-            console.log('Iniciando carga de datos...');
-            try { await loadBcvRate(); } catch(e) { console.log('Error BCV:', e); }
-            try { await loadLogo(); } catch(e) { console.log('Error Logo:', e); }
-            try { await loadPickupMaps(); } catch(e) { console.log('Error Pickup:', e); }
-            try { await loadWhatsapp(); } catch(e) { console.log('Error WhatsApp:', e); }
-            try { await loadBanners(); } catch(e) { console.log('Error Banners:', e); }
-            try { await loadSiteConfig(); } catch(e) { console.log('Error Config:', e); }
-            try { await loadHero(); } catch(e) { console.log('Error Hero:', e); }
-            try { await loadDrawerMenu(); } catch(e) { console.log('Error Drawer:', e); }
-            try { await loadVehicles(); } catch(e) { console.log('Error Vehicles:', e); }
-            try { await loadBrands(); } catch(e) { console.log('Error Brands:', e); }
-            try { await loadProducts(); } catch(e) { console.log('Error Products:', e); }
-            try { await loadOrders(); } catch(e) { console.log('Error Orders:', e); }
-            try { await loadReviews(); } catch(e) { console.log('Error Reviews:', e); }
-            try { await loadCoupons(); } catch(e) { console.log('Error Coupons:', e); }
-            try { await loadDeliveryZones(); } catch(e) { console.log('Error Zones:', e); }
-            try { await loadDrivers(); } catch(e) { console.log('Error Drivers:', e); }
-            try { await loadCustomers(); } catch(e) { console.log('Error Customers:', e); }
-            try { await loadAppearance(); } catch(e) { console.log('Error Appearance:', e); }
-            try { await loadDashboard(); } catch(e) { console.log('Error Dashboard:', e); }
-            console.log('✅ Carga completa');
+            console.log('🚀 Iniciando carga de datos...');
+            try { await loadBcvRate(); console.log('✅ BCV cargado'); } catch(e) { console.error('❌ Error BCV:', e); }
+            try { await loadLogo(); console.log('✅ Logo cargado'); } catch(e) { console.error('❌ Error Logo:', e); }
+            try { await loadPickupMaps(); console.log('✅ Pickup cargado'); } catch(e) { console.error('❌ Error Pickup:', e); }
+            try { await loadWhatsapp(); console.log('✅ WhatsApp cargado'); } catch(e) { console.error('❌ Error WhatsApp:', e); }
+            try { await loadBanners(); console.log('✅ Banners cargados'); } catch(e) { console.error('❌ Error Banners:', e); }
+            try { await loadSiteConfig(); console.log('✅ Config cargada'); } catch(e) { console.error('❌ Error Config:', e); }
+            try { await loadHero(); console.log('✅ Hero cargado'); } catch(e) { console.error('❌ Error Hero:', e); }
+            try { await loadDrawerMenu(); console.log('✅ Drawer cargado'); } catch(e) { console.error('❌ Error Drawer:', e); }
+            try { await loadVehicles(); console.log('✅ Vehículos cargados'); } catch(e) { console.error('❌ Error Vehicles:', e); }
+            try { await loadBrands(); console.log('✅ Marcas cargadas'); } catch(e) { console.error('❌ Error Brands:', e); }
+            try { await loadProducts(); console.log('✅ Productos cargados'); } catch(e) { console.error('❌ Error Products:', e); }
+            try { await loadOrders(); console.log('✅ Pedidos cargados'); } catch(e) { console.error('❌ Error Orders:', e); }
+            try { await loadReviews(); console.log('✅ Reseñas cargadas'); } catch(e) { console.error('❌ Error Reviews:', e); }
+            try { await loadCoupons(); console.log('✅ Cupones cargados'); } catch(e) { console.error('❌ Error Coupons:', e); }
+            try { await loadDeliveryZones(); console.log('✅ Zonas cargadas'); } catch(e) { console.error('❌ Error Zones:', e); }
+            try { await loadDrivers(); console.log('✅ Domiciliarios cargados'); } catch(e) { console.error('❌ Error Drivers:', e); }
+            try { await loadCustomers(); console.log('✅ Clientes cargados'); } catch(e) { console.error('❌ Error Customers:', e); }
+            try { await loadAppearance(); console.log('✅ Apariencia cargada'); } catch(e) { console.error('❌ Error Appearance:', e); }
+            try { await loadDashboard(); console.log('✅ Dashboard cargado'); } catch(e) { console.error('❌ Error Dashboard:', e); }
+            console.log(' Carga completa exitosa');
         }
 
         // ============================================
-        // APARIENCIA - 100% segura
+        // APARIENCIA
         // ============================================
         async function loadAppearance() {
             try {
@@ -788,54 +807,52 @@
                     }
                 }
                 
-                // Solo asignar a elementos que SÍ existen
-                safeSet('appPrimaryColor', appearanceConfig.primaryColor);
-                safeSet('appAccentColor', appearanceConfig.accentColor);
-                safeSet('appBgColor', appearanceConfig.bgColor);
-                safeSet('appCardColor', appearanceConfig.cardColor);
-                safeSet('appFontFamily', appearanceConfig.fontFamily);
-                safeSet('appFontSize', appearanceConfig.fontSize);
-                safeSet('appTextColor', appearanceConfig.textColor);
-                safeSet('appHeaderBgColor', appearanceConfig.headerBgColor);
-                safeSet('appHeaderTextColor', appearanceConfig.headerTextColor);
-                safeSet('appBtnPrimaryBg', appearanceConfig.btnPrimaryBg);
-                safeSet('appBtnTextColor', appearanceConfig.btnTextColor);
-                safeSet('appBtnRadius', appearanceConfig.btnRadius);
-                safeSet('appBtnFontSize', appearanceConfig.btnFontSize);
-                safeSet('appFooterBgColor', appearanceConfig.footerBgColor);
-                safeSet('appFooterTextColor', appearanceConfig.footerTextColor);
-                safeSet('appFooterTitleColor', appearanceConfig.footerTitleColor);
-                
-                console.log('✅ Apariencia cargada');
+                // Usar setInputValue para inputs de color, number, select
+                setInputValue('appPrimaryColor', appearanceConfig.primaryColor);
+                setInputValue('appAccentColor', appearanceConfig.accentColor);
+                setInputValue('appBgColor', appearanceConfig.bgColor);
+                setInputValue('appCardColor', appearanceConfig.cardColor);
+                setInputValue('appFontFamily', appearanceConfig.fontFamily);
+                setInputValue('appFontSize', appearanceConfig.fontSize);
+                setInputValue('appTextColor', appearanceConfig.textColor);
+                setInputValue('appHeaderBgColor', appearanceConfig.headerBgColor);
+                setInputValue('appHeaderTextColor', appearanceConfig.headerTextColor);
+                setInputValue('appBtnPrimaryBg', appearanceConfig.btnPrimaryBg);
+                setInputValue('appBtnTextColor', appearanceConfig.btnTextColor);
+                setInputValue('appBtnRadius', appearanceConfig.btnRadius);
+                setInputValue('appBtnFontSize', appearanceConfig.btnFontSize);
+                setInputValue('appFooterBgColor', appearanceConfig.footerBgColor);
+                setInputValue('appFooterTextColor', appearanceConfig.footerTextColor);
+                setInputValue('appFooterTitleColor', appearanceConfig.footerTitleColor);
             } catch (error) { 
-                console.log('⚠️ Error cargando apariencia (no crítico):', error); 
+                console.error('Error cargando apariencia:', error); 
             }
         }
 
         window.saveAppearance = async function() {
             try {
                 appearanceConfig = {
-                    primaryColor: safeGet('appPrimaryColor', '#dc3545'),
-                    accentColor: safeGet('appAccentColor', '#FFC107'),
-                    bgColor: safeGet('appBgColor', '#f5f5f5'),
-                    cardColor: safeGet('appCardColor', '#ffffff'),
-                    fontFamily: safeGet('appFontFamily', "'Segoe UI', Tahoma, sans-serif"),
-                    fontSize: safeGetInt('appFontSize', 16),
-                    textColor: safeGet('appTextColor', '#333333'),
+                    primaryColor: getInputValue('appPrimaryColor', '#dc3545'),
+                    accentColor: getInputValue('appAccentColor', '#FFC107'),
+                    bgColor: getInputValue('appBgColor', '#f5f5f5'),
+                    cardColor: getInputValue('appCardColor', '#ffffff'),
+                    fontFamily: getInputValue('appFontFamily', "'Segoe UI', Tahoma, sans-serif"),
+                    fontSize: getIntValue('appFontSize', 16),
+                    textColor: getInputValue('appTextColor', '#333333'),
                     textSecondaryColor: '#666666',
                     linkColor: '#dc3545',
-                    headerBgColor: safeGet('appHeaderBgColor', '#dc3545'),
-                    headerTextColor: safeGet('appHeaderTextColor', '#ffffff'),
-                    headerHeight: safeGetInt('appHeaderHeight', 60),
-                    btnPrimaryBg: safeGet('appBtnPrimaryBg', '#dc3545'),
-                    btnTextColor: safeGet('appBtnTextColor', '#ffffff'),
-                    btnRadius: safeGetInt('appBtnRadius', 20),
-                    btnFontSize: safeGetInt('appBtnFontSize', 14),
+                    headerBgColor: getInputValue('appHeaderBgColor', '#dc3545'),
+                    headerTextColor: getInputValue('appHeaderTextColor', '#ffffff'),
+                    headerHeight: getIntValue('appHeaderHeight', 60),
+                    btnPrimaryBg: getInputValue('appBtnPrimaryBg', '#dc3545'),
+                    btnTextColor: getInputValue('appBtnTextColor', '#ffffff'),
+                    btnRadius: getIntValue('appBtnRadius', 20),
+                    btnFontSize: getIntValue('appBtnFontSize', 14),
                     cardRadius: 16,
                     cardShadow: '0 2px 8px rgba(0,0,0,0.08)',
-                    footerBgColor: safeGet('appFooterBgColor', '#1a1a1a'),
-                    footerTextColor: safeGet('appFooterTextColor', '#cccccc'),
-                    footerTitleColor: safeGet('appFooterTitleColor', '#FFC107')
+                    footerBgColor: getInputValue('appFooterBgColor', '#1a1a1a'),
+                    footerTextColor: getInputValue('appFooterTextColor', '#cccccc'),
+                    footerTitleColor: getInputValue('appFooterTitleColor', '#FFC107')
                 };
                 await db.collection('settings').doc('appearance').set(appearanceConfig);
                 alert('✅ Apariencia guardada');
@@ -847,7 +864,7 @@
         // BCV
         // ============================================
         window.toggleBcvMode = function() {
-            const mode = safeGet('bcvMode', 'manual');
+            const mode = getInputValue('bcvMode', 'manual');
             const manualSection = document.getElementById('bcvManualSection');
             const apiSection = document.getElementById('bcvApiSection');
             if (manualSection) manualSection.style.display = mode === 'manual' ? 'block' : 'none';
@@ -855,8 +872,8 @@
         };
 
         window.saveBcvApi = async function() {
-            const apiUrl = safeGet('bcvApiUrl', '');
-            const frequency = safeGetInt('bcvApiFrequency', 3600000);
+            const apiUrl = getInputValue('bcvApiUrl', '');
+            const frequency = getIntValue('bcvApiFrequency', 3600000);
             if (!apiUrl) { alert('Ingresa la URL de la API'); return; }
             try {
                 await db.collection('settings').doc('bcvConfig').set({ mode: 'api', apiUrl, frequency, updatedAt: new Date().toISOString() });
@@ -865,15 +882,15 @@
         };
 
         window.testBcvApi = async function() {
-            const apiUrl = safeGet('bcvApiUrl', '');
+            const apiUrl = getInputValue('bcvApiUrl', '');
             if (!apiUrl) { alert('Ingresa la URL primero'); return; }
             try {
                 const response = await fetch(apiUrl);
                 const data = await response.json();
                 const price = data.price || data.rate || data.value;
                 if (price) alert(`✅ API funcionando! Precio: ${price} Bs/$`);
-                else alert('⚠️ API respondió pero no tiene campo "price" o "rate"');
-            } catch (error) { alert(' Error: ' + error.message); }
+                else alert('️ API respondió pero no tiene campo "price" o "rate"');
+            } catch (error) { alert('❌ Error: ' + error.message); }
         };
 
         async function loadBcvRate() { 
@@ -881,27 +898,28 @@
                 const rateDoc = await db.collection('settings').doc('bcvRate').get(); 
                 if (rateDoc.exists) {
                     bcvRate = rateDoc.data().value;
-                    safeSet('currentBcvDisplay', `${bcvRate} Bs/$`);
+                    // CORRECCIÓN: currentBcvDisplay es un SPAN, usar setTextContent
+                    setTextContent('currentBcvDisplay', `${bcvRate} Bs/$`);
                 }
                 const configDoc = await db.collection('settings').doc('bcvConfig').get();
                 if (configDoc.exists) {
                     const config = configDoc.data();
-                    safeSet('bcvMode', config.mode || 'manual');
-                    safeSet('bcvApiUrl', config.apiUrl || '');
-                    safeSet('bcvApiFrequency', config.frequency || '3600000');
+                    setInputValue('bcvMode', config.mode || 'manual');
+                    setInputValue('bcvApiUrl', config.apiUrl || '');
+                    setInputValue('bcvApiFrequency', config.frequency || '3600000');
                     toggleBcvMode();
                 }
-            } catch (error) { console.log('Error tasa:', error); } 
+            } catch (error) { console.error('Error tasa:', error); } 
         }
         
         window.updateBcvRate = async function() { 
-            const newRate = parseFloat(safeGet('bcvRateInput', '')); 
+            const newRate = parseFloat(getInputValue('bcvRateInput', '')); 
             if (!newRate || newRate <= 0) { alert('Tasa inválida'); return; } 
             try { 
                 await db.collection('settings').doc('bcvRate').set({ value: newRate }); 
                 bcvRate = newRate; 
-                safeSet('currentBcvDisplay', `${bcvRate} Bs/$`);
-                safeSet('bcvRateInput', ''); 
+                setTextContent('currentBcvDisplay', `${bcvRate} Bs/$`);
+                setInputValue('bcvRateInput', ''); 
                 alert('✅ Tasa actualizada'); 
             } catch (error) { alert('Error: ' + error.message); } 
         };
@@ -912,11 +930,11 @@
         async function loadPickupMaps() { 
             try { 
                 const doc = await db.collection('settings').doc('pickupMaps').get(); 
-                if (doc.exists) safeSet('pickupMapsInput', doc.data().url || ''); 
+                if (doc.exists) setInputValue('pickupMapsInput', doc.data().url || ''); 
             } catch (e) {} 
         }
         window.updatePickupMaps = async function() { 
-            const url = safeGet('pickupMapsInput', '').trim(); 
+            const url = getInputValue('pickupMapsInput', '').trim(); 
             if (!url) { alert('Ingresa link'); return; } 
             try { await db.collection('settings').doc('pickupMaps').set({ url }); alert('✅ Guardado'); } catch (e) { alert('Error: ' + e.message); } 
         };
@@ -929,12 +947,12 @@
                 const doc = await db.collection('settings').doc('whatsapp').get(); 
                 if (doc.exists && doc.data().number) { 
                     whatsappNumber = doc.data().number; 
-                    safeSet('whatsappNumber', whatsappNumber); 
+                    setInputValue('whatsappNumber', whatsappNumber); 
                 } 
             } catch (e) {} 
         }
         window.saveWhatsapp = async function() { 
-            const num = safeGet('whatsappNumber', '').trim(); 
+            const num = getInputValue('whatsappNumber', '').trim(); 
             if (!num) { alert('Ingresa número'); return; } 
             try { await db.collection('settings').doc('whatsapp').set({ number: num }); whatsappNumber = num; alert('✅ Guardado'); } catch (e) { alert('Error: ' + e.message); } 
         };
@@ -992,28 +1010,28 @@
             try { 
                 const doc = await db.collection('settings').doc('siteConfig').get(); 
                 if (doc.exists) siteConfig = { ...siteConfig, ...doc.data() }; 
-                safeSet('cfgCompanyName', siteConfig.companyName);
-                safeSet('cfgSlogan', siteConfig.slogan);
-                safeSet('cfgDescription', siteConfig.description);
-                safeSet('cfgAddress', siteConfig.address);
-                safeSet('cfgPhone', siteConfig.phone);
-                safeSet('cfgSchedule', siteConfig.schedule);
-                safeSet('cfgFacebook', siteConfig.facebook || '');
-                safeSet('cfgInstagram', siteConfig.instagram || '');
-                safeSet('cfgTiktok', siteConfig.tiktok || '');
+                setInputValue('cfgCompanyName', siteConfig.companyName);
+                setInputValue('cfgSlogan', siteConfig.slogan);
+                setInputValue('cfgDescription', siteConfig.description);
+                setInputValue('cfgAddress', siteConfig.address);
+                setInputValue('cfgPhone', siteConfig.phone);
+                setInputValue('cfgSchedule', siteConfig.schedule);
+                setInputValue('cfgFacebook', siteConfig.facebook || '');
+                setInputValue('cfgInstagram', siteConfig.instagram || '');
+                setInputValue('cfgTiktok', siteConfig.tiktok || '');
             } catch (e) {} 
         }
         window.saveSiteConfig = async function() { 
             const c = { 
-                companyName: safeGet('cfgCompanyName', ''), 
-                slogan: safeGet('cfgSlogan', ''), 
-                description: safeGet('cfgDescription', ''), 
-                address: safeGet('cfgAddress', ''), 
-                phone: safeGet('cfgPhone', ''), 
-                schedule: safeGet('cfgSchedule', ''), 
-                facebook: safeGet('cfgFacebook', ''), 
-                instagram: safeGet('cfgInstagram', ''), 
-                tiktok: safeGet('cfgTiktok', '') 
+                companyName: getInputValue('cfgCompanyName', ''), 
+                slogan: getInputValue('cfgSlogan', ''), 
+                description: getInputValue('cfgDescription', ''), 
+                address: getInputValue('cfgAddress', ''), 
+                phone: getInputValue('cfgPhone', ''), 
+                schedule: getInputValue('cfgSchedule', ''), 
+                facebook: getInputValue('cfgFacebook', ''), 
+                instagram: getInputValue('cfgInstagram', ''), 
+                tiktok: getInputValue('cfgTiktok', '') 
             }; 
             try { await db.collection('settings').doc('siteConfig').set(c); siteConfig = { ...siteConfig, ...c }; alert('✅ Guardado'); } catch (e) { alert('Error: ' + e.message); } 
         };
@@ -1026,23 +1044,22 @@
                 const doc = await db.collection('settings').doc('hero').get();
                 if (doc.exists) {
                     heroConfig = doc.data();
-                    const el = document.getElementById('heroVisible');
-                    if (el) el.checked = heroConfig.visible || false;
-                    safeSet('heroTitle', heroConfig.title || '');
-                    safeSet('heroSubtitle', heroConfig.subtitle || '');
-                    safeSet('heroTitleColor', heroConfig.titleColor || '#ffffff');
-                    safeSet('heroTitleSize', heroConfig.titleSize || 48);
-                    safeSet('heroTitleFont', heroConfig.titleFont || "'Segoe UI', sans-serif");
-                    safeSet('heroSubtitleColor', heroConfig.subtitleColor || '#dddddd');
-                    safeSet('heroSubtitleSize', heroConfig.subtitleSize || 20);
-                    safeSet('heroCtaText', heroConfig.ctaText || '');
-                    safeSet('heroCtaLink', heroConfig.ctaLink || '');
+                    setCheckbox('heroVisible', heroConfig.visible || false);
+                    setInputValue('heroTitle', heroConfig.title || '');
+                    setInputValue('heroSubtitle', heroConfig.subtitle || '');
+                    setInputValue('heroTitleColor', heroConfig.titleColor || '#ffffff');
+                    setInputValue('heroTitleSize', heroConfig.titleSize || 48);
+                    setInputValue('heroTitleFont', heroConfig.titleFont || "'Segoe UI', sans-serif");
+                    setInputValue('heroSubtitleColor', heroConfig.subtitleColor || '#dddddd');
+                    setInputValue('heroSubtitleSize', heroConfig.subtitleSize || 20);
+                    setInputValue('heroCtaText', heroConfig.ctaText || '');
+                    setInputValue('heroCtaLink', heroConfig.ctaLink || '');
                     if (heroConfig.backgroundImage) {
                         const preview = document.getElementById('heroBgPreview');
                         if (preview) preview.innerHTML = `<img src="${heroConfig.backgroundImage}">`;
                     }
                 }
-            } catch (error) { console.log('Error loading hero:', error); }
+            } catch (error) { console.error('Error loading hero:', error); }
         }
 
         document.getElementById('heroBgImage').addEventListener('change', function(e) {
@@ -1061,16 +1078,16 @@
         window.saveHero = async function() {
             try {
                 const heroData = {
-                    visible: safeGetBool('heroVisible', false),
-                    title: safeGet('heroTitle', ''),
-                    subtitle: safeGet('heroSubtitle', ''),
-                    titleColor: safeGet('heroTitleColor', '#ffffff'),
-                    titleSize: safeGetInt('heroTitleSize', 48),
-                    titleFont: safeGet('heroTitleFont', "'Segoe UI', sans-serif"),
-                    subtitleColor: safeGet('heroSubtitleColor', '#dddddd'),
-                    subtitleSize: safeGetInt('heroSubtitleSize', 20),
-                    ctaText: safeGet('heroCtaText', ''),
-                    ctaLink: safeGet('heroCtaLink', ''),
+                    visible: getCheckboxValue('heroVisible', false),
+                    title: getInputValue('heroTitle', ''),
+                    subtitle: getInputValue('heroSubtitle', ''),
+                    titleColor: getInputValue('heroTitleColor', '#ffffff'),
+                    titleSize: getIntValue('heroTitleSize', 48),
+                    titleFont: getInputValue('heroTitleFont', "'Segoe UI', sans-serif"),
+                    subtitleColor: getInputValue('heroSubtitleColor', '#dddddd'),
+                    subtitleSize: getIntValue('heroSubtitleSize', 20),
+                    ctaText: getInputValue('heroCtaText', ''),
+                    ctaLink: getInputValue('heroCtaLink', ''),
                     backgroundImage: heroConfig.backgroundImage || null,
                     updatedAt: new Date().toISOString()
                 };
@@ -1225,10 +1242,10 @@
         }
 
         window.addCategory = async function() {
-            const name = safeGet('newCategoryName', '').trim();
+            const name = getInputValue('newCategoryName', '').trim();
             if (!name) { alert('Ingresa nombre'); return; }
             drawerMenu.push({ name, brands: [] });
-            safeSet('newCategoryName', '');
+            setInputValue('newCategoryName', '');
             await saveDrawerMenu();
         };
 
@@ -1277,8 +1294,8 @@
         };
 
         window.addSubcategory = async function() {
-            const catIdx = safeGet('newSubcatCategory', '');
-            const name = safeGet('newSubcatName', '').trim();
+            const catIdx = getInputValue('newSubcatCategory', '');
+            const name = getInputValue('newSubcatName', '').trim();
             if (catIdx === '') { alert('Selecciona una categoría'); return; }
             if (!name) { alert('Ingresa el nombre de la subcategoría'); return; }
             
@@ -1287,7 +1304,7 @@
             if (drawerMenu[idx].subcategories.includes(name)) { alert('Esta subcategoría ya existe'); return; }
             
             drawerMenu[idx].subcategories.push(name);
-            safeSet('newSubcatName', '');
+            setInputValue('newSubcatName', '');
             
             try {
                 await db.collection('settings').doc('drawerMenu').set({ categories: drawerMenu, updatedAt: new Date().toISOString() });
@@ -1329,11 +1346,11 @@
             l.innerHTML = h; 
         }
         window.addVehicleBrand = async function() { 
-            const b = safeGet('newVehicleBrand', '').trim(); 
+            const b = getInputValue('newVehicleBrand', '').trim(); 
             if (!b) { alert('Ingresa nombre'); return; } 
             if (vehicles[b]) { alert('Ya existe'); return; } 
             vehicles[b] = []; 
-            try { await db.collection('settings').doc('vehicles').set({ brands: vehicles }); safeSet('newVehicleBrand', ''); renderVehicles(); alert('✅ Agregado'); } catch (e) { alert('Error: ' + e.message); } 
+            try { await db.collection('settings').doc('vehicles').set({ brands: vehicles }); setInputValue('newVehicleBrand', ''); renderVehicles(); alert('✅ Agregado'); } catch (e) { alert('Error: ' + e.message); } 
         };
         window.deleteVehicleBrand = async function(b) { 
             if (!confirm('¿Eliminar?')) return; 
@@ -1375,12 +1392,12 @@
         }
         window.editBrandImage = function(id) { 
             const b = brands.find(x => x.id === id); 
-            safeSet('brandModalTitle', `Imagen: ${b.name}`);
-            safeSet('editBrandId', id);
-            safeSet('currentBrandImageData', b.image || '');
+            setTextContent('brandModalTitle', `Imagen: ${b.name}`);
+            setInputValue('editBrandId', id);
+            setInputValue('currentBrandImageData', b.image || '');
             const preview = document.getElementById('brandImagePreview');
             if (preview) preview.innerHTML = b.image ? `<img src="${b.image}">` : '<div style="color:#999;">Sin imagen</div>';
-            safeSet('brandImageInput', '');
+            setInputValue('brandImageInput', '');
             document.getElementById('brandModal').classList.add('active'); 
         };
         window.previewBrandImage = function(e) { 
@@ -1389,7 +1406,7 @@
             if (f.size > 1024*1024) { alert('Máximo 1MB'); e.target.value = ''; return; } 
             const r = new FileReader(); 
             r.onload = (ev) => { 
-                safeSet('currentBrandImageData', ev.target.result);
+                setInputValue('currentBrandImageData', ev.target.result);
                 const preview = document.getElementById('brandImagePreview');
                 if (preview) preview.innerHTML = `<img src="${ev.target.result}">`;
             }; 
@@ -1397,8 +1414,8 @@
         };
         window.saveBrandImage = async function(e) { 
             e.preventDefault(); 
-            const id = safeGet('editBrandId', ''); 
-            const img = safeGet('currentBrandImageData', ''); 
+            const id = getInputValue('editBrandId', ''); 
+            const img = getInputValue('currentBrandImageData', ''); 
             try { await db.collection('brands').doc(id).update({ image: img || null }); await loadBrands(); closeModal('brandModal'); alert('✅ Guardado'); } catch (err) { alert('Error: ' + err.message); } 
         };
 
@@ -1418,7 +1435,7 @@
             for (const b of Object.keys(vehicles)) s.innerHTML += `<option value="${b}">${b}</option>`; 
         }
         window.updateSubcategoryOptions = function() { 
-            const c = safeGet('productCategory', '');
+            const c = getInputValue('productCategory', '');
             const s = document.getElementById('productSubcategory'); 
             if (!s) return;
             s.innerHTML = '<option value="">Seleccionar...</option>'; 
@@ -1426,25 +1443,25 @@
             if (cat && cat.subcategories) cat.subcategories.forEach(sub => s.innerHTML += `<option value="${sub}">${sub}</option>`); 
         };
         window.updateCompatModels = function() { 
-            const b = safeGet('compatBrand', '');
+            const b = getInputValue('compatBrand', '');
             const s = document.getElementById('compatModel'); 
             if (!s) return;
             s.innerHTML = '<option value="">Seleccionar modelo...</option>'; 
             if (b && vehicles[b]) vehicles[b].forEach(m => s.innerHTML += `<option value="${m}">${m}</option>`); 
         };
         window.calculateSalePrice = function() { 
-            const c = parseFloat(safeGet('productCostPrice', '0')) || 0; 
-            const m = parseFloat(safeGet('productMargin', '0')) || 0; 
-            if (m >= 100) { safeSet('productPrice', '0'); alert('Margen no puede ser 100%+'); return; } 
-            safeSet('productPrice', (c / (1 - m / 100)).toFixed(2)); 
+            const c = parseFloat(getInputValue('productCostPrice', '0')) || 0; 
+            const m = parseFloat(getInputValue('productMargin', '0')) || 0; 
+            if (m >= 100) { setInputValue('productPrice', '0'); alert('Margen no puede ser 100%+'); return; } 
+            setInputValue('productPrice', (c / (1 - m / 100)).toFixed(2)); 
         };
         window.addSpecification = function() { 
-            const k = safeGet('specKey', '').trim(); 
-            const v = safeGet('specValue', '').trim(); 
+            const k = getInputValue('specKey', '').trim(); 
+            const v = getInputValue('specValue', '').trim(); 
             if (!k || !v) { alert('Completa ambos'); return; } 
             currentSpecifications.push({ key: k, value: v }); 
-            safeSet('specKey', '');
-            safeSet('specValue', '');
+            setInputValue('specKey', '');
+            setInputValue('specValue', '');
             renderSpecifications(); 
         };
         function renderSpecifications() { 
@@ -1454,18 +1471,18 @@
         }
         window.removeSpecification = function(i) { currentSpecifications.splice(i, 1); renderSpecifications(); };
         window.addCompatibility = function() { 
-            const b = safeGet('compatBrand', '');
-            const m = safeGet('compatModel', '');
-            const y = safeGet('compatYears', '').trim();
-            const e = safeGet('compatEngine', '').trim();
-            const n = safeGet('compatNotes', '').trim();
+            const b = getInputValue('compatBrand', '');
+            const m = getInputValue('compatModel', '');
+            const y = getInputValue('compatYears', '').trim();
+            const e = getInputValue('compatEngine', '').trim();
+            const n = getInputValue('compatNotes', '').trim();
             if (!b || !m) { alert('Selecciona marca y modelo'); return; } 
             currentCompatibility.push({ brand: b, model: m, years: y, engine: e, notes: n }); 
-            safeSet('compatBrand', '');
-            safeSet('compatModel', '');
-            safeSet('compatYears', '');
-            safeSet('compatEngine', '');
-            safeSet('compatNotes', '');
+            setInputValue('compatBrand', '');
+            setInputValue('compatModel', '');
+            setInputValue('compatYears', '');
+            setInputValue('compatEngine', '');
+            setInputValue('compatNotes', '');
             renderCompatibility(); 
         };
         function renderCompatibility() { 
@@ -1480,7 +1497,7 @@
                 const s = await db.collection('products').get(); 
                 products = []; 
                 s.forEach(d => products.push({ id: d.id, ...d.data() })); 
-                safeSet('statProducts', products.length);
+                setTextContent('statProducts', products.length);
                 renderAdminProducts(); 
             } catch (e) {} 
         }
@@ -1507,14 +1524,14 @@
             currentProductImages = []; 
             currentSpecifications = []; 
             currentCompatibility = []; 
-            safeSet('productModalTitle', 'Agregar Producto');
-            safeSet('editProductId', '');
-            ['productCode','productBrand','productName','productDescription','productPartNumber','productCostPrice','productMargin','productPrice','productDiscount','productStock','productSearchTerms'].forEach(id => safeSet(id, ''));
-            safeSet('productPosition', '');
-            safeSet('productSide', '');
-            safeSet('productCondition', 'Nuevo');
-            safeSet('productCategory', '');
-            safeSet('productSubcategory', '');
+            setTextContent('productModalTitle', 'Agregar Producto');
+            setInputValue('editProductId', '');
+            ['productCode','productBrand','productName','productDescription','productPartNumber','productCostPrice','productMargin','productPrice','productDiscount','productStock','productSearchTerms'].forEach(id => setInputValue(id, ''));
+            setInputValue('productPosition', '');
+            setInputValue('productSide', '');
+            setInputValue('productCondition', 'Nuevo');
+            setInputValue('productCategory', '');
+            setInputValue('productSubcategory', '');
             const rec = document.getElementById('productRecommended');
             if (rec) rec.checked = false;
             const imgContainer = document.getElementById('productImagesContainer');
@@ -1523,12 +1540,12 @@
             if (specContainer) specContainer.innerHTML = '';
             const compatContainer = document.getElementById('compatibilityContainer');
             if (compatContainer) compatContainer.innerHTML = '';
-            safeSet('compatBrand', '');
+            setInputValue('compatBrand', '');
             const compatModel = document.getElementById('compatModel');
             if (compatModel) compatModel.innerHTML = '<option value="">Seleccionar modelo...</option>';
-            safeSet('compatYears', '');
-            safeSet('compatEngine', '');
-            safeSet('compatNotes', '');
+            setInputValue('compatYears', '');
+            setInputValue('compatEngine', '');
+            setInputValue('compatNotes', '');
             document.getElementById('productModal').classList.add('active'); 
         };
         
@@ -1539,25 +1556,25 @@
             currentProductImages = p.images || (p.image ? [p.image] : []);
             currentSpecifications = p.specifications || [];
             currentCompatibility = p.compatibility || [];
-            safeSet('productModalTitle', 'Editar Producto');
-            safeSet('editProductId', p.id);
-            safeSet('productCode', p.code || '');
-            safeSet('productBrand', p.brand || '');
-            safeSet('productName', p.name);
-            safeSet('productDescription', p.description || '');
-            safeSet('productPartNumber', p.attributes?.partNumber || '');
-            safeSet('productPosition', p.attributes?.position || '');
-            safeSet('productSide', p.attributes?.side || '');
-            safeSet('productCondition', p.attributes?.condition || 'Nuevo');
-            safeSet('productCostPrice', p.costPrice || '');
-            safeSet('productMargin', p.margin || '');
-            safeSet('productPrice', p.price);
-            safeSet('productDiscount', p.discount || '');
-            safeSet('productStock', p.stock);
-            safeSet('productCategory', p.category || '');
+            setTextContent('productModalTitle', 'Editar Producto');
+            setInputValue('editProductId', p.id);
+            setInputValue('productCode', p.code || '');
+            setInputValue('productBrand', p.brand || '');
+            setInputValue('productName', p.name);
+            setInputValue('productDescription', p.description || '');
+            setInputValue('productPartNumber', p.attributes?.partNumber || '');
+            setInputValue('productPosition', p.attributes?.position || '');
+            setInputValue('productSide', p.attributes?.side || '');
+            setInputValue('productCondition', p.attributes?.condition || 'Nuevo');
+            setInputValue('productCostPrice', p.costPrice || '');
+            setInputValue('productMargin', p.margin || '');
+            setInputValue('productPrice', p.price);
+            setInputValue('productDiscount', p.discount || '');
+            setInputValue('productStock', p.stock);
+            setInputValue('productCategory', p.category || '');
             updateSubcategoryOptions();
-            safeSet('productSubcategory', p.subcategory || '');
-            safeSet('productSearchTerms', p.searchTerms || '');
+            setInputValue('productSubcategory', p.subcategory || '');
+            setInputValue('productSearchTerms', p.searchTerms || '');
             const rec = document.getElementById('productRecommended');
             if (rec) rec.checked = p.recommended || false;
             renderProductImages();
@@ -1586,76 +1603,24 @@
         
         window.saveProduct = async function(e) { 
             e.preventDefault(); 
-            const id = safeGet('editProductId', '');
-            const cost = parseFloat(safeGet('productCostPrice', '0')) || 0;
-            const margin = parseFloat(safeGet('productMargin', '0')) || 0;
-            const price = parseFloat(safeGet('productPrice', '0')) || 0;
-            const discount = parseFloat(safeGet('productDiscount', '0')) || 0;
+            const id = getInputValue('editProductId', '');
+            const cost = parseFloat(getInputValue('productCostPrice', '0')) || 0;
+            const margin = parseFloat(getInputValue('productMargin', '0')) || 0;
+            const price = parseFloat(getInputValue('productPrice', '0')) || 0;
+            const discount = parseFloat(getInputValue('productDiscount', '0')) || 0;
             const attrs = { 
-                category: safeGet('productCategory', ''), 
-                subcategory: safeGet('productSubcategory', ''), 
-                brand: safeGet('productBrand', ''), 
-                partNumber: safeGet('productPartNumber', ''), 
-                position: safeGet('productPosition', ''), 
-                side: safeGet('productSide', ''), 
-                condition: safeGet('productCondition', 'Nuevo') 
+                category: getInputValue('productCategory', ''), 
+                subcategory: getInputValue('productSubcategory', ''), 
+                brand: getInputValue('productBrand', ''), 
+                partNumber: getInputValue('productPartNumber', ''), 
+                position: getInputValue('productPosition', ''), 
+                side: getInputValue('productSide', ''), 
+                condition: getInputValue('productCondition', 'Nuevo') 
             };
             const data = { 
-                code: safeGet('productCode', ''), 
-                brand: safeGet('productBrand', ''), 
-                name: safeGet('productName', ''), 
-                description: safeGet('productDescription', ''), 
+                code: getInputValue('productCode', ''), 
+                brand: getInputValue('productBrand', ''), 
+                name: getInputValue('productName', ''), 
+                description: getInputValue('productDescription', ''), 
                 costPrice: cost, 
-                margin, 
-                price, 
-                discount, 
-                stock: safeGetInt('productStock', 0), 
-                category: safeGet('productCategory', ''), 
-                subcategory: safeGet('productSubcategory', ''), 
-                recommended: safeGetBool('productRecommended', false), 
-                attributes: attrs, 
-                specifications: currentSpecifications, 
-                compatibility: currentCompatibility, 
-                searchTerms: safeGet('productSearchTerms', ''), 
-                images: currentProductImages.length > 0 ? currentProductImages : null, 
-                image: currentProductImages.length > 0 ? currentProductImages[0] : null, 
-                updatedAt: new Date().toISOString() 
-            }; 
-            try { 
-                if (id) await db.collection('products').doc(id).update(data); 
-                else { data.createdAt = new Date().toISOString(); await db.collection('products').add(data); } 
-                await loadProducts(); 
-                await loadDashboard(); 
-                closeModal('productModal'); 
-                alert('✅ Producto guardado'); 
-            } catch (err) { alert('Error: ' + err.message); } 
-        };
-        
-        window.deleteProduct = async function(id) { 
-            if (!confirm('¿Eliminar?')) return; 
-            try { await db.collection('products').doc(id).delete(); await loadProducts(); await loadDashboard(); alert('✅ Eliminado'); } catch (e) { alert('Error: ' + e.message); } 
-        };
-
-        // ============================================
-        // ORDERS
-        // ============================================
-        async function loadOrders() { 
-            try { 
-                const s = await db.collection('orders').get(); 
-                orders = []; 
-                s.forEach(d => orders.push({ id: d.id, ...d.data() })); 
-                renderOrders(); 
-            } catch (e) {} 
-        }
-        function renderOrders() { 
-            const l = document.getElementById('ordersList'); 
-            if (!l) return;
-            const f = safeGet('filterOrderStatus', '');
-            const q = (safeGet('searchOrderCode', '') || '').toLowerCase().trim(); 
-            let fl = orders; 
-            if (f) fl = fl.filter(o => o.status === f); 
-            if (q) fl = fl.filter(o => (o.customerCode||'').toLowerCase().includes(q) || (o.userName||'').toLowerCase().includes(q) || (o.userPhone||'').toLowerCase().includes(q)); 
-            if (fl.length === 0) { l.innerHTML = '<p style="text-align:center;color:#666;padding:1rem">Sin pedidos</p>'; return; } 
-            l.innerHTML = fl.sort((a,b) => new Date(b.date) - new Date(a.date)).map(o => { 
-                const st = { pending: 'Pendiente', shipped: 'En camino', delivered: 'Entregado', cancelled: 'Cancelado' }[o.status] || o.status; 
-                return `<div class="order-item"><div class="
+                margin,
