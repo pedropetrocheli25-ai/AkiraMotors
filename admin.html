@@ -1,1208 +1,951 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin - Akira Motors</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Segoe UI', sans-serif; background: #f5f5f5; color: #333; min-height: 100vh; display: flex; }
-        .admin-sidebar { width: 260px; background: #1a1a1a; color: white; height: 100vh; position: sticky; top: 0; overflow-y: auto; flex-shrink: 0; }
-        .admin-sidebar-header { background: #dc3545; padding: 1.2rem; text-align: center; }
-        .admin-sidebar-header h2 { font-size: 1.2rem; }
-        .admin-menu { padding: 1rem 0; }
-        .admin-menu-item { padding: 0.9rem 1.2rem; cursor: pointer; transition: all 0.3s; border-left: 3px solid transparent; font-size: 0.85rem; }
-        .admin-menu-item:hover { background: #2a2a2a; border-left-color: #dc3545; }
-        .admin-menu-item.active { background: #dc3545; border-left-color: white; }
-        .admin-content { flex: 1; padding: 2rem; overflow-y: auto; }
-        .admin-section { display: none; }
-        .admin-section.active { display: block; }
-        .section-title { color: #dc3545; font-size: 1.5rem; margin-bottom: 1.5rem; border-bottom: 2px solid #dc3545; padding-bottom: 0.5rem; }
-        .admin-card { background: white; padding: 1.5rem; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); margin-bottom: 1.5rem; }
-        .admin-card h3 { color: #dc3545; margin-bottom: 1rem; font-size: 1.1rem; }
-        .btn { padding: 0.7rem 1.2rem; border: none; border-radius: 8px; cursor: pointer; font-size: 0.9rem; font-weight: 600; }
-        .btn-primary { background: #dc3545; color: white; }
-        .btn-primary:hover { background: #c82333; }
-        .btn-secondary { background: #6c757d; color: white; }
-        .btn-warning { background: #FFC107; color: #333; }
-        .btn-success { background: #28a745; color: white; }
-        .btn-small { padding: 0.4rem 0.8rem; font-size: 0.8rem; }
-        .form-group { margin-bottom: 1rem; }
-        .form-group label { display: block; margin-bottom: 0.4rem; font-weight: 600; font-size: 0.9rem; }
-        .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 0.7rem; border: 1px solid #ddd; border-radius: 8px; font-size: 0.95rem; }
-        .form-group input:focus, .form-group textarea:focus { outline: none; border-color: #dc3545; }
-        .form-group textarea { resize: vertical; min-height: 80px; }
-        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-        .form-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; }
-        .form-row-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 0.8rem; }
-        .admin-item { display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: #f8f8f8; margin-bottom: 0.8rem; border-radius: 8px; flex-wrap: wrap; gap: 1rem; }
-        .admin-info { display: flex; align-items: center; gap: 1rem; flex: 1; }
-        .admin-thumb { width: 60px; height: 60px; background: #ddd; border-radius: 8px; overflow: hidden; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-        .admin-thumb img { width: 100%; height: 100%; object-fit: cover; }
-        .admin-actions { display: flex; gap: 0.5rem; flex-wrap: wrap; }
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 3000; align-items: center; justify-content: center; padding: 1rem; }
-        .modal.active { display: flex; }
-        .modal-content { background: white; padding: 2rem; border-radius: 12px; max-width: 900px; width: 100%; max-height: 90vh; overflow-y: auto; position: relative; }
-        .modal-content h2 { color: #dc3545; margin-bottom: 1.5rem; }
-        .modal-close { position: absolute; top: 1rem; right: 1rem; background: #dc3545; color: white; border: none; width: 35px; height: 35px; border-radius: 50%; font-size: 1.2rem; cursor: pointer; z-index: 10; }
-        .form-section { background: #f8f8f8; padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem; border: 1px solid #eee; }
-        .form-section h3 { color: #dc3545; margin-bottom: 1rem; font-size: 1.1rem; }
-        .checkbox-group { display: flex; align-items: center; gap: 0.5rem; }
-        .checkbox-group input { width: auto; }
-        .image-preview { width: 100%; height: 150px; background: #f0f0f0; border: 2px dashed #ddd; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-top: 0.5rem; overflow: hidden; }
-        .image-preview img { max-width: 100%; max-height: 100%; object-fit: contain; }
-        .alert-info { background: #e3f2fd; border: 1px solid #90caf9; color: #1565c0; padding: 0.8rem; border-radius: 8px; margin-bottom: 1rem; font-size: 0.85rem; }
-        .alert-warning { background: #fff3cd; border: 1px solid #ffc107; color: #856404; padding: 0.8rem; border-radius: 8px; margin-bottom: 1rem; font-size: 0.85rem; }
-        .login-container { max-width: 400px; margin: 4rem auto; padding: 2rem; background: white; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
-        .login-container h2 { color: #dc3545; margin-bottom: 1.5rem; text-align: center; }
-        .hidden { display: none !important; }
-        .back-link { display: inline-block; margin-top: 1rem; color: #dc3545; text-decoration: none; }
-        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
-        .stat-card { background: white; padding: 1.5rem; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); text-align: center; }
-        .stat-card .stat-value { font-size: 2rem; font-weight: bold; color: #dc3545; }
-        .stat-card .stat-label { color: #666; font-size: 0.9rem; margin-top: 0.5rem; }
-        .order-item { background: #f8f8f8; padding: 1rem; border-radius: 8px; margin-bottom: 1rem; }
-        .order-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; flex-wrap: wrap; gap: 0.5rem; }
-        .order-status { padding: 0.3rem 0.8rem; border-radius: 15px; font-size: 0.8rem; font-weight: bold; }
-        .order-status.pending { background: #FFC107; color: #333; }
-        .order-status.shipped { background: #2196F3; color: white; }
-        .order-status.delivered { background: #4CAF50; color: white; }
-        .order-status.cancelled { background: #dc3545; color: white; }
-        .vehicle-tag { background: #e3f2fd; color: #1565c0; padding: 0.3rem 0.8rem; border-radius: 15px; font-size: 0.85rem; display: inline-flex; align-items: center; gap: 0.5rem; margin: 0.2rem; }
-        .vehicle-tag button { background: #dc3545; color: white; border: none; width: 18px; height: 18px; border-radius: 50%; cursor: pointer; font-size: 0.7rem; }
-        .spec-tag { background: #f0f8ff; color: #0066cc; padding: 0.3rem 0.8rem; border-radius: 15px; font-size: 0.8rem; display: inline-flex; align-items: center; gap: 0.5rem; margin: 0.2rem; border: 1px solid #b0d4f1; }
-        .spec-tag button { background: #0066cc; color: white; border: none; width: 18px; height: 18px; border-radius: 50%; cursor: pointer; font-size: 0.7rem; }
-        .compat-row { background: white; padding: 0.8rem; border-radius: 8px; margin-bottom: 0.5rem; border: 1px solid #eee; }
-        .driver-card { background: #f8f8f8; padding: 1rem; border-radius: 8px; margin-bottom: 0.8rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
-        .driver-info strong { font-size: 1.1rem; }
-        .driver-info small { color: #666; }
-        .preview-container { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; height: calc(100vh - 150px); }
-        .preview-editor { overflow-y: auto; }
-        .preview-frame { border: 2px solid #dc3545; border-radius: 12px; overflow: hidden; background: white; }
-        .preview-frame iframe { width: 100%; height: 100%; border: none; }
-        .drawer-editor-item { background: #f8f8f8; padding: 1rem; border-radius: 8px; margin-bottom: 0.5rem; }
-        .drawer-editor-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; }
-        .drawer-editor-controls { display: flex; gap: 0.3rem; }
-        .drawer-editor-controls button { background: #dc3545; color: white; border: none; width: 30px; height: 30px; border-radius: 5px; cursor: pointer; font-size: 1rem; }
-        .drawer-editor-controls button:hover { background: #c82333; }
-        .drawer-sub-item { margin-left: 2rem; margin-top: 0.5rem; }
-        .color-picker-row { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; }
-        .color-picker-row input[type="color"] { width: 60px; height: 40px; border: none; cursor: pointer; }
-        @media (max-width: 768px) {
-            body { flex-direction: column; }
-            .admin-sidebar { width: 100%; height: auto; position: relative; }
-            .admin-menu { display: flex; overflow-x: auto; padding: 0.5rem; }
-            .admin-menu-item { white-space: nowrap; border-left: none; border-bottom: 3px solid transparent; }
-            .admin-menu-item.active { border-left: none; border-bottom-color: white; }
-            .form-row, .form-row-3, .form-row-4 { grid-template-columns: 1fr; }
-            .preview-container { grid-template-columns: 1fr; }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin - Akira Motors</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',sans-serif;background:#f5f5f5;color:#333;min-height:100vh;display:flex}
+.admin-sidebar{width:260px;background:#1a1a1a;color:white;height:100vh;position:sticky;top:0;overflow-y:auto;flex-shrink:0}
+.admin-sidebar-header{background:#dc3545;padding:1.2rem;text-align:center}
+.admin-sidebar-header h2{font-size:1.2rem}
+.admin-menu{padding:1rem 0}
+.admin-menu-item{padding:.9rem 1.2rem;cursor:pointer;transition:all .3s;border-left:3px solid transparent;font-size:.85rem}
+.admin-menu-item:hover{background:#2a2a2a;border-left-color:#dc3545}
+.admin-menu-item.active{background:#dc3545;border-left-color:white}
+.admin-content{flex:1;padding:2rem;overflow-y:auto}
+.admin-section{display:none}
+.admin-section.active{display:block}
+.section-title{color:#dc3545;font-size:1.5rem;margin-bottom:1.5rem;border-bottom:2px solid #dc3545;padding-bottom:.5rem}
+.admin-card{background:white;padding:1.5rem;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,.05);margin-bottom:1.5rem}
+.admin-card h3{color:#dc3545;margin-bottom:1rem;font-size:1.1rem}
+.btn{padding:.7rem 1.2rem;border:none;border-radius:8px;cursor:pointer;font-size:.9rem;font-weight:600}
+.btn-primary{background:#dc3545;color:white}
+.btn-primary:hover{background:#c82333}
+.btn-secondary{background:#6c757d;color:white}
+.btn-warning{background:#FFC107;color:#333}
+.btn-success{background:#28a745;color:white}
+.btn-small{padding:.4rem .8rem;font-size:.8rem}
+.form-group{margin-bottom:1rem}
+.form-group label{display:block;margin-bottom:.4rem;font-weight:600;font-size:.9rem}
+.form-group input,.form-group textarea,.form-group select{width:100%;padding:.7rem;border:1px solid #ddd;border-radius:8px;font-size:.95rem}
+.form-group input:focus,.form-group textarea:focus{outline:none;border-color:#dc3545}
+.form-group textarea{resize:vertical;min-height:80px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.form-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem}
+.form-row-4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:.8rem}
+.admin-item{display:flex;justify-content:space-between;align-items:center;padding:1rem;background:#f8f8f8;margin-bottom:.8rem;border-radius:8px;flex-wrap:wrap;gap:1rem}
+.admin-info{display:flex;align-items:center;gap:1rem;flex:1}
+.admin-thumb{width:60px;height:60px;background:#ddd;border-radius:8px;overflow:hidden;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.admin-thumb img{width:100%;height:100%;object-fit:cover}
+.admin-actions{display:flex;gap:.5rem;flex-wrap:wrap}
+.modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.8);z-index:3000;align-items:center;justify-content:center;padding:1rem}
+.modal.active{display:flex}
+.modal-content{background:white;padding:2rem;border-radius:12px;max-width:900px;width:100%;max-height:90vh;overflow-y:auto;position:relative}
+.modal-content h2{color:#dc3545;margin-bottom:1.5rem}
+.modal-close{position:absolute;top:1rem;right:1rem;background:#dc3545;color:white;border:none;width:35px;height:35px;border-radius:50%;font-size:1.2rem;cursor:pointer;z-index:10}
+.form-section{background:#f8f8f8;padding:1.5rem;border-radius:8px;margin-bottom:1.5rem;border:1px solid #eee}
+.form-section h3{color:#dc3545;margin-bottom:1rem;font-size:1.1rem}
+.checkbox-group{display:flex;align-items:center;gap:.5rem}
+.checkbox-group input{width:auto}
+.image-preview{width:100%;height:150px;background:#f0f0f0;border:2px dashed #ddd;border-radius:8px;display:flex;align-items:center;justify-content:center;margin-top:.5rem;overflow:hidden}
+.image-preview img{max-width:100%;max-height:100%;object-fit:contain}
+.alert-info{background:#e3f2fd;border:1px solid #90caf9;color:#1565c0;padding:.8rem;border-radius:8px;margin-bottom:1rem;font-size:.85rem}
+.alert-warning{background:#fff3cd;border:1px solid #ffc107;color:#856404;padding:.8rem;border-radius:8px;margin-bottom:1rem;font-size:.85rem}
+.login-container{max-width:400px;margin:4rem auto;padding:2rem;background:white;border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,.1)}
+.login-container h2{color:#dc3545;margin-bottom:1.5rem;text-align:center}
+.hidden{display:none!important}
+.back-link{display:inline-block;margin-top:1rem;color:#dc3545;text-decoration:none}
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin-bottom:1.5rem}
+.stat-card{background:white;padding:1.5rem;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,.05);text-align:center}
+.stat-card .stat-value{font-size:2rem;font-weight:bold;color:#dc3545}
+.stat-card .stat-label{color:#666;font-size:.9rem;margin-top:.5rem}
+.order-item{background:#f8f8f8;padding:1rem;border-radius:8px;margin-bottom:1rem}
+.order-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:.5rem;flex-wrap:wrap;gap:.5rem}
+.order-status{padding:.3rem .8rem;border-radius:15px;font-size:.8rem;font-weight:bold}
+.order-status.pending{background:#FFC107;color:#333}
+.order-status.shipped{background:#2196F3;color:white}
+.order-status.delivered{background:#4CAF50;color:white}
+.order-status.cancelled{background:#dc3545;color:white}
+.vehicle-tag{background:#e3f2fd;color:#1565c0;padding:.3rem .8rem;border-radius:15px;font-size:.85rem;display:inline-flex;align-items:center;gap:.5rem;margin:.2rem}
+.vehicle-tag button{background:#dc3545;color:white;border:none;width:18px;height:18px;border-radius:50%;cursor:pointer;font-size:.7rem}
+.spec-tag{background:#f0f8ff;color:#0066cc;padding:.3rem .8rem;border-radius:15px;font-size:.8rem;display:inline-flex;align-items:center;gap:.5rem;margin:.2rem;border:1px solid #b0d4f1}
+.spec-tag button{background:#0066cc;color:white;border:none;width:18px;height:18px;border-radius:50%;cursor:pointer;font-size:.7rem}
+.compat-row{background:white;padding:.8rem;border-radius:8px;margin-bottom:.5rem;border:1px solid #eee}
+.driver-card{background:#f8f8f8;padding:1rem;border-radius:8px;margin-bottom:.8rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem}
+.driver-info strong{font-size:1.1rem}
+.driver-info small{color:#666}
+.preview-container{display:grid;grid-template-columns:1fr 1fr;gap:1rem;height:calc(100vh - 150px)}
+.preview-editor{overflow-y:auto}
+.preview-frame{border:2px solid #dc3545;border-radius:12px;overflow:hidden;background:white}
+.preview-frame iframe{width:100%;height:100%;border:none}
+.drawer-editor-item{background:#f8f8f8;padding:1rem;border-radius:8px;margin-bottom:.5rem}
+.drawer-editor-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:.5rem}
+.drawer-editor-controls{display:flex;gap:.3rem}
+.drawer-editor-controls button{background:#dc3545;color:white;border:none;width:30px;height:30px;border-radius:5px;cursor:pointer;font-size:1rem}
+.drawer-editor-controls button:hover{background:#c82333}
+.drawer-sub-item{margin-left:2rem;margin-top:.5rem}
+@media (max-width:768px){
+body{flex-direction:column}
+.admin-sidebar{width:100%;height:auto;position:relative}
+.admin-menu{display:flex;overflow-x:auto;padding:.5rem}
+.admin-menu-item{white-space:nowrap;border-left:none;border-bottom:3px solid transparent}
+.admin-menu-item.active{border-left:none;border-bottom-color:white}
+.form-row,.form-row-3,.form-row-4{grid-template-columns:1fr}
+.preview-container{grid-template-columns:1fr}
+}
+</style>
 </head>
 <body>
-    <!-- LOGIN -->
-    <div id="loginScreen" style="width:100%;">
-        <div class="login-container">
-            <h2>🔐 Acceso Administrador</h2>
-            <form id="adminLoginForm">
-                <div class="form-group">
-                    <label>Correo</label>
-                    <input type="email" id="adminEmail" required autocomplete="username">
-                </div>
-                <div class="form-group">
-                    <label>Contraseña</label>
-                    <input type="password" id="adminPassword" required autocomplete="current-password">
-                </div>
-                <button type="submit" class="btn btn-primary" style="width:100%">Ingresar</button>
-                <div id="loginError" style="color:#dc3545; font-size:0.9rem; margin-top:0.8rem; text-align:center; min-height:1.2rem;"></div>
-            </form>
-            <a href="index.html" class="back-link">← Volver a la tienda</a>
-        </div>
-    </div>
-
-    <!-- PANEL ADMIN -->
-    <div id="adminPanel" class="hidden" style="display:flex; width:100%;">
-        <aside class="admin-sidebar">
-            <div class="admin-sidebar-header">
-                <h2>AKIRA MOTORS</h2>
-                <small>Panel de Administración</small>
-            </div>
-            <div class="admin-menu">
-                <div class="admin-menu-item active" onclick="showSection('preview', event)">👁️ Vista Previa</div>
-                <div class="admin-menu-item" onclick="showSection('hero', event)">🎨 Hero/Portada</div>
-                <div class="admin-menu-item" onclick="showSection('drawer', event)">☰ Menú Drawer</div>
-                <div class="admin-menu-item" onclick="showSection('categories', event)">📂 Categorías y Subcategorías</div>
-                <div class="admin-menu-item" onclick="showSection('dashboard', event)">📊 Dashboard</div>
-                <div class="admin-menu-item" onclick="showSection('orders', event)">📦 Pedidos</div>
-                <div class="admin-menu-item" onclick="showSection('drivers', event)">🏍️ Domiciliarios</div>
-                <div class="admin-menu-item" onclick="showSection('customers', event)">👥 Clientes</div>
-                <div class="admin-menu-item" onclick="showSection('products', event)">🛒 Productos</div>
-                <div class="admin-menu-item" onclick="showSection('vehicles', event)">🚗 Vehículos</div>
-                <div class="admin-menu-item" onclick="showSection('brands', event)">🏷️ Marcas</div>
-                <div class="admin-menu-item" onclick="showSection('banners', event)">🖼️ Banners</div>
-                <div class="admin-menu-item" onclick="showSection('coupons', event)">🎟️ Cupones</div>
-                <div class="admin-menu-item" onclick="showSection('delivery', event)">📍 Zonas Delivery</div>
-                <div class="admin-menu-item" onclick="showSection('reviews', event)">⭐ Reseñas</div>
-                <div class="admin-menu-item" onclick="showSection('footer', event)">📄 Pie de página</div>
-                <div class="admin-menu-item" onclick="showSection('settings', event)">⚙️ Configuración</div>
-                <div class="admin-menu-item" onclick="logoutAdmin()" style="margin-top:2rem; background:#dc3545;">🚪 Salir</div>
-            </div>
-        </aside>
-
-        <div class="admin-content">
-
-        <!-- VISTA PREVIA -->
-        <div class="admin-section active" id="section-preview">
-            <h2 class="section-title">Vista Previa en Vivo</h2>
-            <div class="alert-info">Así se ve tu tienda. Los cambios se reflejan al recargar.</div>
-            <div class="preview-container">
-                <div class="preview-editor">
-                    <div class="admin-card">
-                        <h3>Controles</h3>
-                        <button class="btn btn-primary" onclick="refreshPreview()" style="width:100%; margin-bottom:1rem;">🔄 Recargar Vista</button>
-                        <button class="btn btn-secondary" onclick="window.open('index.html', '_blank')" style="width:100%;">🔗 Abrir en Nueva Pestaña</button>
-                    </div>
-                </div>
-                <div class="preview-frame">
-                    <iframe id="previewFrame" src="index.html"></iframe>
-                </div>
-            </div>
-        </div>
-
-        <!-- HERO -->
-        <div class="admin-section" id="section-hero">
-            <h2 class="section-title">Hero / Portada Principal</h2>
-            <div class="admin-card">
-                <h3>Visibilidad</h3>
-                <div class="checkbox-group">
-                    <input type="checkbox" id="heroVisible">
-                    <label for="heroVisible" style="margin:0;">Mostrar sección Hero en la tienda</label>
-                </div>
-            </div>
-            <div class="admin-card">
-                <h3>Imagen de Fondo</h3>
-                <div class="form-group">
-                    <label>Subir imagen (máx. 2MB)</label>
-                    <input type="file" id="heroBgImage" accept="image/*">
-                    <div class="image-preview" id="heroBgPreview"><div style="color:#999;">Sin imagen</div></div>
-                </div>
-            </div>
-            <div class="admin-card">
-                <h3>Título Principal</h3>
-                <div class="form-group"><label>Texto</label><input type="text" id="heroTitle"></div>
-                <div class="form-row">
-                    <div class="form-group"><label>Color</label><input type="color" id="heroTitleColor" value="#ffffff"></div>
-                    <div class="form-group"><label>Tamaño (px)</label><input type="number" id="heroTitleSize" value="48"></div>
-                </div>
-                <div class="form-group"><label>Tipografía</label><select id="heroTitleFont"><option value="'Segoe UI', sans-serif">Segoe UI</option><option value="Arial, sans-serif">Arial</option><option value="Georgia, serif">Georgia</option></select></div>
-            </div>
-            <div class="admin-card">
-                <h3>Subtítulo</h3>
-                <div class="form-group"><label>Texto</label><textarea id="heroSubtitle"></textarea></div>
-                <div class="form-row">
-                    <div class="form-group"><label>Color</label><input type="color" id="heroSubtitleColor" value="#dddddd"></div>
-                    <div class="form-group"><label>Tamaño (px)</label><input type="number" id="heroSubtitleSize" value="20"></div>
-                </div>
-            </div>
-            <div class="admin-card">
-                <h3>Botón de Acción</h3>
-                <div class="form-row">
-                    <div class="form-group"><label>Texto</label><input type="text" id="heroCtaText"></div>
-                    <div class="form-group"><label>Enlace</label><input type="text" id="heroCtaLink"></div>
-                </div>
-            </div>
-            <button class="btn btn-primary" onclick="saveHero()" style="width:100%; padding:1rem;">💾 Guardar Hero</button>
-        </div>
-
-        <!-- MENÚ DRAWER -->
-        <div class="admin-section" id="section-drawer">
-            <h2 class="section-title">Menú Drawer (Categorías de Navegación)</h2>
-            <div class="alert-info">Estructura: Categoría → Marca → Modelo. Lo que configures aquí también aparecerá como categorías al agregar productos.</div>
-            <div class="admin-card">
-                <h3>Agregar Categoría</h3>
-                <div class="form-row">
-                    <div class="form-group"><label>Nombre</label><input type="text" id="newCategoryName"></div>
-                    <div class="form-group" style="display:flex; align-items:flex-end;"><button class="btn btn-primary" onclick="addCategory()" style="width:100%;">+ Agregar</button></div>
-                </div>
-            </div>
-            <div class="admin-card"><h3>Categorías Configuradas</h3><div id="drawerEditor"></div></div>
-        </div>
-
-        <!-- CATEGORÍAS Y SUBCATEGORÍAS -->
-        <div class="admin-section" id="section-categories">
-            <h2 class="section-title">Categorías y Subcategorías de Productos</h2>
-            <div class="alert-info">Estas categorías se usarán al agregar productos. Se sincronizan automáticamente con el Menú Drawer.</div>
-            <div class="admin-card">
-                <h3>Agregar Subcategoría</h3>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Categoría Principal</label>
-                        <select id="newSubcatCategory"></select>
-                    </div>
-                    <div class="form-group">
-                        <label>Nombre de Subcategoría</label>
-                        <input type="text" id="newSubcatName" placeholder="Ej: Amortiguadores">
-                    </div>
-                </div>
-                <button class="btn btn-primary" onclick="addSubcategory()">+ Agregar Subcategoría</button>
-            </div>
-            <div class="admin-card">
-                <h3>Categorías y Subcategorías Configuradas</h3>
-                <div id="categoriesEditor"></div>
-            </div>
-        </div>
-
-        <!-- DASHBOARD -->
-        <div class="admin-section" id="section-dashboard">
-            <h2 class="section-title">Dashboard</h2>
-            <div class="stats-grid">
-                <div class="stat-card"><div class="stat-value" id="statProducts">0</div><div class="stat-label">Productos</div></div>
-                <div class="stat-card"><div class="stat-value" id="statOrdersPending">0</div><div class="stat-label">Pendientes</div></div>
-                <div class="stat-card"><div class="stat-value" id="statCustomers">0</div><div class="stat-label">Clientes</div></div>
-            </div>
-        </div>
-
-        <!-- PEDIDOS -->
-        <div class="admin-section" id="section-orders">
-            <h2 class="section-title">Pedidos</h2>
-            <div class="admin-card">
-                <div style="display:flex; gap:0.5rem; margin-bottom:1rem;">
-                    <input type="text" id="searchOrderCode" placeholder="Buscar..." style="flex:1; padding:0.5rem; border:1px solid #ddd; border-radius:8px;">
-                    <select id="filterOrderStatus" style="padding:0.5rem; border:1px solid #ddd; border-radius:8px;">
-                        <option value="">Todos</option>
-                        <option value="pending">Pendientes</option>
-                        <option value="shipped">En camino</option>
-                        <option value="delivered">Entregados</option>
-                        <option value="cancelled">Cancelados</option>
-                    </select>
-                </div>
-                <div id="ordersList"></div>
-            </div>
-        </div>
-
-        <!-- DOMICILIARIOS -->
-        <div class="admin-section" id="section-drivers">
-            <h2 class="section-title">Domiciliarios</h2>
-            <div class="admin-card">
-                <h3>Agregar</h3>
-                <div class="form-row-3">
-                    <div class="form-group"><label>Nombre</label><input type="text" id="driverName"></div>
-                    <div class="form-group"><label>Teléfono</label><input type="tel" id="driverPhone"></div>
-                    <div class="form-group"><label>Comisión ($)</label><input type="number" id="driverCommission" step="0.01"></div>
-                </div>
-                <button class="btn btn-primary" onclick="addDriver()">Agregar</button>
-            </div>
-            <div class="admin-card"><h3>Registrados</h3><div id="driversList"></div></div>
-        </div>
-
-        <!-- CLIENTES -->
-        <div class="admin-section" id="section-customers">
-            <h2 class="section-title">Clientes</h2>
-            <div class="admin-card">
-                <input type="text" id="searchCustomer" placeholder="Buscar..." style="padding:0.5rem; border:1px solid #ddd; border-radius:8px; margin-bottom:1rem;">
-                <div class="table-responsive">
-                    <table><thead><tr><th>Código</th><th>Nombre</th><th>Teléfono</th><th>Pedidos</th><th>Total</th></tr></thead><tbody id="customersList"></tbody></table>
-                </div>
-            </div>
-        </div>
-
-        <!-- PRODUCTOS -->
-        <div class="admin-section" id="section-products">
-            <h2 class="section-title">Productos</h2>
-            <div class="admin-card">
-                <div style="display:flex; gap:0.5rem; margin-bottom:1rem;">
-                    <input type="text" id="adminProductSearch" placeholder="Buscar..." style="flex:1; padding:0.5rem; border:1px solid #ddd; border-radius:8px;">
-                    <button class="btn btn-primary" onclick="openAddProductModal()">+ Agregar</button>
-                </div>
-                <div id="adminProductList"></div>
-            </div>
-        </div>
-
-        <!-- VEHÍCULOS -->
-        <div class="admin-section" id="section-vehicles">
-            <h2 class="section-title">Vehículos</h2>
-            <div class="admin-card">
-                <h3>Agregar Marca</h3>
-                <div class="form-row">
-                    <div class="form-group"><label>Nombre</label><input type="text" id="newVehicleBrand"></div>
-                    <div class="form-group" style="display:flex; align-items:flex-end;"><button class="btn btn-primary" onclick="addVehicleBrand()" style="width:100%;">Agregar</button></div>
-                </div>
-            </div>
-            <div class="admin-card"><h3>Marcas y Modelos</h3><div id="vehiclesList"></div></div>
-        </div>
-
-        <!-- MARCAS -->
-        <div class="admin-section" id="section-brands">
-            <h2 class="section-title">Marcas de Repuestos</h2>
-            <div class="admin-card"><div id="adminBrandsList"></div></div>
-        </div>
-
-        <!-- BANNERS -->
-        <div class="admin-section" id="section-banners">
-            <h2 class="section-title">Banners</h2>
-            <div class="admin-card">
-                <div class="alert-info"><strong>Tamaños:</strong> Web: 1400x400px | Móvil: 750x1000px | Máx: 1MB | Máximo 5 imágenes</div>
-                <input type="file" id="bannerImageInput" accept="image/*" style="margin-bottom:1rem;">
-                <button class="btn btn-primary" onclick="addBanner()">Agregar Banner</button>
-                <div id="bannerPreviewGrid" style="margin-top:1rem; display:grid; grid-template-columns:repeat(auto-fill, minmax(200px, 1fr)); gap:1rem;"></div>
-            </div>
-        </div>
-
-        <!-- CUPONES -->
-        <div class="admin-section" id="section-coupons">
-            <h2 class="section-title">Cupones</h2>
-            <div class="admin-card">
-                <h3>Crear</h3>
-                <div class="form-row-3">
-                    <div class="form-group"><label>Código</label><input type="text" id="couponCode"></div>
-                    <div class="form-group"><label>Descuento (%)</label><input type="number" id="couponDiscount" min="1" max="100"></div>
-                    <div class="form-group"><label>Usos máximos</label><input type="number" id="couponMaxUses" min="1"></div>
-                </div>
-                <button class="btn btn-primary" onclick="createCoupon()">Crear</button>
-            </div>
-            <div class="admin-card"><h3>Activos</h3><div id="couponsList"></div></div>
-        </div>
-
-        <!-- ZONAS DELIVERY -->
-        <div class="admin-section" id="section-delivery">
-            <h2 class="section-title">Zonas Delivery</h2>
-            <div class="admin-card">
-                <h3>Agregar</h3>
-                <div class="form-row-3">
-                    <div class="form-group"><label>Nombre</label><input type="text" id="zoneName"></div>
-                    <div class="form-group"><label>Costo ($)</label><input type="number" id="zoneCost" step="0.01"></div>
-                    <div class="form-group"><label>Tiempo</label><input type="text" id="zoneTime"></div>
-                </div>
-                <button class="btn btn-primary" onclick="addDeliveryZone()">Agregar</button>
-            </div>
-            <div class="admin-card"><h3>Zonas</h3><div id="deliveryZonesList"></div></div>
-        </div>
-
-        <!-- RESEÑAS -->
-        <div class="admin-section" id="section-reviews">
-            <h2 class="section-title">Reseñas</h2>
-            <div class="admin-card"><div id="reviewsList"></div></div>
-        </div>
-
-        <!-- PIE DE PÁGINA -->
-        <div class="admin-section" id="section-footer">
-            <h2 class="section-title">Pie de página</h2>
-            <div class="admin-card">
-                <div class="form-group"><label>Nombre</label><input type="text" id="cfgCompanyName"></div>
-                <div class="form-group"><label>Slogan</label><input type="text" id="cfgSlogan"></div>
-                <div class="form-group"><label>Descripción</label><textarea id="cfgDescription"></textarea></div>
-                <div class="form-group"><label>Dirección</label><input type="text" id="cfgAddress"></div>
-                <div class="form-group"><label>Teléfono</label><input type="text" id="cfgPhone"></div>
-                <div class="form-group"><label>Horario</label><input type="text" id="cfgSchedule"></div>
-                <div class="form-group"><label>Facebook</label><input type="url" id="cfgFacebook"></div>
-                <div class="form-group"><label>Instagram</label><input type="url" id="cfgInstagram"></div>
-                <div class="form-group"><label>TikTok</label><input type="url" id="cfgTiktok"></div>
-                <button class="btn btn-primary" onclick="saveSiteConfig()" style="width:100%; padding:1rem;">Guardar</button>
-            </div>
-        </div>
-
-        <!-- CONFIGURACIÓN -->
-        <div class="admin-section" id="section-settings">
-            <h2 class="section-title">Configuración</h2>
-            <div class="admin-card">
-                <h3>Pickup Maps</h3>
-                <input type="url" id="pickupMapsInput" placeholder="https://maps.google.com/?q=..." style="margin-bottom:1rem;">
-                <button class="btn btn-primary" onclick="updatePickupMaps()">Guardar</button>
-            </div>
-            <div class="admin-card">
-                <h3>WhatsApp</h3>
-                <div class="alert-info"><strong>Importante:</strong> Este número se usará en TODA la web. Incluye código de país sin +. Ej: 584148700616</div>
-                <input type="text" id="whatsappNumber" placeholder="584148700616" style="margin-bottom:1rem;">
-                <button class="btn btn-primary" onclick="saveWhatsapp()">Guardar</button>
-            </div>
-        </div>
-    </div>
+<div id="loginScreen" style="width:100%;">
+<div class="login-container">
+<h2>🔐 Acceso Administrador</h2>
+<form id="adminLoginForm">
+<div class="form-group">
+<label>Correo</label>
+<input type="email" id="adminEmail" required autocomplete="username">
 </div>
-<!-- MODAL PRODUCTO -->
+<div class="form-group">
+<label>Contraseña</label>
+<input type="password" id="adminPassword" required autocomplete="current-password">
+</div>
+<button type="submit" class="btn btn-primary" style="width:100%">Ingresar</button>
+<div id="loginError" style="color:#dc3545;font-size:.9rem;margin-top:.8rem;text-align:center;min-height:1.2rem;"></div>
+</form>
+<a href="index.html" class="back-link">← Volver a la tienda</a>
+</div>
+</div>
+
+<div id="adminPanel" class="hidden" style="display:flex;width:100%;">
+<aside class="admin-sidebar">
+<div class="admin-sidebar-header">
+<h2>AKIRA MOTORS</h2>
+<small>Panel de Administración</small>
+</div>
+<div class="admin-menu">
+<div class="admin-menu-item active" onclick="showSection('preview', event)">👁️ Vista Previa</div>
+<div class="admin-menu-item" onclick="showSection('hero', event)">🎨 Hero/Portada</div>
+<div class="admin-menu-item" onclick="showSection('drawer', event)">☰ Menú Drawer</div>
+<div class="admin-menu-item" onclick="showSection('categories', event)">📂 Categorías y Subcategorías</div>
+<div class="admin-menu-item" onclick="showSection('dashboard', event)">📊 Dashboard</div>
+<div class="admin-menu-item" onclick="showSection('orders', event)">📦 Pedidos</div>
+<div class="admin-menu-item" onclick="showSection('drivers', event)">🏍️ Domiciliarios</div>
+<div class="admin-menu-item" onclick="showSection('customers', event)">👥 Clientes</div>
+<div class="admin-menu-item" onclick="showSection('products', event)">🛒 Productos</div>
+<div class="admin-menu-item" onclick="showSection('vehicles', event)">🚗 Vehículos</div>
+<div class="admin-menu-item" onclick="showSection('brands', event)">🏷️ Marcas</div>
+<div class="admin-menu-item" onclick="showSection('banners', event)">🖼️ Banners</div>
+<div class="admin-menu-item" onclick="showSection('coupons', event)">🎟️ Cupones</div>
+<div class="admin-menu-item" onclick="showSection('delivery', event)">📍 Zonas Delivery</div>
+<div class="admin-menu-item" onclick="showSection('reviews', event)">⭐ Reseñas</div>
+<div class="admin-menu-item" onclick="showSection('footer', event)">📄 Pie de página</div>
+<div class="admin-menu-item" onclick="showSection('settings', event)">⚙️ Configuración</div>
+<div class="admin-menu-item" onclick="logoutAdmin()" style="margin-top:2rem;background:#dc3545;">🚪 Salir</div>
+</div>
+</aside>
+<div class="admin-content">
+<div class="admin-section active" id="section-preview">
+<h2 class="section-title">Vista Previa en Vivo</h2>
+<div class="alert-info">Así se ve tu tienda. Los cambios se reflejan al recargar.</div>
+<div class="preview-container">
+<div class="preview-editor">
+<div class="admin-card">
+<h3>Controles</h3>
+<button class="btn btn-primary" onclick="refreshPreview()" style="width:100%;margin-bottom:1rem;">🔄 Recargar Vista</button>
+<button class="btn btn-secondary" onclick="window.open('index.html','_blank')" style="width:100%;">🔗 Abrir en Nueva Pestaña</button>
+</div>
+</div>
+<div class="preview-frame"><iframe id="previewFrame" src="index.html"></iframe></div>
+</div>
+</div>
+
+<div class="admin-section" id="section-hero">
+<h2 class="section-title">Hero / Portada Principal</h2>
+<div class="admin-card">
+<h3>Visibilidad</h3>
+<div class="checkbox-group"><input type="checkbox" id="heroVisible"><label for="heroVisible" style="margin:0;">Mostrar sección Hero en la tienda</label></div>
+</div>
+<div class="admin-card">
+<h3>Imagen de Fondo</h3>
+<div class="form-group">
+<label>Subir imagen (máx. 2MB)</label>
+<input type="file" id="heroBgImage" accept="image/*">
+<div class="image-preview" id="heroBgPreview"><div style="color:#999;">Sin imagen</div></div>
+</div>
+</div>
+<div class="admin-card">
+<h3>Título Principal</h3>
+<div class="form-group"><label>Texto</label><input type="text" id="heroTitle"></div>
+<div class="form-row">
+<div class="form-group"><label>Color</label><input type="color" id="heroTitleColor" value="#ffffff"></div>
+<div class="form-group"><label>Tamaño (px)</label><input type="number" id="heroTitleSize" value="48"></div>
+</div>
+<div class="form-group"><label>Tipografía</label><select id="heroTitleFont"><option value="'Segoe UI', sans-serif">Segoe UI</option><option value="Arial, sans-serif">Arial</option><option value="Georgia, serif">Georgia</option></select></div>
+</div>
+<div class="admin-card">
+<h3>Subtítulo</h3>
+<div class="form-group"><label>Texto</label><textarea id="heroSubtitle"></textarea></div>
+<div class="form-row">
+<div class="form-group"><label>Color</label><input type="color" id="heroSubtitleColor" value="#dddddd"></div>
+<div class="form-group"><label>Tamaño (px)</label><input type="number" id="heroSubtitleSize" value="20"></div>
+</div>
+</div>
+<div class="admin-card">
+<h3>Botón de Acción</h3>
+<div class="form-row">
+<div class="form-group"><label>Texto</label><input type="text" id="heroCtaText"></div>
+<div class="form-group"><label>Enlace</label><input type="text" id="heroCtaLink"></div>
+</div>
+</div>
+<button class="btn btn-primary" onclick="saveHero()" style="width:100%;padding:1rem;">💾 Guardar Hero</button>
+</div>
+
+<div class="admin-section" id="section-drawer">
+<h2 class="section-title">Menú Drawer</h2>
+<div class="alert-info">Estructura: Categoría → Marca → Modelo.</div>
+<div class="admin-card">
+<h3>Agregar Categoría</h3>
+<div class="form-row">
+<div class="form-group"><label>Nombre</label><input type="text" id="newCategoryName"></div>
+<div class="form-group" style="display:flex;align-items:flex-end;"><button class="btn btn-primary" onclick="addCategory()" style="width:100%;">+ Agregar</button></div>
+</div>
+</div>
+<div class="admin-card"><h3>Categorías Configuradas</h3><div id="drawerEditor"></div></div>
+</div>
+
+<div class="admin-section" id="section-categories">
+<h2 class="section-title">Categorías y Subcategorías</h2>
+<div class="alert-info">Se sincronizan con el Menú Drawer.</div>
+<div class="admin-card">
+<h3>Agregar Subcategoría</h3>
+<div class="form-row">
+<div class="form-group"><label>Categoría Principal</label><select id="newSubcatCategory"></select></div>
+<div class="form-group"><label>Nombre</label><input type="text" id="newSubcatName" placeholder="Ej: Amortiguadores"></div>
+</div>
+<button class="btn btn-primary" onclick="addSubcategory()">+ Agregar Subcategoría</button>
+</div>
+<div class="admin-card"><h3>Configuradas</h3><div id="categoriesEditor"></div></div>
+</div>
+
+<div class="admin-section" id="section-dashboard">
+<h2 class="section-title">Dashboard</h2>
+<div class="stats-grid">
+<div class="stat-card"><div class="stat-value" id="statProducts">0</div><div class="stat-label">Productos</div></div>
+<div class="stat-card"><div class="stat-value" id="statOrdersPending">0</div><div class="stat-label">Pendientes</div></div>
+<div class="stat-card"><div class="stat-value" id="statCustomers">0</div><div class="stat-label">Clientes</div></div>
+</div>
+</div>
+
+<div class="admin-section" id="section-orders">
+<h2 class="section-title">Pedidos</h2>
+<div class="admin-card">
+<div style="display:flex;gap:.5rem;margin-bottom:1rem;">
+<input type="text" id="searchOrderCode" placeholder="Buscar..." style="flex:1;padding:.5rem;border:1px solid #ddd;border-radius:8px;">
+<select id="filterOrderStatus" style="padding:.5rem;border:1px solid #ddd;border-radius:8px;">
+<option value="">Todos</option>
+<option value="pending">Pendientes</option>
+<option value="shipped">En camino</option>
+<option value="delivered">Entregados</option>
+<option value="cancelled">Cancelados</option>
+</select>
+</div>
+<div id="ordersList"></div>
+</div>
+</div>
+
+<div class="admin-section" id="section-drivers">
+<h2 class="section-title">Domiciliarios</h2>
+<div class="admin-card">
+<h3>Agregar</h3>
+<div class="form-row-3">
+<div class="form-group"><label>Nombre</label><input type="text" id="driverName"></div>
+<div class="form-group"><label>Teléfono</label><input type="tel" id="driverPhone"></div>
+<div class="form-group"><label>Comisión ($)</label><input type="number" id="driverCommission" step="0.01"></div>
+</div>
+<button class="btn btn-primary" onclick="addDriver()">Agregar</button>
+</div>
+<div class="admin-card"><h3>Registrados</h3><div id="driversList"></div></div>
+</div>
+
+<div class="admin-section" id="section-customers">
+<h2 class="section-title">Clientes</h2>
+<div class="admin-card">
+<input type="text" id="searchCustomer" placeholder="Buscar..." style="padding:.5rem;border:1px solid #ddd;border-radius:8px;margin-bottom:1rem;">
+<div class="table-responsive">
+<table><thead><tr><th>Código</th><th>Nombre</th><th>Teléfono</th><th>Pedidos</th><th>Total</th></tr></thead><tbody id="customersList"></tbody></table>
+</div>
+</div>
+</div>
+
+<div class="admin-section" id="section-products">
+<h2 class="section-title">Productos</h2>
+<div class="admin-card">
+<div style="display:flex;gap:.5rem;margin-bottom:1rem;">
+<input type="text" id="adminProductSearch" placeholder="Buscar..." style="flex:1;padding:.5rem;border:1px solid #ddd;border-radius:8px;">
+<button class="btn btn-primary" onclick="openAddProductModal()">+ Agregar</button>
+</div>
+<div id="adminProductList"></div>
+</div>
+</div>
+
+<div class="admin-section" id="section-vehicles">
+<h2 class="section-title">Vehículos</h2>
+<div class="admin-card">
+<h3>Agregar Marca</h3>
+<div class="form-row">
+<div class="form-group"><label>Nombre</label><input type="text" id="newVehicleBrand"></div>
+<div class="form-group" style="display:flex;align-items:flex-end;"><button class="btn btn-primary" onclick="addVehicleBrand()" style="width:100%;">Agregar</button></div>
+</div>
+</div>
+<div class="admin-card"><h3>Marcas y Modelos</h3><div id="vehiclesList"></div></div>
+</div>
+
+<div class="admin-section" id="section-brands">
+<h2 class="section-title">Marcas de Repuestos</h2>
+<div class="admin-card"><div id="adminBrandsList"></div></div>
+</div>
+
+<div class="admin-section" id="section-banners">
+<h2 class="section-title">Banners</h2>
+<div class="admin-card">
+<div class="alert-info"><strong>Tamaños:</strong> Web 1400x400 | Móvil 750x1000 | Máx 1MB | Máximo 5 imágenes</div>
+<input type="file" id="bannerImageInput" accept="image/*" style="margin-bottom:1rem;">
+<button class="btn btn-primary" onclick="addBanner()">Agregar Banner</button>
+<div id="bannerPreviewGrid" style="margin-top:1rem;display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem;"></div>
+</div>
+</div>
+
+<div class="admin-section" id="section-coupons">
+<h2 class="section-title">Cupones</h2>
+<div class="admin-card">
+<h3>Crear</h3>
+<div class="form-row-3">
+<div class="form-group"><label>Código</label><input type="text" id="couponCode"></div>
+<div class="form-group"><label>Descuento (%)</label><input type="number" id="couponDiscount" min="1" max="100"></div>
+<div class="form-group"><label>Usos máximos</label><input type="number" id="couponMaxUses" min="1"></div>
+</div>
+<button class="btn btn-primary" onclick="createCoupon()">Crear</button>
+</div>
+<div class="admin-card"><h3>Activos</h3><div id="couponsList"></div></div>
+</div>
+
+<div class="admin-section" id="section-delivery">
+<h2 class="section-title">Zonas Delivery</h2>
+<div class="admin-card">
+<h3>Agregar</h3>
+<div class="form-row-3">
+<div class="form-group"><label>Nombre</label><input type="text" id="zoneName"></div>
+<div class="form-group"><label>Costo ($)</label><input type="number" id="zoneCost" step="0.01"></div>
+<div class="form-group"><label>Tiempo</label><input type="text" id="zoneTime"></div>
+</div>
+<button class="btn btn-primary" onclick="addDeliveryZone()">Agregar</button>
+</div>
+<div class="admin-card"><h3>Zonas</h3><div id="deliveryZonesList"></div></div>
+</div>
+
+<div class="admin-section" id="section-reviews">
+<h2 class="section-title">Reseñas</h2>
+<div class="admin-card"><div id="reviewsList"></div></div>
+</div>
+
+<div class="admin-section" id="section-footer">
+<h2 class="section-title">Pie de página</h2>
+<div class="admin-card">
+<div class="form-group"><label>Nombre</label><input type="text" id="cfgCompanyName"></div>
+<div class="form-group"><label>Slogan</label><input type="text" id="cfgSlogan"></div>
+<div class="form-group"><label>Descripción</label><textarea id="cfgDescription"></textarea></div>
+<div class="form-group"><label>Dirección</label><input type="text" id="cfgAddress"></div>
+<div class="form-group"><label>Teléfono</label><input type="text" id="cfgPhone"></div>
+<div class="form-group"><label>Horario</label><input type="text" id="cfgSchedule"></div>
+<div class="form-group"><label>Facebook</label><input type="url" id="cfgFacebook"></div>
+<div class="form-group"><label>Instagram</label><input type="url" id="cfgInstagram"></div>
+<div class="form-group"><label>TikTok</label><input type="url" id="cfgTiktok"></div>
+<button class="btn btn-primary" onclick="saveSiteConfig()" style="width:100%;padding:1rem;">Guardar</button>
+</div>
+</div>
+
+<div class="admin-section" id="section-settings">
+<h2 class="section-title">Configuración</h2>
+<div class="admin-card">
+<h3>Pickup Maps</h3>
+<input type="url" id="pickupMapsInput" placeholder="https://maps.google.com/?q=..." style="margin-bottom:1rem;">
+<button class="btn btn-primary" onclick="updatePickupMaps()">Guardar</button>
+</div>
+<div class="admin-card">
+<h3>WhatsApp</h3>
+<div class="alert-info"><strong>Importante:</strong> Incluye código de país sin +. Ej: 584148700616</div>
+<input type="text" id="whatsappNumber" placeholder="584148700616" style="margin-bottom:1rem;">
+<button class="btn btn-primary" onclick="saveWhatsapp()">Guardar</button>
+</div>
+</div>
+</div>
+</div>
 <div class="modal" id="productModal">
-    <div class="modal-content">
-        <button class="modal-close" onclick="closeModal('productModal')">×</button>
-        <h2 id="productModalTitle">Producto</h2>
-        <form onsubmit="saveProduct(event)">
-            <div class="form-section">
-                <h3>Básico</h3>
-                <div class="form-row">
-                    <div class="form-group"><label>Código *</label><input type="text" id="productCode" required></div>
-                    <div class="form-group"><label>Marca del Repuesto</label><input type="text" id="productBrand" placeholder="Ej: 555, SKF, Monroe"></div>
-                </div>
-                <div class="form-group"><label>Nombre/Título del Producto *</label><input type="text" id="productName" required placeholder="Ej: Muñón de Suspensión Delantero - Toyota Corolla"></div>
-                <div class="form-group"><label>Descripción *</label><textarea id="productDescription" required></textarea></div>
-                <div class="checkbox-group"><input type="checkbox" id="productRecommended"><label>Marcar como RECOMENDADO</label></div>
-            </div>
-            <div class="form-section">
-                <h3>Categoría y Subcategoría</h3>
-                <div class="form-row">
-                    <div class="form-group"><label>Categoría Principal *</label><select id="productCategory" required onchange="updateSubcategoryOptions()"></select></div>
-                    <div class="form-group"><label>Subcategoría *</label><select id="productSubcategory" required></select></div>
-                </div>
-            </div>
-            <div class="form-section">
-                <h3>Atributos del Repuesto</h3>
-                <div class="form-row">
-                    <div class="form-group"><label>N° Parte / OEM</label><input type="text" id="productPartNumber" placeholder="Ej: SB-3642"></div>
-                    <div class="form-group"><label>Posición</label><select id="productPosition"><option value="">Seleccionar</option><option value="Delantero">Delantero</option><option value="Trasero">Trasero</option><option value="Ambos">Ambos</option></select></div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group"><label>Lado</label><select id="productSide"><option value="">Seleccionar</option><option value="Izquierdo">Izquierdo</option><option value="Derecho">Derecho</option><option value="Ambos Lados">Ambos Lados</option></select></div>
-                    <div class="form-group"><label>Condición</label><select id="productCondition"><option value="Nuevo">Nuevo</option><option value="Reacondicionado">Reacondicionado</option><option value="Usado">Usado</option></select></div>
-                </div>
-            </div>
-            <div class="form-section">
-                <h3>Especificaciones Técnicas</h3>
-                <div class="alert-info">Agrega las especificaciones técnicas del repuesto.</div>
-                <div class="form-row">
-                    <div class="form-group"><label>Característica</label><input type="text" id="specKey" placeholder="Ej: Diámetro del Cono"></div>
-                    <div class="form-group"><label>Especificación</label><input type="text" id="specValue" placeholder="Ej: 15.8 mm"></div>
-                </div>
-                <button type="button" class="btn btn-small btn-primary" onclick="addSpecification()">+ Agregar Especificación</button>
-                <div id="specificationsContainer" style="display:flex; flex-wrap:wrap; gap:0.3rem; margin-top:0.5rem;"></div>
-            </div>
-            <div class="form-section">
-                <h3>Compatibilidad Vehicular</h3>
-                <div class="alert-info">Agrega los vehículos compatibles con este repuesto.</div>
-                <div class="form-row-4">
-                    <div class="form-group"><label>Marca</label><input type="text" id="compatBrand" placeholder="Toyota"></div>
-                    <div class="form-group"><label>Modelo</label><input type="text" id="compatModel" placeholder="Corolla"></div>
-                    <div class="form-group"><label>Años</label><input type="text" id="compatYears" placeholder="1990-2008"></div>
-                    <div class="form-group"><label>Motor</label><input type="text" id="compatEngine" placeholder="1.6L"></div>
-                </div>
-                <div class="form-group"><label>Notas</label><input type="text" id="compatNotes" placeholder="Ej: Aplica a ambos lados"></div>
-                <button type="button" class="btn btn-small btn-primary" onclick="addCompatibility()">+ Agregar Vehículo</button>
-                <div id="compatibilityContainer" style="margin-top:0.5rem;"></div>
-            </div>
-            <div class="form-section">
-                <h3>Términos de Búsqueda</h3>
-                <div class="form-group"><label>Búsquedas frecuentes y códigos equivalentes</label><textarea id="productSearchTerms" placeholder="Ej: Rótula inferior Corolla, Muñón Corolla Sapito, SB3642"></textarea></div>
-            </div>
-            <div class="form-section">
-                <h3>Precio</h3>
-                <div class="alert-warning"><strong>Fórmula:</strong> Precio Venta = Precio Compra / (1 - Margen/100)</div>
-                <div class="form-row">
-                    <div class="form-group"><label>Costo ($) *</label><input type="number" id="productCostPrice" step="0.01" required oninput="calculateSalePrice()"></div>
-                    <div class="form-group"><label>Margen (%) *</label><input type="number" id="productMargin" step="1" required oninput="calculateSalePrice()"></div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group"><label>Venta ($)</label><input type="number" id="productPrice" step="0.01" required readonly style="background:#f0f0f0;"></div>
-                    <div class="form-group"><label>Descuento (%)</label><input type="number" id="productDiscount" min="0" max="100"></div>
-                </div>
-                <div class="form-group"><label>Stock *</label><input type="number" id="productStock" required></div>
-            </div>
-            <div class="form-section">
-                <h3>Imágenes</h3>
-                <input type="file" id="productImageInput" accept="image/*" multiple onchange="addProductImages(event)">
-                <div id="productImagesContainer" style="display:flex; gap:0.5rem; flex-wrap:wrap; margin-top:0.5rem;"></div>
-            </div>
-            <input type="hidden" id="editProductId">
-            <button type="submit" class="btn btn-primary" style="width:100%; padding:1rem;">Guardar Producto</button>
-        </form>
-    </div>
+<div class="modal-content">
+<button class="modal-close" onclick="closeModal('productModal')">×</button>
+<h2 id="productModalTitle">Producto</h2>
+<form onsubmit="saveProduct(event)">
+<div class="form-section">
+<h3>Básico</h3>
+<div class="form-row">
+<div class="form-group"><label>Código *</label><input type="text" id="productCode" required></div>
+<div class="form-group"><label>Marca del Repuesto</label><input type="text" id="productBrand"></div>
+</div>
+<div class="form-group"><label>Nombre *</label><input type="text" id="productName" required></div>
+<div class="form-group"><label>Descripción *</label><textarea id="productDescription" required></textarea></div>
+<div class="checkbox-group"><input type="checkbox" id="productRecommended"><label>Marcar como RECOMENDADO</label></div>
+</div>
+<div class="form-section">
+<h3>Categoría y Subcategoría</h3>
+<div class="form-row">
+<div class="form-group"><label>Categoría Principal *</label><select id="productCategory" required onchange="updateSubcategoryOptions()"></select></div>
+<div class="form-group"><label>Subcategoría *</label><select id="productSubcategory" required></select></div>
+</div>
+</div>
+<div class="form-section">
+<h3>Atributos del Repuesto</h3>
+<div class="form-row">
+<div class="form-group"><label>N° Parte / OEM</label><input type="text" id="productPartNumber"></div>
+<div class="form-group"><label>Posición</label><select id="productPosition"><option value="">Seleccionar</option><option value="Delantero">Delantero</option><option value="Trasero">Trasero</option><option value="Ambos">Ambos</option></select></div>
+</div>
+<div class="form-row">
+<div class="form-group"><label>Lado</label><select id="productSide"><option value="">Seleccionar</option><option value="Izquierdo">Izquierdo</option><option value="Derecho">Derecho</option><option value="Ambos Lados">Ambos Lados</option></select></div>
+<div class="form-group"><label>Condición</label><select id="productCondition"><option value="Nuevo">Nuevo</option><option value="Reacondicionado">Reacondicionado</option><option value="Usado">Usado</option></select></div>
+</div>
+</div>
+<div class="form-section">
+<h3>Especificaciones Técnicas</h3>
+<div class="form-row">
+<div class="form-group"><label>Característica</label><input type="text" id="specKey"></div>
+<div class="form-group"><label>Especificación</label><input type="text" id="specValue"></div>
+</div>
+<button type="button" class="btn btn-small btn-primary" onclick="addSpecification()">+ Agregar Especificación</button>
+<div id="specificationsContainer" style="display:flex;flex-wrap:wrap;gap:.3rem;margin-top:.5rem;"></div>
+</div>
+<div class="form-section">
+<h3>Compatibilidad Vehicular</h3>
+<div class="form-row-4">
+<div class="form-group"><label>Marca</label><input type="text" id="compatBrand"></div>
+<div class="form-group"><label>Modelo</label><input type="text" id="compatModel"></div>
+<div class="form-group"><label>Años</label><input type="text" id="compatYears"></div>
+<div class="form-group"><label>Motor</label><input type="text" id="compatEngine"></div>
+</div>
+<div class="form-group"><label>Notas</label><input type="text" id="compatNotes"></div>
+<button type="button" class="btn btn-small btn-primary" onclick="addCompatibility()">+ Agregar Vehículo</button>
+<div id="compatibilityContainer" style="margin-top:.5rem;"></div>
+</div>
+<div class="form-section">
+<h3>Términos de Búsqueda</h3>
+<div class="form-group"><label>Búsquedas frecuentes</label><textarea id="productSearchTerms"></textarea></div>
+</div>
+<div class="form-section">
+<h3>Precio</h3>
+<div class="alert-warning"><strong>Fórmula:</strong> Venta = Costo / (1 - Margen/100)</div>
+<div class="form-row">
+<div class="form-group"><label>Costo ($) *</label><input type="number" id="productCostPrice" step="0.01" required oninput="calculateSalePrice()"></div>
+<div class="form-group"><label>Margen (%) *</label><input type="number" id="productMargin" step="1" required oninput="calculateSalePrice()"></div>
+</div>
+<div class="form-row">
+<div class="form-group"><label>Venta ($)</label><input type="number" id="productPrice" step="0.01" required readonly style="background:#f0f0f0;"></div>
+<div class="form-group"><label>Descuento (%)</label><input type="number" id="productDiscount" min="0" max="100"></div>
+</div>
+<div class="form-group"><label>Stock *</label><input type="number" id="productStock" required></div>
+</div>
+<div class="form-section">
+<h3>Imágenes</h3>
+<input type="file" id="productImageInput" accept="image/*" multiple onchange="addProductImages(event)">
+<div id="productImagesContainer" style="display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.5rem;"></div>
+</div>
+<input type="hidden" id="editProductId">
+<button type="submit" class="btn btn-primary" style="width:100%;padding:1rem;">Guardar Producto</button>
+</form>
+</div>
 </div>
 
-<!-- MODAL MARCA -->
 <div class="modal" id="brandModal">
-    <div class="modal-content">
-        <button class="modal-close" onclick="closeModal('brandModal')">×</button>
-        <h2 id="brandModalTitle">Imagen de Marca</h2>
-        <form onsubmit="saveBrandImage(event)">
-            <input type="file" id="brandImageInput" accept="image/*" onchange="previewBrandImage(event)">
-            <div class="image-preview" id="brandImagePreview"></div>
-            <input type="hidden" id="editBrandId">
-            <input type="hidden" id="currentBrandImageData">
-            <button type="submit" class="btn btn-primary" style="width:100%">Guardar</button>
-        </form>
-    </div>
+<div class="modal-content">
+<button class="modal-close" onclick="closeModal('brandModal')">×</button>
+<h2 id="brandModalTitle">Imagen de Marca</h2>
+<form onsubmit="saveBrandImage(event)">
+<input type="file" id="brandImageInput" accept="image/*" onchange="previewBrandImage(event)">
+<div class="image-preview" id="brandImagePreview"></div>
+<input type="hidden" id="editBrandId">
+<input type="hidden" id="currentBrandImageData">
+<button type="submit" class="btn btn-primary" style="width:100%">Guardar</button>
+</form>
+</div>
 </div>
 
-<!-- MODAL PEDIDO -->
 <div class="modal" id="orderDetailModal">
-    <div class="modal-content" id="orderDetailContent"></div>
+<div class="modal-content" id="orderDetailContent"></div>
 </div>
 
-<!-- SCRIPT PUENTE -->
 <script>
-    window.showSection = function(sectionId, event) {
-        document.querySelectorAll('.admin-section').forEach(s => s.classList.remove('active'));
-        document.querySelectorAll('.admin-menu-item').forEach(m => m.classList.remove('active'));
-        document.getElementById('section-' + sectionId).classList.add('active');
-        if (event) event.currentTarget.classList.add('active');
-        if (sectionId === 'customers' && typeof loadCustomers === 'function') loadCustomers();
-        if (sectionId === 'drivers' && typeof loadDrivers === 'function') loadDrivers();
-        if (sectionId === 'drawer' && typeof renderDrawerEditor === 'function') renderDrawerEditor();
-        if (sectionId === 'categories' && typeof renderCategoriesEditor === 'function') renderCategoriesEditor();
-    };
+window.showSection = function(sectionId, event) {
+document.querySelectorAll('.admin-section').forEach(s => s.classList.remove('active'));
+document.querySelectorAll('.admin-menu-item').forEach(m => m.classList.remove('active'));
+document.getElementById('section-' + sectionId).classList.add('active');
+if (event) event.currentTarget.classList.add('active');
+if (sectionId === 'customers' && typeof loadCustomers === 'function') loadCustomers();
+if (sectionId === 'drivers' && typeof loadDrivers === 'function') loadDrivers();
+if (sectionId === 'drawer' && typeof renderDrawerEditor === 'function') renderDrawerEditor();
+if (sectionId === 'categories' && typeof renderCategoriesEditor === 'function') renderCategoriesEditor();
+};
 
-    window.refreshPreview = function() {
-        document.getElementById('previewFrame').src = 'index.html?t=' + Date.now();
-    };
+window.refreshPreview = function() {
+document.getElementById('previewFrame').src = 'index.html?t=' + Date.now();
+};
 
-    window.closeModal = function(id) { 
-        document.getElementById(id).classList.remove('active'); 
-    };
+window.closeModal = function(id) { document.getElementById(id).classList.remove('active'); };
 </script>
 
-<!-- Firebase Compat (los 3 scripts) -->
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
 
 <script>
-    const firebaseConfig = {
-        apiKey: "AIzaSyAU77yzh7Tm3RPuuvVcxlCt26u2LjmsBK0",
-        authDomain: "akiramotors-cc498.firebaseapp.com",
-        projectId: "akiramotors-cc498",
-        storageBucket: "akiramotors-cc498.firebasestorage.app",
-        messagingSenderId: "657064466850",
-        appId: "1:657064466850:web:2d1340db67f790d11ebafb"
-    };
+const firebaseConfig = {
+apiKey: "AIzaSyAU77yzh7Tm3RPuuvVcxlCt26u2LjmsBK0",
+authDomain: "akiramotors-cc498.firebaseapp.com",
+projectId: "akiramotors-cc498",
+storageBucket: "akiramotors-cc498.firebasestorage.app",
+messagingSenderId: "657064466850",
+appId: "1:657064466850:web:2d1340db67f790d11ebafb"
+};
 
-    if (!firebase.apps.length) {
-        firebase.initializeApp(firebaseConfig);
-    }
-    const db = firebase.firestore();
+if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
 
-    let products = [], brands = [], banners = [], orders = [], reviews = [], coupons = [], deliveryZones = [], drivers = [], customers = [];
-    let vehicles = {}, drawerMenu = [], heroConfig = { visible: false, backgroundImage: null };
-    let bcvRate = 36.5;
-    let siteConfig = { companyName: 'AKIRA MOTORS', slogan: 'Repuestos', description: '', address: '', phone: '', schedule: '', facebook: '', instagram: '', tiktok: '' };
-    let whatsappNumber = '584148700616';
-    let currentProductImages = [];
-    let currentSpecifications = [];
-    let currentCompatibility = [];
+let products = [], brands = [], banners = [], orders = [], reviews = [], coupons = [], deliveryZones = [], drivers = [], customers = [];
+let vehicles = {}, drawerMenu = [], heroConfig = { visible: false, backgroundImage: null };
+let bcvRate = 36.5;
+let siteConfig = { companyName: 'AKIRA MOTORS', slogan: 'Repuestos', description: '', address: '', phone: '', schedule: '', facebook: '', instagram: '', tiktok: '' };
+let whatsappNumber = '584148700616';
+let currentProductImages = [], currentSpecifications = [], currentCompatibility = [];
 
-    const defaultBrands = [
-        { id: 'mitsubishi', name: 'Mitsubishi', image: null },
-        { id: 'ford', name: 'Ford', image: null },
-        { id: 'kia', name: 'Kia', image: null },
-        { id: 'hyundai', name: 'Hyundai', image: null },
-        { id: 'chevrolet', name: 'Chevrolet', image: null }
-    ];
+const defaultBrands = [
+{ id: 'mitsubishi', name: 'Mitsubishi', image: null },
+{ id: 'ford', name: 'Ford', image: null },
+{ id: 'kia', name: 'Kia', image: null },
+{ id: 'hyundai', name: 'Hyundai', image: null },
+{ id: 'chevrolet', name: 'Chevrolet', image: null }
+];
 
-    async function loadAll() { 
-        console.log('Cargando todos los datos...');
-        await loadBcvRate(); 
-        await loadLogo(); 
-        await loadPickupMaps(); 
-        await loadWhatsapp(); 
-        await loadBanners(); 
-        await loadSiteConfig(); 
-        await loadHero(); 
-        await loadDrawerMenu(); 
-        await loadVehicles(); 
-        await loadBrands(); 
-        await loadProducts(); 
-        await loadOrders(); 
-        await loadReviews(); 
-        await loadCoupons(); 
-        await loadDeliveryZones(); 
-        await loadDrivers(); 
-        await loadCustomers(); 
-        await loadDashboard();
-        console.log('Todos los datos cargados');
-    }
+async function loadAll() {
+console.log('Cargando todos los datos...');
+await loadBcvRate(); await loadLogo(); await loadPickupMaps(); await loadWhatsapp();
+await loadBanners(); await loadSiteConfig(); await loadHero(); await loadDrawerMenu();
+await loadVehicles(); await loadBrands(); await loadProducts(); await loadOrders();
+await loadReviews(); await loadCoupons(); await loadDeliveryZones(); await loadDrivers();
+await loadCustomers(); await loadDashboard();
+console.log('Todos los datos cargados');
+}
 
-    // HERO
-    async function loadHero() {
-        try {
-            const heroDoc = await db.collection('settings').doc('hero').get();
-            if (heroDoc.exists) {
-                heroConfig = heroDoc.data();
-                document.getElementById('heroVisible').checked = heroConfig.visible || false;
-                document.getElementById('heroTitle').value = heroConfig.title || '';
-                document.getElementById('heroSubtitle').value = heroConfig.subtitle || '';
-                document.getElementById('heroTitleColor').value = heroConfig.titleColor || '#ffffff';
-                document.getElementById('heroTitleSize').value = heroConfig.titleSize || 48;
-                document.getElementById('heroTitleFont').value = heroConfig.titleFont || "'Segoe UI', sans-serif";
-                document.getElementById('heroSubtitleColor').value = heroConfig.subtitleColor || '#dddddd';
-                document.getElementById('heroSubtitleSize').value = heroConfig.subtitleSize || 20;
-                document.getElementById('heroCtaText').value = heroConfig.ctaText || '';
-                document.getElementById('heroCtaLink').value = heroConfig.ctaLink || '';
-                if (heroConfig.backgroundImage) {
-                    document.getElementById('heroBgPreview').innerHTML = `<img src="${heroConfig.backgroundImage}">`;
-                }
-            }
-        } catch (error) { console.log('Error loading hero:', error); }
-    }
+async function loadHero() {
+try {
+const heroDoc = await db.collection('settings').doc('hero').get();
+if (heroDoc.exists) {
+heroConfig = heroDoc.data();
+document.getElementById('heroVisible').checked = heroConfig.visible || false;
+document.getElementById('heroTitle').value = heroConfig.title || '';
+document.getElementById('heroSubtitle').value = heroConfig.subtitle || '';
+document.getElementById('heroTitleColor').value = heroConfig.titleColor || '#ffffff';
+document.getElementById('heroTitleSize').value = heroConfig.titleSize || 48;
+document.getElementById('heroTitleFont').value = heroConfig.titleFont || "'Segoe UI', sans-serif";
+document.getElementById('heroSubtitleColor').value = heroConfig.subtitleColor || '#dddddd';
+document.getElementById('heroSubtitleSize').value = heroConfig.subtitleSize || 20;
+document.getElementById('heroCtaText').value = heroConfig.ctaText || '';
+document.getElementById('heroCtaLink').value = heroConfig.ctaLink || '';
+if (heroConfig.backgroundImage) document.getElementById('heroBgPreview').innerHTML = '<img src="' + heroConfig.backgroundImage + '">';
+}
+} catch (error) { console.log('Error hero:', error); }
+}
 
-    document.getElementById('heroBgImage').addEventListener('change', function(e) {
-        const file = e.target.files[0];
-        if (!file) return;
-        if (file.size > 2 * 1024 * 1024) { alert('Máximo 2MB'); return; }
-        const reader = new FileReader();
-        reader.onload = function(ev) {
-            heroConfig.backgroundImage = ev.target.result;
-            document.getElementById('heroBgPreview').innerHTML = `<img src="${ev.target.result}">`;
-        };
-        reader.readAsDataURL(file);
-    });
+const heroBgInput = document.getElementById('heroBgImage');
+if (heroBgInput) {
+heroBgInput.addEventListener('change', function(e) {
+const file = e.target.files[0];
+if (!file) return;
+if (file.size > 2 * 1024 * 1024) { alert('Máximo 2MB'); return; }
+const reader = new FileReader();
+reader.onload = function(ev) {
+heroConfig.backgroundImage = ev.target.result;
+document.getElementById('heroBgPreview').innerHTML = '<img src="' + ev.target.result + '">';
+};
+reader.readAsDataURL(file);
+});
+}
 
-    window.saveHero = async function() {
-        try {
-            const heroData = {
-                visible: document.getElementById('heroVisible').checked,
-                title: document.getElementById('heroTitle').value,
-                subtitle: document.getElementById('heroSubtitle').value,
-                titleColor: document.getElementById('heroTitleColor').value,
-                titleSize: parseInt(document.getElementById('heroTitleSize').value),
-                titleFont: document.getElementById('heroTitleFont').value,
-                subtitleColor: document.getElementById('heroSubtitleColor').value,
-                subtitleSize: parseInt(document.getElementById('heroSubtitleSize').value),
-                ctaText: document.getElementById('heroCtaText').value,
-                ctaLink: document.getElementById('heroCtaLink').value,
-                backgroundImage: heroConfig.backgroundImage || null,
-                updatedAt: new Date().toISOString()
-            };
-            await db.collection('settings').doc('hero').set(heroData);
-            alert('✅ Hero guardado');
-            refreshPreview();
-        } catch (error) { alert('Error: ' + error.message); }
-    };
+window.saveHero = async function() {
+try {
+const heroData = {
+visible: document.getElementById('heroVisible').checked,
+title: document.getElementById('heroTitle').value,
+subtitle: document.getElementById('heroSubtitle').value,
+titleColor: document.getElementById('heroTitleColor').value,
+titleSize: parseInt(document.getElementById('heroTitleSize').value),
+titleFont: document.getElementById('heroTitleFont').value,
+subtitleColor: document.getElementById('heroSubtitleColor').value,
+subtitleSize: parseInt(document.getElementById('heroSubtitleSize').value),
+ctaText: document.getElementById('heroCtaText').value,
+ctaLink: document.getElementById('heroCtaLink').value,
+backgroundImage: heroConfig.backgroundImage || null,
+updatedAt: new Date().toISOString()
+};
+await db.collection('settings').doc('hero').set(heroData);
+alert('✅ Hero guardado');
+refreshPreview();
+} catch (error) { alert('Error: ' + error.message); }
+};
 
-    // DRAWER MENU
-    async function loadDrawerMenu() {
-        try {
-            const drawerDoc = await db.collection('settings').doc('drawerMenu').get();
-            if (drawerDoc.exists) {
-                drawerMenu = drawerDoc.data().categories || [];
-            } else {
-                drawerMenu = [
-                    { name: "Amortiguadores y Suspensión", brands: [
-                        { name: "Toyota", models: ["Corolla", "Fortuner", "Landcruiser"] },
-                        { name: "Nissan", models: ["Sentra", "Frontier", "X-Trail"] }
-                    ]},
-                    { name: "Tren delantero y Dirección", brands: [
-                        { name: "Chevrolet", models: ["Aveo", "Cruze"] },
-                        { name: "Ford", models: ["Fiesta", "Ranger"] }
-                    ]}
-                ];
-                await db.collection('settings').doc('drawerMenu').set({ categories: drawerMenu });
-            }
-        } catch (error) { console.error('Error loading drawer:', error); }
-    }
+async function loadDrawerMenu() {
+try {
+const drawerDoc = await db.collection('settings').doc('drawerMenu').get();
+if (drawerDoc.exists) {
+drawerMenu = drawerDoc.data().categories || [];
+} else {
+drawerMenu = [
+{ name: "Amortiguadores y Suspensión", brands: [
+{ name: "Toyota", models: ["Corolla", "Fortuner", "Landcruiser"] },
+{ name: "Nissan", models: ["Sentra", "Frontier", "X-Trail"] }
+]},
+{ name: "Tren delantero y Dirección", brands: [
+{ name: "Chevrolet", models: ["Aveo", "Cruze"] },
+{ name: "Ford", models: ["Fiesta", "Ranger"] }
+]}
+];
+await db.collection('settings').doc('drawerMenu').set({ categories: drawerMenu });
+}
+} catch (error) { console.error('Error drawer:', error); }
+}
 
-    window.renderDrawerEditor = function() {
-        const container = document.getElementById('drawerEditor');
-        if (drawerMenu.length === 0) {
-            container.innerHTML = '<p style="text-align:center;color:#666;padding:2rem;">No hay categorías</p>';
-            return;
-        }
-
-        let html = '';
-        drawerMenu.forEach((cat, catIdx) => {
-            html += `<div class="drawer-editor-item">
-                <div class="drawer-editor-header">
-                    <strong style="color:#dc3545;">${cat.name}</strong>
-                    <div class="drawer-editor-controls">
-                        <button onclick="moveCategory(${catIdx}, -1)">↑</button>
-                        <button onclick="moveCategory(${catIdx}, 1)">↓</button>
-                        <button onclick="deleteCategory(${catIdx})" style="background:#999;">×</button>
-                    </div>
-                </div>
-                <div style="margin-left:1rem;">
-                    <div style="display:flex; gap:0.5rem; margin-bottom:0.5rem;">
-                        <input type="text" id="newBrand-${catIdx}" placeholder="Marca" style="flex:1; padding:0.5rem; border:1px solid #ddd; border-radius:8px;">
-                        <button class="btn btn-small btn-primary" onclick="addBrand(${catIdx})">+ Marca</button>
-                    </div>`;
-
-            if (cat.brands) {
-                cat.brands.forEach((brand, brandIdx) => {
-                    html += `<div class="drawer-sub-item" style="background:white; padding:0.8rem; border-radius:8px; margin-bottom:0.5rem;">
-                        <div style="display:flex; justify-content:space-between; align-items:center;">
-                            <strong>${brand.name}</strong>
-                            <div class="drawer-editor-controls">
-                                <button onclick="moveBrand(${catIdx}, ${brandIdx}, -1)" style="background:#FFC107; color:#333;">↑</button>
-                                <button onclick="moveBrand(${catIdx}, ${brandIdx}, 1)" style="background:#FFC107; color:#333;">↓</button>
-                                <button onclick="deleteBrand(${catIdx}, ${brandIdx})" style="background:#999;">×</button>
-                            </div>
-                        </div>
-                        <div style="margin-left:1rem; margin-top:0.5rem;">
-                            <div style="display:flex; gap:0.5rem;">
-                                <input type="text" id="newModel-${catIdx}-${brandIdx}" placeholder="Modelo" style="flex:1; padding:0.4rem; border:1px solid #ddd; border-radius:8px;">
-                                <button class="btn btn-small btn-primary" onclick="addModel(${catIdx}, ${brandIdx})">+ Modelo</button>
-                            </div>
-                            <div style="display:flex; flex-wrap:wrap; gap:0.3rem; margin-top:0.5rem;">`;
-
-                    if (brand.models) {
-                        brand.models.forEach((model, modelIdx) => {
-                            html += `<span class="vehicle-tag">${model}<button onclick="deleteModel(${catIdx}, ${brandIdx}, ${modelIdx})">×</button></span>`;
-                        });
-                    }
-
-                    html += `</div></div></div>`;
-                });
-            }
-
-            html += `</div></div>`;
-        });
-
-        container.innerHTML = html;
-    };
+window.renderDrawerEditor = function() {
+const container = document.getElementById('drawerEditor');
+if (drawerMenu.length === 0) {
+container.innerHTML = '<p style="text-align:center;color:#666;padding:2rem;">No hay categorías</p>';
+return;
+}
+let html = '';
+drawerMenu.forEach((cat, catIdx) => {
+html += '<div class="drawer-editor-item"><div class="drawer-editor-header"><strong style="color:#dc3545;">' + cat.name + '</strong><div class="drawer-editor-controls"><button onclick="moveCategory(' + catIdx + ',-1)">↑</button><button onclick="moveCategory(' + catIdx + ',1)">↓</button><button onclick="deleteCategory(' + catIdx + ')" style="background:#999;">×</button></div></div><div style="margin-left:1rem;"><div style="display:flex;gap:.5rem;margin-bottom:.5rem;"><input type="text" id="newBrand-' + catIdx + '" placeholder="Marca" style="flex:1;padding:.5rem;border:1px solid #ddd;border-radius:8px;"><button class="btn btn-small btn-primary" onclick="addBrand(' + catIdx + ')">+ Marca</button></div>';
+if (cat.brands) {
+cat.brands.forEach((brand, brandIdx) => {
+html += '<div class="drawer-sub-item" style="background:white;padding:.8rem;border-radius:8px;margin-bottom:.5rem;"><div style="display:flex;justify-content:space-between;align-items:center;"><strong>' + brand.name + '</strong><div class="drawer-editor-controls"><button onclick="moveBrand(' + catIdx + ',' + brandIdx + ',-1)" style="background:#FFC107;color:#333;">↑</button><button onclick="moveBrand(' + catIdx + ',' + brandIdx + ',1)" style="background:#FFC107;color:#333;">↓</button><button onclick="deleteBrand(' + catIdx + ',' + brandIdx + ')" style="background:#999;">×</button></div></div><div style="margin-left:1rem;margin-top:.5rem;"><div style="display:flex;gap:.5rem;"><input type="text" id="newModel-' + catIdx + '-' + brandIdx + '" placeholder="Modelo" style="flex:1;padding:.4rem;border:1px solid #ddd;border-radius:8px;"><button class="btn btn-small btn-primary" onclick="addModel(' + catIdx + ',' + brandIdx + ')">+ Modelo</button></div><div style="display:flex;flex-wrap:wrap;gap:.3rem;margin-top:.5rem;">';
+if (brand.models) {
+brand.models.forEach((model, modelIdx) => {
+html += '<span class="vehicle-tag">' + model + '<button onclick="deleteModel(' + catIdx + ',' + brandIdx + ',' + modelIdx + ')">×</button></span>';
+});
+}
+html += '</div></div></div>';
+});
+}
+html += '</div></div>';
+});
+container.innerHTML = html;
+};
 window.moveCategory = async function(idx, direction) {
-    const newIdx = idx + direction;
-    if (newIdx < 0 || newIdx >= drawerMenu.length) return;
-    [drawerMenu[idx], drawerMenu[newIdx]] = [drawerMenu[newIdx], drawerMenu[idx]];
-    await saveDrawerMenu();
+const newIdx = idx + direction;
+if (newIdx < 0 || newIdx >= drawerMenu.length) return;
+[drawerMenu[idx], drawerMenu[newIdx]] = [drawerMenu[newIdx], drawerMenu[idx]];
+await saveDrawerMenu();
 };
-
 window.deleteCategory = async function(idx) {
-    if (!confirm('¿Eliminar?')) return;
-    drawerMenu.splice(idx, 1);
-    await saveDrawerMenu();
+if (!confirm('¿Eliminar?')) return;
+drawerMenu.splice(idx, 1);
+await saveDrawerMenu();
 };
-
 window.addBrand = async function(catIdx) {
-    const input = document.getElementById(`newBrand-${catIdx}`);
-    const name = input.value.trim();
-    if (!name) { alert('Ingresa nombre'); return; }
-    if (!drawerMenu[catIdx].brands) drawerMenu[catIdx].brands = [];
-    drawerMenu[catIdx].brands.push({ name, models: [] });
-    input.value = '';
-    await saveDrawerMenu();
+const input = document.getElementById('newBrand-' + catIdx);
+const name = input.value.trim();
+if (!name) { alert('Ingresa nombre'); return; }
+if (!drawerMenu[catIdx].brands) drawerMenu[catIdx].brands = [];
+drawerMenu[catIdx].brands.push({ name, models: [] });
+input.value = '';
+await saveDrawerMenu();
 };
-
 window.moveBrand = async function(catIdx, brandIdx, direction) {
-    const brands = drawerMenu[catIdx].brands;
-    const newIdx = brandIdx + direction;
-    if (newIdx < 0 || newIdx >= brands.length) return;
-    [brands[brandIdx], brands[newIdx]] = [brands[newIdx], brands[brandIdx]];
-    await saveDrawerMenu();
+const arr = drawerMenu[catIdx].brands;
+const newIdx = brandIdx + direction;
+if (newIdx < 0 || newIdx >= arr.length) return;
+[arr[brandIdx], arr[newIdx]] = [arr[newIdx], arr[brandIdx]];
+await saveDrawerMenu();
 };
-
 window.deleteBrand = async function(catIdx, brandIdx) {
-    if (!confirm('¿Eliminar?')) return;
-    drawerMenu[catIdx].brands.splice(brandIdx, 1);
-    await saveDrawerMenu();
+if (!confirm('¿Eliminar?')) return;
+drawerMenu[catIdx].brands.splice(brandIdx, 1);
+await saveDrawerMenu();
 };
-
 window.addModel = async function(catIdx, brandIdx) {
-    const input = document.getElementById(`newModel-${catIdx}-${brandIdx}`);
-    const name = input.value.trim();
-    if (!name) { alert('Ingresa nombre'); return; }
-    if (!drawerMenu[catIdx].brands[brandIdx].models) drawerMenu[catIdx].brands[brandIdx].models = [];
-    drawerMenu[catIdx].brands[brandIdx].models.push(name);
-    input.value = '';
-    await saveDrawerMenu();
+const input = document.getElementById('newModel-' + catIdx + '-' + brandIdx);
+const name = input.value.trim();
+if (!name) { alert('Ingresa nombre'); return; }
+if (!drawerMenu[catIdx].brands[brandIdx].models) drawerMenu[catIdx].brands[brandIdx].models = [];
+drawerMenu[catIdx].brands[brandIdx].models.push(name);
+input.value = '';
+await saveDrawerMenu();
 };
-
 window.deleteModel = async function(catIdx, brandIdx, modelIdx) {
-    if (!confirm('¿Eliminar?')) return;
-    drawerMenu[catIdx].brands[brandIdx].models.splice(modelIdx, 1);
-    await saveDrawerMenu();
+if (!confirm('¿Eliminar?')) return;
+drawerMenu[catIdx].brands[brandIdx].models.splice(modelIdx, 1);
+await saveDrawerMenu();
 };
-
 async function saveDrawerMenu() {
-    try {
-        await db.collection('settings').doc('drawerMenu').set({ categories: drawerMenu, updatedAt: new Date().toISOString() });
-        renderDrawerEditor();
-        alert('✅ Menú actualizado');
-    } catch (error) { alert('Error: ' + error.message); }
+try {
+await db.collection('settings').doc('drawerMenu').set({ categories: drawerMenu, updatedAt: new Date().toISOString() });
+renderDrawerEditor();
+alert('✅ Menú actualizado');
+} catch (error) { alert('Error: ' + error.message); }
 }
-
 window.addCategory = async function() {
-    const name = document.getElementById('newCategoryName').value.trim();
-    if (!name) { alert('Ingresa nombre'); return; }
-    drawerMenu.push({ name, brands: [] });
-    document.getElementById('newCategoryName').value = '';
-    await saveDrawerMenu();
+const name = document.getElementById('newCategoryName').value.trim();
+if (!name) { alert('Ingresa nombre'); return; }
+drawerMenu.push({ name, brands: [] });
+document.getElementById('newCategoryName').value = '';
+await saveDrawerMenu();
 };
 
-// CATEGORÍAS Y SUBCATEGORÍAS
 window.renderCategoriesEditor = function() {
-    const select = document.getElementById('newSubcatCategory');
-    select.innerHTML = '<option value="">Seleccionar categoría...</option>';
-    drawerMenu.forEach((cat, idx) => {
-        select.innerHTML += `<option value="${idx}">${cat.name}</option>`;
-    });
-
-    const container = document.getElementById('categoriesEditor');
-    if (drawerMenu.length === 0) {
-        container.innerHTML = '<p style="text-align:center;color:#666;padding:2rem;">No hay categorías. Agrega categorías primero en "Menú Drawer".</p>';
-        return;
-    }
-
-    let html = '';
-    drawerMenu.forEach((cat, catIdx) => {
-        html += `<div class="drawer-editor-item">
-            <div class="drawer-editor-header">
-                <strong style="color:#dc3545;">${cat.name}</strong>
-            </div>
-            <div style="margin-left:1rem; margin-top:0.5rem;">`;
-
-        if (cat.subcategories && cat.subcategories.length > 0) {
-            cat.subcategories.forEach((sub, subIdx) => {
-                html += `<div class="drawer-sub-item" style="background:white; padding:0.6rem; border-radius:8px; margin-bottom:0.3rem; display:flex; justify-content:space-between; align-items:center;">
-                    <span>${sub}</span>
-                    <button class="btn btn-small btn-secondary" onclick="deleteSubcategory(${catIdx}, ${subIdx})">Eliminar</button>
-                </div>`;
-            });
-        } else {
-            html += `<div style="color:#999; font-size:0.85rem; padding:0.5rem;">Sin subcategorías</div>`;
-        }
-
-        html += `</div></div>`;
-    });
-
-    container.innerHTML = html;
+const select = document.getElementById('newSubcatCategory');
+select.innerHTML = '<option value="">Seleccionar categoría...</option>';
+drawerMenu.forEach((cat, idx) => {
+select.innerHTML += '<option value="' + idx + '">' + cat.name + '</option>';
+});
+const container = document.getElementById('categoriesEditor');
+if (drawerMenu.length === 0) {
+container.innerHTML = '<p style="text-align:center;color:#666;padding:2rem;">No hay categorías.</p>';
+return;
+}
+let html = '';
+drawerMenu.forEach((cat, catIdx) => {
+html += '<div class="drawer-editor-item"><div class="drawer-editor-header"><strong style="color:#dc3545;">' + cat.name + '</strong></div><div style="margin-left:1rem;margin-top:.5rem;">';
+if (cat.subcategories && cat.subcategories.length > 0) {
+cat.subcategories.forEach((sub, subIdx) => {
+html += '<div class="drawer-sub-item" style="background:white;padding:.6rem;border-radius:8px;margin-bottom:.3rem;display:flex;justify-content:space-between;align-items:center;"><span>' + sub + '</span><button class="btn btn-small btn-secondary" onclick="deleteSubcategory(' + catIdx + ',' + subIdx + ')">Eliminar</button></div>';
+});
+} else {
+html += '<div style="color:#999;font-size:.85rem;padding:.5rem;">Sin subcategorías</div>';
+}
+html += '</div></div>';
+});
+container.innerHTML = html;
 };
-
 window.addSubcategory = async function() {
-    const catIdx = document.getElementById('newSubcatCategory').value;
-    const name = document.getElementById('newSubcatName').value.trim();
-    if (catIdx === '') { alert('Selecciona una categoría'); return; }
-    if (!name) { alert('Ingresa el nombre de la subcategoría'); return; }
-    if (!drawerMenu[catIdx].subcategories) drawerMenu[catIdx].subcategories = [];
-    if (drawerMenu[catIdx].subcategories.includes(name)) { alert('Esta subcategoría ya existe'); return; }
-    drawerMenu[catIdx].subcategories.push(name);
-    document.getElementById('newSubcatName').value = '';
-    try {
-        await db.collection('settings').doc('drawerMenu').set({ categories: drawerMenu, updatedAt: new Date().toISOString() });
-        renderCategoriesEditor();
-        alert('✅ Subcategoría agregada');
-    } catch (error) { alert('Error: ' + error.message); }
+const catIdx = document.getElementById('newSubcatCategory').value;
+const name = document.getElementById('newSubcatName').value.trim();
+if (catIdx === '') { alert('Selecciona una categoría'); return; }
+if (!name) { alert('Ingresa nombre'); return; }
+if (!drawerMenu[catIdx].subcategories) drawerMenu[catIdx].subcategories = [];
+if (drawerMenu[catIdx].subcategories.includes(name)) { alert('Ya existe'); return; }
+drawerMenu[catIdx].subcategories.push(name);
+document.getElementById('newSubcatName').value = '';
+try {
+await db.collection('settings').doc('drawerMenu').set({ categories: drawerMenu, updatedAt: new Date().toISOString() });
+renderCategoriesEditor();
+alert('✅ Agregada');
+} catch (error) { alert('Error: ' + error.message); }
 };
-
 window.deleteSubcategory = async function(catIdx, subIdx) {
-    if (!confirm('¿Eliminar esta subcategoría?')) return;
-    drawerMenu[catIdx].subcategories.splice(subIdx, 1);
-    try {
-        await db.collection('settings').doc('drawerMenu').set({ categories: drawerMenu, updatedAt: new Date().toISOString() });
-        renderCategoriesEditor();
-        alert('✅ Subcategoría eliminada');
-    } catch (error) { alert('Error: ' + error.message); }
+if (!confirm('¿Eliminar?')) return;
+drawerMenu[catIdx].subcategories.splice(subIdx, 1);
+try {
+await db.collection('settings').doc('drawerMenu').set({ categories: drawerMenu, updatedAt: new Date().toISOString() });
+renderCategoriesEditor();
+alert('✅ Eliminada');
+} catch (error) { alert('Error: ' + error.message); }
 };
+async function loadBcvRate() { try { const r = await db.collection('settings').doc('bcvRate').get(); if (r.exists) bcvRate = r.data().value; } catch (e) { console.log(e); } }
+async function loadPickupMaps() { try { const p = await db.collection('settings').doc('pickupMaps').get(); if (p.exists) document.getElementById('pickupMapsInput').value = p.data().url || ''; } catch (e) { console.log(e); } }
+window.updatePickupMaps = async function() { const url = document.getElementById('pickupMapsInput').value.trim(); if (!url) { alert('Ingresa link'); return; } try { await db.collection('settings').doc('pickupMaps').set({ url: url }); alert('✅ Guardado'); } catch (e) { alert('Error: ' + e.message); } };
+async function loadWhatsapp() { try { const w = await db.collection('settings').doc('whatsapp').get(); if (w.exists && w.data().number) { whatsappNumber = w.data().number; document.getElementById('whatsappNumber').value = whatsappNumber; } } catch (e) { console.log(e); } }
+window.saveWhatsapp = async function() { const num = document.getElementById('whatsappNumber').value.trim(); if (!num) { alert('Ingresa número'); return; } try { await db.collection('settings').doc('whatsapp').set({ number: num }); whatsappNumber = num; alert('✅ Guardado'); } catch (e) { alert('Error: ' + e.message); } };
+async function loadLogo() { try { const l = await db.collection('settings').doc('logo').get(); if (l.exists) { const p = document.getElementById('adminLogoPreview'); if (p) p.innerHTML = '<img src="' + l.data().image + '">'; } } catch (e) { console.log(e); } }
+async function loadBanners() { try { const b = await db.collection('settings').doc('banners').get(); if (b.exists) banners = b.data().images || []; renderBannerPreviews(); } catch (e) { console.log(e); } }
+function renderBannerPreviews() { const grid = document.getElementById('bannerPreviewGrid'); if (!grid) return; const html = banners.length === 0 ? '<p style="color:#666;text-align:center;">Sin banners</p>' : banners.map((b, i) => '<div style="position:relative;"><img src="' + b + '" style="width:100%;height:120px;object-fit:cover;border-radius:8px;"><button onclick="removeBanner(' + i + ')" style="position:absolute;top:5px;right:5px;background:#dc3545;color:white;border:none;width:28px;height:28px;border-radius:50%;cursor:pointer;">×</button></div>').join(''); grid.innerHTML = html; }
+window.addBanner = async function() { const fi = document.getElementById('bannerImageInput'); const file = fi.files[0]; if (!file) { alert('Selecciona imagen'); return; } if (banners.length >= 5) { alert('Máximo 5'); return; } if (file.size > 1024 * 1024) { alert('Máximo 1MB'); return; } const reader = new FileReader(); reader.onload = async function(e) { banners.push(e.target.result); try { await db.collection('settings').doc('banners').set({ images: banners }); renderBannerPreviews(); fi.value = ''; alert('✅ Agregado'); } catch (err) { alert('Error: ' + err.message); } }; reader.readAsDataURL(file); };
+window.removeBanner = async function(index) { if (!confirm('¿Eliminar?')) return; banners.splice(index, 1); try { await db.collection('settings').doc('banners').set({ images: banners }); renderBannerPreviews(); alert('✅ Eliminado'); } catch (e) { alert('Error: ' + e.message); } };
+async function loadSiteConfig() { try { const c = await db.collection('settings').doc('siteConfig').get(); if (c.exists) siteConfig = Object.assign({}, siteConfig, c.data()); document.getElementById('cfgCompanyName').value = siteConfig.companyName; document.getElementById('cfgSlogan').value = siteConfig.slogan; document.getElementById('cfgDescription').value = siteConfig.description; document.getElementById('cfgAddress').value = siteConfig.address; document.getElementById('cfgPhone').value = siteConfig.phone; document.getElementById('cfgSchedule').value = siteConfig.schedule; document.getElementById('cfgFacebook').value = siteConfig.facebook || ''; document.getElementById('cfgInstagram').value = siteConfig.instagram || ''; document.getElementById('cfgTiktok').value = siteConfig.tiktok || ''; } catch (e) { console.log(e); } }
+window.saveSiteConfig = async function() { const config = { companyName: document.getElementById('cfgCompanyName').value, slogan: document.getElementById('cfgSlogan').value, description: document.getElementById('cfgDescription').value, address: document.getElementById('cfgAddress').value, phone: document.getElementById('cfgPhone').value, schedule: document.getElementById('cfgSchedule').value, facebook: document.getElementById('cfgFacebook').value, instagram: document.getElementById('cfgInstagram').value, tiktok: document.getElementById('cfgTiktok').value }; try { await db.collection('settings').doc('siteConfig').set(config); siteConfig = Object.assign({}, siteConfig, config); alert('✅ Guardado'); } catch (e) { alert('Error: ' + e.message); } };
 
-// BCV
-async function loadBcvRate() { try { const rateDoc = await db.collection('settings').doc('bcvRate').get(); if (rateDoc.exists) bcvRate = rateDoc.data().value; } catch (error) { console.log('Error tasa:', error); } }
+async function loadVehicles() { try { const v = await db.collection('settings').doc('vehicles').get(); if (v.exists) { vehicles = v.data().brands || {}; } else { vehicles = { "Toyota": ["Corolla","Hilux","Yaris"], "Nissan": ["Versa","Sentra","Frontier"], "Chevrolet": ["Aveo","Cruze","Captiva"], "Ford": ["Fiesta","Focus","Ranger"], "Hyundai": ["Tucson","Creta","Accent"], "Kia": ["Rio","Sportage","Picanto"], "Mitsubishi": ["L200","Outlander","Montero"] }; await db.collection('settings').doc('vehicles').set({ brands: vehicles }); } renderVehicles(); } catch (e) { console.error(e); } }
+function renderVehicles() { const list = document.getElementById('vehiclesList'); if (Object.keys(vehicles).length === 0) { list.innerHTML = '<p style="text-align:center;color:#666;padding:1rem">Sin marcas</p>'; return; } let html = ''; for (const brand in vehicles) { const models = vehicles[brand]; let modelsHtml = ''; models.forEach(m => { modelsHtml += '<span class="vehicle-tag">' + m + '<button onclick="deleteVehicleModel(\'' + brand + '\',\'' + m + '\')">×</button></span>'; }); html += '<div class="admin-item" style="flex-direction:column;align-items:stretch;"><div style="display:flex;justify-content:space-between;align-items:center;width:100%;"><strong style="color:#dc3545;">' + brand + '</strong><button class="btn btn-small btn-secondary" onclick="deleteVehicleBrand(\'' + brand + '\')">Eliminar</button></div><div style="margin-top:1rem;padding:1rem;background:white;border-radius:8px;width:100%;"><div style="display:flex;gap:.5rem;margin-bottom:1rem;"><input type="text" id="newModel-' + brand + '" placeholder="Modelo" style="flex:1;padding:.5rem;border:1px solid #ddd;border-radius:8px;"><button class="btn btn-small btn-primary" onclick="addVehicleModel(\'' + brand + '\')">+ Modelo</button></div><div style="display:flex;flex-wrap:wrap;gap:.5rem;">' + modelsHtml + '</div></div></div>'; } list.innerHTML = html; }
+window.addVehicleBrand = async function() { const brand = document.getElementById('newVehicleBrand').value.trim(); if (!brand) { alert('Ingresa nombre'); return; } if (vehicles[brand]) { alert('Ya existe'); return; } vehicles[brand] = []; try { await db.collection('settings').doc('vehicles').set({ brands: vehicles }); document.getElementById('newVehicleBrand').value = ''; renderVehicles(); alert('✅ Agregado'); } catch (e) { alert('Error: ' + e.message); } };
+window.deleteVehicleBrand = async function(brand) { if (!confirm('¿Eliminar?')) return; delete vehicles[brand]; try { await db.collection('settings').doc('vehicles').set({ brands: vehicles }); renderVehicles(); alert('✅ Eliminado'); } catch (e) { alert('Error: ' + e.message); } };
+window.addVehicleModel = async function(brand) { const mi = document.getElementById('newModel-' + brand); const model = mi.value.trim(); if (!model) { alert('Ingresa nombre'); return; } if (vehicles[brand].includes(model)) { alert('Ya existe'); return; } vehicles[brand].push(model); try { await db.collection('settings').doc('vehicles').set({ brands: vehicles }); mi.value = ''; renderVehicles(); alert('✅ Agregado'); } catch (e) { alert('Error: ' + e.message); } };
+window.deleteVehicleModel = async function(brand, model) { if (!confirm('¿Eliminar?')) return; vehicles[brand] = vehicles[brand].filter(m => m !== model); try { await db.collection('settings').doc('vehicles').set({ brands: vehicles }); renderVehicles(); alert('✅ Eliminado'); } catch (e) { alert('Error: ' + e.message); } };
 
-// Pickup Maps
-async function loadPickupMaps() { try { const pickupDoc = await db.collection('settings').doc('pickupMaps').get(); if (pickupDoc.exists) document.getElementById('pickupMapsInput').value = pickupDoc.data().url || ''; } catch (error) { console.log('Error pickup:', error); } }
-window.updatePickupMaps = async function() { const url = document.getElementById('pickupMapsInput').value.trim(); if (!url) { alert('Ingresa link'); return; } try { await db.collection('settings').doc('pickupMaps').set({ url: url }); alert('✅ Guardado'); } catch (error) { alert('Error: ' + error.message); } };
+async function loadBrands() { try { const s = await db.collection('brands').get(); if (s.empty) { brands = defaultBrands; for (const b of defaultBrands) await db.collection('brands').doc(b.id).set(b); } else { brands = []; s.forEach(d => brands.push(Object.assign({ id: d.id }, d.data()))); } renderAdminBrands(); } catch (e) { console.error(e); } }
+function renderAdminBrands() { const list = document.getElementById('adminBrandsList'); list.innerHTML = brands.map(b => { const th = b.image ? '<img src="' + b.image + '">' : ''; return '<div class="admin-item"><div class="admin-info"><div class="admin-thumb">' + th + '</div><div><strong>' + b.name + '</strong><br><small style="color:#666">' + (b.image ? 'Con imagen' : 'Sin imagen') + '</small></div></div><div class="admin-actions"><button class="btn btn-small btn-primary" onclick="editBrandImage(\'' + b.id + '\')">' + (b.image ? 'Cambiar' : 'Agregar') + '</button></div></div>'; }).join(''); }
+window.editBrandImage = function(brandId) { const b = brands.find(x => x.id === brandId); document.getElementById('brandModalTitle').textContent = 'Imagen: ' + b.name; document.getElementById('editBrandId').value = brandId; document.getElementById('currentBrandImageData').value = b.image || ''; if (b.image) document.getElementById('brandImagePreview').innerHTML = '<img src="' + b.image + '">'; else document.getElementById('brandImagePreview').innerHTML = '<div style="color:#999;">Sin imagen</div>'; document.getElementById('brandImageInput').value = ''; document.getElementById('brandModal').classList.add('active'); };
+window.previewBrandImage = function(event) { const file = event.target.files[0]; if (file) { if (file.size > 1024 * 1024) { alert('Máximo 1MB'); event.target.value = ''; return; } const reader = new FileReader(); reader.onload = function(e) { document.getElementById('currentBrandImageData').value = e.target.result; document.getElementById('brandImagePreview').innerHTML = '<img src="' + e.target.result + '">'; }; reader.readAsDataURL(file); } };
+window.saveBrandImage = async function(event) { event.preventDefault(); const id = document.getElementById('editBrandId').value; const img = document.getElementById('currentBrandImageData').value; try { await db.collection('brands').doc(id).update({ image: img || null }); await loadBrands(); closeModal('brandModal'); alert('✅ Guardado'); } catch (e) { alert('Error: ' + e.message); } };
+function populateCategorySelect() { const s = document.getElementById('productCategory'); s.innerHTML = '<option value="">Seleccionar...</option>'; drawerMenu.forEach(c => { s.innerHTML += '<option value="' + c.name + '">' + c.name + '</option>'; }); }
+window.updateSubcategoryOptions = function() { const category = document.getElementById('productCategory').value; const s = document.getElementById('productSubcategory'); s.innerHTML = '<option value="">Seleccionar...</option>'; const cat = drawerMenu.find(c => c.name === category); if (cat && cat.subcategories) cat.subcategories.forEach(sub => { s.innerHTML += '<option value="' + sub + '">' + sub + '</option>'; }); };
+window.calculateSalePrice = function() { const cost = parseFloat(document.getElementById('productCostPrice').value) || 0; const margin = parseFloat(document.getElementById('productMargin').value) || 0; if (margin >= 100) { document.getElementById('productPrice').value = '0'; alert('Margen no puede ser 100%+'); return; } document.getElementById('productPrice').value = (cost / (1 - margin / 100)).toFixed(2); };
+window.addSpecification = function() { const key = document.getElementById('specKey').value.trim(); const value = document.getElementById('specValue').value.trim(); if (!key || !value) { alert('Completa característica y especificación'); return; } currentSpecifications.push({ key, value }); document.getElementById('specKey').value = ''; document.getElementById('specValue').value = ''; renderSpecifications(); };
+function renderSpecifications() { const c = document.getElementById('specificationsContainer'); c.innerHTML = currentSpecifications.map((s, i) => '<span class="spec-tag"><strong>' + s.key + ':</strong> ' + s.value + '<button type="button" onclick="removeSpecification(' + i + ')">×</button></span>').join(''); }
+window.removeSpecification = function(i) { currentSpecifications.splice(i, 1); renderSpecifications(); };
+window.addCompatibility = function() { const b = document.getElementById('compatBrand').value.trim(); const m = document.getElementById('compatModel').value.trim(); const y = document.getElementById('compatYears').value.trim(); const e = document.getElementById('compatEngine').value.trim(); const n = document.getElementById('compatNotes').value.trim(); if (!b || !m) { alert('Completa marca y modelo'); return; } currentCompatibility.push({ brand: b, model: m, years: y, engine: e, notes: n }); document.getElementById('compatBrand').value = ''; document.getElementById('compatModel').value = ''; document.getElementById('compatYears').value = ''; document.getElementById('compatEngine').value = ''; document.getElementById('compatNotes').value = ''; renderCompatibility(); };
+function renderCompatibility() { const c = document.getElementById('compatibilityContainer'); c.innerHTML = currentCompatibility.map((x, i) => '<div class="compat-row"><div style="display:flex;justify-content:space-between;align-items:center;"><div><strong>' + x.brand + ' ' + x.model + '</strong> <small style="color:#666;">(' + (x.years || 'N/A') + ') - ' + (x.engine || 'N/A') + '</small>' + (x.notes ? '<br><small style="color:#0066cc;">' + x.notes + '</small>' : '') + '</div><button type="button" class="btn btn-small btn-secondary" onclick="removeCompatibility(' + i + ')">Eliminar</button></div></div>').join(''); }
+window.removeCompatibility = function(i) { currentCompatibility.splice(i, 1); renderCompatibility(); };
 
-// WhatsApp
-async function loadWhatsapp() { try { const waDoc = await db.collection('settings').doc('whatsapp').get(); if (waDoc.exists && waDoc.data().number) { whatsappNumber = waDoc.data().number; document.getElementById('whatsappNumber').value = whatsappNumber; } } catch (error) { console.log('Error whatsapp:', error); } }
-window.saveWhatsapp = async function() { const num = document.getElementById('whatsappNumber').value.trim(); if (!num) { alert('Ingresa número'); return; } try { await db.collection('settings').doc('whatsapp').set({ number: num }); whatsappNumber = num; alert('✅ Guardado'); } catch (error) { alert('Error: ' + error.message); } };
-
-// Logo
-async function loadLogo() { try { const logoDoc = await db.collection('settings').doc('logo').get(); if (logoDoc.exists) { const preview = document.getElementById('adminLogoPreview'); if (preview) preview.innerHTML = `<img src="${logoDoc.data().image}">`; } } catch (error) { console.log('Logo:', error); } }
-
-// Banners
-async function loadBanners() { try { const bannersDoc = await db.collection('settings').doc('banners').get(); if (bannersDoc.exists) banners = bannersDoc.data().images || []; renderBannerPreviews(); } catch (error) { console.log('Banners:', error); } }
-function renderBannerPreviews() { const grid = document.getElementById('bannerPreviewGrid'); if (!grid) return; const html = banners.length === 0 ? '<p style="color:#666;text-align:center;">Sin banners</p>' : banners.map((banner, i) => `<div style="position:relative;"><img src="${banner}" style="width:100%;height:120px;object-fit:cover;border-radius:8px;"><button onclick="removeBanner(${i})" style="position:absolute;top:5px;right:5px;background:#dc3545;color:white;border:none;width:28px;height:28px;border-radius:50%;cursor:pointer;">×</button></div>`).join(''); grid.innerHTML = html; }
-window.addBanner = async function() { const fileInput = document.getElementById('bannerImageInput'); const file = fileInput.files[0]; if (!file) { alert('Selecciona imagen'); return; } if (banners.length >= 5) { alert('Máximo 5'); return; } if (file.size > 1024 * 1024) { alert('Máximo 1MB'); return; } const reader = new FileReader(); reader.onload = async function(e) { banners.push(e.target.result); try { await db.collection('settings').doc('banners').set({ images: banners }); renderBannerPreviews(); fileInput.value = ''; alert('✅ Agregado'); } catch (error) { alert('Error: ' + error.message); } }; reader.readAsDataURL(file); };
-window.removeBanner = async function(index) { if (!confirm('¿Eliminar?')) return; banners.splice(index, 1); try { await db.collection('settings').doc('banners').set({ images: banners }); renderBannerPreviews(); alert('✅ Eliminado'); } catch (error) { alert('Error: ' + error.message); } };
-
-// Site Config
-async function loadSiteConfig() { try { const configDoc = await db.collection('settings').doc('siteConfig').get(); if (configDoc.exists) siteConfig = { ...siteConfig, ...configDoc.data() }; document.getElementById('cfgCompanyName').value = siteConfig.companyName; document.getElementById('cfgSlogan').value = siteConfig.slogan; document.getElementById('cfgDescription').value = siteConfig.description; document.getElementById('cfgAddress').value = siteConfig.address; document.getElementById('cfgPhone').value = siteConfig.phone; document.getElementById('cfgSchedule').value = siteConfig.schedule; document.getElementById('cfgFacebook').value = siteConfig.facebook || ''; document.getElementById('cfgInstagram').value = siteConfig.instagram || ''; document.getElementById('cfgTiktok').value = siteConfig.tiktok || ''; } catch (error) { console.log('Config:', error); } }
-window.saveSiteConfig = async function() { const config = { companyName: document.getElementById('cfgCompanyName').value, slogan: document.getElementById('cfgSlogan').value, description: document.getElementById('cfgDescription').value, address: document.getElementById('cfgAddress').value, phone: document.getElementById('cfgPhone').value, schedule: document.getElementById('cfgSchedule').value, facebook: document.getElementById('cfgFacebook').value, instagram: document.getElementById('cfgInstagram').value, tiktok: document.getElementById('cfgTiktok').value }; try { await db.collection('settings').doc('siteConfig').set(config); siteConfig = { ...siteConfig, ...config }; alert('✅ Guardado'); } catch (error) { alert('Error: ' + error.message); } };
-
-// Vehicles
-async function loadVehicles() { try { const vehiclesDoc = await db.collection('settings').doc('vehicles').get(); if (vehiclesDoc.exists) { vehicles = vehiclesDoc.data().brands || {}; } else { vehicles = { "Toyota": ["Corolla", "Hilux", "Yaris"], "Nissan": ["Versa", "Sentra", "Frontier"], "Chevrolet": ["Aveo", "Cruze", "Captiva"], "Ford": ["Fiesta", "Focus", "Ranger"], "Hyundai": ["Tucson", "Creta", "Accent"], "Kia": ["Rio", "Sportage", "Picanto"], "Mitsubishi": ["L200", "Outlander", "Montero"] }; await db.collection('settings').doc('vehicles').set({ brands: vehicles }); } renderVehicles(); } catch (error) { console.error('Vehículos:', error); } }
-function renderVehicles() { const list = document.getElementById('vehiclesList'); if (Object.keys(vehicles).length === 0) { list.innerHTML = '<p style="text-align:center;color:#666;padding:1rem">Sin marcas</p>'; return; } let html = ''; for (const [brand, models] of Object.entries(vehicles)) { html += `<div class="admin-item" style="flex-direction:column; align-items:stretch;"><div style="display:flex; justify-content:space-between; align-items:center; width:100%;"><strong style="color:#dc3545;">${brand}</strong><button class="btn btn-small btn-secondary" onclick="deleteVehicleBrand('${brand}')">Eliminar</button></div><div style="margin-top:1rem; padding:1rem; background:white; border-radius:8px; width:100%;"><div style="display:flex; gap:0.5rem; margin-bottom:1rem;"><input type="text" id="newModel-${brand}" placeholder="Modelo" style="flex:1; padding:0.5rem; border:1px solid #ddd; border-radius:8px;"><button class="btn btn-small btn-primary" onclick="addVehicleModel('${brand}')">+ Modelo</button></div><div style="display:flex; flex-wrap:wrap; gap:0.5rem;">${models.map(model => `<span class="vehicle-tag">${model}<button onclick="deleteVehicleModel('${brand}', '${model}')">×</button></span>`).join('')}</div></div></div>`; } list.innerHTML = html; }
-window.addVehicleBrand = async function() { const brand = document.getElementById('newVehicleBrand').value.trim(); if (!brand) { alert('Ingresa nombre'); return; } if (vehicles[brand]) { alert('Ya existe'); return; } vehicles[brand] = []; try { await db.collection('settings').doc('vehicles').set({ brands: vehicles }); document.getElementById('newVehicleBrand').value = ''; renderVehicles(); alert('✅ Agregado'); } catch (error) { alert('Error: ' + error.message); } };
-window.deleteVehicleBrand = async function(brand) { if (!confirm('¿Eliminar?')) return; delete vehicles[brand]; try { await db.collection('settings').doc('vehicles').set({ brands: vehicles }); renderVehicles(); alert('✅ Eliminado'); } catch (error) { alert('Error: ' + error.message); } };
-window.addVehicleModel = async function(brand) { const modelInput = document.getElementById(`newModel-${brand}`); const model = modelInput.value.trim(); if (!model) { alert('Ingresa nombre'); return; } if (vehicles[brand].includes(model)) { alert('Ya existe'); return; } vehicles[brand].push(model); try { await db.collection('settings').doc('vehicles').set({ brands: vehicles }); modelInput.value = ''; renderVehicles(); alert('✅ Agregado'); } catch (error) { alert('Error: ' + error.message); } };
-window.deleteVehicleModel = async function(brand, model) { if (!confirm('¿Eliminar?')) return; vehicles[brand] = vehicles[brand].filter(m => m !== model); try { await db.collection('settings').doc('vehicles').set({ brands: vehicles }); renderVehicles(); alert('✅ Eliminado'); } catch (error) { alert('Error: ' + error.message); } };
-
-// Brands
-async function loadBrands() { try { const snapshot = await db.collection('brands').get(); if (snapshot.empty) { brands = defaultBrands; for (const brand of defaultBrands) await db.collection('brands').doc(brand.id).set(brand); } else { brands = []; snapshot.forEach(docSnap => brands.push({ id: docSnap.id, ...docSnap.data() })); } renderAdminBrands(); } catch (error) { console.error('Marcas:', error); } }
-function renderAdminBrands() { const list = document.getElementById('adminBrandsList'); list.innerHTML = brands.map(brand => { const thumbHtml = brand.image ? `<img src="${brand.image}">` : ''; return `<div class="admin-item"><div class="admin-info"><div class="admin-thumb">${thumbHtml}</div><div><strong>${brand.name}</strong><br><small style="color:#666">${brand.image ? 'Con imagen' : 'Sin imagen'}</small></div></div><div class="admin-actions"><button class="btn btn-small btn-primary" onclick="editBrandImage('${brand.id}')">${brand.image ? 'Cambiar' : 'Agregar'}</button></div></div>`; }).join(''); }
-window.editBrandImage = function(brandId) { const brand = brands.find(b => b.id === brandId); document.getElementById('brandModalTitle').textContent = `Imagen: ${brand.name}`; document.getElementById('editBrandId').value = brandId; document.getElementById('currentBrandImageData').value = brand.image || ''; if (brand.image) { document.getElementById('brandImagePreview').innerHTML = `<img src="${brand.image}">`; } else { document.getElementById('brandImagePreview').innerHTML = '<div style="color:#999;">Sin imagen</div>'; } document.getElementById('brandImageInput').value = ''; document.getElementById('brandModal').classList.add('active'); };
-window.previewBrandImage = function(event) { const file = event.target.files[0]; if (file) { if (file.size > 1024 * 1024) { alert('Máximo 1MB'); event.target.value = ''; return; } const reader = new FileReader(); reader.onload = function(e) { document.getElementById('currentBrandImageData').value = e.target.result; document.getElementById('brandImagePreview').innerHTML = `<img src="${e.target.result}">`; }; reader.readAsDataURL(file); } };
-window.saveBrandImage = async function(event) { event.preventDefault(); const brandId = document.getElementById('editBrandId').value; const imageData = document.getElementById('currentBrandImageData').value; try { await db.collection('brands').doc(brandId).update({ image: imageData || null }); await loadBrands(); closeModal('brandModal'); alert('✅ Guardado'); } catch (error) { alert('Error: ' + error.message); } };.
-// Products
-function populateCategorySelect() { 
-    const select = document.getElementById('productCategory'); 
-    select.innerHTML = '<option value="">Seleccionar...</option>'; 
-    drawerMenu.forEach((cat, idx) => {
-        select.innerHTML += `<option value="${cat.name}">${cat.name}</option>`;
-    });
-}
-window.updateSubcategoryOptions = function() { 
-    const category = document.getElementById('productCategory').value;
-    const subSelect = document.getElementById('productSubcategory'); 
-    subSelect.innerHTML = '<option value="">Seleccionar...</option>'; 
-    const cat = drawerMenu.find(c => c.name === category);
-    if (cat && cat.subcategories) {
-        cat.subcategories.forEach(sub => {
-            subSelect.innerHTML += `<option value="${sub}">${sub}</option>`;
-        });
-    }
-};
-
-window.calculateSalePrice = function() { const cost = parseFloat(document.getElementById('productCostPrice').value) || 0; const margin = parseFloat(document.getElementById('productMargin').value) || 0; if (margin >= 100) { document.getElementById('productPrice').value = '0'; alert('Margen no puede ser 100%+'); return; } const salePrice = cost / (1 - margin / 100); document.getElementById('productPrice').value = salePrice.toFixed(2); };
-
-window.addSpecification = function() {
-    const key = document.getElementById('specKey').value.trim();
-    const value = document.getElementById('specValue').value.trim();
-    if (!key || !value) { alert('Completa característica y especificación'); return; }
-    currentSpecifications.push({ key, value });
-    document.getElementById('specKey').value = '';
-    document.getElementById('specValue').value = '';
-    renderSpecifications();
-};
-
-function renderSpecifications() {
-    const container = document.getElementById('specificationsContainer');
-    container.innerHTML = currentSpecifications.map((spec, i) => 
-        `<span class="spec-tag"><strong>${spec.key}:</strong> ${spec.value}<button type="button" onclick="removeSpecification(${i})">×</button></span>`
-    ).join('');
-}
-
-window.removeSpecification = function(index) {
-    currentSpecifications.splice(index, 1);
-    renderSpecifications();
-};
-
-window.addCompatibility = function() {
-    const brand = document.getElementById('compatBrand').value.trim();
-    const model = document.getElementById('compatModel').value.trim();
-    const years = document.getElementById('compatYears').value.trim();
-    const engine = document.getElementById('compatEngine').value.trim();
-    const notes = document.getElementById('compatNotes').value.trim();
-    if (!brand || !model) { alert('Completa al menos marca y modelo'); return; }
-    currentCompatibility.push({ brand, model, years, engine, notes });
-    document.getElementById('compatBrand').value = '';
-    document.getElementById('compatModel').value = '';
-    document.getElementById('compatYears').value = '';
-    document.getElementById('compatEngine').value = '';
-    document.getElementById('compatNotes').value = '';
-    renderCompatibility();
-};
-
-function renderCompatibility() {
-    const container = document.getElementById('compatibilityContainer');
-    container.innerHTML = currentCompatibility.map((c, i) => 
-        `<div class="compat-row">
-            <div style="display:flex; justify-content:space-between; align-items:center;">
-                <div>
-                    <strong>${c.brand} ${c.model}</strong> 
-                    <small style="color:#666;">(${c.years || 'N/A'}) - ${c.engine || 'N/A'}</small>
-                    ${c.notes ? `<br><small style="color:#0066cc;">${c.notes}</small>` : ''}
-                </div>
-                <button type="button" class="btn btn-small btn-secondary" onclick="removeCompatibility(${i})">Eliminar</button>
-            </div>
-        </div>`
-    ).join('');
-}
-
-window.removeCompatibility = function(index) {
-    currentCompatibility.splice(index, 1);
-    renderCompatibility();
-};
-
-async function loadProducts() { try { const snapshot = await db.collection('products').get(); products = []; snapshot.forEach(docSnap => products.push({ id: docSnap.id, ...docSnap.data() })); document.getElementById('statProducts').textContent = products.length; renderAdminProducts(); } catch (error) { console.error('Productos:', error); } }
-function renderAdminProducts(filter = '') { const list = document.getElementById('adminProductList'); let filtered = products; if (filter) { const q = filter.toLowerCase(); filtered = products.filter(p => p.name.toLowerCase().includes(q) || (p.code && p.code.toLowerCase().includes(q))); } if (filtered.length === 0) { list.innerHTML = '<p style="text-align:center;color:#666;padding:1rem">Sin productos</p>'; return; } list.innerHTML = filtered.map(product => { const images = product.images || (product.image ? [product.image] : []); const thumbHtml = images.length > 0 ? `<img src="${images[0]}">` : ''; const offerText = product.discount && product.discount > 0 ? ` | -${product.discount}%` : ''; const recText = product.recommended ? ' | RECOMENDADO' : ''; return `<div class="admin-item"><div class="admin-info"><div class="admin-thumb">${thumbHtml}</div><div><strong>${product.name}</strong>${recText}<br><small style="color:#dc3545">Código: ${product.code || 'N/A'}</small><br><small style="color:#666">$${Number(product.price).toFixed(2)}${offerText} | Stock: ${product.stock}</small></div></div><div class="admin-actions"><button class="btn btn-small btn-primary" onclick="editProduct('${product.id}')">Editar</button><button class="btn btn-small btn-secondary" onclick="deleteProduct('${product.id}')">Eliminar</button></div></div>`; }).join(''); }
+async function loadProducts() { try { const s = await db.collection('products').get(); products = []; s.forEach(d => products.push(Object.assign({ id: d.id }, d.data()))); document.getElementById('statProducts').textContent = products.length; renderAdminProducts(); } catch (e) { console.error(e); } }
+function renderAdminProducts(filter) { const list = document.getElementById('adminProductList'); filter = filter || ''; let filtered = products; if (filter) { const q = filter.toLowerCase(); filtered = products.filter(p => p.name.toLowerCase().includes(q) || (p.code && p.code.toLowerCase().includes(q))); } if (filtered.length === 0) { list.innerHTML = '<p style="text-align:center;color:#666;padding:1rem">Sin productos</p>'; return; } list.innerHTML = filtered.map(p => { const imgs = p.images || (p.image ? [p.image] : []); const th = imgs.length > 0 ? '<img src="' + imgs[0] + '">' : ''; const off = p.discount && p.discount > 0 ? ' | -' + p.discount + '%' : ''; const rec = p.recommended ? ' | RECOMENDADO' : ''; return '<div class="admin-item"><div class="admin-info"><div class="admin-thumb">' + th + '</div><div><strong>' + p.name + '</strong>' + rec + '<br><small style="color:#dc3545">Código: ' + (p.code || 'N/A') + '</small><br><small style="color:#666">$' + Number(p.price).toFixed(2) + off + ' | Stock: ' + p.stock + '</small></div></div><div class="admin-actions"><button class="btn btn-small btn-primary" onclick="editProduct(\'' + p.id + '\')">Editar</button><button class="btn btn-small btn-secondary" onclick="deleteProduct(\'' + p.id + '\')">Eliminar</button></div></div>'; }).join(''); }
 document.getElementById('adminProductSearch').addEventListener('input', function(e) { renderAdminProducts(e.target.value); });
 
-window.openAddProductModal = function() { 
-    populateCategorySelect(); 
-    currentProductImages = [];
-    currentSpecifications = [];
-    currentCompatibility = [];
-    document.getElementById('productModalTitle').textContent = 'Agregar Producto'; 
-    document.getElementById('editProductId').value = ''; 
-    document.getElementById('productCode').value = ''; 
-    document.getElementById('productBrand').value = ''; 
-    document.getElementById('productName').value = ''; 
-    document.getElementById('productDescription').value = ''; 
-    document.getElementById('productPartNumber').value = '';
-    document.getElementById('productPosition').value = '';
-    document.getElementById('productSide').value = '';
-    document.getElementById('productCondition').value = 'Nuevo';
-    document.getElementById('productCostPrice').value = ''; 
-    document.getElementById('productMargin').value = ''; 
-    document.getElementById('productPrice').value = ''; 
-    document.getElementById('productDiscount').value = ''; 
-    document.getElementById('productStock').value = ''; 
-    document.getElementById('productCategory').value = ''; 
-    document.getElementById('productSubcategory').value = ''; 
-    document.getElementById('productSearchTerms').value = '';
-    document.getElementById('productRecommended').checked = false; 
-    document.getElementById('productImagesContainer').innerHTML = ''; 
-    document.getElementById('specificationsContainer').innerHTML = '';
-    document.getElementById('compatibilityContainer').innerHTML = '';
-    document.getElementById('productModal').classList.add('active'); 
+window.openAddProductModal = function() { populateCategorySelect(); currentProductImages = []; currentSpecifications = []; currentCompatibility = []; document.getElementById('productModalTitle').textContent = 'Agregar Producto'; document.getElementById('editProductId').value = ''; document.getElementById('productCode').value = ''; document.getElementById('productBrand').value = ''; document.getElementById('productName').value = ''; document.getElementById('productDescription').value = ''; document.getElementById('productPartNumber').value = ''; document.getElementById('productPosition').value = ''; document.getElementById('productSide').value = ''; document.getElementById('productCondition').value = 'Nuevo'; document.getElementById('productCostPrice').value = ''; document.getElementById('productMargin').value = ''; document.getElementById('productPrice').value = ''; document.getElementById('productDiscount').value = ''; document.getElementById('productStock').value = ''; document.getElementById('productCategory').value = ''; document.getElementById('productSubcategory').value = ''; document.getElementById('productSearchTerms').value = ''; document.getElementById('productRecommended').checked = false; document.getElementById('productImagesContainer').innerHTML = ''; document.getElementById('specificationsContainer').innerHTML = ''; document.getElementById('compatibilityContainer').innerHTML = ''; document.getElementById('productModal').classList.add('active'); };
+
+window.editProduct = function(productId) {
+const product = products.find(p => p.id === productId);
+populateCategorySelect();
+currentProductImages = product.images || (product.image ? [product.image] : []);
+currentSpecifications = product.specifications || [];
+currentCompatibility = product.compatibility || [];
+const attrs = product.attributes || {};
+document.getElementById('productModalTitle').textContent = 'Editar Producto';
+document.getElementById('editProductId').value = product.id;
+document.getElementById('productCode').value = product.code || '';
+document.getElementById('productBrand').value = product.brand || '';
+document.getElementById('productName').value = product.name;
+document.getElementById('productDescription').value = product.description || '';
+document.getElementById('productPartNumber').value = attrs.partNumber || '';
+document.getElementById('productPosition').value = attrs.position || '';
+document.getElementById('productSide').value = attrs.side || '';
+document.getElementById('productCondition').value = attrs.condition || 'Nuevo';
+document.getElementById('productCostPrice').value = product.costPrice || '';
+document.getElementById('productMargin').value = product.margin || '';
+document.getElementById('productPrice').value = product.price;
+document.getElementById('productDiscount').value = product.discount || '';
+document.getElementById('productStock').value = product.stock;
+document.getElementById('productCategory').value = product.category || '';
+updateSubcategoryOptions();
+document.getElementById('productSubcategory').value = product.subcategory || '';
+document.getElementById('productSearchTerms').value = product.searchTerms || '';
+document.getElementById('productRecommended').checked = product.recommended || false;
+renderProductImages(); renderSpecifications(); renderCompatibility();
+document.getElementById('productModal').classList.add('active');
 };
 
-window.editProduct = function(productId) { 
-    const product = products.find(p => p.id === productId); 
-    populateCategorySelect(); 
-    currentProductImages = product.images || (product.image ? [product.image] : []);
-    currentSpecifications = product.specifications || [];
-    currentCompatibility = product.compatibility || [];
-    document.getElementById('productModalTitle').textContent = 'Editar Producto'; 
-    document.getElementById('editProductId').value = product.id; 
-    document.getElementById('productCode').value = product.code || ''; 
-    document.getElementById('productBrand').value = product.brand || ''; 
-    document.getElementById('productName').value = product.name; 
-    document.getElementById('productDescription').value = product.description || ''; 
-    document.getElementById('productPartNumber').value = product.attributes?.partNumber || '';
-    document.getElementById('productPosition').value = product.attributes?.position || '';
-    document.getElementById('productSide').value = product.attributes?.side || '';
-    document.getElementById('productCondition').value = product.attributes?.condition || 'Nuevo';
-    document.getElementById('productCostPrice').value = product.costPrice || ''; 
-    document.getElementById('productMargin').value = product.margin || ''; 
-    document.getElementById('productPrice').value = product.price; 
-    document.getElementById('productDiscount').value = product.discount || ''; 
-    document.getElementById('productStock').value = product.stock; 
-    document.getElementById('productCategory').value = product.category || ''; 
-    updateSubcategoryOptions();
-    document.getElementById('productSubcategory').value = product.subcategory || ''; 
-    document.getElementById('productSearchTerms').value = product.searchTerms || '';
-    document.getElementById('productRecommended').checked = product.recommended || false; 
-    renderProductImages();
-    renderSpecifications();
-    renderCompatibility();
-    document.getElementById('productModal').classList.add('active'); 
+function renderProductImages() { const c = document.getElementById('productImagesContainer'); if (currentProductImages.length === 0) { c.innerHTML = '<div style="color:#999;">Sin imágenes</div>'; return; } c.innerHTML = currentProductImages.map((img, i) => '<div style="position:relative;"><img src="' + img + '" style="width:80px;height:80px;object-fit:cover;border-radius:8px;"><button type="button" onclick="removeProductImage(' + i + ')" style="position:absolute;top:2px;right:2px;background:#dc3545;color:white;border:none;width:20px;height:20px;border-radius:50%;cursor:pointer;">×</button></div>').join(''); }
+window.addProductImages = function(event) { const files = Array.from(event.target.files); files.forEach(file => { if (currentProductImages.length >= 5) { alert('Máximo 5'); return; } if (file.size > 1024 * 1024) { alert('Máximo 1MB'); return; } const r = new FileReader(); r.onload = function(e) { currentProductImages.push(e.target.result); renderProductImages(); }; r.readAsDataURL(file); }); event.target.value = ''; };
+window.removeProductImage = function(i) { currentProductImages.splice(i, 1); renderProductImages(); };
+
+window.saveProduct = async function(event) {
+event.preventDefault();
+const editId = document.getElementById('editProductId').value;
+const costPrice = parseFloat(document.getElementById('productCostPrice').value) || 0;
+const margin = parseFloat(document.getElementById('productMargin').value) || 0;
+const salePrice = parseFloat(document.getElementById('productPrice').value) || 0;
+const discount = parseFloat(document.getElementById('productDiscount').value) || 0;
+const attributes = {
+category: document.getElementById('productCategory').value,
+subcategory: document.getElementById('productSubcategory').value,
+brand: document.getElementById('productBrand').value,
+partNumber: document.getElementById('productPartNumber').value,
+position: document.getElementById('productPosition').value,
+side: document.getElementById('productSide').value,
+condition: document.getElementById('productCondition').value
 };
-
-function renderProductImages() { const container = document.getElementById('productImagesContainer'); if (currentProductImages.length === 0) { container.innerHTML = '<div style="color:#999;">Sin imágenes</div>'; return; } container.innerHTML = currentProductImages.map((img, i) => `<div style="position:relative;"><img src="${img}" style="width:80px;height:80px;object-fit:cover;border-radius:8px;"><button type="button" onclick="removeProductImage(${i})" style="position:absolute;top:2px;right:2px;background:#dc3545;color:white;border:none;width:20px;height:20px;border-radius:50%;cursor:pointer;">×</button></div>`).join(''); }
-window.addProductImages = function(event) { const files = Array.from(event.target.files); files.forEach(file => { if (currentProductImages.length >= 5) { alert('Máximo 5'); return; } if (file.size > 1024 * 1024) { alert('Máximo 1MB'); return; } const reader = new FileReader(); reader.onload = function(e) { currentProductImages.push(e.target.result); renderProductImages(); }; reader.readAsDataURL(file); }); event.target.value = ''; };
-window.removeProductImage = function(index) { currentProductImages.splice(index, 1); renderProductImages(); };
-
-window.saveProduct = async function(event) { 
-    event.preventDefault(); 
-    const editId = document.getElementById('editProductId').value; 
-    const costPrice = parseFloat(document.getElementById('productCostPrice').value) || 0; 
-    const margin = parseFloat(document.getElementById('productMargin').value) || 0; 
-    const salePrice = parseFloat(document.getElementById('productPrice').value) || 0; 
-    const discount = parseFloat(document.getElementById('productDiscount').value) || 0; 
-
-    const attributes = {
-        category: document.getElementById('productCategory').value,
-        subcategory: document.getElementById('productSubcategory').value,
-        brand: document.getElementById('productBrand').value,
-        partNumber: document.getElementById('productPartNumber').value,
-        position: document.getElementById('productPosition').value,
-        side: document.getElementById('productSide').value,
-        condition: document.getElementById('productCondition').value
-    };
-
-    const productData = { 
-        code: document.getElementById('productCode').value, 
-        brand: document.getElementById('productBrand').value, 
-        name: document.getElementById('productName').value, 
-        description: document.getElementById('productDescription').value, 
-        costPrice: costPrice, 
-        margin: margin, 
-        price: salePrice, 
-        discount: discount, 
-        stock: parseInt(document.getElementById('productStock').value), 
-        category: document.getElementById('productCategory').value, 
-        subcategory: document.getElementById('productSubcategory').value, 
-        recommended: document.getElementById('productRecommended').checked, 
-        attributes: attributes,
-        specifications: currentSpecifications,
-        compatibility: currentCompatibility,
-        searchTerms: document.getElementById('productSearchTerms').value,
-        images: currentProductImages.length > 0 ? currentProductImages : null, 
-        image: currentProductImages.length > 0 ? currentProductImages[0] : null, 
-        updatedAt: new Date().toISOString() 
-    }; 
-
-    try { 
-        if (editId) { 
-            await db.collection('products').doc(editId).update(productData); 
-        } else { 
-            productData.createdAt = new Date().toISOString(); 
-            await db.collection('products').add(productData); 
-        } 
-        await loadProducts(); 
-        await loadDashboard(); 
-        closeModal('productModal'); 
-        alert('✅ Producto guardado con ficha técnica completa'); 
-    } catch (error) { alert('Error: ' + error.message); } 
+const productData = {
+code: document.getElementById('productCode').value,
+brand: document.getElementById('productBrand').value,
+name: document.getElementById('productName').value,
+description: document.getElementById('productDescription').value,
+costPrice, margin, price: salePrice, discount,
+stock: parseInt(document.getElementById('productStock').value),
+category: document.getElementById('productCategory').value,
+subcategory: document.getElementById('productSubcategory').value,
+recommended: document.getElementById('productRecommended').checked,
+attributes, specifications: currentSpecifications, compatibility: currentCompatibility,
+searchTerms: document.getElementById('productSearchTerms').value,
+images: currentProductImages.length > 0 ? currentProductImages : null,
+image: currentProductImages.length > 0 ? currentProductImages[0] : null,
+updatedAt: new Date().toISOString()
 };
+try {
+if (editId) await db.collection('products').doc(editId).update(productData);
+else { productData.createdAt = new Date().toISOString(); await db.collection('products').add(productData); }
+await loadProducts(); await loadDashboard();
+closeModal('productModal');
+alert('✅ Producto guardado');
+} catch (e) { alert('Error: ' + e.message); }
+};
+window.deleteProduct = async function(id) { if (!confirm('¿Eliminar?')) return; try { await db.collection('products').doc(id).delete(); await loadProducts(); await loadDashboard(); alert('✅ Eliminado'); } catch (e) { alert('Error: ' + e.message); } };
+async function loadOrders() { try { const s = await db.collection('orders').get(); orders = []; s.forEach(d => orders.push(Object.assign({ id: d.id }, d.data()))); renderOrders(); } catch (e) { console.error(e); } }
+function renderOrders() { const list = document.getElementById('ordersList'); const filter = document.getElementById('filterOrderStatus').value; const sq = (document.getElementById('searchOrderCode').value || '').toLowerCase().trim(); let filtered = orders; if (filter) filtered = filtered.filter(o => o.status === filter); if (sq) filtered = filtered.filter(o => { const c = (o.customerCode || '').toLowerCase(); const n = (o.userName || '').toLowerCase(); const p = (o.userPhone || '').toLowerCase(); return c.includes(sq) || n.includes(sq) || p.includes(sq); }); if (filtered.length === 0) { list.innerHTML = '<p style="text-align:center;color:#666;padding:1rem">Sin pedidos</p>'; return; } list.innerHTML = filtered.sort((a, b) => new Date(b.date) - new Date(a.date)).map(o => { const st = { pending: 'Pendiente', shipped: 'En camino', delivered: 'Entregado', cancelled: 'Cancelado' }[o.status] || o.status; return '<div class="order-item"><div class="order-header"><div><strong>#' + o.id.slice(-6) + '</strong><br><small style="color:#666">' + (o.userName || 'Cliente') + ' - ' + (o.userPhone || 'N/A') + '</small><br><small style="color:#666">' + new Date(o.date).toLocaleString() + '</small></div><span class="order-status ' + o.status + '">' + st + '</span></div><div style="margin:.5rem 0;"><strong>$' + Number(o.total).toFixed(2) + '</strong> | ' + (o.deliveryMode === 'pickup' ? 'Pickup' : 'Delivery') + '</div><div style="display:flex;gap:.5rem;flex-wrap:wrap;"><button class="btn btn-small btn-primary" onclick="viewOrderDetail(\'' + o.id + '\')">Ver</button><button class="btn btn-small btn-warning" onclick="updateOrderStatus(\'' + o.id + '\',\'shipped\')">Enviado</button><button class="btn btn-small btn-success" onclick="updateOrderStatus(\'' + o.id + '\',\'delivered\')">Entregado</button><button class="btn btn-small btn-secondary" onclick="updateOrderStatus(\'' + o.id + '\',\'cancelled\')">Cancelar</button><button class="btn btn-small" style="background:#999;color:white;" onclick="deleteOrder(\'' + o.id + '\')">🗑️ Eliminar</button></div></div>'; }).join(''); }
+document.getElementById('searchOrderCode').addEventListener('input', renderOrders);
+document.getElementById('filterOrderStatus').addEventListener('change', renderOrders);
+window.viewOrderDetail = function(id) { const o = orders.find(x => x.id === id); if (!o) return; const st = { pending: 'Pendiente', shipped: 'En camino', delivered: 'Entregado', cancelled: 'Cancelado' }[o.status] || o.status; const items = o.items || []; document.getElementById('orderDetailContent').innerHTML = '<button class="modal-close" onclick="closeModal(\'orderDetailModal\')">×</button><h2 style="color:#dc3545;">Pedido #' + o.id.slice(-6) + '</h2><div style="margin:1rem 0;"><strong>Cliente:</strong> ' + (o.userName || 'N/A') + '<br><strong>Tel:</strong> ' + (o.userPhone || 'N/A') + '<br><strong>Fecha:</strong> ' + new Date(o.date).toLocaleString() + '<br><strong>Estado:</strong> <span class="order-status ' + o.status + '">' + st + '</span></div><h3 style="margin:1rem 0 .5rem;color:#dc3545;">Productos</h3><div style="background:#f8f8f8;padding:1rem;border-radius:8px;">' + items.map(it => '<div style="padding:.5rem 0;border-bottom:1px solid #eee;">' + it.name + ' x' + it.quantity + ' = $' + (Number(it.price) * it.quantity).toFixed(2) + '</div>').join('') + '</div><div style="margin-top:1rem;padding:1rem;background:#fff5f5;border-radius:8px;"><div style="display:flex;justify-content:space-between;font-size:1.3rem;font-weight:bold;color:#dc3545;"><span>TOTAL:</span><span>$' + Number(o.total).toFixed(2) + '</span></div></div>'; document.getElementById('orderDetailModal').classList.add('active'); };
+window.updateOrderStatus = async function(id, status) { if (!confirm('¿Cambiar a ' + status + '?')) return; try { await db.collection('orders').doc(id).update({ status }); await loadOrders(); await loadDashboard(); alert('✅ Actualizado'); } catch (e) { alert('Error: ' + e.message); } };
+window.deleteOrder = async function(id) { if (!confirm('¿Eliminar permanentemente?')) return; try { await db.collection('orders').doc(id).delete(); await loadOrders(); await loadDashboard(); alert('✅ Eliminado'); } catch (e) { alert('Error: ' + e.message); } };
 
-window.deleteProduct = async function(productId) { if (!confirm('¿Eliminar?')) return; try { await db.collection('products').doc(productId).delete(); await loadProducts(); await loadDashboard(); alert('✅ Eliminado'); } catch (error) { alert('Error: ' + error.message); } };
-        // Orders
-        async function loadOrders() { try { const snapshot = await db.collection('orders').get(); orders = []; snapshot.forEach(docSnap => orders.push({ id: docSnap.id, ...docSnap.data() })); renderOrders(); } catch (error) { console.error('Pedidos:', error); } }
-        function renderOrders() { const list = document.getElementById('ordersList'); const filter = document.getElementById('filterOrderStatus').value; const searchQuery = (document.getElementById('searchOrderCode').value || '').toLowerCase().trim(); let filtered = orders; if (filter) filtered = filtered.filter(o => o.status === filter); if (searchQuery) { filtered = filtered.filter(o => { const code = (o.customerCode || '').toLowerCase(); const name = (o.userName || '').toLowerCase(); const phone = (o.userPhone || '').toLowerCase(); return code.includes(searchQuery) || name.includes(searchQuery) || phone.includes(searchQuery); }); } if (filtered.length === 0) { list.innerHTML = '<p style="text-align:center;color:#666;padding:1rem">Sin pedidos</p>'; return; } list.innerHTML = filtered.sort((a,b) => new Date(b.date) - new Date(a.date)).map(order => { const statusText = { pending: 'Pendiente', shipped: 'En camino', delivered: 'Entregado', cancelled: 'Cancelado' }[order.status] || order.status; return `<div class="order-item"><div class="order-header"><div><strong>#${order.id.slice(-6)}</strong><br><small style="color:#666">${order.userName || 'Cliente'} - ${order.userPhone || 'N/A'}</small><br><small style="color:#666">${new Date(order.date).toLocaleString()}</small>${order.customerCode ? `<br><small style="color:#dc3545;">Código: ${order.customerCode}</small>` : ''}</div><span class="order-status ${order.status}">${statusText}</span></div><div style="margin:0.5rem 0;"><strong>$${Number(order.total).toFixed(2)}</strong> | ${order.deliveryMode === 'pickup' ? 'Pickup' : 'Delivery'}${order.driverName ? `<br><small style="color:#9C27B0;">${order.driverName}</small>` : ''}</div><div style="display:flex; gap:0.5rem; flex-wrap:wrap;"><button class="btn btn-small btn-primary" onclick="viewOrderDetail('${order.id}')">Ver</button><button class="btn btn-small btn-warning" onclick="updateOrderStatus('${order.id}', 'shipped')">Enviado</button><button class="btn btn-small btn-success" onclick="updateOrderStatus('${order.id}', 'delivered')">Entregado</button><button class="btn btn-small btn-secondary" onclick="updateOrderStatus('${order.id}', 'cancelled')">Cancelar</button><button class="btn btn-small" style="background:#999;color:white;" onclick="deleteOrder('${order.id}')">🗑️ Eliminar</button></div></div>`; }).join(''); }
-        document.getElementById('searchOrderCode').addEventListener('input', renderOrders);
-        document.getElementById('filterOrderStatus').addEventListener('change', renderOrders);
-        window.viewOrderDetail = function(orderId) { const order = orders.find(o => o.id === orderId); if (!order) return; const statusText = { pending: 'Pendiente', shipped: 'En camino', delivered: 'Entregado', cancelled: 'Cancelado' }[order.status] || order.status; document.getElementById('orderDetailContent').innerHTML = `<button class="modal-close" onclick="closeModal('orderDetailModal')">×</button><h2 style="color:#dc3545;">Pedido #${order.id.slice(-6)}</h2><div style="margin:1rem 0;"><strong>Cliente:</strong> ${order.userName || 'N/A'}<br><strong>Tel:</strong> ${order.userPhone || 'N/A'}${order.customerCode ? `<br><strong>Código:</strong> ${order.customerCode}` : ''}<br><strong>Fecha:</strong> ${new Date(order.date).toLocaleString()}<br><strong>Estado:</strong> <span class="order-status ${order.status}">${statusText}</span></div><h3 style="margin:1rem 0 0.5rem; color:#dc3545;">Productos</h3><div style="background:#f8f8f8; padding:1rem; border-radius:8px;">${(order.items || []).map(item => `<div style="padding:0.5rem 0; border-bottom:1px solid #eee;">${item.name} x${item.quantity} = $${(Number(item.price) * item.quantity).toFixed(2)}</div>`).join('')}</div><div style="margin-top:1rem; padding:1rem; background:#fff5f5; border-radius:8px;"><div style="display:flex; justify-content:space-between; font-size:1.3rem; font-weight:bold; color:#dc3545;"><span>TOTAL:</span><span>$${Number(order.total).toFixed(2)}</span></div></div><div style="margin-top:1rem; padding:1rem; background:#f8f8f8; border-radius:8px;"><h4 style="margin-bottom:0.5rem; color:#666;">Eliminar pedido permanentemente</h4><button class="btn btn-small" style="background:#999;color:white;" onclick="deleteOrder('${order.id}'); closeModal('orderDetailModal');">🗑️ Eliminar este pedido</button></div>`; document.getElementById('orderDetailModal').classList.add('active'); };
-        window.updateOrderStatus = async function(orderId, status) { if (!confirm(`¿Cambiar a "${status}"?`)) return; try { await db.collection('orders').doc(orderId).update({ status }); await loadOrders(); await loadDashboard(); alert('✅ Actualizado'); } catch (error) { alert('Error: ' + error.message); } };
-        window.deleteOrder = async function(orderId) { if (!confirm('¿Eliminar permanentemente este pedido?')) return; try { await db.collection('orders').doc(orderId).delete(); await loadOrders(); await loadDashboard(); alert('✅ Pedido eliminado'); } catch (error) { alert('Error: ' + error.message); } };
+async function loadDrivers() { try { const s = await db.collection('drivers').get(); drivers = []; s.forEach(d => drivers.push(Object.assign({ id: d.id }, d.data()))); renderDrivers(); } catch (e) { console.error(e); } }
+function renderDrivers() { const list = document.getElementById('driversList'); if (drivers.length === 0) { list.innerHTML = '<p style="text-align:center;color:#666;padding:1rem">Sin domiciliarios</p>'; return; } list.innerHTML = drivers.map(d => '<div class="driver-card"><div class="driver-info"><strong>' + d.name + '</strong><br><small>📞 ' + d.phone + ' | 💰 $' + Number(d.commission).toFixed(2) + '</small></div><button class="btn btn-small btn-secondary" onclick="deleteDriver(\'' + d.id + '\')">Eliminar</button></div>').join(''); }
+window.addDriver = async function() { const n = document.getElementById('driverName').value.trim(); const p = document.getElementById('driverPhone').value.trim(); const c = parseFloat(document.getElementById('driverCommission').value); if (!n || !p || !c) { alert('Completa todos'); return; } try { await db.collection('drivers').add({ name: n, phone: p, commission: c, createdAt: new Date().toISOString() }); document.getElementById('driverName').value = ''; document.getElementById('driverPhone').value = ''; document.getElementById('driverCommission').value = ''; await loadDrivers(); alert('✅ Agregado'); } catch (e) { alert('Error: ' + e.message); } };
+window.deleteDriver = async function(id) { if (!confirm('¿Eliminar?')) return; try { await db.collection('drivers').doc(id).delete(); await loadDrivers(); alert('✅ Eliminado'); } catch (e) { alert('Error: ' + e.message); } };
 
-        // Drivers
-        async function loadDrivers() { try { const snapshot = await db.collection('drivers').get(); drivers = []; snapshot.forEach(docSnap => drivers.push({ id: docSnap.id, ...docSnap.data() })); renderDrivers(); } catch (error) { console.error('Domiciliarios:', error); } }
-        function renderDrivers() { const list = document.getElementById('driversList'); if (drivers.length === 0) { list.innerHTML = '<p style="text-align:center;color:#666;padding:1rem">Sin domiciliarios</p>'; return; } list.innerHTML = drivers.map(driver => { const todayOrders = orders.filter(o => o.driverId === driver.id && new Date(o.date).toDateString() === new Date().toDateString()); const todayEarnings = todayOrders.reduce((sum, o) => sum + (Number(o.driverCommission) || 0), 0); return `<div class="driver-card"><div class="driver-info"><strong>${driver.name}</strong><br><small>📞 ${driver.phone} | 💰 $${Number(driver.commission).toFixed(2)}</small><br><small style="color:#28a745;">Hoy: ${todayOrders.length} | $${todayEarnings.toFixed(2)}</small></div><button class="btn btn-small btn-secondary" onclick="deleteDriver('${driver.id}')">Eliminar</button></div>`; }).join(''); }
-        window.addDriver = async function() { const name = document.getElementById('driverName').value.trim(); const phone = document.getElementById('driverPhone').value.trim(); const commission = parseFloat(document.getElementById('driverCommission').value); if (!name || !phone || !commission) { alert('Completa todos'); return; } try { await db.collection('drivers').add({ name, phone, commission, createdAt: new Date().toISOString() }); document.getElementById('driverName').value = ''; document.getElementById('driverPhone').value = ''; document.getElementById('driverCommission').value = ''; await loadDrivers(); alert('✅ Agregado'); } catch (error) { alert('Error: ' + error.message); } };
-        window.deleteDriver = async function(driverId) { if (!confirm('¿Eliminar?')) return; try { await db.collection('drivers').doc(driverId).delete(); await loadDrivers(); alert('✅ Eliminado'); } catch (error) { alert('Error: ' + error.message); } };
+async function loadCustomers() { try { const s = await db.collection('customers').get(); customers = []; s.forEach(d => customers.push(Object.assign({ id: d.id }, d.data()))); renderCustomers(); } catch (e) { console.error(e); } }
+function renderCustomers(filter) { const tb = document.getElementById('customersList'); filter = filter || ''; let filtered = customers; if (filter) { const q = filter.toLowerCase(); filtered = customers.filter(c => (c.name || '').toLowerCase().includes(q) || (c.phone || '').includes(q) || (c.customerCode || '').toLowerCase().includes(q)); } if (filtered.length === 0) { tb.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#666;">Sin clientes</td></tr>'; return; } const cm = {}; orders.forEach(o => { const k = o.userPhone || o.userName; if (!k) return; if (!cm[k]) cm[k] = { name: o.userName || 'N/A', phone: o.userPhone || 'N/A', customerCode: o.customerCode || '', orders: 0, total: 0 }; cm[k].orders++; cm[k].total += Number(o.total) || 0; }); tb.innerHTML = filtered.map(c => { const d = cm[c.phone] || cm[c.name] || { orders: 0, total: 0, customerCode: c.customerCode || '' }; return '<tr><td>' + (c.customerCode || d.customerCode || '-') + '</td><td>' + c.name + '</td><td>' + c.phone + '</td><td>' + d.orders + '</td><td>$' + d.total.toFixed(2) + '</td></tr>'; }).join(''); }
+document.getElementById('searchCustomer').addEventListener('input', function(e) { renderCustomers(e.target.value); });
 
-        // Customers
-        async function loadCustomers() { try { const customersSnap = await db.collection('customers').get(); customers = []; customersSnap.forEach(docSnap => customers.push({ id: docSnap.id, ...docSnap.data() })); renderCustomers(); } catch (error) { console.error('Clientes:', error); } }
-        function renderCustomers(filter = '') { const tbody = document.getElementById('customersList'); let filtered = customers; if (filter) { const q = filter.toLowerCase(); filtered = customers.filter(c => (c.name || '').toLowerCase().includes(q) || (c.phone || '').includes(q) || (c.customerCode || '').toLowerCase().includes(q)); } if (filtered.length === 0) { tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#666;">Sin clientes</td></tr>'; return; } const customerMap = {}; orders.forEach(order => { const key = order.userPhone || order.userName; if (!key) return; if (!customerMap[key]) customerMap[key] = { name: order.userName || 'N/A', phone: order.userPhone || 'N/A', customerCode: order.customerCode || '', orders: 0, total: 0 }; customerMap[key].orders++; customerMap[key].total += Number(order.total) || 0; }); tbody.innerHTML = filtered.map(c => { const data = customerMap[c.phone] || customerMap[c.name] || { orders: 0, total: 0, customerCode: c.customerCode || '' }; return `<tr><td>${c.customerCode || data.customerCode || '-'}</td><td>${c.name}</td><td>${c.phone}</td><td>${data.orders}</td><td>$${data.total.toFixed(2)}</td></tr>`; }).join(''); }
-        document.getElementById('searchCustomer').addEventListener('input', function(e) { renderCustomers(e.target.value); });
+async function loadReviews() { try { const s = await db.collection('reviews').get(); reviews = []; s.forEach(d => reviews.push(Object.assign({ id: d.id }, d.data()))); renderReviews(); } catch (e) { console.error(e); } }
+function renderReviews() { const list = document.getElementById('reviewsList'); if (reviews.length === 0) { list.innerHTML = '<p style="text-align:center;color:#666;padding:1rem">Sin reseñas</p>'; return; } list.innerHTML = reviews.sort((a, b) => new Date(b.date) - new Date(a.date)).map(r => { const p = products.find(x => x.id === r.productId); return '<div class="review-item" style="background:#f8f8f8;padding:1rem;border-radius:8px;margin-bottom:.8rem;"><strong>' + r.userName + '</strong> <span style="color:#666;font-size:.85rem;">' + new Date(r.date).toLocaleDateString() + '</span><div style="color:#FFC107;">' + '★'.repeat(r.rating) + '☆'.repeat(5 - r.rating) + '</div><div style="margin:.5rem 0;">' + r.text + '</div><div style="font-size:.85rem;color:#666;">Producto: ' + (p ? p.name : 'N/A') + '</div><button class="btn btn-small btn-secondary" onclick="deleteReview(\'' + r.id + '\')" style="margin-top:.5rem;">Eliminar</button></div>'; }).join(''); }
+window.deleteReview = async function(id) { if (!confirm('¿Eliminar?')) return; try { await db.collection('reviews').doc(id).delete(); await loadReviews(); alert('✅ Eliminado'); } catch (e) { alert('Error: ' + e.message); } };
 
-        // Reviews
-        async function loadReviews() { try { const snapshot = await db.collection('reviews').get(); reviews = []; snapshot.forEach(docSnap => reviews.push({ id: docSnap.id, ...docSnap.data() })); renderReviews(); } catch (error) { console.error('Reseñas:', error); } }
-        function renderReviews() { const list = document.getElementById('reviewsList'); if (reviews.length === 0) { list.innerHTML = '<p style="text-align:center;color:#666;padding:1rem">Sin reseñas</p>'; return; } list.innerHTML = reviews.sort((a,b) => new Date(b.date) - new Date(a.date)).map(review => { const product = products.find(p => p.id === review.productId); return `<div class="review-item"><div class="review-header"><strong>${review.userName}</strong><span style="color:#666;">${new Date(review.date).toLocaleDateString()}</span></div><div style="color:#FFC107;">${'★'.repeat(review.rating)}${'☆'.repeat(5-review.rating)}</div><div style="margin:0.5rem 0;">${review.text}</div><div style="font-size:0.85rem; color:#666;">Producto: ${product ? product.name : 'N/A'}</div><button class="btn btn-small btn-secondary" onclick="deleteReview('${review.id}')" style="margin-top:0.5rem;">Eliminar</button></div>`; }).join(''); }
-        window.deleteReview = async function(reviewId) { if (!confirm('¿Eliminar?')) return; try { await db.collection('reviews').doc(reviewId).delete(); await loadReviews(); alert('✅ Eliminado'); } catch (error) { alert('Error: ' + error.message); } };
+async function loadCoupons() { try { const s = await db.collection('coupons').get(); coupons = []; s.forEach(d => coupons.push(Object.assign({ id: d.id }, d.data()))); renderCoupons(); } catch (e) { console.error(e); } }
+function renderCoupons() { const list = document.getElementById('couponsList'); if (coupons.length === 0) { list.innerHTML = '<p style="text-align:center;color:#666;padding:1rem">Sin cupones</p>'; return; } list.innerHTML = coupons.map(c => '<div class="admin-item"><div class="admin-info"><div><strong>' + c.code + '</strong><br><small style="color:#666;">' + c.discount + '% | Usos: ' + (c.uses || 0) + '/' + (c.maxUses || '∞') + '</small></div></div><button class="btn btn-small btn-secondary" onclick="deleteCoupon(\'' + c.id + '\')">Eliminar</button></div>').join(''); }
+window.createCoupon = async function() { const code = document.getElementById('couponCode').value.trim().toUpperCase(); const d = parseInt(document.getElementById('couponDiscount').value); const m = parseInt(document.getElementById('couponMaxUses').value); if (!code || !d || !m) { alert('Completa todos'); return; } try { await db.collection('coupons').add({ code, discount: d, maxUses: m, uses: 0, createdAt: new Date().toISOString() }); document.getElementById('couponCode').value = ''; document.getElementById('couponDiscount').value = ''; document.getElementById('couponMaxUses').value = ''; await loadCoupons(); alert('✅ Creado'); } catch (e) { alert('Error: ' + e.message); } };
+window.deleteCoupon = async function(id) { if (!confirm('¿Eliminar?')) return; try { await db.collection('coupons').doc(id).delete(); await loadCoupons(); alert('✅ Eliminado'); } catch (e) { alert('Error: ' + e.message); } };
 
-        // Coupons
-        async function loadCoupons() { try { const snapshot = await db.collection('coupons').get(); coupons = []; snapshot.forEach(docSnap => coupons.push({ id: docSnap.id, ...docSnap.data() })); renderCoupons(); } catch (error) { console.error('Cupones:', error); } }
-        function renderCoupons() { const list = document.getElementById('couponsList'); if (coupons.length === 0) { list.innerHTML = '<p style="text-align:center;color:#666;padding:1rem">Sin cupones</p>'; return; } list.innerHTML = coupons.map(coupon => `<div class="admin-item"><div class="admin-info"><div><strong>${coupon.code}</strong><br><small style="color:#666;">${coupon.discount}% | Usos: ${coupon.uses || 0}/${coupon.maxUses || '∞'}</small></div></div><button class="btn btn-small btn-secondary" onclick="deleteCoupon('${coupon.id}')">Eliminar</button></div>`).join(''); }
-        window.createCoupon = async function() { const code = document.getElementById('couponCode').value.trim().toUpperCase(); const discount = parseInt(document.getElementById('couponDiscount').value); const maxUses = parseInt(document.getElementById('couponMaxUses').value); if (!code || !discount || !maxUses) { alert('Completa todos'); return; } try { await db.collection('coupons').add({ code, discount, maxUses, uses: 0, createdAt: new Date().toISOString() }); document.getElementById('couponCode').value = ''; document.getElementById('couponDiscount').value = ''; document.getElementById('couponMaxUses').value = ''; await loadCoupons(); alert('✅ Creado'); } catch (error) { alert('Error: ' + error.message); } };
-        window.deleteCoupon = async function(couponId) { if (!confirm('¿Eliminar?')) return; try { await db.collection('coupons').doc(couponId).delete(); await loadCoupons(); alert('✅ Eliminado'); } catch (error) { alert('Error: ' + error.message); } };
+async function loadDeliveryZones() { try { const s = await db.collection('deliveryZones').get(); deliveryZones = []; s.forEach(d => deliveryZones.push(Object.assign({ id: d.id }, d.data()))); renderDeliveryZones(); } catch (e) { console.error(e); } }
+function renderDeliveryZones() { const list = document.getElementById('deliveryZonesList'); if (deliveryZones.length === 0) { list.innerHTML = '<p style="text-align:center;color:#666;padding:1rem">Sin zonas</p>'; return; } list.innerHTML = deliveryZones.map(z => '<div class="admin-item"><div class="admin-info"><div><strong>' + z.name + '</strong><br><small style="color:#666;">$' + Number(z.cost).toFixed(2) + ' | ' + (z.time || 'N/A') + '</small></div></div><button class="btn btn-small btn-secondary" onclick="deleteDeliveryZone(\'' + z.id + '\')">Eliminar</button></div>').join(''); }
+window.addDeliveryZone = async function() { const n = document.getElementById('zoneName').value.trim(); const c = parseFloat(document.getElementById('zoneCost').value); const t = document.getElementById('zoneTime').value.trim(); if (!n || !c) { alert('Completa nombre y costo'); return; } try { await db.collection('deliveryZones').add({ name: n, cost: c, time: t, createdAt: new Date().toISOString() }); document.getElementById('zoneName').value = ''; document.getElementById('zoneCost').value = ''; document.getElementById('zoneTime').value = ''; await loadDeliveryZones(); alert('✅ Agregado'); } catch (e) { alert('Error: ' + e.message); } };
+window.deleteDeliveryZone = async function(id) { if (!confirm('¿Eliminar?')) return; try { await db.collection('deliveryZones').doc(id).delete(); await loadDeliveryZones(); alert('✅ Eliminado'); } catch (e) { alert('Error: ' + e.message); } };
 
-        // Delivery Zones
-        async function loadDeliveryZones() { try { const snapshot = await db.collection('deliveryZones').get(); deliveryZones = []; snapshot.forEach(docSnap => deliveryZones.push({ id: docSnap.id, ...docSnap.data() })); renderDeliveryZones(); } catch (error) { console.error('Zonas:', error); } }
-        function renderDeliveryZones() { const list = document.getElementById('deliveryZonesList'); if (deliveryZones.length === 0) { list.innerHTML = '<p style="text-align:center;color:#666;padding:1rem">Sin zonas</p>'; return; } list.innerHTML = deliveryZones.map(zone => `<div class="admin-item"><div class="admin-info"><div><strong>${zone.name}</strong><br><small style="color:#666;">$${Number(zone.cost).toFixed(2)} | ${zone.time || 'N/A'}</small></div></div><button class="btn btn-small btn-secondary" onclick="deleteDeliveryZone('${zone.id}')">Eliminar</button></div>`).join(''); }
-        window.addDeliveryZone = async function() { const name = document.getElementById('zoneName').value.trim(); const cost = parseFloat(document.getElementById('zoneCost').value); const time = document.getElementById('zoneTime').value.trim(); if (!name || !cost) { alert('Completa nombre y costo'); return; } try { await db.collection('deliveryZones').add({ name, cost, time, createdAt: new Date().toISOString() }); document.getElementById('zoneName').value = ''; document.getElementById('zoneCost').value = ''; document.getElementById('zoneTime').value = ''; await loadDeliveryZones(); alert('✅ Agregado'); } catch (error) { alert('Error: ' + error.message); } };
-        window.deleteDeliveryZone = async function(zoneId) { if (!confirm('¿Eliminar?')) return; try { await db.collection('deliveryZones').doc(zoneId).delete(); await loadDeliveryZones(); alert('✅ Eliminado'); } catch (error) { alert('Error: ' + error.message); } };
+async function loadDashboard() { const p = orders.filter(o => o.status === 'pending').length; document.getElementById('statProducts').textContent = products.length; document.getElementById('statOrdersPending').textContent = p; document.getElementById('statCustomers').textContent = customers.length; }
+</script>
 
-        // Dashboard
-        async function loadDashboard() {
-            const ordersPending = orders.filter(o => o.status === 'pending').length;
-            document.getElementById('statProducts').textContent = products.length;
-            document.getElementById('statOrdersPending').textContent = ordersPending;
-            document.getElementById('statCustomers').textContent = customers.length;
-        }
-    </script>
-
-    <script type="module">
-        import { loginAdmin, logoutAdmin, requireAdmin } from './assets/js/admin/auth.js';
-
-        document.getElementById('adminLoginForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const email = document.getElementById('adminEmail').value.trim();
-            const password = document.getElementById('adminPassword').value;
-            const errDiv = document.getElementById('loginError');
-            errDiv.textContent = '';
-            try {
-                await loginAdmin(email, password);
-            } catch (err) {
-                console.error(err);
-                if (err.code === 'auth/invalid-credential' || err.code === 'auth/wrong-password' || err.code === 'auth/user-not-found') {
-                    errDiv.textContent = 'Correo o contraseña incorrectos.';
-                } else if (err.code === 'not-admin') {
-                    errDiv.textContent = 'Esta cuenta no tiene permisos de administrador.';
-                } else {
-                    errDiv.textContent = 'Error al iniciar sesión. Intenta de nuevo.';
-                }
-            }
-        });
-
-        window.logoutAdmin = async () => {
-            await logoutAdmin();
-        };
-
-        requireAdmin(async (user) => {
-            document.getElementById('loginScreen').style.display = 'none';
-            document.getElementById('adminPanel').classList.remove('hidden');
-            document.getElementById('adminPanel').style.display = 'flex';
-            document.getElementById('adminEmail').value = '';
-            document.getElementById('adminPassword').value = '';
-            console.log('Admin autenticado:', user.email);
-            if (typeof loadAll === 'function') {
-                loadAll();
-            }
-        });
-    </script>
+<script type="module">
+import { loginAdmin, logoutAdmin, setupAuthGuard } from './assets/js/admin/auth.js';
+console.log('[ADMIN] Módulo cargado');
+const form = document.getElementById('adminLoginForm');
+const errDiv = document.getElementById('loginError');
+if (form) {
+form.addEventListener('submit', async (e) => {
+e.preventDefault();
+console.log('[ADMIN] Submit capturado');
+const email = document.getElementById('adminEmail').value.trim();
+const password = document.getElementById('adminPassword').value;
+errDiv.style.color = '#666';
+errDiv.textContent = 'Verificando...';
+try {
+await loginAdmin(email, password);
+console.log('[ADMIN] Login exitoso');
+errDiv.textContent = '';
+} catch (err) {
+console.error('[ADMIN] Error:', err);
+errDiv.style.color = '#dc3545';
+if (err.code === 'auth/invalid-credential' || err.code === 'auth/wrong-password' || err.code === 'auth/user-not-found') errDiv.textContent = 'Correo o contraseña incorrectos.';
+else if (err.code === 'not-admin') errDiv.textContent = 'Esta cuenta no es administrador.';
+else if (err.code === 'auth/network-request-failed') errDiv.textContent = 'Sin conexión.';
+else if (err.code === 'auth/too-many-requests') errDiv.textContent = 'Demasiados intentos. Espera.';
+else errDiv.textContent = 'Error: ' + (err.message || 'Intenta de nuevo.');
+}
+});
+} else { console.error('[ADMIN] No hay formulario'); }
+window.logoutAdmin = async () => { await logoutAdmin(); };
+let yaCargado = false;
+setupAuthGuard(async (user) => {
+console.log('[ADMIN] Autenticado:', user.email);
+document.getElementById('adminEmail').value = '';
+document.getElementById('adminPassword').value = '';
+if (!yaCargado) {
+yaCargado = true;
+if (typeof loadAll === 'function') {
+try { await loadAll(); } catch (e) { console.error('[ADMIN] loadAll error:', e); }
+}
+}
+});
+</script>
 </body>
 </html>
