@@ -22,7 +22,6 @@ export async function logoutAdmin() {
   await auth.signOut();
 }
 
-// Guard: NO redirige. Solo muestra login o panel según el estado.
 export function setupAuthGuard(onLogin) {
   auth.onAuthStateChanged(async (user) => {
     const loginScreen = document.getElementById('loginScreen');
