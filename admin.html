@@ -236,7 +236,6 @@ body{flex-direction:column}
 <div class="stat-card"><div class="stat-value" id="statCustomers">0</div><div class="stat-label">Clientes</div></div>
 </div>
 </div>
-
 <div class="admin-section" id="section-orders">
 <h2 class="section-title">Pedidos</h2>
 <div class="admin-card">
@@ -300,7 +299,6 @@ body{flex-direction:column}
 </div>
 <div class="admin-card"><h3>Marcas y Modelos</h3><div id="vehiclesList"></div></div>
 </div>
-
 <div class="admin-section" id="section-brands">
 <h2 class="section-title">Marcas de Repuestos</h2>
 <div class="admin-card"><div id="adminBrandsList"></div></div>
@@ -381,6 +379,7 @@ body{flex-direction:column}
 </div>
 </div>
 </div>
+
 <div class="modal" id="productModal">
 <div class="modal-content">
 <button class="modal-close" onclick="closeModal('productModal')">×</button>
@@ -480,7 +479,6 @@ body{flex-direction:column}
 <div class="modal" id="orderDetailModal">
 <div class="modal-content" id="orderDetailContent"></div>
 </div>
-
 <script>
 window.showSection = function(sectionId, event) {
 document.querySelectorAll('.admin-section').forEach(s => s.classList.remove('active'));
@@ -869,6 +867,7 @@ alert('✅ Producto guardado');
 } catch (e) { alert('Error: ' + e.message); }
 };
 window.deleteProduct = async function(id) { if (!confirm('¿Eliminar?')) return; try { await db.collection('products').doc(id).delete(); await loadProducts(); await loadDashboard(); alert('✅ Eliminado'); } catch (e) { alert('Error: ' + e.message); } };
+
 async function loadOrders() { try { const s = await db.collection('orders').get(); orders = []; s.forEach(d => orders.push(Object.assign({ id: d.id }, d.data()))); renderOrders(); } catch (e) { console.error(e); } }
 function renderOrders() { const list = document.getElementById('ordersList'); const filter = document.getElementById('filterOrderStatus').value; const sq = (document.getElementById('searchOrderCode').value || '').toLowerCase().trim(); let filtered = orders; if (filter) filtered = filtered.filter(o => o.status === filter); if (sq) filtered = filtered.filter(o => { const c = (o.customerCode || '').toLowerCase(); const n = (o.userName || '').toLowerCase(); const p = (o.userPhone || '').toLowerCase(); return c.includes(sq) || n.includes(sq) || p.includes(sq); }); if (filtered.length === 0) { list.innerHTML = '<p style="text-align:center;color:#666;padding:1rem">Sin pedidos</p>'; return; } list.innerHTML = filtered.sort((a, b) => new Date(b.date) - new Date(a.date)).map(o => { const st = { pending: 'Pendiente', shipped: 'En camino', delivered: 'Entregado', cancelled: 'Cancelado' }[o.status] || o.status; return '<div class="order-item"><div class="order-header"><div><strong>#' + o.id.slice(-6) + '</strong><br><small style="color:#666">' + (o.userName || 'Cliente') + ' - ' + (o.userPhone || 'N/A') + '</small><br><small style="color:#666">' + new Date(o.date).toLocaleString() + '</small></div><span class="order-status ' + o.status + '">' + st + '</span></div><div style="margin:.5rem 0;"><strong>$' + Number(o.total).toFixed(2) + '</strong> | ' + (o.deliveryMode === 'pickup' ? 'Pickup' : 'Delivery') + '</div><div style="display:flex;gap:.5rem;flex-wrap:wrap;"><button class="btn btn-small btn-primary" onclick="viewOrderDetail(\'' + o.id + '\')">Ver</button><button class="btn btn-small btn-warning" onclick="updateOrderStatus(\'' + o.id + '\',\'shipped\')">Enviado</button><button class="btn btn-small btn-success" onclick="updateOrderStatus(\'' + o.id + '\',\'delivered\')">Entregado</button><button class="btn btn-small btn-secondary" onclick="updateOrderStatus(\'' + o.id + '\',\'cancelled\')">Cancelar</button><button class="btn btn-small" style="background:#999;color:white;" onclick="deleteOrder(\'' + o.id + '\')">🗑️ Eliminar</button></div></div>'; }).join(''); }
 document.getElementById('searchOrderCode').addEventListener('input', renderOrders);
@@ -887,63 +886,4 @@ function renderCustomers(filter) { const tb = document.getElementById('customers
 document.getElementById('searchCustomer').addEventListener('input', function(e) { renderCustomers(e.target.value); });
 
 async function loadReviews() { try { const s = await db.collection('reviews').get(); reviews = []; s.forEach(d => reviews.push(Object.assign({ id: d.id }, d.data()))); renderReviews(); } catch (e) { console.error(e); } }
-function renderReviews() { const list = document.getElementById('reviewsList'); if (reviews.length === 0) { list.innerHTML = '<p style="text-align:center;color:#666;padding:1rem">Sin reseñas</p>'; return; } list.innerHTML = reviews.sort((a, b) => new Date(b.date) - new Date(a.date)).map(r => { const p = products.find(x => x.id === r.productId); return '<div class="review-item" style="background:#f8f8f8;padding:1rem;border-radius:8px;margin-bottom:.8rem;"><strong>' + r.userName + '</strong> <span style="color:#666;font-size:.85rem;">' + new Date(r.date).toLocaleDateString() + '</span><div style="color:#FFC107;">' + '★'.repeat(r.rating) + '☆'.repeat(5 - r.rating) + '</div><div style="margin:.5rem 0;">' + r.text + '</div><div style="font-size:.85rem;color:#666;">Producto: ' + (p ? p.name : 'N/A') + '</div><button class="btn btn-small btn-secondary" onclick="deleteReview(\'' + r.id + '\')" style="margin-top:.5rem;">Eliminar</button></div>'; }).join(''); }
-window.deleteReview = async function(id) { if (!confirm('¿Eliminar?')) return; try { await db.collection('reviews').doc(id).delete(); await loadReviews(); alert('✅ Eliminado'); } catch (e) { alert('Error: ' + e.message); } };
-
-async function loadCoupons() { try { const s = await db.collection('coupons').get(); coupons = []; s.forEach(d => coupons.push(Object.assign({ id: d.id }, d.data()))); renderCoupons(); } catch (e) { console.error(e); } }
-function renderCoupons() { const list = document.getElementById('couponsList'); if (coupons.length === 0) { list.innerHTML = '<p style="text-align:center;color:#666;padding:1rem">Sin cupones</p>'; return; } list.innerHTML = coupons.map(c => '<div class="admin-item"><div class="admin-info"><div><strong>' + c.code + '</strong><br><small style="color:#666;">' + c.discount + '% | Usos: ' + (c.uses || 0) + '/' + (c.maxUses || '∞') + '</small></div></div><button class="btn btn-small btn-secondary" onclick="deleteCoupon(\'' + c.id + '\')">Eliminar</button></div>').join(''); }
-window.createCoupon = async function() { const code = document.getElementById('couponCode').value.trim().toUpperCase(); const d = parseInt(document.getElementById('couponDiscount').value); const m = parseInt(document.getElementById('couponMaxUses').value); if (!code || !d || !m) { alert('Completa todos'); return; } try { await db.collection('coupons').add({ code, discount: d, maxUses: m, uses: 0, createdAt: new Date().toISOString() }); document.getElementById('couponCode').value = ''; document.getElementById('couponDiscount').value = ''; document.getElementById('couponMaxUses').value = ''; await loadCoupons(); alert('✅ Creado'); } catch (e) { alert('Error: ' + e.message); } };
-window.deleteCoupon = async function(id) { if (!confirm('¿Eliminar?')) return; try { await db.collection('coupons').doc(id).delete(); await loadCoupons(); alert('✅ Eliminado'); } catch (e) { alert('Error: ' + e.message); } };
-
-async function loadDeliveryZones() { try { const s = await db.collection('deliveryZones').get(); deliveryZones = []; s.forEach(d => deliveryZones.push(Object.assign({ id: d.id }, d.data()))); renderDeliveryZones(); } catch (e) { console.error(e); } }
-function renderDeliveryZones() { const list = document.getElementById('deliveryZonesList'); if (deliveryZones.length === 0) { list.innerHTML = '<p style="text-align:center;color:#666;padding:1rem">Sin zonas</p>'; return; } list.innerHTML = deliveryZones.map(z => '<div class="admin-item"><div class="admin-info"><div><strong>' + z.name + '</strong><br><small style="color:#666;">$' + Number(z.cost).toFixed(2) + ' | ' + (z.time || 'N/A') + '</small></div></div><button class="btn btn-small btn-secondary" onclick="deleteDeliveryZone(\'' + z.id + '\')">Eliminar</button></div>').join(''); }
-window.addDeliveryZone = async function() { const n = document.getElementById('zoneName').value.trim(); const c = parseFloat(document.getElementById('zoneCost').value); const t = document.getElementById('zoneTime').value.trim(); if (!n || !c) { alert('Completa nombre y costo'); return; } try { await db.collection('deliveryZones').add({ name: n, cost: c, time: t, createdAt: new Date().toISOString() }); document.getElementById('zoneName').value = ''; document.getElementById('zoneCost').value = ''; document.getElementById('zoneTime').value = ''; await loadDeliveryZones(); alert('✅ Agregado'); } catch (e) { alert('Error: ' + e.message); } };
-window.deleteDeliveryZone = async function(id) { if (!confirm('¿Eliminar?')) return; try { await db.collection('deliveryZones').doc(id).delete(); await loadDeliveryZones(); alert('✅ Eliminado'); } catch (e) { alert('Error: ' + e.message); } };
-
-async function loadDashboard() { const p = orders.filter(o => o.status === 'pending').length; document.getElementById('statProducts').textContent = products.length; document.getElementById('statOrdersPending').textContent = p; document.getElementById('statCustomers').textContent = customers.length; }
-</script>
-
-<script type="module">
-import { loginAdmin, logoutAdmin, setupAuthGuard } from './assets/js/admin/auth.js';
-console.log('[ADMIN] Módulo cargado');
-const form = document.getElementById('adminLoginForm');
-const errDiv = document.getElementById('loginError');
-if (form) {
-form.addEventListener('submit', async (e) => {
-e.preventDefault();
-console.log('[ADMIN] Submit capturado');
-const email = document.getElementById('adminEmail').value.trim();
-const password = document.getElementById('adminPassword').value;
-errDiv.style.color = '#666';
-errDiv.textContent = 'Verificando...';
-try {
-await loginAdmin(email, password);
-console.log('[ADMIN] Login exitoso');
-errDiv.textContent = '';
-} catch (err) {
-console.error('[ADMIN] Error:', err);
-errDiv.style.color = '#dc3545';
-if (err.code === 'auth/invalid-credential' || err.code === 'auth/wrong-password' || err.code === 'auth/user-not-found') errDiv.textContent = 'Correo o contraseña incorrectos.';
-else if (err.code === 'not-admin') errDiv.textContent = 'Esta cuenta no es administrador.';
-else if (err.code === 'auth/network-request-failed') errDiv.textContent = 'Sin conexión.';
-else if (err.code === 'auth/too-many-requests') errDiv.textContent = 'Demasiados intentos. Espera.';
-else errDiv.textContent = 'Error: ' + (err.message || 'Intenta de nuevo.');
-}
-});
-} else { console.error('[ADMIN] No hay formulario'); }
-window.logoutAdmin = async () => { await logoutAdmin(); };
-let yaCargado = false;
-setupAuthGuard(async (user) => {
-console.log('[ADMIN] Autenticado:', user.email);
-document.getElementById('adminEmail').value = '';
-document.getElementById('adminPassword').value = '';
-if (!yaCargado) {
-yaCargado = true;
-if (typeof loadAll === 'function') {
-try { await loadAll(); } catch (e) { console.error('[ADMIN] loadAll error:', e); }
-}
-}
-});
-</script>
-</body>
-</html>
+function renderReviews() { const list = document.getElementById('reviewsList'); if (reviews.length === 0) { list.innerHTML = '<p style="
