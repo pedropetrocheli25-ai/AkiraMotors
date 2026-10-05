@@ -1,4 +1,3 @@
-// assets/js/admin/auth.js
 import { auth, db } from '../firebase.js';
 
 async function isAdminUser(uid) {
@@ -26,13 +25,11 @@ export function setupAuthGuard(onLogin) {
   auth.onAuthStateChanged(async (user) => {
     const loginScreen = document.getElementById('loginScreen');
     const adminPanel = document.getElementById('adminPanel');
-
     if (!user) {
       if (loginScreen) loginScreen.style.display = 'block';
       if (adminPanel) adminPanel.classList.add('hidden');
       return;
     }
-
     const ok = await isAdminUser(user.uid);
     if (!ok) {
       await auth.signOut();
@@ -40,7 +37,6 @@ export function setupAuthGuard(onLogin) {
       if (adminPanel) adminPanel.classList.add('hidden');
       return;
     }
-
     if (loginScreen) loginScreen.style.display = 'none';
     if (adminPanel) {
       adminPanel.classList.remove('hidden');
@@ -50,5 +46,4 @@ export function setupAuthGuard(onLogin) {
   });
 }
 
-// Alias para compatibilidad con versiones anteriores
 export const requireAdmin = setupAuthGuard;
