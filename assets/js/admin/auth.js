@@ -1,17 +1,30 @@
 import { auth, db } from '../firebase.js';
 
 async function isAdminUser(uid) {
-  const snap = await db.collection('admins').doc(uid).get();
-  return snap.exists && snap.data().isAdmin === true;
+  try {
+    const snap = await db.collection('admins').doc(uid).get();
+    if (!snap.exists) return { ok: false, reason: 'no-doc', uid };
+    const data = snap.data();
+    const flag = data.isAdmin;
+    const isTrue = flag === true || flag === 'true';
+    return { ok: isTrue, reason: isTrue ? 'ok' : 'flag-false', uid, flag };
+  } catch (e) {
+    return { ok: false, reason: 'query-error', uid, error: e.message };
+  }
 }
 
 export async function loginAdmin(email, password) {
   const cred = await auth.signInWithEmailAndPassword(email, password);
-  const ok = await isAdminUser(cred.user.uid);
-  if (!ok) {
+  const uid = cred.user.uid;
+  const check = await isAdminUser(uid);
+  if (!check.ok) {
     await auth.signOut();
-    const err = new Error('Esta cuenta no tiene permisos.');
+    const err = new Error('No autorizado');
     err.code = 'not-admin';
+    err.uid = uid;
+    err.reason = check.reason;
+    err.flag = check.flag;
+    err.error = check.error;
     throw err;
   }
   return cred.user;
@@ -30,8 +43,8 @@ export function setupAuthGuard(onLogin) {
       if (adminPanel) adminPanel.classList.add('hidden');
       return;
     }
-    const ok = await isAdminUser(user.uid);
-    if (!ok) {
+    const check = await isAdminUser(user.uid);
+    if (!check.ok) {
       await auth.signOut();
       if (loginScreen) loginScreen.style.display = 'block';
       if (adminPanel) adminPanel.classList.add('hidden');
