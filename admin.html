@@ -492,11 +492,9 @@ if (sectionId === 'drivers' && typeof loadDrivers === 'function') loadDrivers();
 if (sectionId === 'drawer' && typeof renderDrawerEditor === 'function') renderDrawerEditor();
 if (sectionId === 'categories' && typeof renderCategoriesEditor === 'function') renderCategoriesEditor();
 };
-
 window.refreshPreview = function() {
 document.getElementById('previewFrame').src = 'index.html?t=' + Date.now();
 };
-
 window.closeModal = function(id) { document.getElementById(id).classList.remove('active'); };
 </script>
 
@@ -506,14 +504,13 @@ window.closeModal = function(id) { document.getElementById(id).classList.remove(
 
 <script>
 const firebaseConfig = {
-apiKey: "AIzaSyAU77yzh7Tm3RPuuvVcxlCt26u2LjmsBK0",
+apiKey: "AIzaSyAU77yzh7Tm3RPuuvVcxlCt26u2ljmsBK0",
 authDomain: "akiramotors-cc498.firebaseapp.com",
 projectId: "akiramotors-cc498",
 storageBucket: "akiramotors-cc498.firebasestorage.app",
 messagingSenderId: "657064466850",
 appId: "1:657064466850:web:2d1340db67f790d11ebafb"
 };
-
 if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
@@ -754,6 +751,7 @@ renderCategoriesEditor();
 alert('✅ Eliminada');
 } catch (error) { alert('Error: ' + error.message); }
 };
+
 async function loadBcvRate() { try { const r = await db.collection('settings').doc('bcvRate').get(); if (r.exists) bcvRate = r.data().value; } catch (e) { console.log(e); } }
 async function loadPickupMaps() { try { const p = await db.collection('settings').doc('pickupMaps').get(); if (p.exists) document.getElementById('pickupMapsInput').value = p.data().url || ''; } catch (e) { console.log(e); } }
 window.updatePickupMaps = async function() { const url = document.getElementById('pickupMapsInput').value.trim(); if (!url) { alert('Ingresa link'); return; } try { await db.collection('settings').doc('pickupMaps').set({ url: url }); alert('✅ Guardado'); } catch (e) { alert('Error: ' + e.message); } };
