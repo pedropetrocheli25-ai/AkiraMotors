@@ -6,7 +6,11 @@
   content="width=device-width, initial-scale=1.0">
 <title>Akira Motors - Repuestos Automotrices</title>
 <style>
-* { margin: 0; padding: 0; box-sizing: border-box; }
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 body {
   font-family: 'Segoe UI', Tahoma, sans-serif;
   background: #f5f5f5;
@@ -1105,282 +1109,266 @@ footer {
 </style>
 </head>
 <body>
-
 <div id="errorBanner" style="display:none;
   position:fixed;top:0;left:0;right:0;
   background:#dc3545;color:white;padding:1rem;
   z-index:10000;font-family:monospace;
-  font-size:0.8rem;text-align:center;
+  font-size:0.85rem;text-align:center;
   word-break:break-word;"></div>
-
 <script>
 window.addEventListener('error', function(e) {
   var el = document.getElementById('errorBanner');
   if (el) {
     el.style.display = 'block';
-    el.style.background = '#dc3545';
     el.textContent = 'ERROR: ' +
-      (e.message || 'desconocido') +
-      ' | ' + (e.filename || '') +
-      ':' + (e.lineno || '');
+      (e.message || 'desconocido') + ' | ' +
+      (e.filename || '') + ':' + (e.lineno || '');
   }
 });
 </script>
 
 <div class="top-header">
-  <div class="header-left">
-    <button class="menu-btn"
-      onclick="toggleSidebar()">☰</button>
-    <div class="header-logo" id="headerLogo">
-      <div class="header-logo-img"
-        id="headerLogoImg"></div>
-      <span id="headerCompanyName">AKIRA MOTORS</span>
-    </div>
-  </div>
-  <div class="header-right">
-    <button class="header-btn" id="accountBtn"
-      onclick="handleAccount()">
-      <span class="icon" id="accountIcon">👤</span>
-      <span id="accountText">Cuenta</span>
-    </button>
-    <button class="header-btn" onclick="toggleCart()">
-      <span class="icon">🛒</span>
-      <span>Carrito</span>
-      <span class="cart-badge"
-        id="cartCount">0</span>
-    </button>
-  </div>
+<div class="header-left">
+<button class="menu-btn"
+  onclick="toggleSidebar()">☰</button>
+<div class="header-logo" id="headerLogo">
+<div class="header-logo-img"
+  id="headerLogoImg"></div>
+<span id="headerCompanyName">AKIRA MOTORS</span>
+</div>
+</div>
+<div class="header-right">
+<button class="header-btn" id="accountBtn"
+  onclick="handleAccount()">
+<span class="icon" id="accountIcon">👤</span>
+<span id="accountText">Cuenta</span>
+</button>
+<button class="header-btn"
+  onclick="toggleCart()">
+<span class="icon">🛒</span>
+<span>Carrito</span>
+<span class="cart-badge"
+  id="cartCount">0</span>
+</button>
+</div>
 </div>
 
 <div class="sidebar-overlay" id="sidebarOverlay"
   onclick="toggleSidebar()"></div>
 <aside class="category-sidebar" id="categorySidebar">
-  <div class="sidebar-header">
-    <strong>Categorías</strong>
-    <button class="sidebar-close"
-      onclick="toggleSidebar()">×</button>
-  </div>
-  <div class="sidebar-search">
-    <input type="text" id="searchInput"
-      placeholder="Buscar repuesto...">
-  </div>
-  <div id="drawerMenu"></div>
+<div class="sidebar-header">
+<strong>Categorías</strong>
+<button class="sidebar-close"
+  onclick="toggleSidebar()">×</button>
+</div>
+<div class="sidebar-search">
+<input type="text" id="searchInput"
+  placeholder="Buscar repuesto...">
+</div>
+<div id="drawerMenu"></div>
 </aside>
 
 <div class="hero-section" id="heroSection"
   style="display:none;">
-  <div class="hero-bg" id="heroBg"></div>
-  <div class="hero-overlay" id="heroOverlay"></div>
-  <div class="hero-content">
-    <h1 class="hero-title" id="heroTitle"></h1>
-    <p class="hero-subtitle" id="heroSubtitle"></p>
-    <a href="#" class="hero-cta"
-      id="heroCta">Ver productos</a>
-  </div>
+<div class="hero-bg" id="heroBg"></div>
+<div class="hero-overlay" id="heroOverlay"></div>
+<div class="hero-content">
+<h1 class="hero-title" id="heroTitle"></h1>
+<p class="hero-subtitle" id="heroSubtitle"></p>
+<a href="#" class="hero-cta"
+  id="heroCta">Ver productos</a>
+</div>
 </div>
 
 <div class="section" id="recommendedSection">
-  <h2 class="section-title">
-    <span class="highlight">Recomendados</span>
-  </h2>
-  <p class="section-subtitle">
-    Los repuestos más solicitados
-  </p>
-  <div class="featured-grid"
-    id="recommendedContainer">
-    <div class="loading">
-      Cargando productos...
-    </div>
-  </div>
+<h2 class="section-title">
+<span class="highlight">Recomendados</span>
+</h2>
+<p class="section-subtitle">
+Los repuestos más solicitados
+</p>
+<div class="featured-grid"
+  id="recommendedContainer">
+<div class="loading">Cargando productos...</div>
+</div>
 </div>
 
 <div class="search-results-container"
   id="searchResultsContainer" style="display:none;">
-  <h2 class="section-title"
-    id="searchResultsTitle">Resultados</h2>
-  <div class="search-results-grid"
-    id="searchResultsGrid"></div>
-  <div class="pagination" id="pagination"></div>
+<h2 class="section-title"
+  id="searchResultsTitle">Resultados</h2>
+<div class="search-results-grid"
+  id="searchResultsGrid"></div>
+<div class="pagination" id="pagination"></div>
 </div>
 <div class="modal" id="productDetailModal">
-  <div class="modal-content"
-    id="productDetailContent"></div>
+<div class="modal-content"
+  id="productDetailContent"></div>
 </div>
 
 <div class="modal auth-modal" id="authModal">
-  <div class="modal-content">
-    <button class="modal-close"
-      onclick="closeModal('authModal')">×</button>
-    <h2>Crea tu Cuenta</h2>
-    <div class="form-group">
-      <label>Nombre</label>
-      <input type="text" id="guestName"
-        placeholder="Tu nombre">
-    </div>
-    <div class="form-group">
-      <label>Teléfono</label>
-      <input type="tel" id="guestPhone"
-        placeholder="Tu teléfono">
-    </div>
-    <div class="form-group">
-      <label>Contraseña (opcional)</label>
-      <input type="password" id="guestPassword">
-    </div>
-    <button class="auth-btn"
-      onclick="loginAsGuest()">Crear Cuenta</button>
-    <button class="guest-btn"
-      onclick="closeModal('authModal')">Cancelar</button>
-  </div>
+<div class="modal-content">
+<button class="modal-close"
+  onclick="closeModal('authModal')">×</button>
+<h2>Crea tu Cuenta</h2>
+<div class="form-group">
+<label>Nombre</label>
+<input type="text" id="guestName"
+  placeholder="Tu nombre">
+</div>
+<div class="form-group">
+<label>Teléfono</label>
+<input type="tel" id="guestPhone"
+  placeholder="Tu teléfono">
+</div>
+<button class="auth-btn"
+  onclick="loginAsGuest()">Crear Cuenta</button>
+<button class="guest-btn"
+  onclick="closeModal('authModal')">Cancelar</button>
+</div>
 </div>
 
 <div class="modal checkout-modal" id="checkoutModal">
-  <div class="modal-content">
-    <button class="modal-close"
-      onclick="closeModal('checkoutModal')">×</button>
-    <h2 style="color:#dc3545;text-align:center;
-      margin-bottom:1.5rem;">Finalizar Compra</h2>
-    <div style="padding: 0 1.5rem;">
-      <h3 style="margin-bottom:0.8rem;">
-        Método de entrega:
-      </h3>
-      <div class="delivery-selector">
-        <div class="delivery-option active"
-          id="checkoutPickup"
-          onclick="selectCheckoutDelivery('pickup')">
-          Pickup en tienda
-        </div>
-        <div class="delivery-option"
-          id="checkoutDelivery"
-          onclick="selectCheckoutDelivery('delivery')">
-          Delivery
-        </div>
-      </div>
-    </div>
-    <div id="deliveryZonesSection"
-      style="display:none; padding: 0 1.5rem;">
-      <h3 style="margin-bottom:0.8rem;">
-        Selecciona tu zona:
-      </h3>
-      <div class="delivery-zone-selector"
-        id="deliveryZonesList"></div>
-    </div>
-    <div id="deliveryFields"
-      style="display:none; padding: 0 1.5rem;">
-      <div class="form-group">
-        <label>Dirección</label>
-        <input type="text" id="deliveryAddressInput"
-          placeholder="Calle, número...">
-      </div>
-      <div class="form-group">
-        <label>Ubicación GPS</label>
-        <button class="auth-btn"
-          style="background:#28a745;"
-          onclick="getLocation()">
-          Obtener ubicación
-        </button>
-        <div style="background:#f0f0f0;height:150px;
-          border-radius:16px;display:flex;
-          align-items:center;justify-content:center;
-          margin:1rem 0;color:#666;"
-          id="mapPlaceholder">Aquí aparecerá</div>
-        <input type="hidden" id="gpsLat">
-        <input type="hidden" id="gpsLng">
-      </div>
-    </div>
-    <div id="pickupMapLink"
-      style="display:none; padding: 0 1.5rem;">
-      <div class="map-link-box">
-        <div style="font-size:2rem;
-          margin-bottom:0.5rem;">📍</div>
-        <div style="margin-bottom:0.5rem;">
-          Ubicación de la tienda:
-        </div>
-        <a href="#" id="pickupMapsLink"
-          target="_blank">Ver en Google Maps</a>
-      </div>
-    </div>
-    <div id="checkoutTotals"
-      style="margin:1rem 1.5rem;"></div>
-    <button class="checkout-btn"
-      onclick="confirmOrder()"
-      style="margin: 0 1.5rem 1.5rem;">
-      Confirmar por WhatsApp
-    </button>
-  </div>
+<div class="modal-content">
+<button class="modal-close"
+  onclick="closeModal('checkoutModal')">×</button>
+<h2 style="color:#dc3545;text-align:center;
+  margin-bottom:1.5rem;">Finalizar Compra</h2>
+<div style="padding:0 1.5rem;">
+<h3 style="margin-bottom:0.8rem;">
+Método de entrega:</h3>
+<div class="delivery-selector">
+<div class="delivery-option active"
+  id="checkoutPickup"
+  onclick="selectCheckoutDelivery('pickup')">
+Pickup en tienda
+</div>
+<div class="delivery-option"
+  id="checkoutDelivery"
+  onclick="selectCheckoutDelivery('delivery')">
+Delivery
+</div>
+</div>
+</div>
+<div id="deliveryZonesSection"
+  style="display:none;padding:0 1.5rem;">
+<h3 style="margin-bottom:0.8rem;">
+Selecciona tu zona:</h3>
+<div class="delivery-zone-selector"
+  id="deliveryZonesList"></div>
+</div>
+<div id="deliveryFields"
+  style="display:none;padding:0 1.5rem;">
+<div class="form-group">
+<label>Dirección</label>
+<input type="text" id="deliveryAddressInput"
+  placeholder="Calle, número...">
+</div>
+<div class="form-group">
+<label>Ubicación GPS</label>
+<button class="auth-btn"
+  style="background:#28a745;"
+  onclick="getLocation()">
+Obtener ubicación</button>
+<div style="background:#f0f0f0;height:150px;
+  border-radius:16px;display:flex;
+  align-items:center;justify-content:center;
+  margin:1rem 0;color:#666;"
+  id="mapPlaceholder">Aquí aparecerá</div>
+<input type="hidden" id="gpsLat">
+<input type="hidden" id="gpsLng">
+</div>
+</div>
+<div id="pickupMapLink"
+  style="display:none;padding:0 1.5rem;">
+<div class="map-link-box">
+<div style="font-size:2rem;
+  margin-bottom:0.5rem;">📍</div>
+<div style="margin-bottom:0.5rem;">
+Ubicación de la tienda:</div>
+<a href="#" id="pickupMapsLink"
+  target="_blank">Ver en Google Maps</a>
+</div>
+</div>
+<div id="checkoutTotals"
+  style="margin:1rem 1.5rem;"></div>
+<button class="checkout-btn"
+  onclick="confirmOrder()"
+  style="margin:0 1.5rem 1.5rem;">
+Confirmar por WhatsApp</button>
+</div>
 </div>
 
 <div class="modal orders-modal" id="ordersModal">
-  <div class="modal-content">
-    <button class="modal-close"
-      onclick="closeModal('ordersModal')">×</button>
-    <h2 style="color:#dc3545;text-align:center;
-      margin-bottom:1.5rem;">Mis Pedidos</h2>
-    <div id="ordersList"></div>
-  </div>
+<div class="modal-content">
+<button class="modal-close"
+  onclick="closeModal('ordersModal')">×</button>
+<h2 style="color:#dc3545;text-align:center;
+  margin-bottom:1.5rem;">Mis Pedidos</h2>
+<div id="ordersList"></div>
 </div>
-
+</div>
 <div class="cart-sidebar" id="cartSidebar">
-  <div class="cart-header">
-    <h3>Tu Carrito</h3>
-    <button class="modal-close"
-      onclick="toggleCart()"
-      style="position:static;">×</button>
-  </div>
-  <div class="cart-items" id="cartItems"></div>
-  <div class="cart-footer">
-    <div class="delivery-selector">
-      <div class="delivery-option active"
-        id="cartPickup"
-        onclick="selectCartDelivery('pickup')">
-        Pickup
-      </div>
-      <div class="delivery-option"
-        id="cartDelivery"
-        onclick="selectCartDelivery('delivery')">
-        Delivery
-      </div>
-    </div>
-    <div style="margin-top: 1rem;
-      border-top: 1px solid #ddd;
-      padding-top: 1rem;">
-      <label style="font-size: 0.9rem;
-        font-weight: bold; display: block;
-        margin-bottom: 0.5rem;">
-        ¿Tienes cupón?
-      </label>
-      <div style="display: flex; gap: 0.5rem;">
-        <input type="text" id="couponCodeInput"
-          placeholder="Código"
-          style="flex: 1; padding: 0.5rem;
-          border: 1px solid #ddd;
-          border-radius: 8px;">
-        <button onclick="applyCouponCode()"
-          style="background: #333; color: white;
-          border: none; padding: 0.5rem 1rem;
-          border-radius: 8px; cursor: pointer;
-          font-weight: bold;">Aplicar</button>
-      </div>
-      <div id="couponMessage"
-        style="font-size: 0.8rem;
-        margin-top: 0.5rem; min-height: 1rem;">
-      </div>
-    </div>
-    <div id="cartTotals"></div>
-    <button class="checkout-btn"
-      onclick="openCheckout()">
-      Finalizar Compra
-    </button>
-  </div>
+<div class="cart-header">
+<h3>Tu Carrito</h3>
+<button class="modal-close"
+  onclick="toggleCart()"
+  style="position:static;">×</button>
+</div>
+<div class="cart-items" id="cartItems"></div>
+<div class="cart-footer">
+<div class="delivery-selector">
+<div class="delivery-option active"
+  id="cartPickup"
+  onclick="selectCartDelivery('pickup')">
+Pickup
+</div>
+<div class="delivery-option"
+  id="cartDelivery"
+  onclick="selectCartDelivery('delivery')">
+Delivery
+</div>
+</div>
+<div style="margin-top:1rem;
+  border-top:1px solid #ddd;padding-top:1rem;">
+<label style="font-size:0.9rem;
+  font-weight:bold;display:block;
+  margin-bottom:0.5rem;">
+¿Tienes cupón?</label>
+<div style="display:flex;gap:0.5rem;">
+<input type="text" id="couponCodeInput"
+  placeholder="Código"
+  style="flex:1;padding:0.5rem;
+  border:1px solid #ddd;border-radius:8px;">
+<button onclick="applyCouponCode()"
+  style="background:#333;color:white;
+  border:none;padding:0.5rem 1rem;
+  border-radius:8px;cursor:pointer;
+  font-weight:bold;">Aplicar</button>
+</div>
+<div id="couponMessage"
+  style="font-size:0.8rem;margin-top:0.5rem;
+  min-height:1rem;"></div>
+</div>
+<div id="cartTotals"></div>
+<button class="checkout-btn"
+  onclick="openCheckout()">
+Finalizar Compra</button>
+</div>
 </div>
 
 <footer id="footer">
-  <div class="footer-content" id="footerContent"></div>
-  <div class="footer-brands" id="footerBrands"></div>
-  <div class="footer-bottom" id="footerBottom"></div>
+<div class="footer-content"
+  id="footerContent"></div>
+<div class="footer-brands"
+  id="footerBrands"></div>
+<div class="footer-bottom"
+  id="footerBottom"></div>
 </footer>
 
 <a href="#" class="whatsapp-float"
   id="whatsappFloat" target="_blank">💬</a>
+
 <script type="module">
 import { initializeApp }
   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
@@ -1391,12 +1379,12 @@ import {
   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAU77yzh7Tm3RPuuvVcxlCt26u2ljmsBK0",
-  authDomain: "akiramotors-cc498.firebaseapp.com",
-  projectId: "akiramotors-cc498",
-  storageBucket: "akiramotors-cc498.firebasestorage.app",
-  messagingSenderId: "657064466850",
-  appId: "1:657064466850:web:2d1340db67f790d11ebafb"
+apiKey: "AIzaSyAU77yzh7Tm3RPuuvVcxlCt26u2ljmsBK0",
+authDomain: "akiramotors-cc498.firebaseapp.com",
+projectId: "akiramotors-cc498",
+storageBucket: "akiramotors-cc498.firebasestorage.app",
+messagingSenderId: "657064466850",
+appId: "1:657064466850:web:2d1340db67f790d11ebafb"
 };
 
 const app = initializeApp(firebaseConfig);
@@ -1406,12 +1394,13 @@ var __banner = document.getElementById('errorBanner');
 if (__banner) {
   __banner.style.display = 'block';
   __banner.style.background = '#28a745';
-  __banner.textContent = 'Script cargado. Iniciando...';
+  __banner.textContent =
+    'Script cargado. Cargando datos...';
   setTimeout(function() {
-    if (__banner) __banner.style.display = 'none';
+    var b = document.getElementById('errorBanner');
+    if (b) b.style.display = 'none';
   }, 2000);
 }
-
 let products = [];
 let cart = [];
 try {
@@ -1426,25 +1415,22 @@ let deliveryMode = 'pickup';
 let checkoutDeliveryMode = 'pickup';
 let selectedDeliveryZone = null;
 let pickupMapsUrl = '';
-let banners = [];
 let activeCategory = null;
 let activeBrand = null;
 let activeModel = null;
 let searchQuery = '';
-let allCoupons = [];
 let appliedCoupon = null;
 let deliveryZones = [];
-let drawerMenu = [];
+let catalogo = { categorias: [] };
 let currentPage = 1;
-let showAllMode = false;
 const PRODUCTS_PER_PAGE = 25;
 let heroConfig = { visible: false };
 let whatsappNumber = '584148700616';
 let siteConfig = {
   companyName: 'AKIRA MOTORS',
   slogan: 'Repuestos Automotrices',
-  description: 'Tu tienda de repuestos.',
-  address: 'Ciudad Bolívar',
+  description: 'Tu tienda de repuestos en Ciudad Bolívar.',
+  address: 'Calle Caracas, Local 70-E, Ciudad Bolívar',
   phone: '0414-8700616',
   schedule: 'Lun-Vie: 8AM-5PM',
   facebook: '', instagram: '', tiktok: ''
@@ -1452,17 +1438,17 @@ let siteConfig = {
 let allReviews = [];
 
 let logoClickCount = 0;
-let logoTimer;
+let logoClickTimer;
 document.getElementById('headerLogo')
   .addEventListener('click', function() {
     logoClickCount++;
     if (logoClickCount === 1) {
-      logoTimer = setTimeout(function() {
+      logoClickTimer = setTimeout(function() {
         logoClickCount = 0;
       }, 800);
     }
     if (logoClickCount >= 3) {
-      clearTimeout(logoTimer);
+      clearTimeout(logoClickTimer);
       logoClickCount = 0;
       window.location.href = 'admin.html';
     }
@@ -1474,45 +1460,43 @@ window.toggleSidebar = function() {
   document.getElementById('sidebarOverlay')
     .classList.toggle('active');
 };
+
 function renderDrawerMenu() {
   var container = document.getElementById('drawerMenu');
   var html = '';
   html += '<div class="drawer-all" ';
   html += 'onclick="showAllProductsFromMenu()">';
   html += '📦 Todos los productos</div>';
-  drawerMenu.forEach(function(cat, catIdx) {
+  catalogo.categorias.forEach(function(cat, catIdx) {
     html += '<div class="drawer-category">';
     html += '<div class="drawer-cat-header" ';
     html += 'onclick="toggleDrawerCategory(' +
       catIdx + ')">';
-    html += '<span>' + cat.name + '</span>';
+    html += '<span>' + cat.nombre + '</span>';
     html += '<span class="drawer-arrow">▼</span>';
     html += '</div>';
     html += '<div class="drawer-brand-list" ';
     html += 'id="drawer-brand-' + catIdx + '">';
-    if (cat.brands) {
-      cat.brands.forEach(function(brand, brandIdx) {
-        html += '<div class="drawer-brand" ';
-        html += 'onclick="toggleDrawerBrand(';
-        html += catIdx + ',' + brandIdx + ')">';
-        html += '<span>' + brand.name + '</span>';
-        html += '<span class="drawer-arrow">▼</span>';
-        html += '</div>';
-        html += '<div class="drawer-model-list" ';
-        html += 'id="drawer-model-' + catIdx +
-          '-' + brandIdx + '">';
-        if (brand.models) {
-          brand.models.forEach(function(model, modelIdx) {
-            html += '<div class="drawer-model" ';
-            html += 'onclick="filterByModel(event,';
-            html += catIdx + ',' + brandIdx + ',';
-            html += modelIdx + ')">';
-            html += model + '</div>';
-          });
-        }
-        html += '</div>';
+    var vehiculos = cat.vehiculos || [];
+    vehiculos.forEach(function(v, brandIdx) {
+      html += '<div class="drawer-brand" ';
+      html += 'onclick="toggleDrawerBrand(';
+      html += catIdx + ',' + brandIdx + ')">';
+      html += '<span>' + v.marca + '</span>';
+      html += '<span class="drawer-arrow">▼</span>';
+      html += '</div>';
+      html += '<div class="drawer-model-list" ';
+      html += 'id="drawer-model-' + catIdx +
+        '-' + brandIdx + '">';
+      (v.modelos || []).forEach(function(model, modelIdx) {
+        html += '<div class="drawer-model" ';
+        html += 'onclick="filterByModel(event,';
+        html += catIdx + ',' + brandIdx + ',';
+        html += modelIdx + ')">';
+        html += model + '</div>';
       });
-    }
+      html += '</div>';
+    });
     html += '</div></div>';
   });
   container.innerHTML = html;
@@ -1543,7 +1527,9 @@ window.toggleDrawerBrand = function(catIdx, brandIdx) {
   var modelList = document.getElementById(
     'drawer-model-' + catIdx + '-' + brandIdx
   );
-  var brands = document.querySelectorAll('.drawer-brand');
+  var brands = document.querySelectorAll(
+    '.drawer-brand'
+  );
   var isOpen = modelList.classList.contains('open');
   document.querySelectorAll('.drawer-model-list')
     .forEach(function(m) {
@@ -1561,11 +1547,11 @@ window.toggleDrawerBrand = function(catIdx, brandIdx) {
 window.filterByModel = function(
   ev, catIdx, brandIdx, modelIdx
 ) {
-  var cat = drawerMenu[catIdx];
-  var brand = cat.brands[brandIdx];
-  var model = brand.models[modelIdx];
-  activeCategory = cat.name;
-  activeBrand = brand.name;
+  var cat = catalogo.categorias[catIdx];
+  var brand = cat.vehiculos[brandIdx];
+  var model = brand.modelos[modelIdx];
+  activeCategory = cat.nombre;
+  activeBrand = brand.marca;
   activeModel = model;
   searchQuery = '';
   document.querySelectorAll('.drawer-model')
@@ -1590,12 +1576,10 @@ window.showAllProductsFromMenu = function() {
   document.getElementById('searchResultsTitle')
     .textContent = 'Todos los productos (' +
     products.length + ')';
-  showAllMode = true;
   currentPage = 1;
   renderSearchResults(products);
   toggleSidebar();
 };
-
 document.getElementById('searchInput')
   .addEventListener('input', function(e) {
     searchQuery = e.target.value
@@ -1609,15 +1593,19 @@ document.getElementById('searchInput')
     }
     applyFilters();
   });
+
 function applyFilters() {
   var filtered = products;
   if (searchQuery) {
     filtered = filtered.filter(function(p) {
-      var n = p.name.toLowerCase()
-        .includes(searchQuery);
-      var c = p.code && p.code.toLowerCase()
-        .includes(searchQuery);
-      return n || c;
+      var byName = p.name &&
+        p.name.toLowerCase().includes(searchQuery);
+      var byCode = p.code &&
+        p.code.toLowerCase().includes(searchQuery);
+      var byTerms = p.searchTerms &&
+        p.searchTerms.toLowerCase()
+          .includes(searchQuery);
+      return byName || byCode || byTerms;
     });
   }
   if (activeCategory) {
@@ -1627,14 +1615,31 @@ function applyFilters() {
   }
   if (activeBrand) {
     filtered = filtered.filter(function(p) {
-      return p.brand && p.brand.toLowerCase()
-        .includes(activeBrand.toLowerCase());
+      if (p.compatibility &&
+          p.compatibility.length > 0) {
+        var match = p.compatibility.some(function(c) {
+          return c.brand && c.brand.toLowerCase()
+            .includes(activeBrand.toLowerCase());
+        });
+        if (match) return true;
+      }
+      if (p.brand && p.brand.toLowerCase()
+          .includes(activeBrand.toLowerCase())) {
+        return true;
+      }
+      return false;
     });
   }
   if (activeModel) {
     filtered = filtered.filter(function(p) {
-      return p.vehicle && p.vehicle.toLowerCase()
-        .includes(activeModel.toLowerCase());
+      if (!p.compatibility ||
+          p.compatibility.length === 0) {
+        return false;
+      }
+      return p.compatibility.some(function(c) {
+        return c.model && c.model.toLowerCase()
+          .includes(activeModel.toLowerCase());
+      });
     });
   }
   var hasFilter = searchQuery || activeCategory ||
@@ -1693,12 +1698,7 @@ function renderSearchResults(filteredProducts) {
     if (p.images && p.images[0]) img = p.images[0];
     else if (p.image) img = p.image;
     var imgHtml = img ?
-      '<img src="' + img + '" alt="' +
-      p.name + '">' : '';
-    var stockColor = p.stock === 0 ?
-      '#dc3545' : '#28a745';
-    var stockTxt = p.stock === 0 ?
-      'No disponible' : 'Stock: ' + p.stock;
+      '<img src="' + img + '" alt="">' : '';
     html += '<div class="search-result-card" ';
     html += 'onclick="openProductDetail(\'' +
       p.id + '\')">';
@@ -1707,16 +1707,19 @@ function renderSearchResults(filteredProducts) {
     html += '<div class="search-result-info">';
     if (p.code) {
       html += '<div style="font-size:0.75rem;';
-      html += 'color:#888;">Código: ' +
-        p.code + '</div>';
+      html += 'color:#888;">Código: ' + p.code +
+        '</div>';
     }
     html += '<div class="search-result-name">' +
       p.name + '</div>';
     html += '<div class="search-result-price">$' +
       fp.finalPrice.toFixed(2) + ' / Bs. ' +
       fp.priceBs.toFixed(2) + '</div>';
+    var color = p.stock === 0 ? '#dc3545' : '#28a745';
+    var stockTxt = p.stock === 0 ?
+      'No disponible' : 'Stock: ' + p.stock;
     html += '<div style="font-size:0.8rem;color:' +
-      stockColor + ';margin-top:0.3rem;">' +
+      color + ';margin-top:0.3rem;">' +
       stockTxt + '</div>';
     html += '</div></div>';
   });
@@ -1771,19 +1774,13 @@ async function loadData() {
     if (pickupDoc.exists()) {
       pickupMapsUrl = pickupDoc.data().url || '';
     }
-    var bannersDoc = await getDoc(
-      doc(db, 'settings', 'banners')
-    );
-    if (bannersDoc.exists()) {
-      banners = bannersDoc.data().images || [];
-    }
     var cfgDoc = await getDoc(
       doc(db, 'settings', 'siteConfig')
     );
     if (cfgDoc.exists()) {
-      var d = cfgDoc.data();
-      for (var k in d) {
-        siteConfig[k] = d[k];
+      var data = cfgDoc.data();
+      for (var k in data) {
+        siteConfig[k] = data[k];
       }
     }
     var waDoc = await getDoc(
@@ -1798,37 +1795,21 @@ async function loadData() {
     if (heroDoc.exists()) {
       heroConfig = heroDoc.data();
       if (heroConfig.visible &&
-        (heroConfig.title ||
-         heroConfig.backgroundImage)) {
+          (heroConfig.title ||
+           heroConfig.backgroundImage)) {
         renderHero();
       }
     }
-    var drawerDoc = await getDoc(
-      doc(db, 'settings', 'drawerMenu')
+    var catalogoDoc = await getDoc(
+      doc(db, 'settings', 'catalogo')
     );
-    if (drawerDoc.exists()) {
-      drawerMenu = drawerDoc.data().categories || [];
+    if (catalogoDoc.exists()) {
+      catalogo = catalogoDoc.data();
+      if (!catalogo.categorias) {
+        catalogo.categorias = [];
+      }
     } else {
-      drawerMenu = [
-        { name: "Amortiguadores", brands: [
-          { name: "Toyota",
-            models: ["Corolla", "Fortuner"] },
-          { name: "Nissan",
-            models: ["Sentra", "Frontier"] }
-        ]},
-        { name: "Tren delantero", brands: [
-          { name: "Chevrolet",
-            models: ["Aveo", "Cruze"] },
-          { name: "Ford",
-            models: ["Fiesta", "Ranger"] }
-        ]},
-        { name: "Motor y componentes", brands: [
-          { name: "Hyundai",
-            models: ["Tucson", "Creta"] },
-          { name: "Kia",
-            models: ["Rio", "Sportage"] }
-        ]}
-      ];
+      catalogo = { categorias: [] };
     }
     var zonesSnap = await getDocs(
       collection(db, 'deliveryZones')
@@ -1839,17 +1820,11 @@ async function loadData() {
       obj.id = d.id;
       deliveryZones.push(obj);
     });
-
-    /* CORRECCIÓN: ya no lee cupones aquí
-       porque las reglas lo bloquean */
-    /* const couponsSnap = await getDocs(...)
-       ELIMINADO */
-
-    var snap = await getDocs(
+    var snapshot = await getDocs(
       collection(db, 'products')
     );
     products = [];
-    snap.forEach(function(d) {
+    snapshot.forEach(function(d) {
       var obj = d.data();
       obj.id = d.id;
       products.push(obj);
@@ -1864,11 +1839,11 @@ async function loadData() {
       brands.push(obj);
     });
     try {
-      var revSnap = await getDocs(
+      var reviewsSnap = await getDocs(
         collection(db, 'reviews')
       );
       allReviews = [];
-      revSnap.forEach(function(d) {
+      reviewsSnap.forEach(function(d) {
         var obj = d.data();
         obj.id = d.id;
         allReviews.push(obj);
@@ -1921,7 +1896,8 @@ function renderHero() {
         heroConfig.overlayColor.slice(5,7), 16
       );
       overlay.style.background = 'rgba(' +
-        r + ',' + g + ',' + b + ',' + opacity + ')';
+        r + ',' + g + ',' + b + ',' +
+        opacity + ')';
     } else {
       overlay.style.background =
         'rgba(0,0,0,' + opacity + ')';
@@ -1996,6 +1972,7 @@ function formatPrices(price, discount) {
     hasDiscount: discount && discount > 0
   };
 }
+
 function renderRecommended() {
   var container = document.getElementById(
     'recommendedContainer'
@@ -2011,75 +1988,75 @@ function renderRecommended() {
   }
   var html = '';
   recommended.forEach(function(p) {
-    var fp = formatPrices(p.price, p.discount);
-    var img = '';
-    if (p.images && p.images[0]) img = p.images[0];
-    else if (p.image) img = p.image;
-    var imgHtml = img ?
-      '<img src="' + img + '" alt="' +
-      p.name + '">' : '';
-    var priceHtml = '';
-    if (fp.hasDiscount) {
-      priceHtml += '<span class="' +
-        'featured-price-original">$' +
-        Number(p.price).toFixed(2) + '</span>';
-      priceHtml += '<div class="featured-price">$' +
-        fp.finalPrice.toFixed(2) + '</div>';
-    } else {
-      priceHtml += '<div class="featured-price">$' +
-        fp.finalPrice.toFixed(2) + '</div>';
-    }
-    priceHtml += '<div class="featured-price-bs">' +
-      'Bs. ' + fp.priceBs.toFixed(2) + '</div>';
-    var stockClass = 'in';
-    var stockText = 'Stock: ' + p.stock;
-    var stockUrgent = '';
-    if (p.stock === 0) {
-      stockClass = 'out';
-      stockText = 'No disponible';
-    } else if (p.stock < 5) {
-      stockClass = 'low';
-      stockText = '¡Últimas ' + p.stock + '!';
-      stockUrgent = '<div class="stock-urgent">' +
-        '¡Últimas!</div>';
-    }
-    var tags = '';
-    if (fp.hasDiscount) {
-      tags = '<div class="offer-tag">-' +
-        p.discount + '%</div>';
-    }
-    html += '<div class="featured-card" ';
-    html += 'onclick="openProductDetail(\'' +
-      p.id + '\')">';
-    html += '<div class="featured-image">' +
-      imgHtml + tags + stockUrgent + '</div>';
-    html += '<div class="featured-info">';
-    if (p.code) {
-      html += '<div style="font-size:0.75rem;';
-      html += 'color:#888;">Código: ' +
-        p.code + '</div>';
-    }
-    html += '<div class="featured-name">' +
-      p.name + '</div>';
-    html += priceHtml;
-    html += '<div class="featured-stock ' +
-      stockClass + '">' + stockText + '</div>';
-    html += '<button class="featured-add-btn" ';
-    html += 'onclick="event.stopPropagation();';
-    html += ' addToCart(\'' + p.id + '\')"';
-    if (p.stock === 0) html += ' disabled';
-    html += '>';
-    html += p.stock === 0 ?
-      'No disponible' : 'Agregar';
-    html += '</button></div></div>';
+    html += renderProductCard(p);
   });
   container.innerHTML = html;
 }
 
+function renderProductCard(p) {
+  var fp = formatPrices(p.price, p.discount);
+  var img = '';
+  if (p.images && p.images[0]) img = p.images[0];
+  else if (p.image) img = p.image;
+  var imgHtml = img ?
+    '<img src="' + img + '" alt="">' : '';
+  var priceHtml = '';
+  if (fp.hasDiscount) {
+    priceHtml += '<span class="featured-price-original">$';
+    priceHtml += Number(p.price).toFixed(2);
+    priceHtml += '</span>';
+  }
+  priceHtml += '<div class="featured-price">$' +
+    fp.finalPrice.toFixed(2) + '</div>';
+  priceHtml += '<div class="featured-price-bs">Bs. ' +
+    fp.priceBs.toFixed(2) + '</div>';
+  var stockClass = 'in';
+  var stockText = 'Stock: ' + p.stock;
+  var stockUrgent = '';
+  if (p.stock === 0) {
+    stockClass = 'out';
+    stockText = 'No disponible';
+  } else if (p.stock < 5) {
+    stockClass = 'low';
+    stockText = '¡Últimas ' + p.stock + '!';
+    stockUrgent =
+      '<div class="stock-urgent">¡Últimas!</div>';
+  }
+  var tags = '';
+  if (fp.hasDiscount) {
+    tags = '<div class="offer-tag">-' +
+      p.discount + '%</div>';
+  }
+  var html = '';
+  html += '<div class="featured-card" ';
+  html += 'onclick="openProductDetail(\'' +
+    p.id + '\')">';
+  html += '<div class="featured-image">' +
+    imgHtml + tags + stockUrgent + '</div>';
+  html += '<div class="featured-info">';
+  if (p.code) {
+    html += '<div style="font-size:0.75rem;';
+    html += 'color:#888;">Código: ' + p.code +
+      '</div>';
+  }
+  html += '<div class="featured-name">' +
+    p.name + '</div>';
+  html += priceHtml;
+  html += '<div class="featured-stock ' +
+    stockClass + '">' + stockText + '</div>';
+  html += '<button class="featured-add-btn" ';
+  html += 'onclick="event.stopPropagation();';
+  html += ' addToCart(\'' + p.id + '\')"';
+  if (p.stock === 0) html += ' disabled';
+  html += '>';
+  html += p.stock === 0 ? 'No disponible' : 'Agregar';
+  html += '</button></div></div>';
+  return html;
+}
 function generateTechSheetHTML(product) {
   var attrs = product.attributes || {};
   var specs = product.specifications || [];
-  var compat = product.compatibility || [];
+  var compatibility = product.compatibility || [];
   var terms = product.searchTerms || '';
   var html = '';
   if (Object.keys(attrs).length > 0) {
@@ -2099,8 +2076,8 @@ function generateTechSheetHTML(product) {
       var value = attrs[key];
       if (value) {
         html += '<div class="attribute">';
-        html += '<strong>' + (labels[key] || key) +
-          '</strong>';
+        html += '<strong>' +
+          (labels[key] || key) + '</strong>';
         html += value + '</div>';
       }
     }
@@ -2118,15 +2095,14 @@ function generateTechSheetHTML(product) {
     });
     html += '</table></div>';
   }
-  if (compat.length > 0) {
+  if (compatibility.length > 0) {
     html += '<div class="tech-sheet">';
     html += '<h3>🚗 Compatibilidad Vehicular</h3>';
     html += '<table class="compatibility-table">';
     html += '<thead><tr><th>Marca</th>';
     html += '<th>Modelo</th><th>Años</th>';
-    html += '<th>Motor</th><th>Notas</th>';
-    html += '</tr></thead><tbody>';
-    compat.forEach(function(c) {
+    html += '<th>Motor</th></tr></thead><tbody>';
+    compatibility.forEach(function(c) {
       if (c.brand || c.model) {
         html += '<tr><td>' + (c.brand || '-') +
           '</td>';
@@ -2135,8 +2111,6 @@ function generateTechSheetHTML(product) {
         html += '<td>' + (c.years || '-') +
           '</td>';
         html += '<td>' + (c.engine || '-') +
-          '</td>';
-        html += '<td>' + (c.notes || '-') +
           '</td></tr>';
       }
     });
@@ -2149,6 +2123,7 @@ function generateTechSheetHTML(product) {
   }
   return html;
 }
+
 window.openProductDetail = function(productId) {
   var product = products.find(function(p) {
     return p.id === productId;
@@ -2159,8 +2134,7 @@ window.openProductDetail = function(productId) {
   var currentImage = images[0] || null;
   var fp = formatPrices(product.price, product.discount);
   var imageHtml = currentImage ?
-    '<img src="' + currentImage + '" alt="' +
-    product.name + '">' : '';
+    '<img src="' + currentImage + '" alt="">' : '';
   var priceBox = '';
   if (fp.hasDiscount) {
     priceBox += '<div class="detail-price-box">';
@@ -2168,43 +2142,42 @@ window.openProductDetail = function(productId) {
     priceBox += 'OFERTA -' + product.discount +
       '%</div>';
     priceBox += '<div style="font-size:1rem;';
-    priceBox += 'color:#999;text-decoration:';
-    priceBox += 'line-through;">Antes: $';
-    priceBox += Number(product.price).toFixed(2);
-    priceBox += '</div>';
-    priceBox += '<div class="detail-price-usd">$';
-    priceBox += fp.finalPrice.toFixed(2) + '</div>';
-    priceBox += '<div class="detail-price-bs">Bs. ';
-    priceBox += fp.priceBs.toFixed(2);
-    priceBox += ' (BCV: ' + bcvRate + ')</div>';
-    priceBox += '</div>';
+    priceBox += 'color:#999;';
+    priceBox += 'text-decoration:line-through;">';
+    priceBox += 'Antes: $' +
+      Number(product.price).toFixed(2) + '</div>';
+    priceBox += '<div class="detail-price-usd">$' +
+      fp.finalPrice.toFixed(2) + '</div>';
+    priceBox += '<div class="detail-price-bs">Bs. ' +
+      fp.priceBs.toFixed(2) + ' (BCV: ' +
+      bcvRate + ')</div></div>';
   } else {
     priceBox += '<div class="detail-price-box">';
-    priceBox += '<div class="detail-price-usd">$';
-    priceBox += fp.finalPrice.toFixed(2) + '</div>';
-    priceBox += '<div class="detail-price-bs">Bs. ';
-    priceBox += fp.priceBs.toFixed(2);
-    priceBox += ' (BCV: ' + bcvRate + ')</div>';
-    priceBox += '</div>';
+    priceBox += '<div class="detail-price-usd">$' +
+      fp.finalPrice.toFixed(2) + '</div>';
+    priceBox += '<div class="detail-price-bs">Bs. ' +
+      fp.priceBs.toFixed(2) + ' (BCV: ' +
+      bcvRate + ')</div></div>';
   }
-  var techSheet = generateTechSheetHTML(product);
-  var pReviews = allReviews.filter(function(r) {
+  var techSheetHtml = generateTechSheetHTML(product);
+  var productReviews = allReviews.filter(function(r) {
     return r.productId === productId;
   });
-  var avg = 0;
-  if (pReviews.length > 0) {
+  var avgRating = 0;
+  if (productReviews.length > 0) {
     var sum = 0;
-    pReviews.forEach(function(r) {
+    productReviews.forEach(function(r) {
       sum += r.rating;
     });
-    avg = (sum / pReviews.length).toFixed(1);
+    avgRating = (sum / productReviews.length)
+      .toFixed(1);
   }
   var reviewsHtml = '<div class="reviews-section">';
   reviewsHtml += '<h3>⭐ Reseñas (' +
-    pReviews.length + ') - Promedio: ' +
-    avg + '/5</h3>';
+    productReviews.length + ') - Promedio: ' +
+    avgRating + '/5</h3>';
   if (currentUser) {
-    var existing = pReviews.find(function(r) {
+    var existing = productReviews.find(function(r) {
       return r.userPhone === currentUser.phone;
     });
     if (!existing) {
@@ -2216,7 +2189,6 @@ window.openProductDetail = function(productId) {
         productId + '">';
       for (var i = 1; i <= 5; i++) {
         reviewsHtml += '<span class="star" ';
-        reviewsHtml += 'data-value="' + i + '" ';
         reviewsHtml += 'onclick="selectRating(\'';
         reviewsHtml += productId + '\',' + i +
           ')">★</span>';
@@ -2225,61 +2197,58 @@ window.openProductDetail = function(productId) {
       reviewsHtml += '<textarea id="reviewText-';
       reviewsHtml += productId + '" maxlength="150" ';
       reviewsHtml += 'placeholder="Escribe tu ';
-      reviewsHtml += 'comentario (máx 150 caracteres)" ';
-      reviewsHtml += 'oninput="updateCharCount(\'';
-      reviewsHtml += productId + '\')">';
-      reviewsHtml += '</textarea>';
+      reviewsHtml += 'comentario (máx 150 ';
+      reviewsHtml += 'caracteres)" oninput="';
+      reviewsHtml += 'updateCharCount(\'' +
+        productId + '\')"></textarea>';
       reviewsHtml += '<div class="char-count" ';
-      reviewsHtml += 'id="charCount-' + productId +
-        '">0/150</div>';
+      reviewsHtml += 'id="charCount-' +
+        productId + '">0/150</div>';
       reviewsHtml += '<button onclick="';
-      reviewsHtml += 'submitReview(\'' + productId +
-        '\')">Publicar reseña</button>';
+      reviewsHtml += 'submitReview(\'' +
+        productId + '\')">Publicar reseña</button>';
       reviewsHtml += '</div>';
     }
   } else {
-    reviewsHtml += '<p style="font-size:0.85rem; ';
-    reviewsHtml += 'color:#666; margin-bottom:1rem;">';
-    reviewsHtml += 'Inicia sesión para dejar una ';
-    reviewsHtml += 'reseña.</p>';
+    reviewsHtml += '<p style="font-size:0.85rem;';
+    reviewsHtml += 'color:#666;margin-bottom:1rem;">';
+    reviewsHtml += 'Inicia sesión para dejar ';
+    reviewsHtml += 'una reseña.</p>';
   }
-  if (pReviews.length > 0) {
-    pReviews.sort(function(a, b) {
+  if (productReviews.length > 0) {
+    productReviews.sort(function(a, b) {
       return new Date(b.date) - new Date(a.date);
     });
-    pReviews.forEach(function(r) {
+    productReviews.forEach(function(r) {
       var stars = '★'.repeat(r.rating) +
         '☆'.repeat(5 - r.rating);
       reviewsHtml += '<div class="review-item">';
       reviewsHtml += '<div class="review-item-header">';
       reviewsHtml += '<span class="review-item-user">';
-      reviewsHtml += (r.userName || 'Cliente') +
-        '</span>';
+      reviewsHtml += (r.userName || 'Cliente');
+      reviewsHtml += '</span>';
       reviewsHtml += '<span class="review-item-stars">';
       reviewsHtml += stars + '</span></div>';
-      reviewsHtml += '<div class="review-item-text">';
-      reviewsHtml += r.text + '</div>';
+      reviewsHtml += '<div class="review-item-text">' +
+        r.text + '</div>';
       reviewsHtml += '<div class="review-item-date">';
       reviewsHtml += new Date(r.date)
-        .toLocaleDateString() + '</div></div>';
+        .toLocaleDateString();
+      reviewsHtml += '</div></div>';
     });
   } else {
-    reviewsHtml += '<p style="font-size:0.85rem; ';
+    reviewsHtml += '<p style="font-size:0.85rem;';
     reviewsHtml += 'color:#999;">Aún no hay reseñas. ';
     reviewsHtml += '¡Sé el primero!</p>';
   }
   reviewsHtml += '</div>';
 
   var stockColor = '#28a745';
-  if (product.stock === 0) {
-    stockColor = '#dc3545';
-  } else if (product.stock < 5) {
-    stockColor = '#FFC107';
-  }
+  if (product.stock === 0) stockColor = '#dc3545';
+  else if (product.stock < 5) stockColor = '#FFC107';
   var stockLabel = 'Disponible: ' + product.stock;
-  if (product.stock === 0) {
-    stockLabel = 'No disponible';
-  } else if (product.stock < 5) {
+  if (product.stock === 0) stockLabel = 'No disponible';
+  else if (product.stock < 5) {
     stockLabel = '¡Últimas ' + product.stock + '!';
   }
 
@@ -2299,25 +2268,24 @@ window.openProductDetail = function(productId) {
   detailHtml += '<h2>' + product.name + '</h2>';
   detailHtml += priceBox;
   detailHtml += '<div style="color:' + stockColor +
-    '; font-weight:bold; margin:0.5rem 0;">' +
+    ';font-weight:bold;margin:0.5rem 0;">' +
     stockLabel + '</div>';
   if (product.description) {
-    detailHtml += '<h3 style="color:#dc3545; ';
+    detailHtml += '<h3 style="color:#dc3545;';
     detailHtml += 'margin:1rem 0 0.5rem;">';
     detailHtml += 'Descripción</h3>';
     detailHtml += '<div class="detail-description">' +
       product.description + '</div>';
   }
-  detailHtml += techSheet;
+  detailHtml += techSheetHtml;
   detailHtml += '</div></div>';
   detailHtml += reviewsHtml;
   detailHtml += '<div class="detail-actions">';
   detailHtml += '<button class="featured-add-btn" ';
-  detailHtml += 'style="padding:1rem;" ';
+  detailHtml += 'style="flex:1;padding:1rem;" ';
   detailHtml += 'onclick="addToCart(\'' +
-    product.id + '\'); ';
-  detailHtml += 'closeModal(\'';
-  detailHtml += 'productDetailModal\')"';
+    product.id + '\');';
+  detailHtml += 'closeModal(\'productDetailModal\')"';
   if (product.stock === 0) detailHtml += ' disabled';
   detailHtml += '>';
   detailHtml += product.stock === 0 ?
@@ -2342,16 +2310,11 @@ window.selectRating = function(productId, rating) {
 };
 
 window.updateCharCount = function(productId) {
-  var textEl = document.getElementById(
+  var text = document.getElementById(
     'reviewText-' + productId
-  );
-  var countEl = document.getElementById(
-    'charCount-' + productId
-  );
-  if (textEl && countEl) {
-    countEl.textContent = textEl.value.length +
-      '/150';
-  }
+  ).value;
+  document.getElementById('charCount-' + productId)
+    .textContent = text.length + '/150';
 };
 
 window.submitReview = async function(productId) {
@@ -2360,10 +2323,9 @@ window.submitReview = async function(productId) {
     return;
   }
   var rating = selectedRatings[productId];
-  var textEl = document.getElementById(
+  var text = document.getElementById(
     'reviewText-' + productId
-  );
-  var text = textEl ? textEl.value.trim() : '';
+  ).value.trim();
   if (!rating) {
     alert('Selecciona una calificación');
     return;
@@ -2387,9 +2349,9 @@ window.submitReview = async function(productId) {
       date: new Date().toISOString()
     });
     alert('✅ Reseña publicada');
-    var revSnap = await getDocs(collection(db, 'reviews'));
+    var snap = await getDocs(collection(db, 'reviews'));
     allReviews = [];
-    revSnap.forEach(function(d) {
+    snap.forEach(function(d) {
       var obj = d.data();
       obj.id = d.id;
       allReviews.push(obj);
@@ -2407,9 +2369,7 @@ window.addToCart = function(productId) {
     alert('No disponible');
     return;
   }
-  var fp = formatPrices(
-    product.price, product.discount
-  );
+  var fp = formatPrices(product.price, product.discount);
   var existing = cart.find(function(item) {
     return item.id === productId;
   });
@@ -2421,8 +2381,8 @@ window.addToCart = function(productId) {
       return;
     }
   } else {
-    var img = (product.images && product.images[0])
-      || product.image;
+    var img = (product.images && product.images[0]) ||
+      product.image;
     cart.push({
       id: product.id,
       name: product.name,
@@ -2480,15 +2440,13 @@ window.applyCouponCode = function() {
     return;
   }
   msg.innerHTML = '<span style="color:#666;">' +
-    'Cupones no disponibles por ahora.</span>';
+    'Los cupones no están disponibles por ahora.</span>';
 };
 
 window.removeCoupon = function() {
   appliedCoupon = null;
-  document.getElementById('couponCodeInput')
-    .value = '';
-  document.getElementById('couponMessage')
-    .innerHTML = '';
+  document.getElementById('couponCodeInput').value = '';
+  document.getElementById('couponMessage').innerHTML = '';
   updateCartUI();
 };
 
@@ -2500,7 +2458,7 @@ function updateCartUI() {
   cart.forEach(function(i) {
     totalItems += i.quantity;
   });
-  if (cartCount) cartCount.textContent = totalItems;
+  cartCount.textContent = totalItems;
   if (cart.length === 0) {
     cartItems.innerHTML = '<p style="' +
       'text-align:center;color:#999;' +
@@ -2527,21 +2485,20 @@ function updateCartUI() {
     html += '<br><small>x ' + item.quantity +
       '</small></div></div>';
     html += '<div class="cart-item-controls">';
-    html += '<button onclick="updateQuantity(\'';
-    html += item.id + '\',-1)">-</button>';
+    html += '<button onclick="updateQuantity(\'' +
+      item.id + '\',-1)">-</button>';
     html += '<span>' + item.quantity + '</span>';
-    html += '<button onclick="updateQuantity(\'';
-    html += item.id + '\',1)">+</button>';
-    html += '<button onclick="removeFromCart(\'';
-    html += item.id + '\')" style="background:#999;">';
+    html += '<button onclick="updateQuantity(\'' +
+      item.id + '\',1)">+</button>';
+    html += '<button onclick="removeFromCart(\'' +
+      item.id + '\')" style="background:#999;">';
     html += '×</button></div></div>';
   });
   cartItems.innerHTML = html;
 
   var subtotalUsd = 0;
   cart.forEach(function(item) {
-    subtotalUsd += Number(item.price) *
-      item.quantity;
+    subtotalUsd += Number(item.price) * item.quantity;
   });
   var discountUsd = 0;
   if (appliedCoupon) {
@@ -2551,19 +2508,17 @@ function updateCartUI() {
   }
   var ivaUsd = subtotalUsd * 0.16;
   var deliveryFee = 0;
-  if (deliveryMode === 'delivery' &&
-      selectedDeliveryZone) {
+  if (deliveryMode === 'delivery' && selectedDeliveryZone) {
     deliveryFee = selectedDeliveryZone.cost;
   } else if (deliveryMode === 'delivery') {
     deliveryFee = 5;
   }
-  var totalUsd = subtotalUsd + ivaUsd +
-    deliveryFee;
+  var totalUsd = subtotalUsd + ivaUsd + deliveryFee;
   var th = '';
   if (appliedCoupon) {
     th += '<div class="cart-total-row discount">';
-    th += '<span>Descuento (' + appliedCoupon.code +
-      '):</span>';
+    th += '<span>Descuento (' + appliedCoupon.code;
+    th += '):</span>';
     th += '<span>-$' + discountUsd.toFixed(2) +
       '</span></div>';
   }
@@ -2622,33 +2577,27 @@ window.getLocation = function() {
         pos.coords.latitude;
       document.getElementById('gpsLng').value =
         pos.coords.longitude;
-      var ph = document.getElementById(
-        'mapPlaceholder'
-      );
-      ph.innerHTML = '<div style="text-align:';
-      ph.innerHTML += 'center;">';
-      ph.innerHTML += '<div style="font-size:3rem;">';
-      ph.innerHTML += '📍</div>';
-      ph.innerHTML += '<div>Ubicación obtenida</div>';
-      ph.innerHTML += '<div style="font-size:0.8rem;">';
-      ph.innerHTML += pos.coords.latitude
-        .toFixed(5);
-      ph.innerHTML += ', ';
-      ph.innerHTML += pos.coords.longitude
-        .toFixed(5);
-      ph.innerHTML += '</div></div>';
+      var ph = document.getElementById('mapPlaceholder');
+      var h = '';
+      h += '<div style="text-align:center;">';
+      h += '<div style="font-size:3rem;">📍</div>';
+      h += '<div>Ubicación obtenida</div>';
+      h += '<div style="font-size:0.8rem;">';
+      h += pos.coords.latitude.toFixed(5);
+      h += ', ';
+      h += pos.coords.longitude.toFixed(5);
+      h += '</div></div>';
+      ph.innerHTML = h;
     },
-    function(err) {
-      alert('Error: ' + err.message);
-    }
+    function(err) { alert('Error: ' + err.message); }
   );
 };
-
 window.handleAccount = function() {
   if (currentUser) {
-    var action = prompt('Hola ' +
-      currentUser.name +
-      '!\n1. Ver pedidos\n2. Cerrar sesión');
+    var action = prompt(
+      'Hola ' + currentUser.name +
+      '!\n1. Ver pedidos\n2. Cerrar sesión'
+    );
     if (action === '1') showMyOrders();
     else if (action === '2') {
       currentUser = null;
@@ -2675,9 +2624,8 @@ async function showMyOrders() {
     });
     var list = document.getElementById('ordersList');
     if (mine.length === 0) {
-      list.innerHTML = '<p style="text-align:';
-      list.innerHTML += 'center;color:#666;';
-      list.innerHTML += 'padding:2rem;">';
+      list.innerHTML = '<p style="text-align:center;';
+      list.innerHTML += 'color:#666;padding:2rem;">';
       list.innerHTML += 'Aún no tienes pedidos</p>';
     } else {
       mine.sort(function(a, b) {
@@ -2685,21 +2633,20 @@ async function showMyOrders() {
       });
       var html = '';
       mine.forEach(function(o) {
-        var statusTxt = o.status === 'pending' ?
-          'Pendiente' :
-          o.status === 'shipped' ?
-          'En camino' : 'Entregado';
         html += '<div class="order-item">';
         html += '<div class="order-header">';
         html += '<strong>#' + o.id.slice(-6) +
           '</strong>';
         html += '<span class="order-status ' +
-          o.status + '">' + statusTxt +
-          '</span></div>';
+          o.status + '">';
+        html += o.status === 'pending' ? 'Pendiente' :
+          o.status === 'shipped' ? 'En camino' :
+          'Entregado';
+        html += '</span></div>';
         html += '<div style="font-size:0.85rem;';
         html += 'color:#666;">';
-        html += new Date(o.date)
-          .toLocaleDateString() + '</div>';
+        html += new Date(o.date).toLocaleDateString();
+        html += '</div>';
         var items = o.items || [];
         html += '<div style="margin:0.5rem 0;">';
         items.forEach(function(it) {
@@ -2709,8 +2656,8 @@ async function showMyOrders() {
         html += '</div>';
         html += '<div style="font-weight:bold;';
         html += 'color:#dc3545;">Total: $';
-        html += Number(o.total || 0).toFixed(2) +
-          '</div></div>';
+        html += Number(o.total || 0).toFixed(2);
+        html += '</div></div>';
       });
       list.innerHTML = html;
     }
@@ -2748,46 +2695,33 @@ window.loginAsGuest = async function() {
       customerCode: customerCode,
       createdAt: new Date().toISOString()
     });
-  } catch (error) {
-    console.error(error);
-  }
+  } catch (error) { console.error(error); }
   updateHeaderButtons();
   closeModal('authModal');
-  alert('¡Bienvenido ' + name +
-    '!\nCódigo: ' + customerCode);
+  alert('¡Bienvenido ' + name + '!\nCódigo: ' +
+    customerCode);
 };
+
 function updateHeaderButtons() {
-  var accountText = document.getElementById(
-    'accountText'
-  );
-  var accountIcon = document.getElementById(
-    'accountIcon'
-  );
-  if (!accountText) return;
+  var accountText = document.getElementById('accountText');
+  var accountIcon = document.getElementById('accountIcon');
   if (currentUser) {
     accountText.textContent =
       currentUser.name.split(' ')[0];
-    if (accountIcon) {
-      accountIcon.textContent =
-        currentUser.name.charAt(0).toUpperCase();
-    }
+    accountIcon.textContent =
+      currentUser.name.charAt(0).toUpperCase();
   } else {
     accountText.textContent = 'Cuenta';
-    if (accountIcon) {
-      accountIcon.textContent = '👤';
-    }
+    accountIcon.textContent = '👤';
   }
 }
 
 function updateWhatsAppLinks() {
-  var cleanNumber = whatsappNumber.replace(/\D/g, '');
-  var floatBtn = document.getElementById(
-    'whatsappFloat'
-  );
+  var clean = whatsappNumber.replace(/\D/g, '');
+  var floatBtn = document.getElementById('whatsappFloat');
   if (floatBtn) {
-    floatBtn.href = 'https://wa.me/' +
-      cleanNumber + '?text=Hola!%20' +
-      'Tengo%20una%20consulta';
+    floatBtn.href = 'https://wa.me/' + clean +
+      '?text=Hola!%20Tengo%20una%20consulta';
   }
 }
 
@@ -2839,22 +2773,21 @@ function renderDeliveryZones() {
   );
   if (deliveryZones.length === 0) {
     container.innerHTML =
-      '<p style="color:#666;">Sin zonas. $5</p>';
+      '<p style="color:#666;">Sin zonas. Costo: $5</p>';
     return;
   }
   var html = '';
   deliveryZones.forEach(function(zone) {
-    var active = selectedDeliveryZone &&
+    var isActive = selectedDeliveryZone &&
       selectedDeliveryZone.id === zone.id;
     html += '<div class="zone-option ' +
-      (active ? 'active' : '') + '" ';
-    html += 'onclick="selectDeliveryZone(\'';
-    html += zone.id + '\')">';
+      (isActive ? 'active' : '') + '" ';
+    html += 'onclick="selectDeliveryZone(\'' +
+      zone.id + '\')">';
     html += '<div class="zone-name">' +
       zone.name + '</div>';
     html += '<div class="zone-price">$' +
-      zone.cost.toFixed(2) + '</div>';
-    html += '</div>';
+      zone.cost.toFixed(2) + '</div></div>';
   });
   container.innerHTML = html;
 }
@@ -2870,8 +2803,7 @@ window.selectDeliveryZone = function(zoneId) {
 function updateCheckoutTotals() {
   var subtotalUsd = 0;
   cart.forEach(function(item) {
-    subtotalUsd += Number(item.price) *
-      item.quantity;
+    subtotalUsd += Number(item.price) * item.quantity;
   });
   var discountAmount = 0;
   if (appliedCoupon) {
@@ -2885,14 +2817,13 @@ function updateCheckoutTotals() {
     deliveryFee = selectedDeliveryZone ?
       selectedDeliveryZone.cost : 5;
   }
-  var totalUsd = subtotalUsd + ivaUsd +
-    deliveryFee;
+  var totalUsd = subtotalUsd + ivaUsd + deliveryFee;
   var html = '';
   if (appliedCoupon) {
     html += '<div class="cart-total-row discount">';
     html += '<span>Descuento:</span>';
-    html += '<span>-$' + discountAmount
-      .toFixed(2) + '</span></div>';
+    html += '<span>-$' + discountAmount.toFixed(2) +
+      '</span></div>';
   }
   html += '<div class="cart-total-row">';
   html += '<span>Subtotal:</span>';
@@ -2918,19 +2849,18 @@ function updateCheckoutTotals() {
 
 window.confirmOrder = async function() {
   if (checkoutDeliveryMode === 'delivery') {
-    var addr = document.getElementById(
+    var address = document.getElementById(
       'deliveryAddressInput'
     ).value;
     var lat = document.getElementById('gpsLat').value;
-    if (!addr && !lat) {
+    if (!address && !lat) {
       alert('Ingresa dirección o GPS');
       return;
     }
   }
   var subtotalUsd = 0;
   cart.forEach(function(item) {
-    subtotalUsd += Number(item.price) *
-      item.quantity;
+    subtotalUsd += Number(item.price) * item.quantity;
   });
   var discountAmount = 0;
   if (appliedCoupon) {
@@ -2944,8 +2874,7 @@ window.confirmOrder = async function() {
     deliveryFee = selectedDeliveryZone ?
       selectedDeliveryZone.cost : 5;
   }
-  var totalUsd = subtotalUsd + ivaUsd +
-    deliveryFee;
+  var totalUsd = subtotalUsd + ivaUsd + deliveryFee;
   var orderData = {
     userId: currentUser.name,
     userName: currentUser.name,
@@ -2983,15 +2912,13 @@ window.confirmOrder = async function() {
       'gpsLng'
     ).value;
   }
-  var orderSaved = false;
+  var saved = false;
   try {
     await addDoc(collection(db, 'orders'), orderData);
-    orderSaved = true;
-  } catch (error) {
-    console.error(error);
-  }
-  if (!orderSaved) {
-    alert('Error al registrar el pedido. ' +
+    saved = true;
+  } catch (error) { console.error(error); }
+  if (!saved) {
+    alert('Hubo un problema al registrar tu pedido. ' +
       'Contáctanos por WhatsApp.');
     return;
   }
@@ -3007,47 +2934,36 @@ window.confirmOrder = async function() {
       .toFixed(2) + '\n';
   });
   if (appliedCoupon) {
-    rawMessage += '\nCupón: ' +
-      appliedCoupon.code + ' (-' +
-      appliedCoupon.discount + '%)';
+    rawMessage += '\nCupón: ' + appliedCoupon.code +
+      ' (-' + appliedCoupon.discount + '%)';
   }
-  rawMessage += '\nTotal: $' +
-    totalUsd.toFixed(2);
+  rawMessage += '\nTotal: $' + totalUsd.toFixed(2);
   rawMessage += '\nEntrega: ' +
     (checkoutDeliveryMode === 'pickup' ?
       'Pickup' : 'Delivery');
   if (checkoutDeliveryMode === 'delivery') {
-    var addr2 = document.getElementById(
+    var addr = document.getElementById(
       'deliveryAddressInput'
     ).value;
-    if (addr2) {
-      rawMessage += '\nDirección: ' + addr2;
-    }
+    if (addr) rawMessage += '\nDirección: ' + addr;
   }
   window.open(
-    'https://wa.me/' + cleanNumber +
-    '?text=' + encodeURIComponent(rawMessage),
+    'https://wa.me/' + cleanNumber + '?text=' +
+    encodeURIComponent(rawMessage),
     '_blank'
   );
   cart = [];
   appliedCoupon = null;
   selectedDeliveryZone = null;
-  var cc = document.getElementById(
-    'couponCodeInput'
-  );
-  if (cc) cc.value = '';
-  var cm = document.getElementById('couponMessage');
-  if (cm) cm.innerHTML = '';
+  document.getElementById('couponCodeInput').value = '';
+  document.getElementById('couponMessage').innerHTML = '';
   updateCartUI();
   saveCart();
   closeModal('checkoutModal');
   alert('✅ Pedido enviado');
   await loadData();
 };
-
 function renderFooter() {
-  var fc = document.getElementById('footerContent');
-  if (!fc) return;
   var html = '';
   html += '<div class="footer-section">';
   html += '<h3>' + siteConfig.companyName + '</h3>';
@@ -3077,17 +2993,15 @@ function renderFooter() {
       '" target="_blank">TikTok</a>';
   }
   html += '</div>';
-  fc.innerHTML = html;
-  var fb = document.getElementById('footerBottom');
-  if (fb) {
-    fb.innerHTML = '<p>&copy; 2026 ' +
-      siteConfig.companyName + '</p>';
-  }
+  document.getElementById('footerContent')
+    .innerHTML = html;
+  document.getElementById('footerBottom')
+    .innerHTML = '<p>&copy; 2026 ' +
+    siteConfig.companyName + '</p>';
 }
 
 window.closeModal = function(id) {
-  var el = document.getElementById(id);
-  if (el) el.classList.remove('active');
+  document.getElementById(id).classList.remove('active');
 };
 
 document.addEventListener('keydown', function(e) {
@@ -3096,19 +3010,17 @@ document.addEventListener('keydown', function(e) {
       .forEach(function(m) {
         m.classList.remove('active');
       });
-    var cs = document.getElementById('cartSidebar');
-    if (cs) cs.classList.remove('active');
+    document.getElementById('cartSidebar')
+      .classList.remove('active');
   }
 });
 
-try {
-  var savedGuest = localStorage.getItem(
-    'akira_guest'
-  );
-  if (savedGuest) {
+var savedGuest = localStorage.getItem('akira_guest');
+if (savedGuest) {
+  try {
     currentUser = JSON.parse(savedGuest);
-  }
-} catch(e) {}
+  } catch(e) {}
+}
 
 loadData();
 </script>
