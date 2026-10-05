@@ -58,7 +58,7 @@
         .section-title { font-size: 1.8rem; margin-bottom: 1rem; color: #1a1a1a; text-align: center; }
         .section-title .highlight { color: #dc3545; }
         .section-subtitle { text-align: center; color: #666; margin-bottom: 2rem; }
-        
+
         /* GRID UNIFORME DE PRODUCTOS */
         .featured-grid { 
             display: grid; 
@@ -152,7 +152,7 @@
         .detail-price-bs { font-size: 1.1rem; color: #666; }
         .detail-offer-badge { background: #dc3545; color: white; padding: 0.3rem 0.8rem; border-radius: 15px; font-size: 0.85rem; display: inline-block; margin: 0.5rem 0; }
         .detail-description { background: #f8f8f8; padding: 1rem; border-radius: 16px; margin: 1rem 0; color: #555; }
-        
+
         /* FICHA TÉCNICA */
         .tech-sheet { background: #f0f8ff; border: 1px solid #b0d4f1; border-radius: 12px; padding: 1rem; margin: 1rem 0; }
         .tech-sheet h3 { color: #0066cc; margin-bottom: 0.8rem; font-size: 1.1rem; }
@@ -168,7 +168,7 @@
         .compatibility-table td { padding: 0.5rem; border-bottom: 1px solid #d0e4f7; }
         .search-terms { background: #fff8e1; padding: 0.8rem; border-radius: 8px; margin-top: 1rem; font-size: 0.8rem; color: #666; }
         .search-terms strong { color: #ff9800; }
-        
+
         .specs-table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
         .specs-table tr { border-bottom: 1px solid #eee; }
         .specs-table td { padding: 0.6rem; }
@@ -451,7 +451,6 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
-
         let products = [], cart = JSON.parse(localStorage.getItem('akira_cart')) || [], currentUser = null;
         let bcvRate = 36.5, deliveryMode = 'pickup', checkoutDeliveryMode = 'pickup', selectedDeliveryZone = null;
         let pickupMapsUrl = '', banners = [], currentBanner = 0, bannerInterval;
@@ -479,7 +478,7 @@
         function renderDrawerMenu() {
             const container = document.getElementById('drawerMenu');
             let html = '<div class="drawer-all" onclick="showAllProductsFromMenu()">📦 Todos los productos</div>';
-            
+
             drawerMenu.forEach((cat, catIdx) => {
                 html += `<div class="drawer-category">
                     <div class="drawer-cat-header" onclick="toggleDrawerCategory(${catIdx})">
@@ -487,7 +486,7 @@
                         <span class="drawer-arrow">▼</span>
                     </div>
                     <div class="drawer-brand-list" id="drawer-brand-${catIdx}">`;
-                
+
                 if (cat.brands) {
                     cat.brands.forEach((brand, brandIdx) => {
                         html += `<div class="drawer-brand" onclick="toggleDrawerBrand(${catIdx}, ${brandIdx})">
@@ -495,10 +494,10 @@
                             <span class="drawer-arrow">▼</span>
                         </div>
                         <div class="drawer-model-list" id="drawer-model-${catIdx}-${brandIdx}">`;
-                        
+
                         if (brand.models) {
                             brand.models.forEach((model, modelIdx) => {
-                                html += `<div class="drawer-model" onclick="filterByModel(${catIdx}, ${brandIdx}, ${modelIdx})">${model}</div>`;
+                                html += `<div class="drawer-model" onclick="filterByModel(event, ${catIdx}, ${brandIdx}, ${modelIdx})">${model}</div>`;
                             });
                         }
                         html += `</div>`;
@@ -506,7 +505,7 @@
                 }
                 html += `</div></div>`;
             });
-            
+
             container.innerHTML = html;
         }
 
@@ -514,10 +513,10 @@
             const brandList = document.getElementById(`drawer-brand-${catIdx}`);
             const headers = document.querySelectorAll('.drawer-cat-header');
             const isOpen = brandList.classList.contains('open');
-            
+
             document.querySelectorAll('.drawer-brand-list').forEach(b => b.classList.remove('open'));
             headers.forEach(h => h.classList.remove('active'));
-            
+
             if (!isOpen) {
                 brandList.classList.add('open');
                 headers[catIdx].classList.add('active');
@@ -528,29 +527,29 @@
             const modelList = document.getElementById(`drawer-model-${catIdx}-${brandIdx}`);
             const brands = document.querySelectorAll('.drawer-brand');
             const isOpen = modelList.classList.contains('open');
-            
+
             document.querySelectorAll('.drawer-model-list').forEach(m => m.classList.remove('open'));
             brands.forEach(b => b.classList.remove('active'));
-            
+
             if (!isOpen) {
                 modelList.classList.add('open');
                 brands[brandIdx].classList.add('active');
             }
         };
 
-        window.filterByModel = function(catIdx, brandIdx, modelIdx) {
+        window.filterByModel = function(ev, catIdx, brandIdx, modelIdx) {
             const cat = drawerMenu[catIdx];
             const brand = cat.brands[brandIdx];
             const model = brand.models[modelIdx];
-            
+
             activeCategory = cat.name;
             activeBrand = brand.name;
             activeModel = model;
             searchQuery = '';
-            
+
             document.querySelectorAll('.drawer-model').forEach(m => m.classList.remove('active'));
-            event.target.classList.add('active');
-            
+            ev.target.classList.add('active');
+
             applyFilters();
             toggleSidebar();
         };
@@ -582,7 +581,7 @@
             if (activeCategory) filtered = filtered.filter(p => p.category === activeCategory);
             if (activeBrand) filtered = filtered.filter(p => p.brand && p.brand.toLowerCase().includes(activeBrand.toLowerCase()));
             if (activeModel) filtered = filtered.filter(p => p.vehicle && p.vehicle.toLowerCase().includes(activeModel.toLowerCase()));
-            
+
             const hasFilter = searchQuery || activeCategory || activeBrand || activeModel;
             if (hasFilter) {
                 document.getElementById('recommendedSection').style.display = 'none';
@@ -614,13 +613,13 @@
             if (currentPage > totalPages) currentPage = totalPages;
             const start = (currentPage - 1) * PRODUCTS_PER_PAGE;
             const pageProducts = filteredProducts.slice(start, start + PRODUCTS_PER_PAGE);
-            
+
             grid.innerHTML = pageProducts.map(p => {
                 const { finalPrice, priceBs } = formatPrices(p.price, p.discount);
                 const imageHtml = p.images?.[0] || p.image ? `<img src="${p.images?.[0] || p.image}" alt="${p.name}">` : '';
                 return `<div class="search-result-card" onclick="openProductDetail('${p.id}')"><div class="search-result-image">${imageHtml}</div><div class="search-result-info">${p.code ? `<div style="font-size:0.75rem;color:#888;">Código: ${p.code}</div>` : ''}<div class="search-result-name">${p.name}</div><div class="search-result-price">$${finalPrice.toFixed(2)} / Bs. ${priceBs.toFixed(2)}</div><div style="font-size:0.8rem;color:${p.stock === 0 ? '#dc3545' : '#28a745'};margin-top:0.3rem;">${p.stock === 0 ? 'No disponible' : `Stock: ${p.stock}`}</div></div></div>`;
             }).join('');
-            
+
             if (totalPages > 1) {
                 let pagHtml = `<button ${currentPage === 1 ? 'disabled' : ''} onclick="changePage(${currentPage - 1})">Anterior</button>`;
                 for (let i = 1; i <= totalPages; i++) pagHtml += `<button class="${i === currentPage ? 'active' : ''}" onclick="changePage(${i})">${i}</button>`;
@@ -639,8 +638,7 @@
                 const bannersDoc = await getDoc(doc(db, 'settings', 'banners')); if (bannersDoc.exists()) banners = bannersDoc.data().images || [];
                 const configDoc = await getDoc(doc(db, 'settings', 'siteConfig')); if (configDoc.exists()) siteConfig = { ...siteConfig, ...configDoc.data() };
                 const waDoc = await getDoc(doc(db, 'settings', 'whatsapp')); if (waDoc.exists() && waDoc.data().number) whatsappNumber = waDoc.data().number;
-                
-                // Hero
+
                 const heroDoc = await getDoc(doc(db, 'settings', 'hero'));
                 if (heroDoc.exists()) {
                     heroConfig = heroDoc.data();
@@ -648,8 +646,7 @@
                         renderHero();
                     }
                 }
-                
-                // Drawer menu
+
                 const drawerDoc = await getDoc(doc(db, 'settings', 'drawerMenu'));
                 if (drawerDoc.exists()) {
                     drawerMenu = drawerDoc.data().categories || [];
@@ -669,19 +666,17 @@
                         ]}
                     ];
                 }
-                
+
                 const zonesSnap = await getDocs(collection(db, 'deliveryZones')); deliveryZones = []; zonesSnap.forEach(d => deliveryZones.push({ id: d.id, ...d.data() }));
-                const couponsSnap = await getDocs(collection(db, 'coupons')); allCoupons = []; couponsSnap.forEach(d => allCoupons.push({ id: d.id, ...d.data() }));
                 const snapshot = await getDocs(collection(db, 'products')); products = []; snapshot.forEach(d => products.push({ id: d.id, ...d.data() }));
                 const brandsSnap = await getDocs(collection(db, 'brands')); let brands = []; brandsSnap.forEach(d => brands.push({ id: d.id, ...d.data() }));
-                
-                // Cargar reseñas
+
                 try {
                     const reviewsSnap = await getDocs(collection(db, 'reviews'));
                     allReviews = [];
                     reviewsSnap.forEach(d => allReviews.push({ id: d.id, ...d.data() }));
                 } catch(e) { allReviews = []; }
-                
+
                 applySiteConfig(); renderDrawerMenu(); renderRecommended(); renderFooterBrands(brands); updateCartUI(); updateHeaderButtons(); updateWhatsAppLinks();
             } catch (error) { console.error('Error:', error); }
         }
@@ -693,7 +688,7 @@
             const title = document.getElementById('heroTitle');
             const subtitle = document.getElementById('heroSubtitle');
             const cta = document.getElementById('heroCta');
-            
+
             section.style.display = 'flex';
             if (heroConfig.backgroundImage) {
                 bg.style.backgroundImage = `url('${heroConfig.backgroundImage}')`;
@@ -710,7 +705,7 @@
                 bg.style.background = 'linear-gradient(135deg, #dc3545 0%, #8b0000 100%)';
                 overlay.style.display = 'none';
             }
-            
+
             if (heroConfig.title) {
                 title.textContent = heroConfig.title;
                 title.style.color = heroConfig.titleColor || 'white';
@@ -760,16 +755,14 @@
             }).join('');
         }
 
-        // GENERAR FICHA TÉCNICA AUTOMÁTICA
         function generateTechSheetHTML(product) {
             const attrs = product.attributes || {};
             const specs = product.specifications || [];
             const compatibility = product.compatibility || [];
             const searchTerms = product.searchTerms || '';
-            
+
             let html = '';
-            
-            // Atributos
+
             if (Object.keys(attrs).length > 0) {
                 html += `<div class="tech-sheet"><h3>📋 Atributos del Repuesto</h3><div class="attributes">`;
                 const attrLabels = {
@@ -788,8 +781,7 @@
                 }
                 html += `</div></div>`;
             }
-            
-            // Especificaciones técnicas
+
             if (specs.length > 0) {
                 html += `<div class="tech-sheet"><h3>️ Especificaciones Técnicas</h3><table class="tech-specs-table">`;
                 specs.forEach(spec => {
@@ -799,8 +791,7 @@
                 });
                 html += `</table></div>`;
             }
-            
-            // Compatibilidad vehicular
+
             if (compatibility.length > 0) {
                 html += `<div class="tech-sheet"><h3> Compatibilidad Vehicular</h3><table class="compatibility-table"><thead><tr><th>Marca</th><th>Modelo</th><th>Años</th><th>Motor</th><th>Notas</th></tr></thead><tbody>`;
                 compatibility.forEach(c => {
@@ -810,12 +801,11 @@
                 });
                 html += `</tbody></table></div>`;
             }
-            
-            // Términos de búsqueda
+
             if (searchTerms) {
                 html += `<div class="search-terms"><strong>🔍 Búsquedas frecuentes:</strong> ${searchTerms}</div>`;
             }
-            
+
             return html;
         }
 
@@ -828,19 +818,16 @@
             let priceBox = '';
             if (hasDiscount) priceBox = `<div class="detail-price-box"><div class="detail-offer-badge">OFERTA -${product.discount}%</div><div style="font-size:1rem;color:#999;text-decoration:line-through;">Antes: $${Number(product.price).toFixed(2)}</div><div class="detail-price-usd">$${finalPrice.toFixed(2)}</div><div class="detail-price-bs">Bs. ${priceBs.toFixed(2)} (BCV: ${bcvRate})</div></div>`;
             else priceBox = `<div class="detail-price-box"><div class="detail-price-usd">$${finalPrice.toFixed(2)}</div><div class="detail-price-bs">Bs. ${priceBs.toFixed(2)} (BCV: ${bcvRate})</div></div>`;
-            
-            // Ficha técnica
+
             const techSheetHtml = generateTechSheetHTML(product);
-            
-            // Reseñas del producto
+
             const productReviews = allReviews.filter(r => r.productId === productId);
             const avgRating = productReviews.length > 0 ? (productReviews.reduce((sum, r) => sum + r.rating, 0) / productReviews.length).toFixed(1) : 0;
-            
+
             let reviewsHtml = `<div class="reviews-section"><h3>⭐ Reseñas (${productReviews.length}) - Promedio: ${avgRating}/5</h3>`;
-            
-            // Formulario de reseña
+
             if (currentUser) {
-                const existingReview = productReviews.find(r => r.userId === currentUser.name || r.userPhone === currentUser.phone);
+                const existingReview = productReviews.find(r => r.userPhone === currentUser.phone);
                 if (!existingReview) {
                     reviewsHtml += `<div class="review-form">
                         <label style="font-weight:600;">Tu calificación:</label>
@@ -859,8 +846,7 @@
             } else {
                 reviewsHtml += `<p style="font-size:0.85rem; color:#666; margin-bottom:1rem;">Inicia sesión para dejar una reseña.</p>`;
             }
-            
-            // Lista de reseñas
+
             if (productReviews.length > 0) {
                 reviewsHtml += productReviews.sort((a,b) => new Date(b.date) - new Date(a.date)).map(r => {
                     const stars = '★'.repeat(r.rating) + '☆'.repeat(5 - r.rating);
@@ -877,12 +863,11 @@
                 reviewsHtml += `<p style="font-size:0.85rem; color:#999;">Aún no hay reseñas. ¡Sé el primero!</p>`;
             }
             reviewsHtml += `</div>`;
-            
+
             document.getElementById('productDetailContent').innerHTML = `<button class="modal-close" onclick="closeModal('productDetailModal')">×</button><div class="product-detail"><div class="product-detail-image">${imageHtml}</div><div class="product-detail-info">${product.code ? `<div style="color:#dc3545;font-size:0.9rem;">Código: ${product.code}</div>` : ''}<h2>${product.name}</h2>${priceBox}<div style="color: ${product.stock === 0 ? '#dc3545' : product.stock < 5 ? '#FFC107' : '#28a745'}; font-weight:bold; margin:0.5rem 0;">${product.stock === 0 ? 'No disponible' : product.stock < 5 ? `¡Últimas ${product.stock}!` : `Disponible: ${product.stock}`}</div>${product.description ? `<h3 style="color:#dc3545; margin:1rem 0 0.5rem;">Descripción</h3><div class="detail-description">${product.description}</div>` : ''}${techSheetHtml}</div></div>${reviewsHtml}<div class="detail-actions"><button class="featured-add-btn" style="flex:1; padding:1rem;" onclick="addToCart('${product.id}'); closeModal('productDetailModal')" ${product.stock === 0 ? 'disabled' : ''}>${product.stock === 0 ? 'Consultar' : 'Agregar al carrito'}</button></div>`;
             document.getElementById('productDetailModal').classList.add('active');
         };
 
-        // Sistema de reseñas
         let selectedRatings = {};
         window.selectRating = function(productId, rating) {
             selectedRatings[productId] = rating;
@@ -938,6 +923,7 @@
             if (item) { 
                 item.quantity += change; 
                 if (item.quantity <= 0) removeFromCart(productId); 
+                else if (!product) { removeFromCart(productId); } 
                 else if (item.quantity > product.stock) { item.quantity = product.stock; alert('No hay más stock'); updateCartUI(); } 
                 else { updateCartUI(); saveCart(); } 
             } 
@@ -947,12 +933,7 @@
             const codeInput = document.getElementById('couponCodeInput').value.trim().toUpperCase(); 
             const messageDiv = document.getElementById('couponMessage'); 
             if (!codeInput) { messageDiv.innerHTML = '<span style="color:#dc3545;">Ingresa un código</span>'; return; } 
-            const coupon = allCoupons.find(c => c.code === codeInput); 
-            if (!coupon) { messageDiv.innerHTML = '<span style="color:#dc3545;">Cupón inválido</span>'; appliedCoupon = null; updateCartUI(); return; } 
-            if (coupon.uses >= coupon.maxUses) { messageDiv.innerHTML = '<span style="color:#dc3545;">Cupón agotado</span>'; appliedCoupon = null; updateCartUI(); return; } 
-            appliedCoupon = coupon; 
-            messageDiv.innerHTML = `<span style="color:#28a745;">✅ -${coupon.discount}% aplicado</span> <button onclick="removeCoupon()" style="background:none; border:none; color:#dc3545; cursor:pointer; font-size:0.8rem; text-decoration:underline;">Quitar</button>`; 
-            updateCartUI(); 
+            messageDiv.innerHTML = '<span style="color:#666;">Los cupones no están disponibles por ahora.</span>';
         };
         window.removeCoupon = function() { appliedCoupon = null; document.getElementById('couponCodeInput').value = ''; document.getElementById('couponMessage').innerHTML = ''; updateCartUI(); };
 
@@ -1001,10 +982,10 @@
             try { 
                 const ordersSnap = await getDocs(collection(db, 'orders')); 
                 const myOrders = []; 
-                ordersSnap.forEach(doc => { const data = doc.data(); if (data.userId === currentUser.name || data.userPhone === currentUser.phone) myOrders.push({ id: doc.id, ...data }); }); 
+                ordersSnap.forEach(doc => { const data = doc.data(); if (data.userPhone === currentUser.phone) myOrders.push({ id: doc.id, ...data }); }); 
                 const ordersList = document.getElementById('ordersList'); 
                 if (myOrders.length === 0) ordersList.innerHTML = '<p style="text-align:center;color:#666;padding:2rem;">Aún no tienes pedidos</p>'; 
-                else ordersList.innerHTML = myOrders.sort((a,b) => new Date(b.date) - new Date(a.date)).map(order => `<div class="order-item"><div class="order-header"><strong>#${order.id.slice(-6)}</strong><span class="order-status ${order.status}">${order.status === 'pending' ? 'Pendiente' : order.status === 'shipped' ? 'En camino' : 'Entregado'}</span></div><div style="font-size:0.85rem;color:#666;">${new Date(order.date).toLocaleDateString()}</div><div style="margin:0.5rem 0;">${order.items.map(item => `<div>${item.name} x${item.quantity}</div>`).join('')}</div><div style="font-weight:bold;color:#dc3545;">Total: $${order.total.toFixed(2)}</div></div>`).join(''); 
+                else ordersList.innerHTML = myOrders.sort((a,b) => new Date(b.date) - new Date(a.date)).map(order => `<div class="order-item"><div class="order-header"><strong>#${order.id.slice(-6)}</strong><span class="order-status ${order.status}">${order.status === 'pending' ? 'Pendiente' : order.status === 'shipped' ? 'En camino' : 'Entregado'}</span></div><div style="font-size:0.85rem;color:#666;">${new Date(order.date).toLocaleDateString()}</div><div style="margin:0.5rem 0;">${(order.items || []).map(item => `<div>${item.name} x${item.quantity}</div>`).join('')}</div><div style="font-weight:bold;color:#dc3545;">Total: $${Number(order.total || 0).toFixed(2)}</div></div>`).join(''); 
                 document.getElementById('ordersModal').classList.add('active'); 
             } catch (error) { alert('Error: ' + error.message); } 
         }
@@ -1081,15 +1062,16 @@
             const totalUsd = subtotalUsd + ivaUsd + deliveryFee;
             const orderData = { userId: currentUser.name, userName: currentUser.name, userPhone: currentUser.phone, customerCode: currentUser.customerCode || '', items: cart.map(item => ({ id: item.id, name: item.name, quantity: item.quantity, price: item.price })), subtotal: subtotalUsd, discount: discountAmount, couponCode: appliedCoupon ? appliedCoupon.code : null, iva: ivaUsd, deliveryFee: deliveryFee, deliveryZone: selectedDeliveryZone ? selectedDeliveryZone.name : null, total: totalUsd, deliveryMode: checkoutDeliveryMode, status: 'pending', date: new Date().toISOString() };
             if (checkoutDeliveryMode === 'delivery') { orderData.address = document.getElementById('deliveryAddressInput').value; orderData.gpsLat = document.getElementById('gpsLat').value; orderData.gpsLng = document.getElementById('gpsLng').value; }
-            try { await addDoc(collection(db, 'orders'), orderData); if (appliedCoupon) { const couponRef = doc(db, 'coupons', appliedCoupon.id); const couponDoc = await getDoc(couponRef); if (couponDoc.exists()) await updateDoc(couponRef, { uses: (couponDoc.data().uses || 0) + 1 }); } } catch (error) { console.error(error); }
-            for (const item of cart) { const product = products.find(p => p.id === item.id); if (product) { const newStock = product.stock - item.quantity; try { await updateDoc(doc(db, 'products', item.id), { stock: Math.max(0, newStock) }); product.stock = Math.max(0, newStock); } catch (error) { console.error(error); } } }
+            let orderSaved = false;
+            try { await addDoc(collection(db, 'orders'), orderData); orderSaved = true; } catch (error) { console.error(error); }
+            if (!orderSaved) { alert('Hubo un problema al registrar tu pedido. Contáctanos por WhatsApp.'); return; }
             const cleanNumber = whatsappNumber.replace(/\D/g, '');
-            let message = `¡Hola ${siteConfig.companyName}! Soy ${currentUser?.name}.%0A%0AMi pedido:%0A`;
-            cart.forEach(item => { message += `- ${item.name} x${item.quantity} = $${(Number(item.price) * item.quantity).toFixed(2)}%0A`; });
-            if (appliedCoupon) message += `%0ACupón: ${appliedCoupon.code} (-${appliedCoupon.discount}%)`;
-            message += `%0ATotal: $${totalUsd.toFixed(2)}%0AEntrega: ${checkoutDeliveryMode === 'pickup' ? 'Pickup' : 'Delivery'}`;
-            if (checkoutDeliveryMode === 'delivery') { const address = document.getElementById('deliveryAddressInput').value; if (address) message += `%0ADirección: ${address}`; }
-            window.open(`https://wa.me/${cleanNumber}?text=${message}`, '_blank');
+            let rawMessage = `¡Hola ${siteConfig.companyName}! Soy ${currentUser?.name}.\n\nMi pedido:\n`;
+            cart.forEach(item => { rawMessage += `- ${item.name} x${item.quantity} = $${(Number(item.price) * item.quantity).toFixed(2)}\n`; });
+            if (appliedCoupon) rawMessage += `\nCupón: ${appliedCoupon.code} (-${appliedCoupon.discount}%)`;
+            rawMessage += `\nTotal: $${totalUsd.toFixed(2)}\nEntrega: ${checkoutDeliveryMode === 'pickup' ? 'Pickup' : 'Delivery'}`;
+            if (checkoutDeliveryMode === 'delivery') { const address = document.getElementById('deliveryAddressInput').value; if (address) rawMessage += `\nDirección: ${address}`; }
+            window.open(`https://wa.me/${cleanNumber}?text=${encodeURIComponent(rawMessage)}`, '_blank');
             cart = []; appliedCoupon = null; selectedDeliveryZone = null; document.getElementById('couponCodeInput').value = ''; document.getElementById('couponMessage').innerHTML = '';
             updateCartUI(); saveCart(); closeModal('checkoutModal'); alert('✅ Pedido enviado'); await loadData();
         };
@@ -1098,10 +1080,11 @@
             document.getElementById('footerContent').innerHTML = `<div class="footer-section"><h3>${siteConfig.companyName}</h3><p>${siteConfig.description}</p></div><div class="footer-section"><h3>Contacto</h3><p>${siteConfig.address}</p><p>${siteConfig.phone}</p></div><div class="footer-section"><h3>Horario</h3><p>${siteConfig.schedule}</p></div><div class="footer-section"><h3>Síguenos</h3>${siteConfig.facebook ? `<a href="${siteConfig.facebook}" target="_blank">Facebook</a>` : ''}${siteConfig.instagram ? `<a href="${siteConfig.instagram}" target="_blank">Instagram</a>` : ''}${siteConfig.tiktok ? `<a href="${siteConfig.tiktok}" target="_blank">TikTok</a>` : ''}</div>`; 
             document.getElementById('footerBottom').innerHTML = `<p>&copy; 2026 ${siteConfig.companyName}</p>`; 
         }
+
         window.closeModal = function(id) { document.getElementById(id).classList.remove('active'); };
         document.addEventListener('keydown', function(e) { if (e.key === 'Escape') { document.querySelectorAll('.modal.active').forEach(m => m.classList.remove('active')); document.getElementById('cartSidebar').classList.remove('active'); } });
         const savedGuest = localStorage.getItem('akira_guest'); if (savedGuest) { try { currentUser = JSON.parse(savedGuest); } catch(e) {} }
-        loadData(); renderFooter();
+        loadData();
     </script>
 </body>
 </html>
