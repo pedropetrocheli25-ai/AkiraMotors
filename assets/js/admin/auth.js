@@ -49,3 +49,6 @@ export function setupAuthGuard(onLogin) {
     if (typeof onLogin === 'function') onLogin(user);
   });
 }
+
+// Alias para compatibilidad con versiones anteriores
+export const requireAdmin = setupAuthGuard;
