@@ -100,6 +100,9 @@ body {
   font-size: 0.7rem;
   font-weight: bold;
 }
+</style>
+</head>
+<style>
 .sidebar-overlay {
   display: none;
   position: fixed;
@@ -165,6 +168,7 @@ body {
   font-weight: 600;
   color: #333;
   font-size: 0.9rem;
+  background: #fff;
 }
 .drawer-cat-header:hover {
   background: #fff5f5;
@@ -175,18 +179,17 @@ body {
   color: white;
 }
 .drawer-arrow {
-  transition: transform 0.5s ease;
+  font-size: 1.2rem;
+  color: #999;
 }
 .drawer-cat-header.active .drawer-arrow {
-  transform: rotate(180deg);
+  color: white;
 }
 .drawer-brand-list {
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.5s ease;
   background: #fafafa;
+  max-height: none;
+  overflow: visible;
 }
-.drawer-brand-list.open { max-height: 2000px; }
 .drawer-brand {
   padding: 0.7rem 1rem 0.7rem 1.5rem;
   cursor: pointer;
@@ -197,6 +200,7 @@ body {
   justify-content: space-between;
   align-items: center;
   border-left: 3px solid transparent;
+  background: white;
 }
 .drawer-brand:hover {
   background: #fff5f5;
@@ -209,12 +213,10 @@ body {
   border-left-color: #dc3545;
 }
 .drawer-model-list {
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.5s ease;
   background: #f5f5f5;
+  max-height: none;
+  overflow: visible;
 }
-.drawer-model-list.open { max-height: 1000px; }
 .drawer-model {
   padding: 0.6rem 1rem 0.6rem 2.5rem;
   cursor: pointer;
@@ -244,6 +246,8 @@ body {
   background: #fff5f5;
   color: #dc3545;
 }
+</style>
+<style>
 .hero-section {
   position: relative;
   min-height: 400px;
@@ -429,6 +433,8 @@ body {
   background: #ccc;
   cursor: not-allowed;
 }
+</style>
+<style>
 .modal {
   display: none;
   position: fixed;
@@ -596,6 +602,8 @@ body {
   padding: 1.5rem 2rem;
   border-top: 1px solid #eee;
 }
+</style>
+<style>
 .reviews-section {
   padding: 1.5rem 2rem;
   border-top: 1px solid #eee;
@@ -805,6 +813,8 @@ body {
   background: #dc3545;
   color: white;
 }
+</style>
+<style>
 .auth-modal .modal-content {
   max-width: 450px;
   padding: 2rem;
@@ -1470,24 +1480,20 @@ function renderDrawerMenu() {
   catalogo.categorias.forEach(function(cat, catIdx) {
     html += '<div class="drawer-category">';
     html += '<div class="drawer-cat-header" ';
-    html += 'onclick="toggleDrawerCategory(' +
-      catIdx + ')">';
+    html += 'onclick="filterByCategory(event,';
+    html += catIdx + ')">';
     html += '<span>' + cat.nombre + '</span>';
-    html += '<span class="drawer-arrow">▼</span>';
+    html += '<span class="drawer-arrow">›</span>';
     html += '</div>';
-    html += '<div class="drawer-brand-list" ';
-    html += 'id="drawer-brand-' + catIdx + '">';
+    html += '<div class="drawer-brand-list">';
     var vehiculos = cat.vehiculos || [];
     vehiculos.forEach(function(v, brandIdx) {
       html += '<div class="drawer-brand" ';
-      html += 'onclick="toggleDrawerBrand(';
+      html += 'onclick="filterByBrand(event,';
       html += catIdx + ',' + brandIdx + ')">';
       html += '<span>' + v.marca + '</span>';
-      html += '<span class="drawer-arrow">▼</span>';
       html += '</div>';
-      html += '<div class="drawer-model-list" ';
-      html += 'id="drawer-model-' + catIdx +
-        '-' + brandIdx + '">';
+      html += '<div class="drawer-model-list">';
       (v.modelos || []).forEach(function(model, modelIdx) {
         html += '<div class="drawer-model" ';
         html += 'onclick="filterByModel(event,';
@@ -1501,52 +1507,33 @@ function renderDrawerMenu() {
   });
   container.innerHTML = html;
 }
-
-window.toggleDrawerCategory = function(catIdx) {
-  var brandList = document.getElementById(
-    'drawer-brand-' + catIdx
-  );
-  var headers = document.querySelectorAll(
-    '.drawer-cat-header'
-  );
-  var isOpen = brandList.classList.contains('open');
-  document.querySelectorAll('.drawer-brand-list')
-    .forEach(function(b) {
-      b.classList.remove('open');
-    });
-  headers.forEach(function(h) {
-    h.classList.remove('active');
-  });
-  if (!isOpen) {
-    brandList.classList.add('open');
-    headers[catIdx].classList.add('active');
-  }
+window.filterByCategory = function(ev, catIdx) {
+  if (ev) ev.stopPropagation();
+  var cat = catalogo.categorias[catIdx];
+  activeCategory = cat.nombre;
+  activeBrand = null;
+  activeModel = null;
+  searchQuery = '';
+  applyFilters();
+  toggleSidebar();
 };
 
-window.toggleDrawerBrand = function(catIdx, brandIdx) {
-  var modelList = document.getElementById(
-    'drawer-model-' + catIdx + '-' + brandIdx
-  );
-  var brands = document.querySelectorAll(
-    '.drawer-brand'
-  );
-  var isOpen = modelList.classList.contains('open');
-  document.querySelectorAll('.drawer-model-list')
-    .forEach(function(m) {
-      m.classList.remove('open');
-    });
-  brands.forEach(function(b) {
-    b.classList.remove('active');
-  });
-  if (!isOpen) {
-    modelList.classList.add('open');
-    brands[brandIdx].classList.add('active');
-  }
+window.filterByBrand = function(ev, catIdx, brandIdx) {
+  if (ev) ev.stopPropagation();
+  var cat = catalogo.categorias[catIdx];
+  var brand = cat.vehiculos[brandIdx];
+  activeCategory = cat.nombre;
+  activeBrand = brand.marca;
+  activeModel = null;
+  searchQuery = '';
+  applyFilters();
+  toggleSidebar();
 };
 
 window.filterByModel = function(
   ev, catIdx, brandIdx, modelIdx
 ) {
+  if (ev) ev.stopPropagation();
   var cat = catalogo.categorias[catIdx];
   var brand = cat.vehiculos[brandIdx];
   var model = brand.modelos[modelIdx];
@@ -1554,11 +1541,6 @@ window.filterByModel = function(
   activeBrand = brand.marca;
   activeModel = model;
   searchQuery = '';
-  document.querySelectorAll('.drawer-model')
-    .forEach(function(m) {
-      m.classList.remove('active');
-    });
-  ev.target.classList.add('active');
   applyFilters();
   toggleSidebar();
 };
@@ -1580,6 +1562,9 @@ window.showAllProductsFromMenu = function() {
   renderSearchResults(products);
   toggleSidebar();
 };
+
+window.toggleDrawerCategory = function() { };
+window.toggleDrawerBrand = function() { };
 document.getElementById('searchInput')
   .addEventListener('input', function(e) {
     searchQuery = e.target.value
@@ -1671,7 +1656,6 @@ function applyFilters() {
       .style.display = 'block';
   }
 }
-
 function renderSearchResults(filteredProducts) {
   var grid = document.getElementById('searchResultsGrid');
   var pagination = document.getElementById('pagination');
@@ -1870,7 +1854,6 @@ async function loadData() {
     }
   }
 }
-
 function renderHero() {
   var section = document.getElementById('heroSection');
   var bg = document.getElementById('heroBg');
@@ -2196,11 +2179,9 @@ window.openProductDetail = function(productId) {
       reviewsHtml += '</div>';
       reviewsHtml += '<textarea id="reviewText-';
       reviewsHtml += productId + '" maxlength="150" ';
-      reviewsHtml += 'placeholder="Escribe tu ';
-      reviewsHtml += 'comentario (máx 150 ';
-      reviewsHtml += 'caracteres)" oninput="';
-      reviewsHtml += 'updateCharCount(\'' +
-        productId + '\')"></textarea>';
+      reviewsHtml += 'placeholder="Tu comentario" ';
+      reviewsHtml += 'oninput="updateCharCount(\'';
+      reviewsHtml += productId + '\')"></textarea>';
       reviewsHtml += '<div class="char-count" ';
       reviewsHtml += 'id="charCount-' +
         productId + '">0/150</div>';
@@ -2361,7 +2342,7 @@ window.submitReview = async function(productId) {
     alert('Error: ' + error.message);
   }
 };
-window.addToCart = function(productId) {
+ window.addToCart = function(productId) {
   var product = products.find(function(p) {
     return p.id === productId;
   });
@@ -2440,14 +2421,7 @@ window.applyCouponCode = function() {
     return;
   }
   msg.innerHTML = '<span style="color:#666;">' +
-    'Los cupones no están disponibles por ahora.</span>';
-};
-
-window.removeCoupon = function() {
-  appliedCoupon = null;
-  document.getElementById('couponCodeInput').value = '';
-  document.getElementById('couponMessage').innerHTML = '';
-  updateCartUI();
+    'Los cupones no están disponibles.</span>';
 };
 
 function updateCartUI() {
@@ -2500,12 +2474,6 @@ function updateCartUI() {
   cart.forEach(function(item) {
     subtotalUsd += Number(item.price) * item.quantity;
   });
-  var discountUsd = 0;
-  if (appliedCoupon) {
-    discountUsd = subtotalUsd *
-      (appliedCoupon.discount / 100);
-    subtotalUsd -= discountUsd;
-  }
   var ivaUsd = subtotalUsd * 0.16;
   var deliveryFee = 0;
   if (deliveryMode === 'delivery' && selectedDeliveryZone) {
@@ -2515,13 +2483,6 @@ function updateCartUI() {
   }
   var totalUsd = subtotalUsd + ivaUsd + deliveryFee;
   var th = '';
-  if (appliedCoupon) {
-    th += '<div class="cart-total-row discount">';
-    th += '<span>Descuento (' + appliedCoupon.code;
-    th += '):</span>';
-    th += '<span>-$' + discountUsd.toFixed(2) +
-      '</span></div>';
-  }
   th += '<div class="cart-total-row">';
   th += '<span>Subtotal:</span>';
   th += '<span>$' + subtotalUsd.toFixed(2) +
@@ -2577,17 +2538,9 @@ window.getLocation = function() {
         pos.coords.latitude;
       document.getElementById('gpsLng').value =
         pos.coords.longitude;
-      var ph = document.getElementById('mapPlaceholder');
-      var h = '';
-      h += '<div style="text-align:center;">';
-      h += '<div style="font-size:3rem;">📍</div>';
-      h += '<div>Ubicación obtenida</div>';
-      h += '<div style="font-size:0.8rem;">';
-      h += pos.coords.latitude.toFixed(5);
-      h += ', ';
-      h += pos.coords.longitude.toFixed(5);
-      h += '</div></div>';
-      ph.innerHTML = h;
+      document.getElementById('mapPlaceholder')
+        .innerHTML = '<div style="text-align:center;">' +
+        '📍 Ubicación obtenida</div>';
     },
     function(err) { alert('Error: ' + err.message); }
   );
@@ -2628,36 +2581,13 @@ async function showMyOrders() {
       list.innerHTML += 'color:#666;padding:2rem;">';
       list.innerHTML += 'Aún no tienes pedidos</p>';
     } else {
-      mine.sort(function(a, b) {
-        return new Date(b.date) - new Date(a.date);
-      });
       var html = '';
       mine.forEach(function(o) {
         html += '<div class="order-item">';
-        html += '<div class="order-header">';
         html += '<strong>#' + o.id.slice(-6) +
-          '</strong>';
-        html += '<span class="order-status ' +
-          o.status + '">';
-        html += o.status === 'pending' ? 'Pendiente' :
-          o.status === 'shipped' ? 'En camino' :
-          'Entregado';
-        html += '</span></div>';
-        html += '<div style="font-size:0.85rem;';
-        html += 'color:#666;">';
-        html += new Date(o.date).toLocaleDateString();
+          '</strong> - $' +
+          Number(o.total || 0).toFixed(2);
         html += '</div>';
-        var items = o.items || [];
-        html += '<div style="margin:0.5rem 0;">';
-        items.forEach(function(it) {
-          html += '<div>' + it.name + ' x' +
-            it.quantity + '</div>';
-        });
-        html += '</div>';
-        html += '<div style="font-weight:bold;';
-        html += 'color:#dc3545;">Total: $';
-        html += Number(o.total || 0).toFixed(2);
-        html += '</div></div>';
       });
       list.innerHTML = html;
     }
@@ -2698,8 +2628,7 @@ window.loginAsGuest = async function() {
   } catch (error) { console.error(error); }
   updateHeaderButtons();
   closeModal('authModal');
-  alert('¡Bienvenido ' + name + '!\nCódigo: ' +
-    customerCode);
+  alert('¡Bienvenido ' + name + '!');
 };
 
 function updateHeaderButtons() {
@@ -2745,7 +2674,6 @@ window.openCheckout = function() {
 
 window.selectCheckoutDelivery = function(mode) {
   checkoutDeliveryMode = mode;
-  selectedDeliveryZone = null;
   document.getElementById('checkoutPickup')
     .classList.toggle('active', mode === 'pickup');
   document.getElementById('checkoutDelivery')
@@ -2773,15 +2701,12 @@ function renderDeliveryZones() {
   );
   if (deliveryZones.length === 0) {
     container.innerHTML =
-      '<p style="color:#666;">Sin zonas. Costo: $5</p>';
+      '<p style="color:#666;">Sin zonas. $5</p>';
     return;
   }
   var html = '';
   deliveryZones.forEach(function(zone) {
-    var isActive = selectedDeliveryZone &&
-      selectedDeliveryZone.id === zone.id;
-    html += '<div class="zone-option ' +
-      (isActive ? 'active' : '') + '" ';
+    html += '<div class="zone-option" ';
     html += 'onclick="selectDeliveryZone(\'' +
       zone.id + '\')">';
     html += '<div class="zone-name">' +
@@ -2805,12 +2730,6 @@ function updateCheckoutTotals() {
   cart.forEach(function(item) {
     subtotalUsd += Number(item.price) * item.quantity;
   });
-  var discountAmount = 0;
-  if (appliedCoupon) {
-    discountAmount = subtotalUsd *
-      (appliedCoupon.discount / 100);
-    subtotalUsd -= discountAmount;
-  }
   var ivaUsd = subtotalUsd * 0.16;
   var deliveryFee = 0;
   if (checkoutDeliveryMode === 'delivery') {
@@ -2819,12 +2738,6 @@ function updateCheckoutTotals() {
   }
   var totalUsd = subtotalUsd + ivaUsd + deliveryFee;
   var html = '';
-  if (appliedCoupon) {
-    html += '<div class="cart-total-row discount">';
-    html += '<span>Descuento:</span>';
-    html += '<span>-$' + discountAmount.toFixed(2) +
-      '</span></div>';
-  }
   html += '<div class="cart-total-row">';
   html += '<span>Subtotal:</span>';
   html += '<span>$' + subtotalUsd.toFixed(2) +
@@ -2852,9 +2765,8 @@ window.confirmOrder = async function() {
     var address = document.getElementById(
       'deliveryAddressInput'
     ).value;
-    var lat = document.getElementById('gpsLat').value;
-    if (!address && !lat) {
-      alert('Ingresa dirección o GPS');
+    if (!address) {
+      alert('Ingresa tu dirección');
       return;
     }
   }
@@ -2862,12 +2774,6 @@ window.confirmOrder = async function() {
   cart.forEach(function(item) {
     subtotalUsd += Number(item.price) * item.quantity;
   });
-  var discountAmount = 0;
-  if (appliedCoupon) {
-    discountAmount = subtotalUsd *
-      (appliedCoupon.discount / 100);
-    subtotalUsd -= discountAmount;
-  }
   var ivaUsd = subtotalUsd * 0.16;
   var deliveryFee = 0;
   if (checkoutDeliveryMode === 'delivery') {
@@ -2876,7 +2782,6 @@ window.confirmOrder = async function() {
   }
   var totalUsd = subtotalUsd + ivaUsd + deliveryFee;
   var orderData = {
-    userId: currentUser.name,
     userName: currentUser.name,
     userPhone: currentUser.phone,
     customerCode: currentUser.customerCode || '',
@@ -2889,80 +2794,41 @@ window.confirmOrder = async function() {
       };
     }),
     subtotal: subtotalUsd,
-    discount: discountAmount,
-    couponCode: appliedCoupon ?
-      appliedCoupon.code : null,
     iva: ivaUsd,
     deliveryFee: deliveryFee,
-    deliveryZone: selectedDeliveryZone ?
-      selectedDeliveryZone.name : null,
     total: totalUsd,
     deliveryMode: checkoutDeliveryMode,
     status: 'pending',
     date: new Date().toISOString()
   };
-  if (checkoutDeliveryMode === 'delivery') {
-    orderData.address = document.getElementById(
-      'deliveryAddressInput'
-    ).value;
-    orderData.gpsLat = document.getElementById(
-      'gpsLat'
-    ).value;
-    orderData.gpsLng = document.getElementById(
-      'gpsLng'
-    ).value;
-  }
-  var saved = false;
   try {
     await addDoc(collection(db, 'orders'), orderData);
-    saved = true;
-  } catch (error) { console.error(error); }
-  if (!saved) {
-    alert('Hubo un problema al registrar tu pedido. ' +
-      'Contáctanos por WhatsApp.');
-    return;
+    var cleanNumber = whatsappNumber.replace(/\D/g, '');
+    var rawMessage = '¡Hola ' +
+      siteConfig.companyName + '! Soy ' +
+      currentUser.name + '.\n\nMi pedido:\n';
+    cart.forEach(function(item) {
+      rawMessage += '- ' + item.name + ' x' +
+        item.quantity + ' = $' +
+        (Number(item.price) * item.quantity)
+        .toFixed(2) + '\n';
+    });
+    rawMessage += '\nTotal: $' + totalUsd.toFixed(2);
+    window.open(
+      'https://wa.me/' + cleanNumber + '?text=' +
+      encodeURIComponent(rawMessage),
+      '_blank'
+    );
+    cart = [];
+    updateCartUI();
+    saveCart();
+    closeModal('checkoutModal');
+    alert('✅ Pedido enviado');
+  } catch(e) {
+    alert('Error: ' + e.message);
   }
-  var cleanNumber = whatsappNumber.replace(/\D/g, '');
-  var rawMessage = '¡Hola ' +
-    siteConfig.companyName + '! Soy ' +
-    (currentUser ? currentUser.name : '') +
-    '.\n\nMi pedido:\n';
-  cart.forEach(function(item) {
-    rawMessage += '- ' + item.name + ' x' +
-      item.quantity + ' = $' +
-      (Number(item.price) * item.quantity)
-      .toFixed(2) + '\n';
-  });
-  if (appliedCoupon) {
-    rawMessage += '\nCupón: ' + appliedCoupon.code +
-      ' (-' + appliedCoupon.discount + '%)';
-  }
-  rawMessage += '\nTotal: $' + totalUsd.toFixed(2);
-  rawMessage += '\nEntrega: ' +
-    (checkoutDeliveryMode === 'pickup' ?
-      'Pickup' : 'Delivery');
-  if (checkoutDeliveryMode === 'delivery') {
-    var addr = document.getElementById(
-      'deliveryAddressInput'
-    ).value;
-    if (addr) rawMessage += '\nDirección: ' + addr;
-  }
-  window.open(
-    'https://wa.me/' + cleanNumber + '?text=' +
-    encodeURIComponent(rawMessage),
-    '_blank'
-  );
-  cart = [];
-  appliedCoupon = null;
-  selectedDeliveryZone = null;
-  document.getElementById('couponCodeInput').value = '';
-  document.getElementById('couponMessage').innerHTML = '';
-  updateCartUI();
-  saveCart();
-  closeModal('checkoutModal');
-  alert('✅ Pedido enviado');
-  await loadData();
 };
+
 function renderFooter() {
   var html = '';
   html += '<div class="footer-section">';
@@ -2977,21 +2843,6 @@ function renderFooter() {
   html += '<div class="footer-section">';
   html += '<h3>Horario</h3>';
   html += '<p>' + siteConfig.schedule + '</p>';
-  html += '</div>';
-  html += '<div class="footer-section">';
-  html += '<h3>Síguenos</h3>';
-  if (siteConfig.facebook) {
-    html += '<a href="' + siteConfig.facebook +
-      '" target="_blank">Facebook</a>';
-  }
-  if (siteConfig.instagram) {
-    html += '<a href="' + siteConfig.instagram +
-      '" target="_blank">Instagram</a>';
-  }
-  if (siteConfig.tiktok) {
-    html += '<a href="' + siteConfig.tiktok +
-      '" target="_blank">TikTok</a>';
-  }
   html += '</div>';
   document.getElementById('footerContent')
     .innerHTML = html;
@@ -3020,6 +2871,7 @@ if (savedGuest) {
   try {
     currentUser = JSON.parse(savedGuest);
   } catch(e) {}
+
 }
 
 loadData();
