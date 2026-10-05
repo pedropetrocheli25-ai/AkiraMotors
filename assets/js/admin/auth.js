@@ -1,6 +1,4 @@
 // assets/js/admin/auth.js
-// Autenticación real con Firebase Auth (modo compat) + verificación de admin.
-
 import { auth, db } from '../firebase.js';
 
 async function isAdminUser(uid) {
@@ -13,7 +11,7 @@ export async function loginAdmin(email, password) {
   const ok = await isAdminUser(cred.user.uid);
   if (!ok) {
     await auth.signOut();
-    const err = new Error('Esta cuenta no tiene permisos de administrador.');
+    const err = new Error('Esta cuenta no tiene permisos.');
     err.code = 'not-admin';
     throw err;
   }
@@ -24,23 +22,31 @@ export async function logoutAdmin() {
   await auth.signOut();
 }
 
-export function requireAdmin(onReady) {
+// Guard: NO redirige. Solo muestra login o panel según el estado.
+export function setupAuthGuard(onLogin) {
   auth.onAuthStateChanged(async (user) => {
+    const loginScreen = document.getElementById('loginScreen');
+    const adminPanel = document.getElementById('adminPanel');
+
     if (!user) {
-      window.location.replace('index.html');
+      if (loginScreen) loginScreen.style.display = 'block';
+      if (adminPanel) adminPanel.classList.add('hidden');
       return;
     }
-    try {
-      const ok = await isAdminUser(user.uid);
-      if (!ok) {
-        await auth.signOut();
-        window.location.replace('index.html');
-        return;
-      }
-      onReady(user);
-    } catch (e) {
-      console.error('Error verificando admin:', e);
-      window.location.replace('index.html');
+
+    const ok = await isAdminUser(user.uid);
+    if (!ok) {
+      await auth.signOut();
+      if (loginScreen) loginScreen.style.display = 'block';
+      if (adminPanel) adminPanel.classList.add('hidden');
+      return;
     }
+
+    if (loginScreen) loginScreen.style.display = 'none';
+    if (adminPanel) {
+      adminPanel.classList.remove('hidden');
+      adminPanel.style.display = 'flex';
+    }
+    if (typeof onLogin === 'function') onLogin(user);
   });
 }
