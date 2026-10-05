@@ -498,343 +498,96 @@ const pageProducts = filteredProducts.slice(start, start + PRODUCTS_PER_PAGE);
 grid.innerHTML = pageProducts.map(p => {
 const fp = formatPrices(p.price, p.discount);
 const imageHtml = p.images && p.images[0] ? '<img src="' + p.images[0] + '" alt="' + p.name + '">' : (p.image ? '<img src="' + p.image + '" alt="' + p.name + '">' : '');
-return '<div class="search-result-card" onclick="openProductDetail(\'' + p.id + '\')"><div class="search-result-image">' + imageHtml + '</div><div class="search-result-info">' + (p.code ? '<div style="font-size:0.75rem;color:#888;">Código: ' + p.code + '</div>' : '') + '<div class="search-result-name">' + p.name + '</div><div class="search-result-price">$' + fp.finalPrice.toFixed(2) + ' / Bs. ' + fp.priceBs.toFixed(2) + '</div><div style="font-size:0.8rem;color:' + (p.stock === 0 ? '#dc3545' : '#28a745') + ';margin-top:0.3rem;">' + (p.stock === 0 ? 'No disponible' : 'Stock: ' + p.stock) + '</div></div></div>';
-}).join('');
-if (totalPages > 1) {
-let pagHtml = '<button ' + (currentPage === 1 ? 'disabled' : '') + ' onclick="changePage(' + (currentPage - 1) + ')">Anterior</button>';
-for (let i = 1; i <= totalPages; i++) pagHtml += '<button class="' + (i === currentPage ? 'active' : '') + '" onclick="changePage(' + i + ')">' + i + '</button>';
-pagHtml += '<button ' + (currentPage === totalPages ? 'disabled' : '') + ' onclick="changePage(' + (currentPage + 1) + ')">Siguiente</button>';
-pagination.innerHTML = pagHtml;
-} else pagination.innerHTML = '';
-}
+return '<div class="search-result-card" onclick="openProductDetail(\'' + p.id + '\')"><div class="search-result-image">' + imageHtml + '</div><div class="search-result-info">' + (p.code ? '<div style="font-size:0.75rem;color:#888;">Código: ' + p.code + '</div>' : '') + '<div class="search-result-name">' + p.name + '</div><div class="search-result-price">
+function populateCategorySelect() { const s = document.getElementById('productCategory'); s.innerHTML = '<option value="">Seleccionar...</option>'; drawerMenu.forEach(c => { s.innerHTML += '<option value="' + c.name + '">' + c.name + '</option>'; }); }
+window.updateSubcategoryOptions = function() { const category = document.getElementById('productCategory').value; const s = document.getElementById('productSubcategory'); s.innerHTML = '<option value="">Seleccionar...</option>'; const cat = drawerMenu.find(c => c.name === category); if (cat && cat.subcategories) cat.subcategories.forEach(sub => { s.innerHTML += '<option value="' + sub + '">' + sub + '</option>'; }); };
+window.calculateSalePrice = function() { const cost = parseFloat(document.getElementById('productCostPrice').value) || 0; const margin = parseFloat(document.getElementById('productMargin').value) || 0; if (margin >= 100) { document.getElementById('productPrice').value = '0'; alert('Margen no puede ser 100%+'); return; } document.getElementById('productPrice').value = (cost / (1 - margin / 100)).toFixed(2); };
+window.addSpecification = function() { const key = document.getElementById('specKey').value.trim(); const value = document.getElementById('specValue').value.trim(); if (!key || !value) { alert('Completa característica y especificación'); return; } currentSpecifications.push({ key, value }); document.getElementById('specKey').value = ''; document.getElementById('specValue').value = ''; renderSpecifications(); };
+function renderSpecifications() { const c = document.getElementById('specificationsContainer'); c.innerHTML = currentSpecifications.map((s, i) => '<span class="spec-tag"><strong>' + s.key + ':</strong> ' + s.value + '<button type="button" onclick="removeSpecification(' + i + ')">×</button></span>').join(''); }
+window.removeSpecification = function(i) { currentSpecifications.splice(i, 1); renderSpecifications(); };
+window.addCompatibility = function() { const b = document.getElementById('compatBrand').value.trim(); const m = document.getElementById('compatModel').value.trim(); const y = document.getElementById('compatYears').value.trim(); const e = document.getElementById('compatEngine').value.trim(); const n = document.getElementById('compatNotes').value.trim(); if (!b || !m) { alert('Completa marca y modelo'); return; } currentCompatibility.push({ brand: b, model: m, years: y, engine: e, notes: n }); document.getElementById('compatBrand').value = ''; document.getElementById('compatModel').value = ''; document.getElementById('compatYears').value = ''; document.getElementById('compatEngine').value = ''; document.getElementById('compatNotes').value = ''; renderCompatibility(); };
+function renderCompatibility() { const c = document.getElementById('compatibilityContainer'); c.innerHTML = currentCompatibility.map((x, i) => '<div class="compat-row"><div style="display:flex;justify-content:space-between;align-items:center;"><div><strong>' + x.brand + ' ' + x.model + '</strong> <small style="color:#666;">(' + (x.years || 'N/A') + ') - ' + (x.engine || 'N/A') + '</small>' + (x.notes ? '<br><small style="color:#0066cc;">' + x.notes + '</small>' : '') + '</div><button type="button" class="btn btn-small btn-secondary" onclick="removeCompatibility(' + i + ')">Eliminar</button></div></div>').join(''); }
+window.removeCompatibility = function(i) { currentCompatibility.splice(i, 1); renderCompatibility(); };
 
-window.changePage = function(page) { currentPage = page; applyFilters(); document.getElementById('searchResultsContainer').scrollIntoView({ behavior: 'smooth' }); };
+async function loadProducts() { try { const s = await db.collection('products').get(); products = []; s.forEach(d => products.push(Object.assign({ id: d.id }, d.data()))); document.getElementById('statProducts').textContent = products.length; renderAdminProducts(); } catch (e) { console.error(e); } }
+function renderAdminProducts(filter) { const list = document.getElementById('adminProductList'); filter = filter || ''; let filtered = products; if (filter) { const q = filter.toLowerCase(); filtered = products.filter(p => p.name.toLowerCase().includes(q) || (p.code && p.code.toLowerCase().includes(q))); } if (filtered.length === 0) { list.innerHTML = '<p style="text-align:center;color:#666;padding:1rem">Sin productos</p>'; return; } list.innerHTML = filtered.map(p => { const imgs = p.images || (p.image ? [p.image] : []); const th = imgs.length > 0 ? '<img src="' + imgs[0] + '">' : ''; const off = p.discount && p.discount > 0 ? ' | -' + p.discount + '%' : ''; const rec = p.recommended ? ' | RECOMENDADO' : ''; return '<div class="admin-item"><div class="admin-info"><div class="admin-thumb">' + th + '</div><div><strong>' + p.name + '</strong>' + rec + '<br><small style="color:#dc3545">Código: ' + (p.code || 'N/A') + '</small><br><small style="color:#666">$' + Number(p.price).toFixed(2) + off + ' | Stock: ' + p.stock + '</small></div></div><div class="admin-actions"><button class="btn btn-small btn-primary" onclick="editProduct(\'' + p.id + '\')">Editar</button><button class="btn btn-small btn-secondary" onclick="deleteProduct(\'' + p.id + '\')">Eliminar</button></div></div>'; }).join(''); }
+document.getElementById('adminProductSearch').addEventListener('input', function(e) { renderAdminProducts(e.target.value); });
 
-async function loadData() {
-try {
-const rateDoc = await getDoc(doc(db, 'settings', 'bcvRate')); if (rateDoc.exists()) bcvRate = rateDoc.data().value;
-const logoDoc = await getDoc(doc(db, 'settings', 'logo')); if (logoDoc.exists()) document.getElementById('headerLogoImg').innerHTML = '<img src="' + logoDoc.data().image + '">';
-const pickupDoc = await getDoc(doc(db, 'settings', 'pickupMaps')); if (pickupDoc.exists()) pickupMapsUrl = pickupDoc.data().url || '';
-const bannersDoc = await getDoc(doc(db, 'settings', 'banners')); if (bannersDoc.exists()) banners = bannersDoc.data().images || [];
-const configDoc = await getDoc(doc(db, 'settings', 'siteConfig')); if (configDoc.exists()) siteConfig = Object.assign({}, siteConfig, configDoc.data());
-const waDoc = await getDoc(doc(db, 'settings', 'whatsapp')); if (waDoc.exists() && waDoc.data().number) whatsappNumber = waDoc.data().number;
-const heroDoc = await getDoc(doc(db, 'settings', 'hero'));
-if (heroDoc.exists()) {
-heroConfig = heroDoc.data();
-if (heroConfig.visible && (heroConfig.title || heroConfig.backgroundImage)) {
-renderHero();
-}
-}
-const drawerDoc = await getDoc(doc(db, 'settings', 'drawerMenu'));
-if (drawerDoc.exists()) {
-drawerMenu = drawerDoc.data().categories || [];
-} else {
-drawerMenu = [
-{ name: "Amortiguadores y Suspensión", brands: [
-{ name: "Toyota", models: ["Corolla", "Fortuner", "Landcruiser"] },
-{ name: "Nissan", models: ["Sentra", "Frontier", "X-Trail"] }
-]},
-{ name: "Tren delantero y Dirección", brands: [
-{ name: "Chevrolet", models: ["Aveo", "Cruze"] },
-{ name: "Ford", models: ["Fiesta", "Ranger"] }
-]},
-{ name: "Motor y componentes", brands: [
-{ name: "Hyundai", models: ["Tucson", "Creta"] },
-{ name: "Kia", models: ["Rio", "Sportage"] }
-]}
-];
-}
-const zonesSnap = await getDocs(collection(db, 'deliveryZones')); deliveryZones = []; zonesSnap.forEach(d => deliveryZones.push(Object.assign({ id: d.id }, d.data())));
-const snapshot = await getDocs(collection(db, 'products')); products = []; snapshot.forEach(d => products.push(Object.assign({ id: d.id }, d.data())));
-const brandsSnap = await getDocs(collection(db, 'brands')); let brands = []; brandsSnap.forEach(d => brands.push(Object.assign({ id: d.id }, d.data())));
-try {
-const reviewsSnap = await getDocs(collection(db, 'reviews'));
-allReviews = [];
-reviewsSnap.forEach(d => allReviews.push(Object.assign({ id: d.id }, d.data())));
-} catch(e) { allReviews = []; }
-applySiteConfig(); renderFooter(); renderDrawerMenu(); renderRecommended(); renderFooterBrands(brands); updateCartUI(); updateHeaderButtons(); updateWhatsAppLinks();
-} catch (error) { console.error('Error:', error); }
-}
+window.openAddProductModal = function() { populateCategorySelect(); currentProductImages = []; currentSpecifications = []; currentCompatibility = []; document.getElementById('productModalTitle').textContent = 'Agregar Producto'; document.getElementById('editProductId').value = ''; document.getElementById('productCode').value = ''; document.getElementById('productBrand').value = ''; document.getElementById('productName').value = ''; document.getElementById('productDescription').value = ''; document.getElementById('productPartNumber').value = ''; document.getElementById('productPosition').value = ''; document.getElementById('productSide').value = ''; document.getElementById('productCondition').value = 'Nuevo'; document.getElementById('productCostPrice').value = ''; document.getElementById('productMargin').value = ''; document.getElementById('productPrice').value = ''; document.getElementById('productDiscount').value = ''; document.getElementById('productStock').value = ''; document.getElementById('productCategory').value = ''; document.getElementById('productSubcategory').value = ''; document.getElementById('productSearchTerms').value = ''; document.getElementById('productRecommended').checked = false; document.getElementById('productImagesContainer').innerHTML = ''; document.getElementById('specificationsContainer').innerHTML = ''; document.getElementById('compatibilityContainer').innerHTML = ''; document.getElementById('productModal').classList.add('active'); };
 
-function renderHero() {
-const section = document.getElementById('heroSection');
-const bg = document.getElementById('heroBg');
-const overlay = document.getElementById('heroOverlay');
-const title = document.getElementById('heroTitle');
-const subtitle = document.getElementById('heroSubtitle');
-const cta = document.getElementById('heroCta');
-section.style.display = 'flex';
-if (heroConfig.backgroundImage) {
-bg.style.backgroundImage = "url('" + heroConfig.backgroundImage + "')";
-const opacity = (heroConfig.overlayOpacity || 50) / 100;
-if (heroConfig.overlayColor && heroConfig.overlayColor.startsWith('#')) {
-const r = parseInt(heroConfig.overlayColor.slice(1,3), 16);
-const g = parseInt(heroConfig.overlayColor.slice(3,5), 16);
-const b = parseInt(heroConfig.overlayColor.slice(5,7), 16);
-overlay.style.background = 'rgba(' + r + ',' + g + ',' + b + ',' + opacity + ')';
-} else {
-overlay.style.background = 'rgba(0,0,0,' + opacity + ')';
-}
-} else {
-bg.style.background = 'linear-gradient(135deg, #dc3545 0%, #8b0000 100%)';
-overlay.style.display = 'none';
-}
-if (heroConfig.title) {
-title.textContent = heroConfig.title;
-title.style.color = heroConfig.titleColor || 'white';
-title.style.fontSize = (heroConfig.titleSize || 48) + 'px';
-title.style.fontFamily = heroConfig.titleFont || "'Segoe UI', sans-serif";
-}
-if (heroConfig.subtitle) {
-subtitle.textContent = heroConfig.subtitle;
-subtitle.style.color = heroConfig.subtitleColor || '#ddd';
-subtitle.style.fontSize = (heroConfig.subtitleSize || 20) + 'px';
-}
-if (heroConfig.ctaText) cta.textContent = heroConfig.ctaText;
-if (heroConfig.ctaLink) cta.href = heroConfig.ctaLink;
-}
-
-function applySiteConfig() { 
-document.getElementById('headerCompanyName').textContent = siteConfig.companyName; 
-document.title = siteConfig.companyName + ' - Repuestos'; 
-}
-function renderFooterBrands(brands) { 
-const container = document.getElementById('footerBrands'); 
-const activeBrands = brands.filter(b => b.image); 
-if (activeBrands.length === 0) { container.style.display = 'none'; return; } 
-container.innerHTML = activeBrands.map(b => '<div class="footer-brand-logo"><img src="' + b.image + '" alt="' + b.name + '"></div>').join(''); 
-}
-function calculateDiscountedPrice(price, discount) { if (!discount || discount <= 0) return price; return price - (price * discount / 100); }
-function formatPrices(price, discount) { const finalPrice = calculateDiscountedPrice(price, discount); const priceBs = finalPrice * bcvRate; return { finalPrice, priceBs, hasDiscount: discount && discount > 0 }; }
-
-function renderRecommended() {
-const container = document.getElementById('recommendedContainer');
-const recommended = products.filter(p => p.recommended);
-if (recommended.length === 0) { 
-container.innerHTML = '<div class="no-results">Próximamente más productos. Escríbenos por WhatsApp.</div>'; 
-return; 
-}
-container.innerHTML = recommended.map(p => {
-const fp = formatPrices(p.price, p.discount);
-const imageHtml = p.images && p.images[0] ? '<img src="' + p.images[0] + '" alt="' + p.name + '">' : (p.image ? '<img src="' + p.image + '" alt="' + p.name + '">' : '');
-let priceHtml = '';
-if (fp.hasDiscount) priceHtml = '<span class="featured-price-original">$' + Number(p.price).toFixed(2) + '</span><div class="featured-price">$' + fp.finalPrice.toFixed(2) + '</div><div class="featured-price-bs">Bs. ' + fp.priceBs.toFixed(2) + '</div>';
-else priceHtml = '<div class="featured-price">$' + fp.finalPrice.toFixed(2) + '</div><div class="featured-price-bs">Bs. ' + fp.priceBs.toFixed(2) + '</div>';
-let stockClass = 'in', stockText = 'Stock: ' + p.stock, stockUrgent = '';
-if (p.stock === 0) { stockClass = 'out'; stockText = 'No disponible'; } 
-else if (p.stock < 5) { stockClass = 'low'; stockText = '¡Últimas ' + p.stock + '!'; stockUrgent = '<div class="stock-urgent">¡Últimas!</div>'; }
-let tags = ''; if (fp.hasDiscount) tags += '<div class="offer-tag">-' + p.discount + '%</div>';
-return '<div class="featured-card" onclick="openProductDetail(\'' + p.id + '\')"><div class="featured-image">' + imageHtml + tags + stockUrgent + '</div><div class="featured-info">' + (p.code ? '<div style="font-size:0.75rem;color:#888;">Código: ' + p.code + '</div>' : '') + '<div class="featured-name">' + p.name + '</div>' + priceHtml + '<div class="featured-stock ' + stockClass + '">' + stockText + '</div><button class="featured-add-btn" onclick="event.stopPropagation(); addToCart(\'' + p.id + '\')" ' + (p.stock === 0 ? 'disabled' : '') + '>' + (p.stock === 0 ? 'No disponible' : 'Agregar') + '</button></div></div>';
-}).join('');
-}
-
-function generateTechSheetHTML(product) {
+window.editProduct = function(productId) {
+const product = products.find(p => p.id === productId);
+populateCategorySelect();
+currentProductImages = product.images || (product.image ? [product.image] : []);
+currentSpecifications = product.specifications || [];
+currentCompatibility = product.compatibility || [];
 const attrs = product.attributes || {};
-const specs = product.specifications || [];
-const compatibility = product.compatibility || [];
-const searchTerms = product.searchTerms || '';
-let html = '';
-if (Object.keys(attrs).length > 0) {
-html += '<div class="tech-sheet"><h3>📋 Atributos del Repuesto</h3><div class="attributes">';
-const attrLabels = {
-'category': 'Categoría Principal', 'subcategory': 'Subcategoría', 'brand': 'Marca del Repuesto',
-'partNumber': 'N° Parte / OEM', 'position': 'Posición', 'side': 'Lado', 'condition': 'Condición'
-};
-for (const key in attrs) {
-const value = attrs[key];
-if (value) html += '<div class="attribute"><strong>' + (attrLabels[key] || key) + '</strong>' + value + '</div>';
-}
-html += '</div></div>';
-}
-if (specs.length > 0) {
-html += '<div class="tech-sheet"><h3>⚙️ Especificaciones Técnicas</h3><table class="tech-specs-table">';
-specs.forEach(spec => {
-if (spec.key && spec.value) html += '<tr><td>' + spec.key + '</td><td>' + spec.value + '</td></tr>';
-});
-html += '</table></div>';
-}
-if (compatibility.length > 0) {
-html += '<div class="tech-sheet"><h3>🚗 Compatibilidad Vehicular</h3><table class="compatibility-table"><thead><tr><th>Marca</th><th>Modelo</th><th>Años</th><th>Motor</th><th>Notas</th></tr></thead><tbody>';
-compatibility.forEach(c => {
-if (c.brand || c.model) html += '<tr><td>' + (c.brand || '-') + '</td><td>' + (c.model || '-') + '</td><td>' + (c.years || '-') + '</td><td>' + (c.engine || '-') + '</td><td>' + (c.notes || '-') + '</td></tr>';
-});
-html += '</tbody></table></div>';
-}
-if (searchTerms) html += '<div class="search-terms"><strong>🔍 Búsquedas frecuentes:</strong> ' + searchTerms + '</div>';
-return html;
-}
-
-window.openProductDetail = function(productId) {
-const product = products.find(p => p.id === productId); if (!product) return;
-const images = product.images || (product.image ? [product.image] : []);
-const currentImage = images[0] || null;
-const fp = formatPrices(product.price, product.discount);
-const imageHtml = currentImage ? '<img src="' + currentImage + '" alt="' + product.name + '">' : '';
-let priceBox = '';
-if (fp.hasDiscount) priceBox = '<div class="detail-price-box"><div class="detail-offer-badge">OFERTA -' + product.discount + '%</div><div style="font-size:1rem;color:#999;text-decoration:line-through;">Antes: $' + Number(product.price).toFixed(2) + '</div><div class="detail-price-usd">$' + fp.finalPrice.toFixed(2) + '</div><div class="detail-price-bs">Bs. ' + fp.priceBs.toFixed(2) + ' (BCV: ' + bcvRate + ')</div></div>';
-else priceBox = '<div class="detail-price-box"><div class="detail-price-usd">$' + fp.finalPrice.toFixed(2) + '</div><div class="detail-price-bs">Bs. ' + fp.priceBs.toFixed(2) + ' (BCV: ' + bcvRate + ')</div></div>';
-const techSheetHtml = generateTechSheetHTML(product);
-const productReviews = allReviews.filter(r => r.productId === productId);
-const avgRating = productReviews.length > 0 ? (productReviews.reduce((sum, r) => sum + r.rating, 0) / productReviews.length).toFixed(1) : 0;
-let reviewsHtml = '<div class="reviews-section"><h3>⭐ Reseñas (' + productReviews.length + ') - Promedio: ' + avgRating + '/5</h3>';
-if (currentUser) {
-const existingReview = productReviews.find(r => r.userPhone === currentUser.phone);
-if (!existingReview) {
-reviewsHtml += '<div class="review-form"><label style="font-weight:600;">Tu calificación:</label><div class="stars-input" id="starsInput-' + productId + '"><span class="star" data-value="1" onclick="selectRating(\'' + productId + '\', 1)">★</span><span class="star" data-value="2" onclick="selectRating(\'' + productId + '\', 2)">★</span><span class="star" data-value="3" onclick="selectRating(\'' + productId + '\', 3)">★</span><span class="star" data-value="4" onclick="selectRating(\'' + productId + '\', 4)">★</span><span class="star" data-value="5" onclick="selectRating(\'' + productId + '\', 5)">★</span></div><textarea id="reviewText-' + productId + '" maxlength="150" placeholder="Escribe tu comentario (máx 150 caracteres)" oninput="updateCharCount(\'' + productId + '\')"></textarea><div class="char-count" id="charCount-' + productId + '">0/150</div><button onclick="submitReview(\'' + productId + '\')">Publicar reseña</button></div>';
-}
-} else {
-reviewsHtml += '<p style="font-size:0.85rem; color:#666; margin-bottom:1rem;">Inicia sesión para dejar una reseña.</p>';
-}
-if (productReviews.length > 0) {
-reviewsHtml += productReviews.sort((a,b) => new Date(b.date) - new Date(a.dat
-function updateCartUI() {
-const cartItems = document.getElementById('cartItems'); const cartCount = document.getElementById('cartCount'); const cartTotals = document.getElementById('cartTotals');
-const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0); cartCount.textContent = totalItems;
-if (cart.length === 0) { cartItems.innerHTML = '<p style="text-align:center;color:#999;padding:2rem;">Carrito vacío</p>'; cartTotals.innerHTML = ''; return; }
-cartItems.innerHTML = cart.map(item => '<div class="cart-item"><div class="cart-item-img">' + (item.image ? '<img src="' + item.image + '">' : '') + '</div><div class="cart-item-info"><div class="cart-item-name">' + item.name + '</div><div style="font-size:0.85rem;"><span style="font-weight:bold;">$' + Number(item.price).toFixed(2) + '</span> <span style="color:#666;">| Bs.' + Number(item.priceBs).toFixed(2) + '</span><br><small>x ' + item.quantity + '</small></div></div><div class="cart-item-controls"><button onclick="updateQuantity(\'' + item.id + '\',-1)">-</button><span>' + item.quantity + '</span><button onclick="updateQuantity(\'' + item.id + '\',1)">+</button><button onclick="removeFromCart(\'' + item.id + '\')" style="background:#999;">×</button></div></div>').join('');
-let subtotalUsd = cart.reduce((sum, item) => sum + (Number(item.price) * item.quantity), 0);
-let discountUsd = 0;
-if (appliedCoupon) { discountUsd = subtotalUsd * (appliedCoupon.discount / 100); subtotalUsd -= discountUsd; }
-const ivaUsd = subtotalUsd * 0.16;
-let deliveryFee = 0;
-if (deliveryMode === 'delivery' && selectedDeliveryZone) deliveryFee = selectedDeliveryZone.cost; else if (deliveryMode === 'delivery') deliveryFee = 5;
-const totalUsd = subtotalUsd + ivaUsd + deliveryFee;
-let html = '';
-if (appliedCoupon) html += '<div class="cart-total-row discount"><span>Descuento (' + appliedCoupon.code + '):</span><span>-$' + discountUsd.toFixed(2) + '</span></div>';
-html += '<div class="cart-total-row"><span>Subtotal:</span><span>$' + subtotalUsd.toFixed(2) + '</span></div>';
-html += '<div class="cart-total-row"><span>IVA (16%):</span><span>$' + ivaUsd.toFixed(2) + '</span></div>';
-if (deliveryFee > 0) html += '<div class="cart-total-row"><span>Delivery:</span><span>$' + deliveryFee.toFixed(2) + '</span></div>';
-html += '<div class="cart-total-row total"><span>TOTAL:</span><span>$' + totalUsd.toFixed(2) + '</span></div>';
-cartTotals.innerHTML = html;
-}
-
-function saveCart() { localStorage.setItem('akira_cart', JSON.stringify(cart)); }
-window.toggleCart = function() { document.getElementById('cartSidebar').classList.toggle('active'); };
-window.selectCartDelivery = function(mode) { deliveryMode = mode; selectedDeliveryZone = null; document.getElementById('cartPickup').classList.toggle('active', mode === 'pickup'); document.getElementById('cartDelivery').classList.toggle('active', mode === 'delivery'); updateCartUI(); };
-window.getLocation = function() { 
-if (!navigator.geolocation) { alert('No soporta geolocalización'); return; } 
-navigator.geolocation.getCurrentPosition((pos) => { 
-document.getElementById('gpsLat').value = pos.coords.latitude; 
-document.getElementById('gpsLng').value = pos.coords.longitude; 
-document.getElementById('mapPlaceholder').innerHTML = '<div style="text-align:center;"><div style="font-size:3rem;">📍</div><div>Ubicación obtenida</div><div style="font-size:0.8rem;">' + pos.coords.latitude.toFixed(5) + ', ' + pos.coords.longitude.toFixed(5) + '</div></div>'; 
-}, (err) => alert('Error: ' + err.message)); 
+document.getElementById('productModalTitle').textContent = 'Editar Producto';
+document.getElementById('editProductId').value = product.id;
+document.getElementById('productCode').value = product.code || '';
+document.getElementById('productBrand').value = product.brand || '';
+document.getElementById('productName').value = product.name;
+document.getElementById('productDescription').value = product.description || '';
+document.getElementById('productPartNumber').value = attrs.partNumber || '';
+document.getElementById('productPosition').value = attrs.position || '';
+document.getElementById('productSide').value = attrs.side || '';
+document.getElementById('productCondition').value = attrs.condition || 'Nuevo';
+document.getElementById('productCostPrice').value = product.costPrice || '';
+document.getElementById('productMargin').value = product.margin || '';
+document.getElementById('productPrice').value = product.price;
+document.getElementById('productDiscount').value = product.discount || '';
+document.getElementById('productStock').value = product.stock;
+document.getElementById('productCategory').value = product.category || '';
+updateSubcategoryOptions();
+document.getElementById('productSubcategory').value = product.subcategory || '';
+document.getElementById('productSearchTerms').value = product.searchTerms || '';
+document.getElementById('productRecommended').checked = product.recommended || false;
+renderProductImages(); renderSpecifications(); renderCompatibility();
+document.getElementById('productModal').classList.add('active');
 };
 
-window.handleAccount = function() { 
-if (currentUser) { 
-const action = prompt('Hola ' + currentUser.name + '!\n1. Ver pedidos\n2. Cerrar sesión'); 
-if (action === '1') showMyOrders(); 
-else if (action === '2') { currentUser = null; localStorage.removeItem('akira_guest'); updateHeaderButtons(); } 
-} else document.getElementById('authModal').classList.add('active'); 
-};
-async function showMyOrders() { 
-if (!currentUser) return; 
-try { 
-const ordersSnap = await getDocs(collection(db, 'orders')); 
-const myOrders = []; 
-ordersSnap.forEach(doc => { const data = doc.data(); if (data.userPhone === currentUser.phone) myOrders.push(Object.assign({ id: doc.id }, data)); }); 
-const ordersList = document.getElementById('ordersList'); 
-if (myOrders.length === 0) ordersList.innerHTML = '<p style="text-align:center;color:#666;padding:2rem;">Aún no tienes pedidos</p>'; 
-else ordersList.innerHTML = myOrders.sort((a,b) => new Date(b.date) - new Date(a.date)).map(order => '<div class="order-item"><div class="order-header"><strong>#' + order.id.slice(-6) + '</strong><span class="order-status ' + order.status + '">' + (order.status === 'pending' ? 'Pendiente' : order.status === 'shipped' ? 'En camino' : 'Entregado') + '</span></div><div style="font-size:0.85rem;color:#666;">' + new Date(order.date).toLocaleDateString() + '</div><div style="margin:0.5rem 0;">' + (order.items || []).map(item => '<div>' + item.name + ' x' + item.quantity + '</div>').join('') + '</div><div style="font-weight:bold;color:#dc3545;">Total: $' + Number(order.total || 0).toFixed(2) + '</div></div>').join(''); 
-document.getElementById('ordersModal').classList.add('active'); 
-} catch (error) { alert('Error: ' + error.message); } 
-}
-window.loginAsGuest = async function() { 
-const name = document.getElementById('guestName').value.trim(); 
-const phone = document.getElementById('guestPhone').value.trim(); 
-if (!name || !phone) { alert('Completa nombre y teléfono'); return; } 
-const customerCode = 'AM-' + Math.random().toString(36).substr(2, 6).toUpperCase(); 
-currentUser = { name, phone, customerCode, isGuest: true }; 
-localStorage.setItem('akira_guest', JSON.stringify(currentUser));
-try { await setDoc(doc(db, 'customers', phone), { name, phone, customerCode, createdAt: new Date().toISOString() }); } catch (error) { console.error(error); }
-updateHeaderButtons(); closeModal('authModal'); alert('¡Bienvenido ' + name + '!\nCódigo: ' + customerCode);
-};
-function updateHeaderButtons() { 
-const accountText = document.getElementById('accountText'); 
-const accountIcon = document.getElementById('accountIcon'); 
-if (currentUser) { 
-accountText.textContent = currentUser.name.split(' ')[0]; 
-accountIcon.textContent = currentUser.name.charAt(0).toUpperCase(); 
-} else { accountText.textContent = 'Cuenta'; accountIcon.textContent = '👤'; } 
-}
-function updateWhatsAppLinks() {
-const cleanNumber = whatsappNumber.replace(/\D/g, '');
-const floatBtn = document.getElementById('whatsappFloat');
-if (floatBtn) floatBtn.href = 'https://wa.me/' + cleanNumber + '?text=Hola!%20Tengo%20una%20consulta';
-}
+function renderProductImages() { const c = document.getElementById('productImagesContainer'); if (currentProductImages.length === 0) { c.innerHTML = '<div style="color:#999;">Sin imágenes</div>'; return; } c.innerHTML = currentProductImages.map((img, i) => '<div style="position:relative;"><img src="' + img + '" style="width:80px;height:80px;object-fit:cover;border-radius:8px;"><button type="button" onclick="removeProductImage(' + i + ')" style="position:absolute;top:2px;right:2px;background:#dc3545;color:white;border:none;width:20px;height:20px;border-radius:50%;cursor:pointer;">×</button></div>').join(''); }
+window.addProductImages = function(event) { const files = Array.from(event.target.files); files.forEach(file => { if (currentProductImages.length >= 5) { alert('Máximo 5'); return; } if (file.size > 1024 * 1024) { alert('Máximo 1MB'); return; } const r = new FileReader(); r.onload = function(e) { currentProductImages.push(e.target.result); renderProductImages(); }; r.readAsDataURL(file); }); event.target.value = ''; };
+window.removeProductImage = function(i) { currentProductImages.splice(i, 1); renderProductImages(); };
 
-window.openCheckout = function() { 
-if (cart.length === 0) { alert('Carrito vacío'); return; } 
-if (!currentUser) { alert('Crea tu cuenta primero'); document.getElementById('authModal').classList.add('active'); return; } 
-selectCheckoutDelivery(deliveryMode); updateCheckoutTotals(); document.getElementById('checkoutModal').classList.add('active'); toggleCart(); 
+window.saveProduct = async function(event) {
+event.preventDefault();
+const editId = document.getElementById('editProductId').value;
+const costPrice = parseFloat(document.getElementById('productCostPrice').value) || 0;
+const margin = parseFloat(document.getElementById('productMargin').value) || 0;
+const salePrice = parseFloat(document.getElementById('productPrice').value) || 0;
+const discount = parseFloat(document.getElementById('productDiscount').value) || 0;
+const attributes = {
+category: document.getElementById('productCategory').value,
+subcategory: document.getElementById('productSubcategory').value,
+brand: document.getElementById('productBrand').value,
+partNumber: document.getElementById('productPartNumber').value,
+position: document.getElementById('productPosition').value,
+side: document.getElementById('productSide').value,
+condition: document.getElementById('productCondition').value
 };
-window.selectCheckoutDelivery = function(mode) { 
-checkoutDeliveryMode = mode; selectedDeliveryZone = null; 
-document.getElementById('checkoutPickup').classList.toggle('active', mode === 'pickup'); 
-document.getElementById('checkoutDelivery').classList.toggle('active', mode === 'delivery'); 
-document.getElementById('deliveryFields').style.display = mode === 'delivery' ? 'block' : 'none'; 
-document.getElementById('pickupMapLink').style.display = mode === 'pickup' ? 'block' : 'none'; 
-document.getElementById('deliveryZonesSection').style.display = mode === 'delivery' ? 'block' : 'none'; 
-if (mode === 'pickup' && pickupMapsUrl) document.getElementById('pickupMapsLink').href = pickupMapsUrl; 
-if (mode === 'delivery') renderDeliveryZones(); 
-updateCheckoutTotals(); 
+const productData = {
+code: document.getElementById('productCode').value,
+brand: document.getElementById('productBrand').value,
+name: document.getElementById('productName').value,
+description: document.getElementById('productDescription').value,
+costPrice, margin, price: salePrice, discount,
+stock: parseInt(document.getElementById('productStock').value),
+category: document.getElementById('productCategory').value,
+subcategory: document.getElementById('productSubcategory').value,
+recommended: document.getElementById('productRecommended').checked,
+attributes, specifications: currentSpecifications, compatibility: currentCompatibility,
+searchTerms: document.getElementById('productSearchTerms').value,
+images: currentProductImages.length > 0 ? currentProductImages : null,
+image: currentProductImages.length > 0 ? currentProductImages[0] : null,
+updatedAt: new Date().toISOString()
 };
-function renderDeliveryZones() {
-const container = document.getElementById('deliveryZonesList');
-if (deliveryZones.length === 0) { container.innerHTML = '<p style="color:#666;">Sin zonas. Costo: $5</p>'; return; }
-container.innerHTML = deliveryZones.map(zone => '<div class="zone-option ' + (selectedDeliveryZone && selectedDeliveryZone.id === zone.id ? 'active' : '') + '" onclick="selectDeliveryZone(\'' + zone.id + '\')"><div class="zone-name">' + zone.name + '</div><div class="zone-price">$' + zone.cost.toFixed(2) + '</div></div>').join('');
-}
-window.selectDeliveryZone = function(zoneId) { selectedDeliveryZone = deliveryZones.find(z => z.id === zoneId); renderDeliveryZones(); updateCheckoutTotals(); };
-function updateCheckoutTotals() {
-let subtotalUsd = cart.reduce((sum, item) => sum + (Number(item.price) * item.quantity), 0);
-let discountAmount = 0;
-if (appliedCoupon) { discountAmount = subtotalUsd * (appliedCoupon.discount / 100); subtotalUsd -= discountAmount; }
-const ivaUsd = subtotalUsd * 0.16;
-let deliveryFee = 0;
-if (checkoutDeliveryMode === 'delivery') deliveryFee = selectedDeliveryZone ? selectedDeliveryZone.cost : 5;
-const totalUsd = subtotalUsd + ivaUsd + deliveryFee;
-let html = '';
-if (appliedCoupon) html += '<div class="cart-total-row discount"><span>Descuento:</span><span>-$' + discountAmount.toFixed(2) + '</span></div>';
-html += '<div class="cart-total-row"><span>Subtotal:</span><span>$' + subtotalUsd.toFixed(2) + '</span></div>';
-html += '<div class="cart-total-row"><span>IVA (16%):</span><span>$' + ivaUsd.toFixed(2) + '</span></div>';
-if (deliveryFee > 0) html += '<div class="cart-total-row"><span>Delivery:</span><span>$' + deliveryFee.toFixed(2) + '</span></div>';
-html += '<div class="cart-total-row total"><span>TOTAL:</span><span>$' + totalUsd.toFixed(2) + '</span></div>';
-document.getElementById('checkoutTotals').innerHTML = html;
-}
-window.confirmOrder = async function() {
-if (checkoutDeliveryMode === 'delivery') { const address = document.getElementById('deliveryAddressInput').value; const lat = document.getElementById('gpsLat').value; if (!address && !lat) { alert('Ingresa dirección o GPS'); return; } }
-let subtotalUsd = cart.reduce((sum, item) => sum + (Number(item.price) * item.quantity), 0);
-let discountAmount = 0;
-if (appliedCoupon) { discountAmount = subtotalUsd * (appliedCoupon.discount / 100); subtotalUsd -= discountAmount; }
-const ivaUsd = subtotalUsd * 0.16;
-let deliveryFee = 0;
-if (checkoutDeliveryMode === 'delivery') deliveryFee = selectedDeliveryZone ? selectedDeliveryZone.cost : 5;
-const totalUsd = subtotalUsd + ivaUsd + deliveryFee;
-const orderData = { userId: currentUser.name, userName: currentUser.name, userPhone: currentUser.phone, customerCode: currentUser.customerCode || '', items: cart.map(item => ({ id: item.id, name: item.name, quantity: item.quantity, price: item.price })), subtotal: subtotalUsd, discount: discountAmount, couponCode: appliedCoupon ? appliedCoupon.code : null, iva: ivaUsd, deliveryFee: deliveryFee, deliveryZone: selectedDeliveryZone ? selectedDeliveryZone.name : null, total: totalUsd, deliveryMode: checkoutDeliveryMode, status: 'pending', date: new Date().toISOString() };
-if (checkoutDeliveryMode === 'delivery') { orderData.address = document.getElementById('deliveryAddressInput').value; orderData.gpsLat = document.getElementById('gpsLat').value; orderData.gpsLng = document.getElementById('gpsLng').value; }
-let orderSaved = false;
-try { await addDoc(collection(db, 'orders'), orderData); orderSaved = true; } catch (error) { console.error(error); }
-if (!orderSaved) { alert('Hubo un problema al registrar tu pedido. Contáctanos por WhatsApp.'); return; }
-const cleanNumber = whatsappNumber.replace(/\D/g, '');
-let rawMessage = '¡Hola ' + siteConfig.companyName + '! Soy ' + (currentUser ? currentUser.name : '') + '.\n\nMi pedido:\n';
-cart.forEach(item => { rawMessage += '- ' + item.name + ' x' + item.quantity + ' = $' + (Number(item.price) * item.quantity).toFixed(2) + '\n'; });
-if (appliedCoupon) rawMessage += '\nCupón: ' + appliedCoupon.code + ' (-' + appliedCoupon.discount + '%)';
-rawMessage += '\nTotal: $' + totalUsd.toFixed(2) + '\nEntrega: ' + (checkoutDeliveryMode === 'pickup' ? 'Pickup' : 'Delivery');
-if (checkoutDeliveryMode === 'delivery') { const address = document.getElementById('deliveryAddressInput').value; if (address) rawMessage += '\nDirección: ' + address; }
-window.open('https://wa.me/' + cleanNumber + '?text=' + encodeURIComponent(rawMessage), '_blank');
-cart = []; appliedCoupon = null; selectedDeliveryZone = null; document.getElementById('couponCodeInput').value = ''; document.getElementById('couponMessage').innerHTML = '';
-updateCartUI(); saveCart(); closeModal('checkoutModal'); alert('✅ Pedido enviado'); await loadData();
+try {
+if (editId) await db.collection('products').doc(editId).update(productData);
+else { productData.createdAt = new Date().toISOString(); await db.collection('products').add(productData); }
+await loadProducts(); await loadDashboard();
+closeModal('productModal');
+alert('✅ Producto guardado');
+} catch (e) { alert('Error: ' + e.message); }
 };
-
-function renderFooter() { 
-document.getElementById('footerContent').innerHTML = '<div class="footer-section"><h3>' + siteConfig.companyName + '</h3><p>' + siteConfig.description + '</p></div><div class="footer-section"><h3>Contacto</h3><p>' + siteConfig.address + '</p><p>' + siteConfig.phone + '</p></div><div class="footer-section"><h3>Horario</h3><p>' + siteConfig.schedule + '</p></div><div class="footer-section"><h3>Síguenos</h3>' + (siteConfig.facebook ? '<a href="' + siteConfig.facebook + '" target="_blank">Facebook</a>' : '') + (siteConfig.instagram ? '<a href="' + siteConfig.instagram + '" target="_blank">Instagram</a>' : '') + (siteConfig.tiktok ? '<a href="' + siteConfig.tiktok + '" target="_blank">TikTok</a>' : '') + '</div>'; 
-document.getElementById('footerBottom').innerHTML = '<p>&copy; 2026 ' + siteConfig.companyName + '</p>'; 
-}
-
-window.closeModal = function(id) { document.getElementById(id).classList.remove('active'); };
-document.addEventListener('keydown', function(e) { if (e.key === 'Escape') { document.querySelectorAll('.modal.active').forEach(m => m.classList.remove('active')); document.getElementById('cartSidebar').classList.remove('active'); } });
-const savedGuest = localStorage.getItem('akira_guest'); if (savedGuest) { try { currentUser = JSON.parse(savedGuest); } catch(e) {} }
-loadData();
-</script>
-</body>
-</html>
+window.deleteProduct = async function(id) { if (!confirm('¿Eliminar?')) return; try { await db.collection('products').doc(id).delete(); await loadProducts(); await loadDashboard(); alert('✅ Eliminado'); } catch (e) { alert('Error: ' + e.message); } };
