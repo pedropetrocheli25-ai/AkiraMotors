@@ -4,356 +4,1214 @@
 <meta charset="UTF-8">
 <meta name="viewport"
   content="width=device-width, initial-scale=1.0">
-<title>Akira Motors</title>
+<title>Akira Motors - Repuestos Automotrices</title>
 <style>
-* { margin:0; padding:0; box-sizing:border-box; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
 body {
-  font-family:'Segoe UI', sans-serif;
-  background:#f5f5f5;
-  color:#333;
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+  background: #f5f5f5;
+  color: #333;
+  line-height: 1.6;
 }
 .top-header {
-  background:#dc3545;
-  color:white;
-  padding:0.6rem 1rem;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  position:sticky;
-  top:0;
-  z-index:100;
-  gap:0.5rem;
+  background: #dc3545;
+  color: white;
+  padding: 0.6rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
 }
-.logo {
-  display:flex;
-  align-items:center;
-  gap:0.6rem;
-  font-weight:bold;
-  font-size:0.95rem;
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
 }
-.logo-img {
-  width:34px; height:34px;
-  border-radius:50%;
-  background:white;
-  overflow:hidden;
+.menu-btn {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.8rem;
+  cursor: pointer;
 }
-.logo-img img {
-  width:100%; height:100%;
-  object-fit:cover;
+.header-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  font-size: 1.2rem;
+  font-weight: bold;
+  cursor: pointer;
 }
-.btn-header {
-  background:rgba(255,255,255,0.2);
-  border:none;
-  color:white;
-  padding:0.4rem 0.7rem;
-  border-radius:6px;
-  cursor:pointer;
-  font-size:0.8rem;
-  font-weight:600;
+.header-logo-img {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: white;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
+.header-logo-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.header-right {
+  display: flex;
+  gap: 0.8rem;
+  align-items: center;
+}
+.header-btn {
+  background: rgba(255,255,255,0.15);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: white;
+  font-size: 0.7rem;
+  padding: 0.3rem 0.7rem;
+  border-radius: 8px;
+  position: relative;
+}
+.header-btn .icon { font-size: 1.3rem; }
+.cart-badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background: #FFC107;
+  color: #333;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  font-weight: bold;
+}
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+  z-index: 1400;
+}
+.sidebar-overlay.active { display: block; }
+.category-sidebar {
+  position: fixed;
+  left: -340px;
+  top: 0;
+  width: 320px;
+  height: 100vh;
+  background: white;
+  z-index: 1500;
+  transition: left 0.3s ease;
+  overflow-y: auto;
+  box-shadow: 2px 0 15px rgba(0,0,0,0.2);
+  border-radius: 0 16px 16px 0;
+}
+.category-sidebar.open { left: 0; }
+.sidebar-header {
+  background: #dc3545;
+  color: white;
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 0 16px 0 0;
+}
+.sidebar-close {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+.sidebar-search {
+  padding: 1rem;
+  border-bottom: 1px solid #eee;
+}
+.sidebar-search input {
+  width: 100%;
+  padding: 0.7rem;
+  border: 2px solid #dc3545;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  outline: none;
+}
+.drawer-category {
+  border-bottom: 1px solid #f0f0f0;
+}
+.drawer-cat-header {
+  padding: 0.9rem 1rem;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 600;
+  color: #333;
+  font-size: 0.9rem;
+}
+.drawer-cat-header:hover {
+  background: #fff5f5;
+  color: #dc3545;
+}
+.drawer-cat-header.active {
+  background: #dc3545;
+  color: white;
+}
+.drawer-arrow {
+  transition: transform 0.5s ease;
+}
+.drawer-cat-header.active .drawer-arrow {
+  transform: rotate(180deg);
+}
+.drawer-brand-list {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.5s ease;
+  background: #fafafa;
+}
+.drawer-brand-list.open { max-height: 2000px; }
+.drawer-brand {
+  padding: 0.7rem 1rem 0.7rem 1.5rem;
+  cursor: pointer;
+  font-weight: 600;
+  color: #555;
+  font-size: 0.85rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-left: 3px solid transparent;
+}
+.drawer-brand:hover {
+  background: #fff5f5;
+  color: #dc3545;
+  border-left-color: #dc3545;
+}
+.drawer-brand.active {
+  background: #ffe0e0;
+  color: #dc3545;
+  border-left-color: #dc3545;
+}
+.drawer-model-list {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.5s ease;
+  background: #f5f5f5;
+}
+.drawer-model-list.open { max-height: 1000px; }
+.drawer-model {
+  padding: 0.6rem 1rem 0.6rem 2.5rem;
+  cursor: pointer;
+  font-size: 0.8rem;
+  color: #666;
+  border-left: 3px solid transparent;
+}
+.drawer-model:hover {
+  background: #fff5f5;
+  color: #dc3545;
+  border-left-color: #dc3545;
+}
+.drawer-model.active {
+  background: #ffe0e0;
+  color: #dc3545;
+  font-weight: bold;
+  border-left-color: #dc3545;
+}
+.drawer-all {
+  padding: 0.9rem 1rem;
+  cursor: pointer;
+  font-weight: 600;
+  color: #333;
+  border-bottom: 1px solid #f0f0f0;
+}
+.drawer-all:hover {
+  background: #fff5f5;
+  color: #dc3545;
+}
+.hero-section {
+  position: relative;
+  min-height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  overflow: hidden;
+}
+.hero-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+}
+.hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+.hero-content {
+  position: relative;
+  z-index: 2;
+  padding: 3rem 1.5rem;
+  max-width: 900px;
+}
+.hero-title {
+  font-weight: bold;
+  margin-bottom: 1rem;
+  line-height: 1.2;
+}
+.hero-subtitle {
+  margin-bottom: 2rem;
+  opacity: 0.95;
+}
+.hero-cta {
+  display: inline-block;
+  padding: 1rem 2rem;
+  border-radius: 25px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: transform 0.3s;
+}
+.hero-cta:hover { transform: scale(1.05); }
 .section {
-  max-width:1200px;
-  margin:1.5rem auto;
-  padding:0 1rem;
+  padding: 2rem 1.5rem;
+  max-width: 1400px;
+  margin: 0 auto;
 }
 .section-title {
-  text-align:center;
-  font-size:1.4rem;
-  margin-bottom:1rem;
-  color:#dc3545;
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+  color: #1a1a1a;
+  text-align: center;
 }
-.grid {
-  display:grid;
+.section-title .highlight { color: #dc3545; }
+.section-subtitle {
+  text-align: center;
+  color: #666;
+  margin-bottom: 2rem;
+}
+.featured-grid {
+  display: grid;
   grid-template-columns:
-    repeat(auto-fill, minmax(220px, 1fr));
-  gap:1rem;
+    repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1.5rem;
+  justify-items: center;
+  align-items: stretch;
 }
-.card {
-  background:white;
-  border-radius:12px;
-  overflow:hidden;
-  box-shadow:0 2px 8px rgba(0,0,0,0.08);
-  cursor:pointer;
-  display:flex;
-  flex-direction:column;
+.featured-card {
+  background: white;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  transition: all 0.3s;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 300px;
+  height: 100%;
 }
-.card-img {
-  width:100%; height:180px;
-  background:#f8f8f8;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  overflow:hidden;
+.featured-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(220,53,69,0.2);
 }
-.card-img img {
-  max-width:100%; max-height:100%;
-  object-fit:contain;
-  padding:10px;
+.featured-image {
+  width: 100%;
+  height: 220px;
+  background: #f8f8f8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+  flex-shrink: 0;
 }
-.card-info {
-  padding:0.8rem;
-  display:flex;
-  flex-direction:column;
-  flex:1;
+.featured-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 15px;
 }
-.card-code {
-  font-size:0.75rem;
-  color:#888;
+.featured-info {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
 }
-.card-name {
-  font-weight:600;
-  font-size:0.9rem;
-  margin:0.3rem 0;
-  min-height:2.2rem;
+.featured-name {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #333;
+  min-height: 2.5rem;
 }
-.card-price {
-  color:#dc3545;
-  font-weight:bold;
-  font-size:1.1rem;
+.featured-price {
+  font-size: 1.3rem;
+  color: #dc3545;
+  font-weight: bold;
 }
-.card-bs {
-  color:#666;
-  font-size:0.8rem;
+.featured-price-bs {
+  font-size: 0.85rem;
+  color: #666;
 }
-.card-stock {
-  font-size:0.75rem;
-  margin:0.3rem 0;
+.featured-price-original {
+  font-size: 0.85rem;
+  color: #999;
+  text-decoration: line-through;
+  margin-right: 0.5rem;
 }
-.card-stock.in { color:#28a745; }
-.card-stock.out { color:#dc3545; }
-.card-btn {
-  margin-top:auto;
-  background:#dc3545;
-  color:white;
-  border:none;
-  padding:0.6rem;
-  border-radius:16px;
-  cursor:pointer;
-  font-weight:600;
-  font-size:0.85rem;
+.offer-tag {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: #dc3545;
+  color: white;
+  padding: 0.3rem 0.7rem;
+  border-radius: 15px;
+  font-size: 0.75rem;
+  font-weight: bold;
 }
-.card-btn:disabled {
-  background:#ccc;
-  cursor:not-allowed;
+.stock-urgent {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  background: #dc3545;
+  color: white;
+  padding: 0.2rem 0.6rem;
+  border-radius: 10px;
+  font-size: 0.7rem;
+  font-weight: bold;
 }
-.loading {
-  text-align:center;
-  padding:2rem;
-  color:#666;
+.featured-stock {
+  font-size: 0.8rem;
+  margin: 0.5rem 0;
 }
-.error {
-  text-align:center;
-  padding:2rem;
-  color:#dc3545;
-  background:#fff5f5;
-  border-radius:12px;
+.featured-stock.in { color: #28a745; }
+.featured-stock.low {
+  color: #FFC107;
+  font-weight: bold;
+}
+.featured-stock.out { color: #dc3545; }
+.featured-add-btn {
+  width: 100%;
+  background: #dc3545;
+  color: white;
+  border: none;
+  padding: 0.8rem;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: 600;
+  margin-top: auto;
+  font-size: 0.95rem;
+}
+.featured-add-btn:hover { background: #c82333; }
+.featured-add-btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
 }
 .modal {
-  display:none;
-  position:fixed;
-  top:0; left:0;
-  width:100%; height:100%;
-  background:rgba(0,0,0,0.8);
-  z-index:3000;
-  align-items:center;
-  justify-content:center;
-  padding:1rem;
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.8);
+  z-index: 3000;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
 }
-.modal.active { display:flex; }
+.modal.active { display: flex; }
 .modal-content {
-  background:white;
-  border-radius:16px;
-  max-width:900px;
-  width:100%;
-  max-height:90vh;
-  overflow-y:auto;
-  padding:1.5rem;
-  position:relative;
+  background: white;
+  border-radius: 20px;
+  max-width: 950px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
 }
 .modal-close {
-  position:absolute;
-  top:1rem; right:1rem;
-  background:#dc3545;
-  color:white;
-  border:none;
-  width:32px; height:32px;
-  border-radius:50%;
-  font-size:1.1rem;
-  cursor:pointer;
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: #dc3545;
+  color: white;
+  border: none;
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  font-size: 1.2rem;
+  cursor: pointer;
+  z-index: 10;
 }
-.form-group { margin-bottom:1rem; }
-.form-group label {
-  display:block;
-  margin-bottom:0.3rem;
-  font-weight:600;
-  font-size:0.85rem;
+.product-detail {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  padding: 2rem;
 }
-.form-group input {
-  width:100%;
-  padding:0.6rem;
-  border:1px solid #ddd;
-  border-radius:10px;
-  font-size:0.9rem;
+.product-detail-image {
+  background: #f8f8f8;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
 }
-.btn-primary {
-  width:100%;
-  background:#dc3545;
-  color:white;
-  border:none;
-  padding:0.8rem;
-  border-radius:22px;
-  font-size:0.95rem;
-  font-weight:bold;
-  cursor:pointer;
-  margin-top:0.5rem;
+.product-detail-image img {
+  max-width: 100%;
+  max-height: 400px;
+  object-fit: contain;
 }
-.btn-secondary {
-  width:100%;
-  background:white;
-  color:#dc3545;
-  border:2px solid #dc3545;
-  padding:0.8rem;
-  border-radius:22px;
-  font-size:0.95rem;
-  font-weight:bold;
-  cursor:pointer;
-  margin-top:0.5rem;
+.product-detail-info h2 {
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+.detail-price-box {
+  background: #fff5f5;
+  padding: 1rem;
+  border-radius: 16px;
+  margin: 1rem 0;
+  border-left: 4px solid #dc3545;
+}
+.detail-price-usd {
+  font-size: 2rem;
+  color: #333;
+  font-weight: bold;
+}
+.detail-price-bs {
+  font-size: 1.1rem;
+  color: #666;
+}
+.detail-offer-badge {
+  background: #dc3545;
+  color: white;
+  padding: 0.3rem 0.8rem;
+  border-radius: 15px;
+  font-size: 0.85rem;
+  display: inline-block;
+  margin: 0.5rem 0;
+}
+.detail-description {
+  background: #f8f8f8;
+  padding: 1rem;
+  border-radius: 16px;
+  margin: 1rem 0;
+  color: #555;
+}
+.tech-sheet {
+  background: #f0f8ff;
+  border: 1px solid #b0d4f1;
+  border-radius: 12px;
+  padding: 1rem;
+  margin: 1rem 0;
+}
+.tech-sheet h3 {
+  color: #0066cc;
+  margin-bottom: 0.8rem;
+  font-size: 1.1rem;
+}
+.tech-sheet .attributes {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+.tech-sheet .attribute {
+  background: white;
+  padding: 0.5rem;
+  border-radius: 8px;
+  font-size: 0.85rem;
+}
+.tech-sheet .attribute strong {
+  color: #0066cc;
+  display: block;
+  font-size: 0.75rem;
+}
+.tech-specs-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0.5rem 0;
+}
+.tech-specs-table tr {
+  border-bottom: 1px solid #d0e4f7;
+}
+.tech-specs-table td {
+  padding: 0.5rem;
+  font-size: 0.85rem;
+}
+.tech-specs-table td:first-child {
+  color: #0066cc;
+  font-weight: 600;
+  width: 45%;
+}
+.compatibility-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0.5rem 0;
+  font-size: 0.8rem;
+}
+.compatibility-table th {
+  background: #0066cc;
+  color: white;
+  padding: 0.5rem;
+  text-align: left;
+}
+.compatibility-table td {
+  padding: 0.5rem;
+  border-bottom: 1px solid #d0e4f7;
+}
+.search-terms {
+  background: #fff8e1;
+  padding: 0.8rem;
+  border-radius: 8px;
+  margin-top: 1rem;
+  font-size: 0.8rem;
+  color: #666;
+}
+.search-terms strong { color: #ff9800; }
+.detail-actions {
+  padding: 1.5rem 2rem;
+  border-top: 1px solid #eee;
+}
+.reviews-section {
+  padding: 1.5rem 2rem;
+  border-top: 1px solid #eee;
+}
+.reviews-section h3 {
+  color: #dc3545;
+  margin-bottom: 1rem;
+}
+.review-form {
+  background: #f8f8f8;
+  padding: 1rem;
+  border-radius: 12px;
+  margin-bottom: 1rem;
+}
+.review-form .stars-input {
+  display: flex;
+  gap: 0.3rem;
+  margin: 0.5rem 0;
+}
+.review-form .star {
+  font-size: 1.8rem;
+  color: #ddd;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.review-form .star.active,
+.review-form .star:hover { color: #FFC107; }
+.review-form textarea {
+  width: 100%;
+  padding: 0.7rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  resize: vertical;
+  min-height: 60px;
+}
+.review-form .char-count {
+  font-size: 0.75rem;
+  color: #666;
+  text-align: right;
+  margin-top: 0.3rem;
+}
+.review-form button {
+  background: #dc3545;
+  color: white;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: 600;
+  margin-top: 0.5rem;
+}
+.review-item {
+  background: #f8f8f8;
+  padding: 1rem;
+  border-radius: 12px;
+  margin-bottom: 0.8rem;
+}
+.review-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+.review-item-stars {
+  color: #FFC107;
+  font-size: 1.1rem;
+}
+.review-item-text {
+  font-size: 0.9rem;
+  color: #333;
+  margin: 0.3rem 0;
+}
+.review-item-date {
+  font-size: 0.75rem;
+  color: #999;
+}
+.review-item-user {
+  font-weight: 600;
+  color: #333;
+  font-size: 0.9rem;
 }
 .cart-sidebar {
-  position:fixed;
-  right:-500px; top:0;
-  width:400px; max-width:100%;
-  height:100vh;
-  background:white;
-  transition:right 0.3s;
-  z-index:2000;
-  display:flex;
-  flex-direction:column;
+  position: fixed;
+  right: -500px;
+  top: 0;
+  width: 450px;
+  max-width: 100%;
+  height: 100vh;
+  background: white;
+  box-shadow: -5px 0 20px rgba(0,0,0,0.2);
+  transition: right 0.3s;
+  z-index: 2000;
+  display: flex;
+  flex-direction: column;
+  border-radius: 20px 0 0 20px;
 }
-.cart-sidebar.active { right:0; }
+.cart-sidebar.active { right: 0; }
 .cart-header {
-  background:#dc3545;
-  color:white;
-  padding:1rem;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
+  background: #dc3545;
+  color: white;
+  padding: 1.2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 20px 0 0 0;
 }
 .cart-items {
-  flex:1;
-  overflow-y:auto;
-  padding:1rem;
+  flex: 1;
+  overflow-y: auto;
+  padding: 1rem;
 }
 .cart-item {
-  display:flex;
-  gap:0.8rem;
-  padding:0.8rem 0;
-  border-bottom:1px solid #eee;
-  align-items:center;
+  display: flex;
+  gap: 1rem;
+  padding: 1rem;
+  border-bottom: 1px solid #eee;
+  align-items: center;
 }
+.cart-item-img {
+  width: 60px;
+  height: 60px;
+  background: #f8f8f8;
+  border-radius: 12px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.cart-item-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.cart-item-info { flex: 1; }
 .cart-item-name {
-  font-weight:600;
-  font-size:0.85rem;
+  font-weight: 600;
+  font-size: 0.9rem;
 }
-.cart-item-price {
-  font-size:0.8rem;
-  color:#666;
+.cart-item-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
-.cart-item button {
-  background:#dc3545;
-  color:white;
-  border:none;
-  width:26px; height:26px;
-  border-radius:50%;
-  cursor:pointer;
+.cart-item-controls button {
+  background: #dc3545;
+  color: white;
+  border: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-weight: bold;
 }
 .cart-footer {
-  padding:1rem;
-  background:#f8f8f8;
-  border-top:2px solid #dc3545;
+  padding: 1.5rem;
+  background: #f8f8f8;
+  border-top: 2px solid #dc3545;
+  border-radius: 0 0 0 20px;
 }
-.total-row {
-  display:flex;
-  justify-content:space-between;
-  padding:0.3rem 0;
-  font-size:0.9rem;
+.cart-total-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.4rem 0;
+  font-size: 0.95rem;
 }
-.total-row.grand {
-  font-size:1.1rem;
-  font-weight:bold;
-  color:#dc3545;
-  border-top:1px solid #ddd;
-  padding-top:0.6rem;
-  margin-top:0.4rem;
+.cart-total-row.total {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #dc3545;
+  border-top: 1px solid #ddd;
+  padding-top: 0.8rem;
+  margin-top: 0.5rem;
+}
+.cart-total-row.discount {
+  color: #28a745;
+  font-weight: bold;
+}
+.checkout-btn {
+  width: 100%;
+  background: #dc3545;
+  color: white;
+  border: none;
+  padding: 1rem;
+  border-radius: 25px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 1rem;
+}
+.delivery-selector {
+  display: flex;
+  gap: 0.8rem;
+  margin: 1rem 0;
+}
+.delivery-option {
+  flex: 1;
+  padding: 1rem 0.5rem;
+  border: 2px solid #ddd;
+  border-radius: 12px;
+  cursor: pointer;
+  text-align: center;
+  font-size: 0.85rem;
+  font-weight: 600;
+  background: white;
+}
+.delivery-option.active {
+  border-color: #dc3545;
+  background: #dc3545;
+  color: white;
+}
+.auth-modal .modal-content {
+  max-width: 450px;
+  padding: 2rem;
+}
+.auth-modal h2 {
+  color: #dc3545;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+.form-group { margin-bottom: 1rem; }
+.form-group label {
+  display: block;
+  margin-bottom: 0.4rem;
+  font-weight: 600;
+  color: #333;
+  font-size: 0.9rem;
+}
+.form-group input {
+  width: 100%;
+  padding: 0.7rem;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  font-size: 0.95rem;
+}
+.auth-btn {
+  width: 100%;
+  background: #dc3545;
+  color: white;
+  border: none;
+  padding: 0.9rem;
+  border-radius: 25px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 0.5rem;
+}
+.guest-btn {
+  width: 100%;
+  background: white;
+  color: #dc3545;
+  border: 2px solid #dc3545;
+  padding: 0.9rem;
+  border-radius: 25px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 0.5rem;
+}
+.checkout-modal .modal-content { max-width: 600px; }
+.map-link-box {
+  background: #fff5f5;
+  padding: 1rem;
+  border-radius: 16px;
+  margin: 1rem 0;
+  text-align: center;
+}
+.map-link-box a {
+  color: #dc3545;
+  font-weight: bold;
+  text-decoration: none;
+}
+.search-results-container {
+  padding: 1rem 1.5rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+.search-results-grid {
+  display: grid;
+  grid-template-columns:
+    repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1.5rem;
+  justify-items: center;
+}
+.search-result-card {
+  background: white;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  cursor: pointer;
+  width: 100%;
+  max-width: 300px;
+  display: flex;
+  flex-direction: column;
+}
+.search-result-image {
+  width: 100%;
+  height: 200px;
+  background: #f8f8f8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.search-result-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 10px;
+}
+.search-result-info {
+  padding: 1rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.search-result-name {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+.search-result-price {
+  color: #dc3545;
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+.whatsapp-float {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: #25d366;
+  color: white;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  text-decoration: none;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  z-index: 999;
+}
+.whatsapp-float:hover { transform: scale(1.1); }
+.orders-modal .modal-content { max-width: 700px; }
+.order-item {
+  background: #f8f8f8;
+  padding: 1rem;
+  border-radius: 12px;
+  margin-bottom: 1rem;
+}
+.order-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+.order-status {
+  padding: 0.3rem 0.8rem;
+  border-radius: 15px;
+  font-size: 0.8rem;
+  font-weight: bold;
+}
+.order-status.pending {
+  background: #FFC107;
+  color: #333;
+}
+.order-status.shipped {
+  background: #2196F3;
+  color: white;
+}
+.order-status.delivered {
+  background: #4CAF50;
+  color: white;
+}
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 2rem;
+  flex-wrap: wrap;
+}
+.pagination button {
+  background: white;
+  color: #333;
+  border: 2px solid #ddd;
+  padding: 0.6rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}
+.pagination button.active {
+  background: #dc3545;
+  color: white;
+  border-color: #dc3545;
+}
+.pagination button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+.delivery-zone-selector {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin: 1rem 0;
+}
+.zone-option {
+  padding: 0.8rem;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.zone-option.active {
+  border-color: #dc3545;
+  background: #fff5f5;
+}
+.zone-option .zone-name { font-weight: 600; }
+.zone-option .zone-price {
+  color: #dc3545;
+  font-weight: bold;
 }
 footer {
-  background:#1a1a1a;
-  color:white;
-  padding:2rem 1rem;
-  margin-top:2rem;
-  text-align:center;
-  font-size:0.85rem;
+  background: #1a1a1a;
+  color: white;
+  padding: 3rem 2rem 1rem;
+  margin-top: 3rem;
 }
-footer h3 {
-  color:#FFC107;
-  margin-bottom:0.5rem;
+.footer-content {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns:
+    repeat(auto-fit, minmax(200px, 1fr));
+  gap: 2rem;
+  margin-bottom: 2rem;
 }
-.whatsapp {
-  position:fixed;
-  bottom:20px; right:20px;
-  background:#25d366;
-  color:white;
-  width:55px; height:55px;
-  border-radius:50%;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:1.8rem;
-  text-decoration:none;
-  box-shadow:0 4px 12px rgba(0,0,0,0.3);
-  z-index:999;
+.footer-section h3 {
+  color: #FFC107;
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+}
+.footer-section p,
+.footer-section a {
+  color: #ccc;
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+  display: block;
+  text-decoration: none;
+}
+.footer-brands {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 1.5rem 0;
+  border-top: 1px solid #333;
+  border-bottom: 1px solid #333;
+  margin: 1.5rem 0;
+}
+.footer-brand-logo {
+  width: 70px;
+  height: 70px;
+  background: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: 8px;
+}
+.footer-brand-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.footer-bottom {
+  text-align: center;
+  color: #999;
+  font-size: 0.85rem;
+}
+.loading {
+  text-align: center;
+  padding: 3rem;
+  color: #666;
+}
+.no-results {
+  text-align: center;
+  padding: 3rem;
+  color: #666;
+}
+@media (max-width: 900px) {
+  .product-detail { grid-template-columns: 1fr; }
+  .featured-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+  .hero-title { font-size: 1.8rem !important; }
+  .tech-sheet .attributes {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 600px) {
+  .top-header { padding: 0.6rem 1rem; }
+  .header-logo { font-size: 1rem; }
+  .featured-grid { grid-template-columns: 1fr; }
+  .delivery-selector { flex-direction: column; }
+  .hero-title { font-size: 1.5rem !important; }
+  .hero-subtitle { font-size: 1rem !important; }
+  .search-results-grid { grid-template-columns: 1fr; }
 }
 </style>
 </head>
 <body>
-<div id="errorBanner"
-  style="display:none;position:fixed;top:0;left:0;
-  right:0;background:#dc3545;color:white;padding:0.8rem;
-  z-index:9999;font-family:monospace;font-size:0.8rem;
-  text-align:center;"></div>
+
+<div id="errorBanner" style="display:none;
+  position:fixed;top:0;left:0;right:0;
+  background:#dc3545;color:white;padding:1rem;
+  z-index:10000;font-family:monospace;
+  font-size:0.8rem;text-align:center;
+  word-break:break-word;"></div>
+
+<script>
+window.addEventListener('error', function(e) {
+  var el = document.getElementById('errorBanner');
+  if (el) {
+    el.style.display = 'block';
+    el.style.background = '#dc3545';
+    el.textContent = 'ERROR: ' +
+      (e.message || 'desconocido') +
+      ' | ' + (e.filename || '') +
+      ':' + (e.lineno || '');
+  }
+});
+</script>
 
 <div class="top-header">
-  <div class="logo">
-    <div class="logo-img" id="headerLogoImg"></div>
-    <span id="headerCompanyName">AKIRA MOTORS</span>
+  <div class="header-left">
+    <button class="menu-btn"
+      onclick="toggleSidebar()">☰</button>
+    <div class="header-logo" id="headerLogo">
+      <div class="header-logo-img"
+        id="headerLogoImg"></div>
+      <span id="headerCompanyName">AKIRA MOTORS</span>
+    </div>
   </div>
-  <button class="btn-header" onclick="handleAccount()">
-    <span id="accountText">Cuenta</span>
-  </button>
-  <button class="btn-header" onclick="toggleCart()">
-    🛒 <span id="cartCount">0</span>
-  </button>
+  <div class="header-right">
+    <button class="header-btn" id="accountBtn"
+      onclick="handleAccount()">
+      <span class="icon" id="accountIcon">👤</span>
+      <span id="accountText">Cuenta</span>
+    </button>
+    <button class="header-btn" onclick="toggleCart()">
+      <span class="icon">🛒</span>
+      <span>Carrito</span>
+      <span class="cart-badge"
+        id="cartCount">0</span>
+    </button>
+  </div>
+</div>
+
+<div class="sidebar-overlay" id="sidebarOverlay"
+  onclick="toggleSidebar()"></div>
+<aside class="category-sidebar" id="categorySidebar">
+  <div class="sidebar-header">
+    <strong>Categorías</strong>
+    <button class="sidebar-close"
+      onclick="toggleSidebar()">×</button>
+  </div>
+  <div class="sidebar-search">
+    <input type="text" id="searchInput"
+      placeholder="Buscar repuesto...">
+  </div>
+  <div id="drawerMenu"></div>
+</aside>
+
+<div class="hero-section" id="heroSection"
+  style="display:none;">
+  <div class="hero-bg" id="heroBg"></div>
+  <div class="hero-overlay" id="heroOverlay"></div>
+  <div class="hero-content">
+    <h1 class="hero-title" id="heroTitle"></h1>
+    <p class="hero-subtitle" id="heroSubtitle"></p>
+    <a href="#" class="hero-cta"
+      id="heroCta">Ver productos</a>
+  </div>
 </div>
 
 <div class="section" id="recommendedSection">
-  <h2 class="section-title">Recomendados</h2>
-  <div class="grid" id="recommendedContainer">
-    <div class="loading">Cargando productos...</div>
+  <h2 class="section-title">
+    <span class="highlight">Recomendados</span>
+  </h2>
+  <p class="section-subtitle">
+    Los repuestos más solicitados
+  </p>
+  <div class="featured-grid"
+    id="recommendedContainer">
+    <div class="loading">
+      Cargando productos...
+    </div>
   </div>
 </div>
 
+<div class="search-results-container"
+  id="searchResultsContainer" style="display:none;">
+  <h2 class="section-title"
+    id="searchResultsTitle">Resultados</h2>
+  <div class="search-results-grid"
+    id="searchResultsGrid"></div>
+  <div class="pagination" id="pagination"></div>
+</div>
 <div class="modal" id="productDetailModal">
   <div class="modal-content"
     id="productDetailContent"></div>
 </div>
 
-<div class="modal" id="authModal">
+<div class="modal auth-modal" id="authModal">
   <div class="modal-content">
     <button class="modal-close"
       onclick="closeModal('authModal')">×</button>
-    <h2 style="color:#dc3545;margin-bottom:1rem;">
-      Crea tu Cuenta
-    </h2>
+    <h2>Crea tu Cuenta</h2>
     <div class="form-group">
       <label>Nombre</label>
       <input type="text" id="guestName"
@@ -364,14 +1222,104 @@ footer h3 {
       <input type="tel" id="guestPhone"
         placeholder="Tu teléfono">
     </div>
-    <button class="btn-primary"
+    <div class="form-group">
+      <label>Contraseña (opcional)</label>
+      <input type="password" id="guestPassword">
+    </div>
+    <button class="auth-btn"
       onclick="loginAsGuest()">Crear Cuenta</button>
-    <button class="btn-secondary"
+    <button class="guest-btn"
       onclick="closeModal('authModal')">Cancelar</button>
   </div>
 </div>
 
-<aside class="cart-sidebar" id="cartSidebar">
+<div class="modal checkout-modal" id="checkoutModal">
+  <div class="modal-content">
+    <button class="modal-close"
+      onclick="closeModal('checkoutModal')">×</button>
+    <h2 style="color:#dc3545;text-align:center;
+      margin-bottom:1.5rem;">Finalizar Compra</h2>
+    <div style="padding: 0 1.5rem;">
+      <h3 style="margin-bottom:0.8rem;">
+        Método de entrega:
+      </h3>
+      <div class="delivery-selector">
+        <div class="delivery-option active"
+          id="checkoutPickup"
+          onclick="selectCheckoutDelivery('pickup')">
+          Pickup en tienda
+        </div>
+        <div class="delivery-option"
+          id="checkoutDelivery"
+          onclick="selectCheckoutDelivery('delivery')">
+          Delivery
+        </div>
+      </div>
+    </div>
+    <div id="deliveryZonesSection"
+      style="display:none; padding: 0 1.5rem;">
+      <h3 style="margin-bottom:0.8rem;">
+        Selecciona tu zona:
+      </h3>
+      <div class="delivery-zone-selector"
+        id="deliveryZonesList"></div>
+    </div>
+    <div id="deliveryFields"
+      style="display:none; padding: 0 1.5rem;">
+      <div class="form-group">
+        <label>Dirección</label>
+        <input type="text" id="deliveryAddressInput"
+          placeholder="Calle, número...">
+      </div>
+      <div class="form-group">
+        <label>Ubicación GPS</label>
+        <button class="auth-btn"
+          style="background:#28a745;"
+          onclick="getLocation()">
+          Obtener ubicación
+        </button>
+        <div style="background:#f0f0f0;height:150px;
+          border-radius:16px;display:flex;
+          align-items:center;justify-content:center;
+          margin:1rem 0;color:#666;"
+          id="mapPlaceholder">Aquí aparecerá</div>
+        <input type="hidden" id="gpsLat">
+        <input type="hidden" id="gpsLng">
+      </div>
+    </div>
+    <div id="pickupMapLink"
+      style="display:none; padding: 0 1.5rem;">
+      <div class="map-link-box">
+        <div style="font-size:2rem;
+          margin-bottom:0.5rem;">📍</div>
+        <div style="margin-bottom:0.5rem;">
+          Ubicación de la tienda:
+        </div>
+        <a href="#" id="pickupMapsLink"
+          target="_blank">Ver en Google Maps</a>
+      </div>
+    </div>
+    <div id="checkoutTotals"
+      style="margin:1rem 1.5rem;"></div>
+    <button class="checkout-btn"
+      onclick="confirmOrder()"
+      style="margin: 0 1.5rem 1.5rem;">
+      Confirmar por WhatsApp
+    </button>
+  </div>
+</div>
+
+<div class="modal orders-modal" id="ordersModal">
+  <div class="modal-content">
+    <button class="modal-close"
+      onclick="closeModal('ordersModal')">×</button>
+    <h2 style="color:#dc3545;text-align:center;
+      margin-bottom:1.5rem;">Mis Pedidos</h2>
+    <div id="ordersList"></div>
+  </div>
+</div>
+
+<div class="cart-sidebar" id="cartSidebar">
   <div class="cart-header">
     <h3>Tu Carrito</h3>
     <button class="modal-close"
@@ -380,27 +1328,65 @@ footer h3 {
   </div>
   <div class="cart-items" id="cartItems"></div>
   <div class="cart-footer">
+    <div class="delivery-selector">
+      <div class="delivery-option active"
+        id="cartPickup"
+        onclick="selectCartDelivery('pickup')">
+        Pickup
+      </div>
+      <div class="delivery-option"
+        id="cartDelivery"
+        onclick="selectCartDelivery('delivery')">
+        Delivery
+      </div>
+    </div>
+    <div style="margin-top: 1rem;
+      border-top: 1px solid #ddd;
+      padding-top: 1rem;">
+      <label style="font-size: 0.9rem;
+        font-weight: bold; display: block;
+        margin-bottom: 0.5rem;">
+        ¿Tienes cupón?
+      </label>
+      <div style="display: flex; gap: 0.5rem;">
+        <input type="text" id="couponCodeInput"
+          placeholder="Código"
+          style="flex: 1; padding: 0.5rem;
+          border: 1px solid #ddd;
+          border-radius: 8px;">
+        <button onclick="applyCouponCode()"
+          style="background: #333; color: white;
+          border: none; padding: 0.5rem 1rem;
+          border-radius: 8px; cursor: pointer;
+          font-weight: bold;">Aplicar</button>
+      </div>
+      <div id="couponMessage"
+        style="font-size: 0.8rem;
+        margin-top: 0.5rem; min-height: 1rem;">
+      </div>
+    </div>
     <div id="cartTotals"></div>
-    <button class="btn-primary"
-      onclick="openCheckout()">Finalizar Compra</button>
+    <button class="checkout-btn"
+      onclick="openCheckout()">
+      Finalizar Compra
+    </button>
   </div>
-</aside>
+</div>
 
-<footer>
-  <div id="footerContent"></div>
-  <div id="footerBottom"
-    style="margin-top:1rem;color:#999;"></div>
+<footer id="footer">
+  <div class="footer-content" id="footerContent"></div>
+  <div class="footer-brands" id="footerBrands"></div>
+  <div class="footer-bottom" id="footerBottom"></div>
 </footer>
 
-<a href="#" class="whatsapp"
+<a href="#" class="whatsapp-float"
   id="whatsappFloat" target="_blank">💬</a>
-
 <script type="module">
 import { initializeApp }
   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import {
   getFirestore, collection, getDocs,
-  doc, getDoc, addDoc, setDoc
+  doc, getDoc, updateDoc, addDoc, setDoc
 }
   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
@@ -408,28 +1394,24 @@ const firebaseConfig = {
   apiKey: "AIzaSyAU77yzh7Tm3RPuuvVcxlCt26u2ljmsBK0",
   authDomain: "akiramotors-cc498.firebaseapp.com",
   projectId: "akiramotors-cc498",
-  storageBucket:
-    "akiramotors-cc498.firebasestorage.app",
+  storageBucket: "akiramotors-cc498.firebasestorage.app",
   messagingSenderId: "657064466850",
-  appId:
-    "1:657064466850:web:2d1340db67f790d11ebafb"
+  appId: "1:657064466850:web:2d1340db67f790d11ebafb"
 };
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-window.__banner = function(msg, color) {
-  var el = document.getElementById('errorBanner');
-  if (!el) return;
-  el.style.display = 'block';
-  el.style.background = color || '#dc3545';
-  el.textContent = msg;
-};
-window.__banner('Script cargado. Cargando...', '#28a745');
-setTimeout(function() {
-  var el = document.getElementById('errorBanner');
-  if (el) el.style.display = 'none';
-}, 2000);
+var __banner = document.getElementById('errorBanner');
+if (__banner) {
+  __banner.style.display = 'block';
+  __banner.style.background = '#28a745';
+  __banner.textContent = 'Script cargado. Iniciando...';
+  setTimeout(function() {
+    if (__banner) __banner.style.display = 'none';
+  }, 2000);
+}
+
 let products = [];
 let cart = [];
 try {
@@ -437,19 +1419,36 @@ try {
     localStorage.getItem('akira_cart')
   ) || [];
 } catch(e) { cart = []; }
+
 let currentUser = null;
 let bcvRate = 36.5;
+let deliveryMode = 'pickup';
+let checkoutDeliveryMode = 'pickup';
+let selectedDeliveryZone = null;
+let pickupMapsUrl = '';
+let banners = [];
+let activeCategory = null;
+let activeBrand = null;
+let activeModel = null;
+let searchQuery = '';
+let allCoupons = [];
+let appliedCoupon = null;
 let deliveryZones = [];
 let drawerMenu = [];
+let currentPage = 1;
+let showAllMode = false;
+const PRODUCTS_PER_PAGE = 25;
+let heroConfig = { visible: false };
+let whatsappNumber = '584148700616';
 let siteConfig = {
   companyName: 'AKIRA MOTORS',
+  slogan: 'Repuestos Automotrices',
   description: 'Tu tienda de repuestos.',
   address: 'Ciudad Bolívar',
   phone: '0414-8700616',
   schedule: 'Lun-Vie: 8AM-5PM',
   facebook: '', instagram: '', tiktok: ''
 };
-let whatsappNumber = '584148700616';
 let allReviews = [];
 
 let logoClickCount = 0;
@@ -469,61 +1468,295 @@ document.getElementById('headerLogo')
     }
   });
 
-window.closeModal = function(id) {
-  var el = document.getElementById(id);
-  if (el) el.classList.remove('active');
-};
-
-window.toggleCart = function() {
-  document.getElementById('cartSidebar')
+window.toggleSidebar = function() {
+  document.getElementById('categorySidebar')
+    .classList.toggle('open');
+  document.getElementById('sidebarOverlay')
     .classList.toggle('active');
 };
-
-function calcPrice(price, discount) {
-  if (!discount || discount <= 0) return price;
-  return price - (price * discount / 100);
-}
-
-function formatPrices(price, discount) {
-  var finalPrice = calcPrice(price, discount);
-  var priceBs = finalPrice * bcvRate;
-  return {
-    finalPrice: finalPrice,
-    priceBs: priceBs,
-    hasDiscount: discount && discount > 0
-  };
-}
-
 function renderDrawerMenu() {
   var container = document.getElementById('drawerMenu');
-  if (!container) return;
   var html = '';
-  drawerMenu.forEach(function(cat, ci) {
-    html += '<div style="border-bottom:1px solid #eee;">';
-    html += '<div style="padding:0.8rem;font-weight:600;">';
-    html += cat.name + '</div>';
+  html += '<div class="drawer-all" ';
+  html += 'onclick="showAllProductsFromMenu()">';
+  html += '📦 Todos los productos</div>';
+  drawerMenu.forEach(function(cat, catIdx) {
+    html += '<div class="drawer-category">';
+    html += '<div class="drawer-cat-header" ';
+    html += 'onclick="toggleDrawerCategory(' +
+      catIdx + ')">';
+    html += '<span>' + cat.name + '</span>';
+    html += '<span class="drawer-arrow">▼</span>';
+    html += '</div>';
+    html += '<div class="drawer-brand-list" ';
+    html += 'id="drawer-brand-' + catIdx + '">';
     if (cat.brands) {
-      cat.brands.forEach(function(b) {
-        html += '<div style="padding:0.5rem 0 0.5rem 1rem;';
-        html += 'font-size:0.85rem;color:#555;">';
-        html += b.name + '</div>';
+      cat.brands.forEach(function(brand, brandIdx) {
+        html += '<div class="drawer-brand" ';
+        html += 'onclick="toggleDrawerBrand(';
+        html += catIdx + ',' + brandIdx + ')">';
+        html += '<span>' + brand.name + '</span>';
+        html += '<span class="drawer-arrow">▼</span>';
+        html += '</div>';
+        html += '<div class="drawer-model-list" ';
+        html += 'id="drawer-model-' + catIdx +
+          '-' + brandIdx + '">';
+        if (brand.models) {
+          brand.models.forEach(function(model, modelIdx) {
+            html += '<div class="drawer-model" ';
+            html += 'onclick="filterByModel(event,';
+            html += catIdx + ',' + brandIdx + ',';
+            html += modelIdx + ')">';
+            html += model + '</div>';
+          });
+        }
+        html += '</div>';
       });
     }
-    html += '</div>';
+    html += '</div></div>';
   });
   container.innerHTML = html;
 }
+
+window.toggleDrawerCategory = function(catIdx) {
+  var brandList = document.getElementById(
+    'drawer-brand-' + catIdx
+  );
+  var headers = document.querySelectorAll(
+    '.drawer-cat-header'
+  );
+  var isOpen = brandList.classList.contains('open');
+  document.querySelectorAll('.drawer-brand-list')
+    .forEach(function(b) {
+      b.classList.remove('open');
+    });
+  headers.forEach(function(h) {
+    h.classList.remove('active');
+  });
+  if (!isOpen) {
+    brandList.classList.add('open');
+    headers[catIdx].classList.add('active');
+  }
+};
+
+window.toggleDrawerBrand = function(catIdx, brandIdx) {
+  var modelList = document.getElementById(
+    'drawer-model-' + catIdx + '-' + brandIdx
+  );
+  var brands = document.querySelectorAll('.drawer-brand');
+  var isOpen = modelList.classList.contains('open');
+  document.querySelectorAll('.drawer-model-list')
+    .forEach(function(m) {
+      m.classList.remove('open');
+    });
+  brands.forEach(function(b) {
+    b.classList.remove('active');
+  });
+  if (!isOpen) {
+    modelList.classList.add('open');
+    brands[brandIdx].classList.add('active');
+  }
+};
+
+window.filterByModel = function(
+  ev, catIdx, brandIdx, modelIdx
+) {
+  var cat = drawerMenu[catIdx];
+  var brand = cat.brands[brandIdx];
+  var model = brand.models[modelIdx];
+  activeCategory = cat.name;
+  activeBrand = brand.name;
+  activeModel = model;
+  searchQuery = '';
+  document.querySelectorAll('.drawer-model')
+    .forEach(function(m) {
+      m.classList.remove('active');
+    });
+  ev.target.classList.add('active');
+  applyFilters();
+  toggleSidebar();
+};
+
+window.showAllProductsFromMenu = function() {
+  searchQuery = '';
+  activeCategory = null;
+  activeBrand = null;
+  activeModel = null;
+  document.getElementById('searchInput').value = '';
+  document.getElementById('searchResultsContainer')
+    .style.display = 'block';
+  document.getElementById('recommendedSection')
+    .style.display = 'none';
+  document.getElementById('searchResultsTitle')
+    .textContent = 'Todos los productos (' +
+    products.length + ')';
+  showAllMode = true;
+  currentPage = 1;
+  renderSearchResults(products);
+  toggleSidebar();
+};
+
+document.getElementById('searchInput')
+  .addEventListener('input', function(e) {
+    searchQuery = e.target.value
+      .toLowerCase().trim();
+    if (searchQuery.length < 2) {
+      document.getElementById('searchResultsContainer')
+        .style.display = 'none';
+      document.getElementById('recommendedSection')
+        .style.display = 'block';
+      return;
+    }
+    applyFilters();
+  });
+function applyFilters() {
+  var filtered = products;
+  if (searchQuery) {
+    filtered = filtered.filter(function(p) {
+      var n = p.name.toLowerCase()
+        .includes(searchQuery);
+      var c = p.code && p.code.toLowerCase()
+        .includes(searchQuery);
+      return n || c;
+    });
+  }
+  if (activeCategory) {
+    filtered = filtered.filter(function(p) {
+      return p.category === activeCategory;
+    });
+  }
+  if (activeBrand) {
+    filtered = filtered.filter(function(p) {
+      return p.brand && p.brand.toLowerCase()
+        .includes(activeBrand.toLowerCase());
+    });
+  }
+  if (activeModel) {
+    filtered = filtered.filter(function(p) {
+      return p.vehicle && p.vehicle.toLowerCase()
+        .includes(activeModel.toLowerCase());
+    });
+  }
+  var hasFilter = searchQuery || activeCategory ||
+    activeBrand || activeModel;
+  if (hasFilter) {
+    document.getElementById('recommendedSection')
+      .style.display = 'none';
+    document.getElementById('searchResultsContainer')
+      .style.display = 'block';
+    var title = 'Resultados';
+    if (searchQuery) {
+      title = 'Búsqueda: "' + searchQuery + '"';
+    } else if (activeModel) {
+      title = activeModel;
+    } else if (activeBrand) {
+      title = activeBrand;
+    } else if (activeCategory) {
+      title = activeCategory;
+    }
+    title += ' (' + filtered.length + ')';
+    document.getElementById('searchResultsTitle')
+      .textContent = title;
+    currentPage = 1;
+    renderSearchResults(filtered);
+  } else {
+    document.getElementById('searchResultsContainer')
+      .style.display = 'none';
+    document.getElementById('recommendedSection')
+      .style.display = 'block';
+  }
+}
+
+function renderSearchResults(filteredProducts) {
+  var grid = document.getElementById('searchResultsGrid');
+  var pagination = document.getElementById('pagination');
+  if (filteredProducts.length === 0) {
+    grid.innerHTML = '<div class="no-results" ' +
+      'style="grid-column:1/-1;">' +
+      'No se encontraron productos. ' +
+      'Escríbenos por WhatsApp.</div>';
+    pagination.innerHTML = '';
+    return;
+  }
+  var totalPages = Math.ceil(
+    filteredProducts.length / PRODUCTS_PER_PAGE
+  );
+  if (currentPage > totalPages) currentPage = totalPages;
+  var start = (currentPage - 1) * PRODUCTS_PER_PAGE;
+  var pageProducts = filteredProducts.slice(
+    start, start + PRODUCTS_PER_PAGE
+  );
+  var html = '';
+  pageProducts.forEach(function(p) {
+    var fp = formatPrices(p.price, p.discount);
+    var img = '';
+    if (p.images && p.images[0]) img = p.images[0];
+    else if (p.image) img = p.image;
+    var imgHtml = img ?
+      '<img src="' + img + '" alt="' +
+      p.name + '">' : '';
+    var stockColor = p.stock === 0 ?
+      '#dc3545' : '#28a745';
+    var stockTxt = p.stock === 0 ?
+      'No disponible' : 'Stock: ' + p.stock;
+    html += '<div class="search-result-card" ';
+    html += 'onclick="openProductDetail(\'' +
+      p.id + '\')">';
+    html += '<div class="search-result-image">' +
+      imgHtml + '</div>';
+    html += '<div class="search-result-info">';
+    if (p.code) {
+      html += '<div style="font-size:0.75rem;';
+      html += 'color:#888;">Código: ' +
+        p.code + '</div>';
+    }
+    html += '<div class="search-result-name">' +
+      p.name + '</div>';
+    html += '<div class="search-result-price">$' +
+      fp.finalPrice.toFixed(2) + ' / Bs. ' +
+      fp.priceBs.toFixed(2) + '</div>';
+    html += '<div style="font-size:0.8rem;color:' +
+      stockColor + ';margin-top:0.3rem;">' +
+      stockTxt + '</div>';
+    html += '</div></div>';
+  });
+  grid.innerHTML = html;
+  if (totalPages > 1) {
+    var pag = '';
+    pag += '<button ' +
+      (currentPage === 1 ? 'disabled' : '') +
+      ' onclick="changePage(' +
+      (currentPage - 1) + ')">Anterior</button>';
+    for (var i = 1; i <= totalPages; i++) {
+      pag += '<button class="' +
+        (i === currentPage ? 'active' : '') +
+        '" onclick="changePage(' + i + ')">' +
+        i + '</button>';
+    }
+    pag += '<button ' +
+      (currentPage === totalPages ? 'disabled' : '') +
+      ' onclick="changePage(' +
+      (currentPage + 1) + ')">Siguiente</button>';
+    pagination.innerHTML = pag;
+  } else {
+    pagination.innerHTML = '';
+  }
+}
+
+window.changePage = function(page) {
+  currentPage = page;
+  applyFilters();
+  document.getElementById('searchResultsContainer')
+    .scrollIntoView({ behavior: 'smooth' });
+};
 async function loadData() {
   try {
-    window.__banner('Leyendo configuración...', '#28a745');
-
     var rateDoc = await getDoc(
       doc(db, 'settings', 'bcvRate')
     );
     if (rateDoc.exists()) {
       bcvRate = rateDoc.data().value || 36.5;
     }
-
     var logoDoc = await getDoc(
       doc(db, 'settings', 'logo')
     );
@@ -532,7 +1765,18 @@ async function loadData() {
         .innerHTML = '<img src="' +
         logoDoc.data().image + '">';
     }
-
+    var pickupDoc = await getDoc(
+      doc(db, 'settings', 'pickupMaps')
+    );
+    if (pickupDoc.exists()) {
+      pickupMapsUrl = pickupDoc.data().url || '';
+    }
+    var bannersDoc = await getDoc(
+      doc(db, 'settings', 'banners')
+    );
+    if (bannersDoc.exists()) {
+      banners = bannersDoc.data().images || [];
+    }
     var cfgDoc = await getDoc(
       doc(db, 'settings', 'siteConfig')
     );
@@ -542,23 +1786,50 @@ async function loadData() {
         siteConfig[k] = d[k];
       }
     }
-
     var waDoc = await getDoc(
       doc(db, 'settings', 'whatsapp')
     );
     if (waDoc.exists() && waDoc.data().number) {
       whatsappNumber = waDoc.data().number;
     }
-
+    var heroDoc = await getDoc(
+      doc(db, 'settings', 'hero')
+    );
+    if (heroDoc.exists()) {
+      heroConfig = heroDoc.data();
+      if (heroConfig.visible &&
+        (heroConfig.title ||
+         heroConfig.backgroundImage)) {
+        renderHero();
+      }
+    }
     var drawerDoc = await getDoc(
       doc(db, 'settings', 'drawerMenu')
     );
     if (drawerDoc.exists()) {
       drawerMenu = drawerDoc.data().categories || [];
+    } else {
+      drawerMenu = [
+        { name: "Amortiguadores", brands: [
+          { name: "Toyota",
+            models: ["Corolla", "Fortuner"] },
+          { name: "Nissan",
+            models: ["Sentra", "Frontier"] }
+        ]},
+        { name: "Tren delantero", brands: [
+          { name: "Chevrolet",
+            models: ["Aveo", "Cruze"] },
+          { name: "Ford",
+            models: ["Fiesta", "Ranger"] }
+        ]},
+        { name: "Motor y componentes", brands: [
+          { name: "Hyundai",
+            models: ["Tucson", "Creta"] },
+          { name: "Kia",
+            models: ["Rio", "Sportage"] }
+        ]}
+      ];
     }
-
-    window.__banner('Cargando productos...', '#28a745');
-
     var zonesSnap = await getDocs(
       collection(db, 'deliveryZones')
     );
@@ -569,14 +1840,29 @@ async function loadData() {
       deliveryZones.push(obj);
     });
 
-    var snap = await getDocs(collection(db, 'products'));
+    /* CORRECCIÓN: ya no lee cupones aquí
+       porque las reglas lo bloquean */
+    /* const couponsSnap = await getDocs(...)
+       ELIMINADO */
+
+    var snap = await getDocs(
+      collection(db, 'products')
+    );
     products = [];
     snap.forEach(function(d) {
       var obj = d.data();
       obj.id = d.id;
       products.push(obj);
     });
-
+    var brandsSnap = await getDocs(
+      collection(db, 'brands')
+    );
+    var brands = [];
+    brandsSnap.forEach(function(d) {
+      var obj = d.data();
+      obj.id = d.id;
+      brands.push(obj);
+    });
     try {
       var revSnap = await getDocs(
         collection(db, 'reviews')
@@ -593,246 +1879,714 @@ async function loadData() {
     renderFooter();
     renderDrawerMenu();
     renderRecommended();
+    renderFooterBrands(brands);
     updateCartUI();
     updateHeaderButtons();
     updateWhatsAppLinks();
-
-    window.__banner('Productos cargados: ' +
-      products.length, '#28a745');
-    setTimeout(function() {
-      var el = document.getElementById('errorBanner');
-      if (el) el.style.display = 'none';
-    }, 1500);
-
   } catch (error) {
     console.error('Error:', error);
-    window.__banner('ERROR: ' + error.message);
-    var c = document.getElementById('recommendedContainer');
+    var c = document.getElementById(
+      'recommendedContainer'
+    );
     if (c) {
-      c.innerHTML = '<div class="error">' +
-        'Error cargando productos:<br><br>' +
-        error.message + '</div>';
+      c.innerHTML = '<div class="no-results">' +
+        '<strong>Error cargando:</strong><br>' +
+        (error.message || error) + '</div>';
     }
+  }
+}
+
+function renderHero() {
+  var section = document.getElementById('heroSection');
+  var bg = document.getElementById('heroBg');
+  var overlay = document.getElementById('heroOverlay');
+  var title = document.getElementById('heroTitle');
+  var subtitle = document.getElementById('heroSubtitle');
+  var cta = document.getElementById('heroCta');
+  section.style.display = 'flex';
+  if (heroConfig.backgroundImage) {
+    bg.style.backgroundImage =
+      "url('" + heroConfig.backgroundImage + "')";
+    var opacity = (heroConfig.overlayOpacity || 50)
+      / 100;
+    if (heroConfig.overlayColor &&
+        heroConfig.overlayColor.startsWith('#')) {
+      var r = parseInt(
+        heroConfig.overlayColor.slice(1,3), 16
+      );
+      var g = parseInt(
+        heroConfig.overlayColor.slice(3,5), 16
+      );
+      var b = parseInt(
+        heroConfig.overlayColor.slice(5,7), 16
+      );
+      overlay.style.background = 'rgba(' +
+        r + ',' + g + ',' + b + ',' + opacity + ')';
+    } else {
+      overlay.style.background =
+        'rgba(0,0,0,' + opacity + ')';
+    }
+  } else {
+    bg.style.background =
+      'linear-gradient(135deg, #dc3545 0%, #8b0000 100%)';
+    overlay.style.display = 'none';
+  }
+  if (heroConfig.title) {
+    title.textContent = heroConfig.title;
+    title.style.color =
+      heroConfig.titleColor || 'white';
+    title.style.fontSize =
+      (heroConfig.titleSize || 48) + 'px';
+    title.style.fontFamily = heroConfig.titleFont ||
+      "'Segoe UI', sans-serif";
+  }
+  if (heroConfig.subtitle) {
+    subtitle.textContent = heroConfig.subtitle;
+    subtitle.style.color =
+      heroConfig.subtitleColor || '#ddd';
+    subtitle.style.fontSize =
+      (heroConfig.subtitleSize || 20) + 'px';
+  }
+  if (heroConfig.ctaText) {
+    cta.textContent = heroConfig.ctaText;
+  }
+  if (heroConfig.ctaLink) {
+    cta.href = heroConfig.ctaLink;
   }
 }
 
 function applySiteConfig() {
-  var el = document.getElementById('headerCompanyName');
-  if (el) el.textContent = siteConfig.companyName;
-  document.title = siteConfig.companyName;
+  document.getElementById('headerCompanyName')
+    .textContent = siteConfig.companyName;
+  document.title = siteConfig.companyName +
+    ' - Repuestos';
 }
 
-function updateWhatsAppLinks() {
-  var clean = whatsappNumber.replace(/\D/g, '');
-  var btn = document.getElementById('whatsappFloat');
-  if (btn) {
-    btn.href = 'https://wa.me/' + clean;
-  }
-}
-
-function renderFooter() {
-  var fc = document.getElementById('footerContent');
-  if (fc) {
-    var html = '<h3>' + siteConfig.companyName + '</h3>';
-    html += '<p>' + siteConfig.description + '</p>';
-    html += '<p>Tel: ' + siteConfig.phone + '</p>';
-    fc.innerHTML = html;
-  }
-  var fb = document.getElementById('footerBottom');
-  if (fb) {
-    fb.innerHTML = '© 2026 ' + siteConfig.companyName;
-  }
-}
-
-function renderRecommended() {
-  var container = document.getElementById(
-    'recommendedContainer'
-  );
-  if (!container) return;
-
-  var recommended = products.filter(function(p) {
-    return p.recommended;
+function renderFooterBrands(brands) {
+  var container = document.getElementById('footerBrands');
+  var activeBrands = brands.filter(function(b) {
+    return b.image;
   });
-
-  if (recommended.length === 0) {
-    container.innerHTML =
-      '<div class="loading">' +
-      'Próximamente más productos.</div>';
+  if (activeBrands.length === 0) {
+    container.style.display = 'none';
     return;
   }
-
   var html = '';
-  recommended.forEach(function(p) {
-    html += renderProductCard(p);
+  activeBrands.forEach(function(b) {
+    html += '<div class="footer-brand-logo">';
+    html += '<img src="' + b.image + '" alt="' +
+      b.name + '"></div>';
   });
   container.innerHTML = html;
 }
 
-function renderProductCard(p) {
-  var fp = formatPrices(p.price, p.discount);
-  var img = '';
-  if (p.images && p.images[0]) {
-    img = p.images[0];
-  } else if (p.image) {
-    img = p.image;
+function calculateDiscountedPrice(price, discount) {
+  if (!discount || discount <= 0) return price;
+  return price - (price * discount / 100);
+}
+
+function formatPrices(price, discount) {
+  var finalPrice = calculateDiscountedPrice(
+    price, discount
+  );
+  var priceBs = finalPrice * bcvRate;
+  return {
+    finalPrice: finalPrice,
+    priceBs: priceBs,
+    hasDiscount: discount && discount > 0
+  };
+}
+function renderRecommended() {
+  var container = document.getElementById(
+    'recommendedContainer'
+  );
+  var recommended = products.filter(function(p) {
+    return p.recommended;
+  });
+  if (recommended.length === 0) {
+    container.innerHTML = '<div class="no-results">' +
+      'Próximamente más productos. ' +
+      'Escríbenos por WhatsApp.</div>';
+    return;
   }
-  var imgHtml = img ?
-    '<img src="' + img + '" alt="">' : '';
-
-  var stockClass = 'in';
-  var stockText = 'Stock: ' + p.stock;
-  if (p.stock === 0) {
-    stockClass = 'out';
-    stockText = 'No disponible';
-  }
-
-  var codeHtml = p.code ?
-    '<div class="card-code">Cód: ' +
-    p.code + '</div>' : '';
-
   var html = '';
-  html += '<div class="card" onclick="' +
-    'openProductDetail(\'' + p.id + '\')">';
-  html += '<div class="card-img">' + imgHtml + '</div>';
-  html += '<div class="card-info">';
-  html += codeHtml;
-  html += '<div class="card-name">' + p.name + '</div>';
-  html += '<div class="card-price">$' +
-    fp.finalPrice.toFixed(2) + '</div>';
-  html += '<div class="card-bs">Bs. ' +
-    fp.priceBs.toFixed(2) + '</div>';
-  html += '<div class="card-stock ' + stockClass +
-    '">' + stockText + '</div>';
-  html += '<button class="card-btn"';
-  html += ' onclick="event.stopPropagation();';
-  html += ' addToCart(\'' + p.id + '\')"';
-  if (p.stock === 0) html += ' disabled';
-  html += '>Agregar</button>';
-  html += '</div></div>';
+  recommended.forEach(function(p) {
+    var fp = formatPrices(p.price, p.discount);
+    var img = '';
+    if (p.images && p.images[0]) img = p.images[0];
+    else if (p.image) img = p.image;
+    var imgHtml = img ?
+      '<img src="' + img + '" alt="' +
+      p.name + '">' : '';
+    var priceHtml = '';
+    if (fp.hasDiscount) {
+      priceHtml += '<span class="' +
+        'featured-price-original">$' +
+        Number(p.price).toFixed(2) + '</span>';
+      priceHtml += '<div class="featured-price">$' +
+        fp.finalPrice.toFixed(2) + '</div>';
+    } else {
+      priceHtml += '<div class="featured-price">$' +
+        fp.finalPrice.toFixed(2) + '</div>';
+    }
+    priceHtml += '<div class="featured-price-bs">' +
+      'Bs. ' + fp.priceBs.toFixed(2) + '</div>';
+    var stockClass = 'in';
+    var stockText = 'Stock: ' + p.stock;
+    var stockUrgent = '';
+    if (p.stock === 0) {
+      stockClass = 'out';
+      stockText = 'No disponible';
+    } else if (p.stock < 5) {
+      stockClass = 'low';
+      stockText = '¡Últimas ' + p.stock + '!';
+      stockUrgent = '<div class="stock-urgent">' +
+        '¡Últimas!</div>';
+    }
+    var tags = '';
+    if (fp.hasDiscount) {
+      tags = '<div class="offer-tag">-' +
+        p.discount + '%</div>';
+    }
+    html += '<div class="featured-card" ';
+    html += 'onclick="openProductDetail(\'' +
+      p.id + '\')">';
+    html += '<div class="featured-image">' +
+      imgHtml + tags + stockUrgent + '</div>';
+    html += '<div class="featured-info">';
+    if (p.code) {
+      html += '<div style="font-size:0.75rem;';
+      html += 'color:#888;">Código: ' +
+        p.code + '</div>';
+    }
+    html += '<div class="featured-name">' +
+      p.name + '</div>';
+    html += priceHtml;
+    html += '<div class="featured-stock ' +
+      stockClass + '">' + stockText + '</div>';
+    html += '<button class="featured-add-btn" ';
+    html += 'onclick="event.stopPropagation();';
+    html += ' addToCart(\'' + p.id + '\')"';
+    if (p.stock === 0) html += ' disabled';
+    html += '>';
+    html += p.stock === 0 ?
+      'No disponible' : 'Agregar';
+    html += '</button></div></div>';
+  });
+  container.innerHTML = html;
+}
+
+function generateTechSheetHTML(product) {
+  var attrs = product.attributes || {};
+  var specs = product.specifications || [];
+  var compat = product.compatibility || [];
+  var terms = product.searchTerms || '';
+  var html = '';
+  if (Object.keys(attrs).length > 0) {
+    html += '<div class="tech-sheet">';
+    html += '<h3>📋 Atributos del Repuesto</h3>';
+    html += '<div class="attributes">';
+    var labels = {
+      'category': 'Categoría Principal',
+      'subcategory': 'Subcategoría',
+      'brand': 'Marca del Repuesto',
+      'partNumber': 'N° Parte / OEM',
+      'position': 'Posición',
+      'side': 'Lado',
+      'condition': 'Condición'
+    };
+    for (var key in attrs) {
+      var value = attrs[key];
+      if (value) {
+        html += '<div class="attribute">';
+        html += '<strong>' + (labels[key] || key) +
+          '</strong>';
+        html += value + '</div>';
+      }
+    }
+    html += '</div></div>';
+  }
+  if (specs.length > 0) {
+    html += '<div class="tech-sheet">';
+    html += '<h3>⚙️ Especificaciones Técnicas</h3>';
+    html += '<table class="tech-specs-table">';
+    specs.forEach(function(s) {
+      if (s.key && s.value) {
+        html += '<tr><td>' + s.key +
+          '</td><td>' + s.value + '</td></tr>';
+      }
+    });
+    html += '</table></div>';
+  }
+  if (compat.length > 0) {
+    html += '<div class="tech-sheet">';
+    html += '<h3>🚗 Compatibilidad Vehicular</h3>';
+    html += '<table class="compatibility-table">';
+    html += '<thead><tr><th>Marca</th>';
+    html += '<th>Modelo</th><th>Años</th>';
+    html += '<th>Motor</th><th>Notas</th>';
+    html += '</tr></thead><tbody>';
+    compat.forEach(function(c) {
+      if (c.brand || c.model) {
+        html += '<tr><td>' + (c.brand || '-') +
+          '</td>';
+        html += '<td>' + (c.model || '-') +
+          '</td>';
+        html += '<td>' + (c.years || '-') +
+          '</td>';
+        html += '<td>' + (c.engine || '-') +
+          '</td>';
+        html += '<td>' + (c.notes || '-') +
+          '</td></tr>';
+      }
+    });
+    html += '</tbody></table></div>';
+  }
+  if (terms) {
+    html += '<div class="search-terms">';
+    html += '<strong>🔍 Búsquedas frecuentes:</strong> ';
+    html += terms + '</div>';
+  }
   return html;
 }
 window.openProductDetail = function(productId) {
-  var p = null;
-  for (var i = 0; i < products.length; i++) {
-    if (products[i].id === productId) {
-      p = products[i];
-      break;
+  var product = products.find(function(p) {
+    return p.id === productId;
+  });
+  if (!product) return;
+  var images = product.images ||
+    (product.image ? [product.image] : []);
+  var currentImage = images[0] || null;
+  var fp = formatPrices(product.price, product.discount);
+  var imageHtml = currentImage ?
+    '<img src="' + currentImage + '" alt="' +
+    product.name + '">' : '';
+  var priceBox = '';
+  if (fp.hasDiscount) {
+    priceBox += '<div class="detail-price-box">';
+    priceBox += '<div class="detail-offer-badge">';
+    priceBox += 'OFERTA -' + product.discount +
+      '%</div>';
+    priceBox += '<div style="font-size:1rem;';
+    priceBox += 'color:#999;text-decoration:';
+    priceBox += 'line-through;">Antes: $';
+    priceBox += Number(product.price).toFixed(2);
+    priceBox += '</div>';
+    priceBox += '<div class="detail-price-usd">$';
+    priceBox += fp.finalPrice.toFixed(2) + '</div>';
+    priceBox += '<div class="detail-price-bs">Bs. ';
+    priceBox += fp.priceBs.toFixed(2);
+    priceBox += ' (BCV: ' + bcvRate + ')</div>';
+    priceBox += '</div>';
+  } else {
+    priceBox += '<div class="detail-price-box">';
+    priceBox += '<div class="detail-price-usd">$';
+    priceBox += fp.finalPrice.toFixed(2) + '</div>';
+    priceBox += '<div class="detail-price-bs">Bs. ';
+    priceBox += fp.priceBs.toFixed(2);
+    priceBox += ' (BCV: ' + bcvRate + ')</div>';
+    priceBox += '</div>';
+  }
+  var techSheet = generateTechSheetHTML(product);
+  var pReviews = allReviews.filter(function(r) {
+    return r.productId === productId;
+  });
+  var avg = 0;
+  if (pReviews.length > 0) {
+    var sum = 0;
+    pReviews.forEach(function(r) {
+      sum += r.rating;
+    });
+    avg = (sum / pReviews.length).toFixed(1);
+  }
+  var reviewsHtml = '<div class="reviews-section">';
+  reviewsHtml += '<h3>⭐ Reseñas (' +
+    pReviews.length + ') - Promedio: ' +
+    avg + '/5</h3>';
+  if (currentUser) {
+    var existing = pReviews.find(function(r) {
+      return r.userPhone === currentUser.phone;
+    });
+    if (!existing) {
+      reviewsHtml += '<div class="review-form">';
+      reviewsHtml += '<label style="font-weight:600;">';
+      reviewsHtml += 'Tu calificación:</label>';
+      reviewsHtml += '<div class="stars-input" ';
+      reviewsHtml += 'id="starsInput-' +
+        productId + '">';
+      for (var i = 1; i <= 5; i++) {
+        reviewsHtml += '<span class="star" ';
+        reviewsHtml += 'data-value="' + i + '" ';
+        reviewsHtml += 'onclick="selectRating(\'';
+        reviewsHtml += productId + '\',' + i +
+          ')">★</span>';
+      }
+      reviewsHtml += '</div>';
+      reviewsHtml += '<textarea id="reviewText-';
+      reviewsHtml += productId + '" maxlength="150" ';
+      reviewsHtml += 'placeholder="Escribe tu ';
+      reviewsHtml += 'comentario (máx 150 caracteres)" ';
+      reviewsHtml += 'oninput="updateCharCount(\'';
+      reviewsHtml += productId + '\')">';
+      reviewsHtml += '</textarea>';
+      reviewsHtml += '<div class="char-count" ';
+      reviewsHtml += 'id="charCount-' + productId +
+        '">0/150</div>';
+      reviewsHtml += '<button onclick="';
+      reviewsHtml += 'submitReview(\'' + productId +
+        '\')">Publicar reseña</button>';
+      reviewsHtml += '</div>';
     }
+  } else {
+    reviewsHtml += '<p style="font-size:0.85rem; ';
+    reviewsHtml += 'color:#666; margin-bottom:1rem;">';
+    reviewsHtml += 'Inicia sesión para dejar una ';
+    reviewsHtml += 'reseña.</p>';
   }
-  if (!p) return;
+  if (pReviews.length > 0) {
+    pReviews.sort(function(a, b) {
+      return new Date(b.date) - new Date(a.date);
+    });
+    pReviews.forEach(function(r) {
+      var stars = '★'.repeat(r.rating) +
+        '☆'.repeat(5 - r.rating);
+      reviewsHtml += '<div class="review-item">';
+      reviewsHtml += '<div class="review-item-header">';
+      reviewsHtml += '<span class="review-item-user">';
+      reviewsHtml += (r.userName || 'Cliente') +
+        '</span>';
+      reviewsHtml += '<span class="review-item-stars">';
+      reviewsHtml += stars + '</span></div>';
+      reviewsHtml += '<div class="review-item-text">';
+      reviewsHtml += r.text + '</div>';
+      reviewsHtml += '<div class="review-item-date">';
+      reviewsHtml += new Date(r.date)
+        .toLocaleDateString() + '</div></div>';
+    });
+  } else {
+    reviewsHtml += '<p style="font-size:0.85rem; ';
+    reviewsHtml += 'color:#999;">Aún no hay reseñas. ';
+    reviewsHtml += '¡Sé el primero!</p>';
+  }
+  reviewsHtml += '</div>';
 
-  var fp = formatPrices(p.price, p.discount);
-  var img = '';
-  if (p.images && p.images[0]) img = p.images[0];
-  else if (p.image) img = p.image;
-  var imgHtml = img ?
-    '<img src="' + img +
-    '" style="max-width:100%;max-height:300px;">' : '';
+  var stockColor = '#28a745';
+  if (product.stock === 0) {
+    stockColor = '#dc3545';
+  } else if (product.stock < 5) {
+    stockColor = '#FFC107';
+  }
+  var stockLabel = 'Disponible: ' + product.stock;
+  if (product.stock === 0) {
+    stockLabel = 'No disponible';
+  } else if (product.stock < 5) {
+    stockLabel = '¡Últimas ' + product.stock + '!';
+  }
 
-  var html = '';
-  html += '<button class="modal-close"';
-  html += ' onclick="closeModal(\'productDetailModal\')"';
-  html += '>×</button>';
-  html += '<div style="text-align:center;">';
-  html += imgHtml;
-  html += '</div>';
-  html += '<h2 style="margin:1rem 0;color:#333;">' +
-    p.name + '</h2>';
-  if (p.code) {
-    html += '<div style="color:#888;font-size:0.85rem;">';
-    html += 'Código: ' + p.code + '</div>';
+  var detailHtml = '';
+  detailHtml += '<button class="modal-close" ';
+  detailHtml += 'onclick="closeModal(\'';
+  detailHtml += 'productDetailModal\')">×</button>';
+  detailHtml += '<div class="product-detail">';
+  detailHtml += '<div class="product-detail-image">' +
+    imageHtml + '</div>';
+  detailHtml += '<div class="product-detail-info">';
+  if (product.code) {
+    detailHtml += '<div style="color:#dc3545;';
+    detailHtml += 'font-size:0.9rem;">Código: ' +
+      product.code + '</div>';
   }
-  html += '<div style="margin:1rem 0;padding:1rem;';
-  html += 'background:#fff5f5;border-radius:12px;">';
-  html += '<div style="font-size:1.8rem;';
-  html += 'color:#dc3545;font-weight:bold;">$' +
-    fp.finalPrice.toFixed(2) + '</div>';
-  html += '<div style="color:#666;">Bs. ' +
-    fp.priceBs.toFixed(2) + '</div>';
-  html += '</div>';
-  if (p.description) {
-    html += '<div style="margin:1rem 0;';
-    html += 'padding:1rem;background:#f8f8f8;';
-    html += 'border-radius:12px;">' +
-      p.description + '</div>';
+  detailHtml += '<h2>' + product.name + '</h2>';
+  detailHtml += priceBox;
+  detailHtml += '<div style="color:' + stockColor +
+    '; font-weight:bold; margin:0.5rem 0;">' +
+    stockLabel + '</div>';
+  if (product.description) {
+    detailHtml += '<h3 style="color:#dc3545; ';
+    detailHtml += 'margin:1rem 0 0.5rem;">';
+    detailHtml += 'Descripción</h3>';
+    detailHtml += '<div class="detail-description">' +
+      product.description + '</div>';
   }
-  html += '<button class="card-btn"';
-  html += ' onclick="addToCart(\'' + p.id + '\');';
-  html += ' closeModal(\'productDetailModal\')">';
-  html += 'Agregar al carrito</button>';
+  detailHtml += techSheet;
+  detailHtml += '</div></div>';
+  detailHtml += reviewsHtml;
+  detailHtml += '<div class="detail-actions">';
+  detailHtml += '<button class="featured-add-btn" ';
+  detailHtml += 'style="padding:1rem;" ';
+  detailHtml += 'onclick="addToCart(\'' +
+    product.id + '\'); ';
+  detailHtml += 'closeModal(\'';
+  detailHtml += 'productDetailModal\')"';
+  if (product.stock === 0) detailHtml += ' disabled';
+  detailHtml += '>';
+  detailHtml += product.stock === 0 ?
+    'Consultar' : 'Agregar al carrito';
+  detailHtml += '</button></div>';
 
   document.getElementById('productDetailContent')
-    .innerHTML = html;
+    .innerHTML = detailHtml;
   document.getElementById('productDetailModal')
     .classList.add('active');
 };
 
-window.addToCart = function(productId) {
-  var p = null;
-  for (var i = 0; i < products.length; i++) {
-    if (products[i].id === productId) {
-      p = products[i];
-      break;
-    }
+var selectedRatings = {};
+window.selectRating = function(productId, rating) {
+  selectedRatings[productId] = rating;
+  var stars = document.querySelectorAll(
+    '#starsInput-' + productId + ' .star'
+  );
+  stars.forEach(function(star, idx) {
+    star.classList.toggle('active', idx < rating);
+  });
+};
+
+window.updateCharCount = function(productId) {
+  var textEl = document.getElementById(
+    'reviewText-' + productId
+  );
+  var countEl = document.getElementById(
+    'charCount-' + productId
+  );
+  if (textEl && countEl) {
+    countEl.textContent = textEl.value.length +
+      '/150';
   }
-  if (!p) return;
-  if (p.stock <= 0) {
+};
+
+window.submitReview = async function(productId) {
+  if (!currentUser) {
+    alert('Inicia sesión primero');
+    return;
+  }
+  var rating = selectedRatings[productId];
+  var textEl = document.getElementById(
+    'reviewText-' + productId
+  );
+  var text = textEl ? textEl.value.trim() : '';
+  if (!rating) {
+    alert('Selecciona una calificación');
+    return;
+  }
+  if (!text || text.length < 5) {
+    alert('Escribe un comentario (mín 5)');
+    return;
+  }
+  if (text.length > 150) {
+    alert('Máximo 150 caracteres');
+    return;
+  }
+  try {
+    await addDoc(collection(db, 'reviews'), {
+      productId: productId,
+      userId: currentUser.name,
+      userName: currentUser.name,
+      userPhone: currentUser.phone,
+      rating: rating,
+      text: text,
+      date: new Date().toISOString()
+    });
+    alert('✅ Reseña publicada');
+    var revSnap = await getDocs(collection(db, 'reviews'));
+    allReviews = [];
+    revSnap.forEach(function(d) {
+      var obj = d.data();
+      obj.id = d.id;
+      allReviews.push(obj);
+    });
+    openProductDetail(productId);
+  } catch (error) {
+    alert('Error: ' + error.message);
+  }
+};
+window.addToCart = function(productId) {
+  var product = products.find(function(p) {
+    return p.id === productId;
+  });
+  if (!product || product.stock <= 0) {
     alert('No disponible');
     return;
   }
-
-  var fp = formatPrices(p.price, p.discount);
-  var found = false;
-  for (var j = 0; j < cart.length; j++) {
-    if (cart[j].id === productId) {
-      if (cart[j].quantity < p.stock) {
-        cart[j].quantity++;
-      } else {
-        alert('No hay más stock');
-        return;
-      }
-      found = true;
-      break;
+  var fp = formatPrices(
+    product.price, product.discount
+  );
+  var existing = cart.find(function(item) {
+    return item.id === productId;
+  });
+  if (existing) {
+    if (existing.quantity < product.stock) {
+      existing.quantity++;
+    } else {
+      alert('No hay más stock');
+      return;
     }
-  }
-  if (!found) {
-    var img = '';
-    if (p.images && p.images[0]) img = p.images[0];
-    else if (p.image) img = p.image;
+  } else {
+    var img = (product.images && product.images[0])
+      || product.image;
     cart.push({
-      id: p.id,
-      name: p.name,
+      id: product.id,
+      name: product.name,
       price: fp.finalPrice,
       priceBs: fp.priceBs,
       image: img,
       quantity: 1
     });
   }
-  saveCart();
   updateCartUI();
+  saveCart();
 };
 
-window.updateQuantity = function(id, change) {
-  for (var i = 0; i < cart.length; i++) {
-    if (cart[i].id === id) {
-      cart[i].quantity += change;
-      if (cart[i].quantity <= 0) {
-        cart.splice(i, 1);
-      }
-      break;
-    }
-  }
-  saveCart();
-  updateCartUI();
-};
-
-window.removeFromCart = function(id) {
+window.removeFromCart = function(productId) {
   cart = cart.filter(function(item) {
-    return item.id !== id;
+    return item.id !== productId;
   });
+  updateCartUI();
   saveCart();
+};
+
+window.updateQuantity = function(productId, change) {
+  var item = cart.find(function(i) {
+    return i.id === productId;
+  });
+  var product = products.find(function(p) {
+    return p.id === productId;
+  });
+  if (!item) return;
+  item.quantity += change;
+  if (item.quantity <= 0) {
+    removeFromCart(productId);
+    return;
+  }
+  if (!product) {
+    removeFromCart(productId);
+    return;
+  }
+  if (item.quantity > product.stock) {
+    item.quantity = product.stock;
+    alert('No hay más stock');
+    updateCartUI();
+    return;
+  }
+  updateCartUI();
+  saveCart();
+};
+
+window.applyCouponCode = function() {
+  var input = document.getElementById('couponCodeInput');
+  var msg = document.getElementById('couponMessage');
+  if (!input.value.trim()) {
+    msg.innerHTML = '<span style="color:#dc3545;">' +
+      'Ingresa un código</span>';
+    return;
+  }
+  msg.innerHTML = '<span style="color:#666;">' +
+    'Cupones no disponibles por ahora.</span>';
+};
+
+window.removeCoupon = function() {
+  appliedCoupon = null;
+  document.getElementById('couponCodeInput')
+    .value = '';
+  document.getElementById('couponMessage')
+    .innerHTML = '';
   updateCartUI();
 };
+
+function updateCartUI() {
+  var cartItems = document.getElementById('cartItems');
+  var cartCount = document.getElementById('cartCount');
+  var cartTotals = document.getElementById('cartTotals');
+  var totalItems = 0;
+  cart.forEach(function(i) {
+    totalItems += i.quantity;
+  });
+  if (cartCount) cartCount.textContent = totalItems;
+  if (cart.length === 0) {
+    cartItems.innerHTML = '<p style="' +
+      'text-align:center;color:#999;' +
+      'padding:2rem;">Carrito vacío</p>';
+    cartTotals.innerHTML = '';
+    return;
+  }
+  var html = '';
+  cart.forEach(function(item) {
+    html += '<div class="cart-item">';
+    html += '<div class="cart-item-img">';
+    if (item.image) {
+      html += '<img src="' + item.image + '">';
+    }
+    html += '</div>';
+    html += '<div class="cart-item-info">';
+    html += '<div class="cart-item-name">' +
+      item.name + '</div>';
+    html += '<div style="font-size:0.85rem;">';
+    html += '<span style="font-weight:bold;">$' +
+      Number(item.price).toFixed(2) + '</span>';
+    html += ' <span style="color:#666;">| Bs.' +
+      Number(item.priceBs).toFixed(2) + '</span>';
+    html += '<br><small>x ' + item.quantity +
+      '</small></div></div>';
+    html += '<div class="cart-item-controls">';
+    html += '<button onclick="updateQuantity(\'';
+    html += item.id + '\',-1)">-</button>';
+    html += '<span>' + item.quantity + '</span>';
+    html += '<button onclick="updateQuantity(\'';
+    html += item.id + '\',1)">+</button>';
+    html += '<button onclick="removeFromCart(\'';
+    html += item.id + '\')" style="background:#999;">';
+    html += '×</button></div></div>';
+  });
+  cartItems.innerHTML = html;
+
+  var subtotalUsd = 0;
+  cart.forEach(function(item) {
+    subtotalUsd += Number(item.price) *
+      item.quantity;
+  });
+  var discountUsd = 0;
+  if (appliedCoupon) {
+    discountUsd = subtotalUsd *
+      (appliedCoupon.discount / 100);
+    subtotalUsd -= discountUsd;
+  }
+  var ivaUsd = subtotalUsd * 0.16;
+  var deliveryFee = 0;
+  if (deliveryMode === 'delivery' &&
+      selectedDeliveryZone) {
+    deliveryFee = selectedDeliveryZone.cost;
+  } else if (deliveryMode === 'delivery') {
+    deliveryFee = 5;
+  }
+  var totalUsd = subtotalUsd + ivaUsd +
+    deliveryFee;
+  var th = '';
+  if (appliedCoupon) {
+    th += '<div class="cart-total-row discount">';
+    th += '<span>Descuento (' + appliedCoupon.code +
+      '):</span>';
+    th += '<span>-$' + discountUsd.toFixed(2) +
+      '</span></div>';
+  }
+  th += '<div class="cart-total-row">';
+  th += '<span>Subtotal:</span>';
+  th += '<span>$' + subtotalUsd.toFixed(2) +
+    '</span></div>';
+  th += '<div class="cart-total-row">';
+  th += '<span>IVA (16%):</span>';
+  th += '<span>$' + ivaUsd.toFixed(2) +
+    '</span></div>';
+  if (deliveryFee > 0) {
+    th += '<div class="cart-total-row">';
+    th += '<span>Delivery:</span>';
+    th += '<span>$' + deliveryFee.toFixed(2) +
+      '</span></div>';
+  }
+  th += '<div class="cart-total-row total">';
+  th += '<span>TOTAL:</span>';
+  th += '<span>$' + totalUsd.toFixed(2) +
+    '</span></div>';
+  cartTotals.innerHTML = th;
+}
 
 function saveCart() {
   try {
@@ -842,73 +2596,61 @@ function saveCart() {
   } catch(e) {}
 }
 
-function updateCartUI() {
-  var count = 0;
-  cart.forEach(function(i) { count += i.quantity; });
-  var cc = document.getElementById('cartCount');
-  if (cc) cc.textContent = count;
+window.toggleCart = function() {
+  document.getElementById('cartSidebar')
+    .classList.toggle('active');
+};
 
-  var ci = document.getElementById('cartItems');
-  if (!ci) return;
+window.selectCartDelivery = function(mode) {
+  deliveryMode = mode;
+  selectedDeliveryZone = null;
+  document.getElementById('cartPickup')
+    .classList.toggle('active', mode === 'pickup');
+  document.getElementById('cartDelivery')
+    .classList.toggle('active', mode === 'delivery');
+  updateCartUI();
+};
 
-  if (cart.length === 0) {
-    ci.innerHTML = '<p style="text-align:center;';
-    ci.innerHTML += 'color:#999;padding:2rem;">';
-    ci.innerHTML += 'Carrito vacío</p>';
-    var ct = document.getElementById('cartTotals');
-    if (ct) ct.innerHTML = '';
+window.getLocation = function() {
+  if (!navigator.geolocation) {
+    alert('No soporta geolocalización');
     return;
   }
-
-  var html = '';
-  cart.forEach(function(item) {
-    html += '<div class="cart-item">';
-    if (item.image) {
-      html += '<img src="' + item.image +
-        '" style="width:50px;height:50px;' +
-        'object-fit:cover;border-radius:8px;">';
+  navigator.geolocation.getCurrentPosition(
+    function(pos) {
+      document.getElementById('gpsLat').value =
+        pos.coords.latitude;
+      document.getElementById('gpsLng').value =
+        pos.coords.longitude;
+      var ph = document.getElementById(
+        'mapPlaceholder'
+      );
+      ph.innerHTML = '<div style="text-align:';
+      ph.innerHTML += 'center;">';
+      ph.innerHTML += '<div style="font-size:3rem;">';
+      ph.innerHTML += '📍</div>';
+      ph.innerHTML += '<div>Ubicación obtenida</div>';
+      ph.innerHTML += '<div style="font-size:0.8rem;">';
+      ph.innerHTML += pos.coords.latitude
+        .toFixed(5);
+      ph.innerHTML += ', ';
+      ph.innerHTML += pos.coords.longitude
+        .toFixed(5);
+      ph.innerHTML += '</div></div>';
+    },
+    function(err) {
+      alert('Error: ' + err.message);
     }
-    html += '<div style="flex:1;">';
-    html += '<div class="cart-item-name">' +
-      item.name + '</div>';
-    html += '<div class="cart-item-price">$' +
-      item.price.toFixed(2) + '</div>';
-    html += '</div>';
-    html += '<div style="display:flex;';
-    html += 'align-items:center;gap:0.3rem;">';
-    html += '<button onclick="updateQuantity(\'' +
-      item.id + '\',-1)">-</button>';
-    html += '<span>' + item.quantity + '</span>';
-    html += '<button onclick="updateQuantity(\'' +
-      item.id + '\',1)">+</button>';
-    html += '</div></div>';
-  });
-  ci.innerHTML = html;
+  );
+};
 
-  var subtotal = 0;
-  cart.forEach(function(i) {
-    subtotal += i.price * i.quantity;
-  });
-  var iva = subtotal * 0.16;
-  var total = subtotal + iva;
-
-  var th = '';
-  th += '<div class="total-row"><span>Subtotal:</span>';
-  th += '<span>$' + subtotal.toFixed(2) + '</span></div>';
-  th += '<div class="total-row"><span>IVA 16%:</span>';
-  th += '<span>$' + iva.toFixed(2) + '</span></div>';
-  th += '<div class="total-row grand">';
-  th += '<span>TOTAL:</span>';
-  th += '<span>$' + total.toFixed(2) + '</span></div>';
-
-  var ct2 = document.getElementById('cartTotals');
-  if (ct2) ct2.innerHTML = th;
-}
 window.handleAccount = function() {
   if (currentUser) {
-    var op = prompt('Hola ' + currentUser.name +
-      '!\n1. Cerrar sesión');
-    if (op === '1') {
+    var action = prompt('Hola ' +
+      currentUser.name +
+      '!\n1. Ver pedidos\n2. Cerrar sesión');
+    if (action === '1') showMyOrders();
+    else if (action === '2') {
       currentUser = null;
       localStorage.removeItem('akira_guest');
       updateHeaderButtons();
@@ -919,6 +2661,66 @@ window.handleAccount = function() {
   }
 };
 
+async function showMyOrders() {
+  if (!currentUser) return;
+  try {
+    var snap = await getDocs(collection(db, 'orders'));
+    var mine = [];
+    snap.forEach(function(d) {
+      var data = d.data();
+      if (data.userPhone === currentUser.phone) {
+        data.id = d.id;
+        mine.push(data);
+      }
+    });
+    var list = document.getElementById('ordersList');
+    if (mine.length === 0) {
+      list.innerHTML = '<p style="text-align:';
+      list.innerHTML += 'center;color:#666;';
+      list.innerHTML += 'padding:2rem;">';
+      list.innerHTML += 'Aún no tienes pedidos</p>';
+    } else {
+      mine.sort(function(a, b) {
+        return new Date(b.date) - new Date(a.date);
+      });
+      var html = '';
+      mine.forEach(function(o) {
+        var statusTxt = o.status === 'pending' ?
+          'Pendiente' :
+          o.status === 'shipped' ?
+          'En camino' : 'Entregado';
+        html += '<div class="order-item">';
+        html += '<div class="order-header">';
+        html += '<strong>#' + o.id.slice(-6) +
+          '</strong>';
+        html += '<span class="order-status ' +
+          o.status + '">' + statusTxt +
+          '</span></div>';
+        html += '<div style="font-size:0.85rem;';
+        html += 'color:#666;">';
+        html += new Date(o.date)
+          .toLocaleDateString() + '</div>';
+        var items = o.items || [];
+        html += '<div style="margin:0.5rem 0;">';
+        items.forEach(function(it) {
+          html += '<div>' + it.name + ' x' +
+            it.quantity + '</div>';
+        });
+        html += '</div>';
+        html += '<div style="font-weight:bold;';
+        html += 'color:#dc3545;">Total: $';
+        html += Number(o.total || 0).toFixed(2) +
+          '</div></div>';
+      });
+      list.innerHTML = html;
+    }
+    document.getElementById('ordersModal')
+      .classList.add('active');
+  } catch (error) {
+    alert('Error: ' + error.message);
+  }
+}
+
 window.loginAsGuest = async function() {
   var name = document.getElementById('guestName')
     .value.trim();
@@ -928,12 +2730,13 @@ window.loginAsGuest = async function() {
     alert('Completa nombre y teléfono');
     return;
   }
-  var code = 'AM-' + Math.random()
+  var customerCode = 'AM-' + Math.random()
     .toString(36).substr(2, 6).toUpperCase();
   currentUser = {
     name: name,
     phone: phone,
-    customerCode: code
+    customerCode: customerCode,
+    isGuest: true
   };
   localStorage.setItem(
     'akira_guest', JSON.stringify(currentUser)
@@ -942,23 +2745,49 @@ window.loginAsGuest = async function() {
     await setDoc(doc(db, 'customers', phone), {
       name: name,
       phone: phone,
-      customerCode: code,
+      customerCode: customerCode,
       createdAt: new Date().toISOString()
     });
-  } catch(e) { console.error(e); }
+  } catch (error) {
+    console.error(error);
+  }
   updateHeaderButtons();
   closeModal('authModal');
-  alert('Bienvenido ' + name);
+  alert('¡Bienvenido ' + name +
+    '!\nCódigo: ' + customerCode);
 };
-
 function updateHeaderButtons() {
-  var at = document.getElementById('accountText');
-  if (!at) return;
+  var accountText = document.getElementById(
+    'accountText'
+  );
+  var accountIcon = document.getElementById(
+    'accountIcon'
+  );
+  if (!accountText) return;
   if (currentUser) {
-    at.textContent = currentUser.name
-      .split(' ')[0];
+    accountText.textContent =
+      currentUser.name.split(' ')[0];
+    if (accountIcon) {
+      accountIcon.textContent =
+        currentUser.name.charAt(0).toUpperCase();
+    }
   } else {
-    at.textContent = 'Cuenta';
+    accountText.textContent = 'Cuenta';
+    if (accountIcon) {
+      accountIcon.textContent = '👤';
+    }
+  }
+}
+
+function updateWhatsAppLinks() {
+  var cleanNumber = whatsappNumber.replace(/\D/g, '');
+  var floatBtn = document.getElementById(
+    'whatsappFloat'
+  );
+  if (floatBtn) {
+    floatBtn.href = 'https://wa.me/' +
+      cleanNumber + '?text=Hola!%20' +
+      'Tengo%20una%20consulta';
   }
 }
 
@@ -973,58 +2802,292 @@ window.openCheckout = function() {
       .classList.add('active');
     return;
   }
+  selectCheckoutDelivery(deliveryMode);
+  updateCheckoutTotals();
+  document.getElementById('checkoutModal')
+    .classList.add('active');
+  toggleCart();
+};
 
-  var msg = 'Hola ' + siteConfig.companyName +
-    '! Soy ' + currentUser.name + '.\n\n';
-  msg += 'Mi pedido:\n';
+window.selectCheckoutDelivery = function(mode) {
+  checkoutDeliveryMode = mode;
+  selectedDeliveryZone = null;
+  document.getElementById('checkoutPickup')
+    .classList.toggle('active', mode === 'pickup');
+  document.getElementById('checkoutDelivery')
+    .classList.toggle('active', mode === 'delivery');
+  document.getElementById('deliveryFields')
+    .style.display = mode === 'delivery' ?
+    'block' : 'none';
+  document.getElementById('pickupMapLink')
+    .style.display = mode === 'pickup' ?
+    'block' : 'none';
+  document.getElementById('deliveryZonesSection')
+    .style.display = mode === 'delivery' ?
+    'block' : 'none';
+  if (mode === 'pickup' && pickupMapsUrl) {
+    document.getElementById('pickupMapsLink')
+      .href = pickupMapsUrl;
+  }
+  if (mode === 'delivery') renderDeliveryZones();
+  updateCheckoutTotals();
+};
 
-  var subtotal = 0;
-  cart.forEach(function(item) {
-    subtotal += item.price * item.quantity;
-    msg += '- ' + item.name + ' x' +
-      item.quantity + ' = $' +
-      (item.price * item.quantity).toFixed(2) +
-      '\n';
+function renderDeliveryZones() {
+  var container = document.getElementById(
+    'deliveryZonesList'
+  );
+  if (deliveryZones.length === 0) {
+    container.innerHTML =
+      '<p style="color:#666;">Sin zonas. $5</p>';
+    return;
+  }
+  var html = '';
+  deliveryZones.forEach(function(zone) {
+    var active = selectedDeliveryZone &&
+      selectedDeliveryZone.id === zone.id;
+    html += '<div class="zone-option ' +
+      (active ? 'active' : '') + '" ';
+    html += 'onclick="selectDeliveryZone(\'';
+    html += zone.id + '\')">';
+    html += '<div class="zone-name">' +
+      zone.name + '</div>';
+    html += '<div class="zone-price">$' +
+      zone.cost.toFixed(2) + '</div>';
+    html += '</div>';
   });
-  var iva = subtotal * 0.16;
-  var total = subtotal + iva;
-  msg += '\nTotal: $' + total.toFixed(2);
+  container.innerHTML = html;
+}
 
+window.selectDeliveryZone = function(zoneId) {
+  selectedDeliveryZone = deliveryZones.find(
+    function(z) { return z.id === zoneId; }
+  );
+  renderDeliveryZones();
+  updateCheckoutTotals();
+};
+
+function updateCheckoutTotals() {
+  var subtotalUsd = 0;
+  cart.forEach(function(item) {
+    subtotalUsd += Number(item.price) *
+      item.quantity;
+  });
+  var discountAmount = 0;
+  if (appliedCoupon) {
+    discountAmount = subtotalUsd *
+      (appliedCoupon.discount / 100);
+    subtotalUsd -= discountAmount;
+  }
+  var ivaUsd = subtotalUsd * 0.16;
+  var deliveryFee = 0;
+  if (checkoutDeliveryMode === 'delivery') {
+    deliveryFee = selectedDeliveryZone ?
+      selectedDeliveryZone.cost : 5;
+  }
+  var totalUsd = subtotalUsd + ivaUsd +
+    deliveryFee;
+  var html = '';
+  if (appliedCoupon) {
+    html += '<div class="cart-total-row discount">';
+    html += '<span>Descuento:</span>';
+    html += '<span>-$' + discountAmount
+      .toFixed(2) + '</span></div>';
+  }
+  html += '<div class="cart-total-row">';
+  html += '<span>Subtotal:</span>';
+  html += '<span>$' + subtotalUsd.toFixed(2) +
+    '</span></div>';
+  html += '<div class="cart-total-row">';
+  html += '<span>IVA (16%):</span>';
+  html += '<span>$' + ivaUsd.toFixed(2) +
+    '</span></div>';
+  if (deliveryFee > 0) {
+    html += '<div class="cart-total-row">';
+    html += '<span>Delivery:</span>';
+    html += '<span>$' + deliveryFee.toFixed(2) +
+      '</span></div>';
+  }
+  html += '<div class="cart-total-row total">';
+  html += '<span>TOTAL:</span>';
+  html += '<span>$' + totalUsd.toFixed(2) +
+    '</span></div>';
+  document.getElementById('checkoutTotals')
+    .innerHTML = html;
+}
+
+window.confirmOrder = async function() {
+  if (checkoutDeliveryMode === 'delivery') {
+    var addr = document.getElementById(
+      'deliveryAddressInput'
+    ).value;
+    var lat = document.getElementById('gpsLat').value;
+    if (!addr && !lat) {
+      alert('Ingresa dirección o GPS');
+      return;
+    }
+  }
+  var subtotalUsd = 0;
+  cart.forEach(function(item) {
+    subtotalUsd += Number(item.price) *
+      item.quantity;
+  });
+  var discountAmount = 0;
+  if (appliedCoupon) {
+    discountAmount = subtotalUsd *
+      (appliedCoupon.discount / 100);
+    subtotalUsd -= discountAmount;
+  }
+  var ivaUsd = subtotalUsd * 0.16;
+  var deliveryFee = 0;
+  if (checkoutDeliveryMode === 'delivery') {
+    deliveryFee = selectedDeliveryZone ?
+      selectedDeliveryZone.cost : 5;
+  }
+  var totalUsd = subtotalUsd + ivaUsd +
+    deliveryFee;
   var orderData = {
+    userId: currentUser.name,
     userName: currentUser.name,
     userPhone: currentUser.phone,
     customerCode: currentUser.customerCode || '',
-    items: cart.map(function(i) {
+    items: cart.map(function(item) {
       return {
-        id: i.id,
-        name: i.name,
-        quantity: i.quantity,
-        price: i.price
+        id: item.id,
+        name: item.name,
+        quantity: item.quantity,
+        price: item.price
       };
     }),
-    subtotal: subtotal,
-    iva: iva,
-    total: total,
+    subtotal: subtotalUsd,
+    discount: discountAmount,
+    couponCode: appliedCoupon ?
+      appliedCoupon.code : null,
+    iva: ivaUsd,
+    deliveryFee: deliveryFee,
+    deliveryZone: selectedDeliveryZone ?
+      selectedDeliveryZone.name : null,
+    total: totalUsd,
+    deliveryMode: checkoutDeliveryMode,
     status: 'pending',
     date: new Date().toISOString()
   };
-
+  if (checkoutDeliveryMode === 'delivery') {
+    orderData.address = document.getElementById(
+      'deliveryAddressInput'
+    ).value;
+    orderData.gpsLat = document.getElementById(
+      'gpsLat'
+    ).value;
+    orderData.gpsLng = document.getElementById(
+      'gpsLng'
+    ).value;
+  }
+  var orderSaved = false;
   try {
     await addDoc(collection(db, 'orders'), orderData);
-    var clean = whatsappNumber.replace(/\D/g, '');
-    window.open(
-      'https://wa.me/' + clean + '?text=' +
-      encodeURIComponent(msg),
-      '_blank'
-    );
-    cart = [];
-    saveCart();
-    updateCartUI();
-    toggleCart();
-    alert('Pedido enviado');
-  } catch(e) {
-    alert('Error: ' + e.message);
+    orderSaved = true;
+  } catch (error) {
+    console.error(error);
   }
+  if (!orderSaved) {
+    alert('Error al registrar el pedido. ' +
+      'Contáctanos por WhatsApp.');
+    return;
+  }
+  var cleanNumber = whatsappNumber.replace(/\D/g, '');
+  var rawMessage = '¡Hola ' +
+    siteConfig.companyName + '! Soy ' +
+    (currentUser ? currentUser.name : '') +
+    '.\n\nMi pedido:\n';
+  cart.forEach(function(item) {
+    rawMessage += '- ' + item.name + ' x' +
+      item.quantity + ' = $' +
+      (Number(item.price) * item.quantity)
+      .toFixed(2) + '\n';
+  });
+  if (appliedCoupon) {
+    rawMessage += '\nCupón: ' +
+      appliedCoupon.code + ' (-' +
+      appliedCoupon.discount + '%)';
+  }
+  rawMessage += '\nTotal: $' +
+    totalUsd.toFixed(2);
+  rawMessage += '\nEntrega: ' +
+    (checkoutDeliveryMode === 'pickup' ?
+      'Pickup' : 'Delivery');
+  if (checkoutDeliveryMode === 'delivery') {
+    var addr2 = document.getElementById(
+      'deliveryAddressInput'
+    ).value;
+    if (addr2) {
+      rawMessage += '\nDirección: ' + addr2;
+    }
+  }
+  window.open(
+    'https://wa.me/' + cleanNumber +
+    '?text=' + encodeURIComponent(rawMessage),
+    '_blank'
+  );
+  cart = [];
+  appliedCoupon = null;
+  selectedDeliveryZone = null;
+  var cc = document.getElementById(
+    'couponCodeInput'
+  );
+  if (cc) cc.value = '';
+  var cm = document.getElementById('couponMessage');
+  if (cm) cm.innerHTML = '';
+  updateCartUI();
+  saveCart();
+  closeModal('checkoutModal');
+  alert('✅ Pedido enviado');
+  await loadData();
+};
+
+function renderFooter() {
+  var fc = document.getElementById('footerContent');
+  if (!fc) return;
+  var html = '';
+  html += '<div class="footer-section">';
+  html += '<h3>' + siteConfig.companyName + '</h3>';
+  html += '<p>' + siteConfig.description + '</p>';
+  html += '</div>';
+  html += '<div class="footer-section">';
+  html += '<h3>Contacto</h3>';
+  html += '<p>' + siteConfig.address + '</p>';
+  html += '<p>' + siteConfig.phone + '</p>';
+  html += '</div>';
+  html += '<div class="footer-section">';
+  html += '<h3>Horario</h3>';
+  html += '<p>' + siteConfig.schedule + '</p>';
+  html += '</div>';
+  html += '<div class="footer-section">';
+  html += '<h3>Síguenos</h3>';
+  if (siteConfig.facebook) {
+    html += '<a href="' + siteConfig.facebook +
+      '" target="_blank">Facebook</a>';
+  }
+  if (siteConfig.instagram) {
+    html += '<a href="' + siteConfig.instagram +
+      '" target="_blank">Instagram</a>';
+  }
+  if (siteConfig.tiktok) {
+    html += '<a href="' + siteConfig.tiktok +
+      '" target="_blank">TikTok</a>';
+  }
+  html += '</div>';
+  fc.innerHTML = html;
+  var fb = document.getElementById('footerBottom');
+  if (fb) {
+    fb.innerHTML = '<p>&copy; 2026 ' +
+      siteConfig.companyName + '</p>';
+  }
+}
+
+window.closeModal = function(id) {
+  var el = document.getElementById(id);
+  if (el) el.classList.remove('active');
 };
 
 document.addEventListener('keydown', function(e) {
@@ -1033,16 +3096,20 @@ document.addEventListener('keydown', function(e) {
       .forEach(function(m) {
         m.classList.remove('active');
       });
+    var cs = document.getElementById('cartSidebar');
+    if (cs) cs.classList.remove('active');
   }
 });
+
 try {
-  var saved = localStorage.getItem('akira_guest');
-  if (saved) {
-    currentUser = JSON.parse(saved);
+  var savedGuest = localStorage.getItem(
+    'akira_guest'
+  );
+  if (savedGuest) {
+    currentUser = JSON.parse(savedGuest);
   }
 } catch(e) {}
 
-updateHeaderButtons();
 loadData();
 </script>
 </body>
