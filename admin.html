@@ -126,6 +126,7 @@ body {
   grid-template-columns: 1fr 1fr 1fr 1fr;
   gap: 0.8rem;
 }
+<style>
 .admin-item {
   display: flex;
   justify-content: space-between;
@@ -155,8 +156,7 @@ body {
   flex-shrink: 0;
 }
 .admin-thumb img {
-  width: 100%;
-  height: 100%;
+  width: 100%; height: 100%;
   object-fit: cover;
 }
 .admin-actions {
@@ -192,13 +192,11 @@ body {
 }
 .modal-close {
   position: absolute;
-  top: 1rem;
-  right: 1rem;
+  top: 1rem; right: 1rem;
   background: #dc3545;
   color: white;
   border: none;
-  width: 35px;
-  height: 35px;
+  width: 35px; height: 35px;
   border-radius: 50%;
   font-size: 1.2rem;
   cursor: pointer;
@@ -257,6 +255,15 @@ body {
   margin-bottom: 1rem;
   font-size: 0.85rem;
 }
+.alert-success {
+  background: #d4edda;
+  border: 1px solid #c3e6cb;
+  color: #155724;
+  padding: 0.8rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  font-size: 0.85rem;
+}
 .login-container {
   max-width: 400px;
   margin: 4rem auto;
@@ -277,6 +284,7 @@ body {
   color: #dc3545;
   text-decoration: none;
 }
+<style>
 .stats-grid {
   display: grid;
   grid-template-columns:
@@ -301,7 +309,6 @@ body {
   font-size: 0.9rem;
   margin-top: 0.5rem;
 }
-<style>
 .order-item {
   background: #f8f8f8;
   padding: 1rem;
@@ -331,11 +338,35 @@ body {
   padding: 1rem;
   border-radius: 8px;
   margin-bottom: 0.8rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+.driver-card-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
-  gap: 1rem;
+  gap: 0.5rem;
+  margin-bottom: 0.6rem;
+}
+.driver-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+.driver-stat {
+  background: white;
+  padding: 0.6rem;
+  border-radius: 6px;
+  text-align: center;
+  font-size: 0.75rem;
+}
+.driver-stat strong {
+  display: block;
+  color: #dc3545;
+  font-size: 1rem;
+  margin-bottom: 0.2rem;
 }
 .preview-container {
   display: grid;
@@ -382,8 +413,7 @@ body {
   background: #dc3545;
   color: white;
   border: none;
-  width: 32px;
-  height: 32px;
+  width: 32px; height: 32px;
   border-radius: 6px;
   cursor: pointer;
   font-size: 1rem;
@@ -408,6 +438,7 @@ body {
   letter-spacing: 0.5px;
   margin-bottom: 0.5rem;
 }
+<style>
 .chip-list {
   display: flex;
   flex-wrap: wrap;
@@ -427,8 +458,7 @@ body {
   background: #dc3545;
   color: white;
   border: none;
-  width: 16px;
-  height: 16px;
+  width: 16px; height: 16px;
   border-radius: 50%;
   cursor: pointer;
   font-size: 0.7rem;
@@ -454,8 +484,7 @@ body {
   background: #999;
   color: white;
   border: none;
-  width: 22px;
-  height: 22px;
+  width: 22px; height: 22px;
   border-radius: 50%;
   cursor: pointer;
   font-size: 0.8rem;
@@ -475,7 +504,7 @@ body {
 }
 .map-preview {
   width: 100%;
-  height: 200px;
+  height: 150px;
   background: #e8f5e9;
   border: 2px solid #4caf50;
   border-radius: 12px;
@@ -487,6 +516,49 @@ body {
   margin-top: 0.5rem;
   text-align: center;
   padding: 1rem;
+}
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 24px;
+}
+.switch input { opacity: 0; width: 0; height: 0; }
+.switch .slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: #ccc;
+  transition: 0.3s;
+  border-radius: 24px;
+}
+.switch .slider:before {
+  position: absolute;
+  content: "";
+  height: 18px; width: 18px;
+  left: 3px; bottom: 3px;
+  background-color: white;
+  transition: 0.3s;
+  border-radius: 50%;
+}
+.switch input:checked + .slider {
+  background-color: #28a745;
+}
+.switch input:checked + .slider:before {
+  transform: translateX(20px);
+}
+.switch-row {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+.switch-row:last-child { border-bottom: none; }
+.switch-row label {
+  flex: 1;
+  font-weight: 500;
+  cursor: pointer;
 }
 @media (max-width: 768px) {
   body { flex-direction: column; }
@@ -513,6 +585,7 @@ body {
     grid-template-columns: 1fr;
   }
   .preview-container { grid-template-columns: 1fr; }
+  .driver-stats { grid-template-columns: 1fr; }
 }
 </style>
 </head>
@@ -606,7 +679,6 @@ body {
 
 <div class="admin-content">
 
-<!-- DASHBOARD -->
 <div class="admin-section active" id="section-dashboard">
 <h2 class="section-title">Dashboard</h2>
 <div class="stats-grid">
@@ -629,7 +701,6 @@ body {
 </div>
 </div>
 
-<!-- VISTA PREVIA -->
 <div class="admin-section" id="section-preview">
 <h2 class="section-title">Vista Previa en Vivo</h2>
 <div class="alert-info">
@@ -656,7 +727,6 @@ recargar.
 </div>
 </div>
 
-<!-- CATÁLOGO -->
 <div class="admin-section" id="section-catalogo">
 <h2 class="section-title">
 🗂️ Catálogo: Categorías y Vehículos
@@ -687,8 +757,6 @@ categoría tiene sus subcategorías y los vehículos
 <div id="catalogoEditor"></div>
 </div>
 </div>
-
-<!-- PRODUCTOS -->
 <div class="admin-section" id="section-products">
 <h2 class="section-title">🛒 Productos</h2>
 <div class="admin-card">
@@ -706,7 +774,6 @@ categoría tiene sus subcategorías y los vehículos
 </div>
 </div>
 
-<!-- PEDIDOS -->
 <div class="admin-section" id="section-orders">
 <h2 class="section-title">📦 Pedidos</h2>
 <div class="admin-card">
@@ -730,16 +797,15 @@ categoría tiene sus subcategorías y los vehículos
 </div>
 </div>
 
-<!-- CLIENTES -->
 <div class="admin-section" id="section-customers">
 <h2 class="section-title">👥 Clientes</h2>
 <div class="admin-card">
 <input type="text" id="searchCustomer"
-  placeholder="Buscar por nombre, teléfono o código..."
+  placeholder="Buscar por nombre, correo, teléfono o código..."
   style="padding:0.5rem;border:1px solid #ddd;
   border-radius:8px;margin-bottom:1rem;
   width:100%;">
-<div class="table-responsive">
+<div style="overflow-x:auto;">
 <table style="width:100%;border-collapse:collapse;">
 <thead>
 <tr style="background:#f8f8f8;">
@@ -747,6 +813,8 @@ categoría tiene sus subcategorías y los vehículos
 Código</th>
 <th style="padding:0.6rem;text-align:left;">
 Nombre</th>
+<th style="padding:0.6rem;text-align:left;">
+Correo</th>
 <th style="padding:0.6rem;text-align:left;">
 Teléfono</th>
 <th style="padding:0.6rem;text-align:left;">
@@ -760,9 +828,12 @@ Total</th>
 </div>
 </div>
 </div>
-<!-- DOMICILIARIOS -->
 <div class="admin-section" id="section-drivers">
 <h2 class="section-title">🏍️ Domiciliarios</h2>
+<div class="alert-info">
+Aquí verás las estadísticas de cada domiciliario:
+pedidos y ganancias de hoy, esta semana y total.
+</div>
 <div class="admin-card">
 <h3>Agregar Domiciliario</h3>
 <div class="form-row-3">
@@ -784,12 +855,11 @@ Total</th>
   onclick="addDriver()">Agregar</button>
 </div>
 <div class="admin-card">
-<h3>Registrados</h3>
+<h3>Registrados y Estadísticas</h3>
 <div id="driversList"></div>
 </div>
 </div>
 
-<!-- MARCAS DE REPUESTOS -->
 <div class="admin-section" id="section-brands">
 <h2 class="section-title">🏷️ Marcas de Repuestos</h2>
 <div class="alert-info">
@@ -802,7 +872,6 @@ tienda con su logo.
 </div>
 </div>
 
-<!-- BANNERS -->
 <div class="admin-section" id="section-banners">
 <h2 class="section-title">🖼️ Banners</h2>
 <div class="admin-card">
@@ -821,13 +890,11 @@ Máx: 1MB | Máximo 5 imágenes
   minmax(200px,1fr));gap:1rem;"></div>
 </div>
 </div>
-
-<!-- CUPONES -->
 <div class="admin-section" id="section-coupons">
 <h2 class="section-title">🎟️ Cupones</h2>
 <div class="admin-card">
 <h3>Crear Cupón</h3>
-<div class="form-row-3">
+<div class="form-row">
 <div class="form-group">
 <label>Código</label>
 <input type="text" id="couponCode"
@@ -838,22 +905,49 @@ Máx: 1MB | Máximo 5 imágenes
 <input type="number" id="couponDiscount"
   min="1" max="100">
 </div>
-<div class="form-group">
-<label>Usos máximos</label>
-<input type="number" id="couponMaxUses"
-  min="1">
 </div>
+<div class="form-row">
+<div class="form-group">
+<label>Usos máximos (0 = ilimitado)</label>
+<input type="number" id="couponMaxUses"
+  min="0" value="100">
+</div>
+<div class="form-group">
+<label>Solo para correos verificados</label>
+<select id="couponVerify">
+<option value="no">No, cualquier usuario</option>
+<option value="yes">Sí, solo verificados</option>
+</select>
+</div>
+</div>
+<div class="alert-info">
+Las fechas son opcionales. Si las dejas vacías,
+el cupón funciona siempre (si el switch está
+activo).
+</div>
+<div class="form-row">
+<div class="form-group">
+<label>Fecha inicio (opcional)</label>
+<input type="date" id="couponStart">
+</div>
+<div class="form-group">
+<label>Fecha fin (opcional)</label>
+<input type="date" id="couponEnd">
+</div>
+</div>
+<div class="checkbox-group" style="margin-bottom:1rem;">
+<input type="checkbox" id="couponActive" checked>
+<label>Activo desde el momento de creación</label>
 </div>
 <button class="btn btn-primary"
-  onclick="createCoupon()">Crear</button>
+  onclick="createCoupon()">Crear Cupón</button>
 </div>
 <div class="admin-card">
-<h3>Activos</h3>
+<h3>Cupones Creados</h3>
 <div id="couponsList"></div>
 </div>
 </div>
 
-<!-- DELIVERY POR KM -->
 <div class="admin-section" id="section-delivery">
 <h2 class="section-title">📍 Delivery por km</h2>
 <div class="alert-info">
@@ -892,38 +986,65 @@ Recomendado: 1.2
 </div>
 </div>
 <div class="admin-card">
-<h3>Ubicación de tu tienda</h3>
+<h3>🎁 Delivery Gratis</h3>
 <div class="alert-info">
-Pega las coordenadas de tu local (Google Maps).
+Configura cuándo el delivery sale gratis según
+el monto del pedido. El switch principal activa
+o desactiva todo el sistema.
 </div>
-<div class="form-row">
+<div class="switch-row">
+<label for="freeShipActive">
+Activar sistema de Delivery Gratis
+</label>
+<label class="switch">
+<input type="checkbox" id="freeShipActive">
+<span class="slider"></span>
+</label>
+</div>
+<div class="form-group" style="margin-top:1rem;">
+<label>Umbral base ($)</label>
+<input type="number" id="freeShipBase"
+  step="0.01" value="40"
+  placeholder="Ej: 40">
+<div style="font-size:0.75rem;
+  color:#666;margin-top:0.3rem;">
+Delivery gratis con pedidos superiores a este
+monto.
+</div>
+</div>
+<div class="switch-row">
+<label for="freeShipPromo">
+Activar promoción temporal
+</label>
+<label class="switch">
+<input type="checkbox" id="freeShipPromo">
+<span class="slider"></span>
+</label>
+</div>
+<div class="form-row" id="promoFields"
+  style="display:none;">
 <div class="form-group">
-<label>Latitud</label>
-<input type="text" id="storeLat"
-  placeholder="Ej: 8.123456">
+<label>Umbral promoción ($)</label>
+<input type="number" id="freeShipPromoAmount"
+  step="0.01" value="20">
+<div style="font-size:0.75rem;
+  color:#666;margin-top:0.3rem;">
+Pon 0 para delivery gratis a TODOS.
+</div>
 </div>
 <div class="form-group">
-<label>Longitud</label>
-<input type="text" id="storeLng"
-  placeholder="Ej: -63.567890">
+<label>Promoción válida hasta</label>
+<input type="date" id="freeShipPromoUntil">
 </div>
 </div>
-<button class="btn btn-secondary"
-  onclick="openStoreInMaps()"
-  style="margin-top:0.5rem;">
-🗺️ Ver mi tienda en Google Maps
-</button>
-<div class="map-preview" id="storePreview">
-📍 Configura tus coordenadas para ver el preview
-</div>
+<div class="alert-success" id="freeShipPreview"
+  style="display:none;"></div>
 </div>
 <button class="btn btn-primary"
   onclick="saveDeliveryConfig()"
   style="width:100%;padding:1rem;">
 💾 Guardar Configuración de Delivery</button>
 </div>
-
-<!-- RESEÑAS -->
 <div class="admin-section" id="section-reviews">
 <h2 class="section-title">⭐ Reseñas</h2>
 <div class="admin-card">
@@ -931,7 +1052,6 @@ Pega las coordenadas de tu local (Google Maps).
 </div>
 </div>
 
-<!-- HERO -->
 <div class="admin-section" id="section-hero">
 <h2 class="section-title">🎨 Hero / Portada</h2>
 <div class="admin-card">
@@ -1021,7 +1141,6 @@ Segoe UI</option>
 💾 Guardar Hero</button>
 </div>
 
-<!-- PIE DE PÁGINA -->
 <div class="admin-section" id="section-footer">
 <h2 class="section-title">📄 Pie de página</h2>
 <div class="admin-card">
@@ -1067,8 +1186,6 @@ Segoe UI</option>
 💾 Guardar</button>
 </div>
 </div>
-
-<!-- CONFIGURACIÓN -->
 <div class="admin-section" id="section-settings">
 <h2 class="section-title">⚙️ Configuración</h2>
 <div class="admin-card">
@@ -1112,10 +1229,10 @@ Tasa de cambio del dólar según el BCV.
   onclick="saveBcvRate()">Guardar</button>
 </div>
 </div>
+
 </div>
 </div>
 
-<!-- MODAL PRODUCTO -->
 <div class="modal" id="productModal">
 <div class="modal-content">
 <button class="modal-close"
@@ -1219,9 +1336,6 @@ Esta información es solo para ti.
 
 <div class="form-section">
 <h3>Especificaciones Técnicas</h3>
-<div class="alert-info">
-Detalles que verá el cliente en la ficha técnica.
-</div>
 <div class="form-row">
 <div class="form-group">
 <label>Característica</label>
@@ -1242,13 +1356,8 @@ Detalles que verá el cliente en la ficha técnica.
   style="display:flex;flex-wrap:wrap;
   gap:0.3rem;margin-top:0.5rem;"></div>
 </div>
-
 <div class="form-section">
 <h3>Compatibilidad Vehicular</h3>
-<div class="alert-info">
-Las marcas y modelos se cargan desde la
-categoría seleccionada arriba.
-</div>
 <div class="form-row-4">
 <div class="form-group">
 <label>Marca</label>
@@ -1286,8 +1395,7 @@ categoría seleccionada arriba.
 <div class="form-group">
 <label>Búsquedas frecuentes</label>
 <textarea id="productSearchTerms"
-  placeholder="Ej: Rótula inferior Corolla,
-  Muñón Corolla, SB3642"></textarea>
+  placeholder="Ej: Rótula inferior Corolla"></textarea>
 </div>
 </div>
 
@@ -1352,7 +1460,6 @@ Máximo 5 imágenes. La primera será la principal.
 </div>
 </div>
 
-<!-- MODAL MARCA -->
 <div class="modal" id="brandModal">
 <div class="modal-content">
 <button class="modal-close"
@@ -1372,13 +1479,10 @@ Máximo 5 imágenes. La primera será la principal.
 </div>
 </div>
 
-<!-- MODAL PEDIDO -->
 <div class="modal" id="orderDetailModal">
 <div class="modal-content"
   id="orderDetailContent"></div>
 </div>
-
-<!-- SCRIPT PUENTE -->
 <script>
 window.showSection = function(sectionId, event) {
   document.querySelectorAll('.admin-section')
@@ -1411,6 +1515,10 @@ window.showSection = function(sectionId, event) {
   if (sectionId === 'delivery' &&
       typeof loadDeliveryConfig === 'function') {
     loadDeliveryConfig();
+  }
+  if (sectionId === 'coupons' &&
+      typeof renderCoupons === 'function') {
+    renderCoupons();
   }
 };
 
@@ -1493,8 +1601,8 @@ async function loadAll() {
   ]);
   await loadDashboard();
 }
-
-/* CATÁLOGO */
+</script>
+<script>
 async function loadCatalogo() {
   try {
     var snap = await db.collection('settings')
@@ -1608,7 +1716,8 @@ window.renderCatalogo = function() {
   });
   container.innerHTML = html;
 };
-
+</script>
+<script>
 window.addCategoria = async function() {
   var input = document.getElementById('newCatName');
   var nombre = input.value.trim();
@@ -1720,8 +1829,8 @@ window.eliminarModelo = async function(ci, vi, mi) {
     .splice(mi, 1);
   await saveCatalogo();
 };
-
-/* DELIVERY POR KM */
+</script>
+<script>
 async function loadDeliveryConfig() {
   try {
     var snap = await db.collection('settings')
@@ -1740,7 +1849,20 @@ async function loadDeliveryConfig() {
       if (el) el.value = d.storeLat || '';
       el = document.getElementById('storeLng');
       if (el) el.value = d.storeLng || '';
+      el = document.getElementById('freeShipActive');
+      if (el) el.checked = d.freeShipActive || false;
+      el = document.getElementById('freeShipBase');
+      if (el) el.value = d.freeShipBase || 40;
+      el = document.getElementById('freeShipPromo');
+      if (el) el.checked = d.freeShipPromo || false;
+      el = document.getElementById('freeShipPromoAmount');
+      if (el) el.value = d.freeShipPromoAmount !== undefined
+        ? d.freeShipPromoAmount : 20;
+      el = document.getElementById('freeShipPromoUntil');
+      if (el) el.value = d.freeShipPromoUntil || '';
       updateStorePreview();
+      togglePromoFields();
+      updateFreeShipPreview();
     }
   } catch(e) { console.error('Error delivery:', e); }
 }
@@ -1759,6 +1881,59 @@ function updateStorePreview() {
   }
 }
 
+window.togglePromoFields = function() {
+  var promo = document.getElementById('freeShipPromo');
+  var fields = document.getElementById('promoFields');
+  if (!promo || !fields) return;
+  fields.style.display = promo.checked ? 'grid' : 'none';
+};
+
+window.updateFreeShipPreview = function() {
+  var preview = document.getElementById('freeShipPreview');
+  if (!preview) return;
+  var active = document.getElementById('freeShipActive')
+    .checked;
+  if (!active) {
+    preview.style.display = 'none';
+    return;
+  }
+  preview.style.display = 'block';
+  var base = parseFloat(document.getElementById(
+    'freeShipBase').value) || 0;
+  var promoActive = document.getElementById('freeShipPromo')
+    .checked;
+  var promoAmt = parseFloat(document.getElementById(
+    'freeShipPromoAmount').value) || 0;
+  var promoUntil = document.getElementById('freeShipPromoUntil')
+    .value;
+  var hoy = new Date();
+  var promoVigente = false;
+  if (promoActive && promoUntil) {
+    var fechaFin = new Date(promoUntil + 'T23:59:59');
+    if (fechaFin >= hoy) promoVigente = true;
+  }
+  var html = '<strong>📋 Estado actual:</strong><br>';
+  if (promoVigente) {
+    if (promoAmt === 0) {
+      html += '🎉 <strong>HOY delivery GRATIS para ' +
+        'TODOS los pedidos.</strong><br>';
+    } else {
+      html += '🎉 <strong>HOY delivery GRATIS con pedidos ' +
+        'mayores a $' + promoAmt.toFixed(2) + '.</strong>' +
+        '<br>';
+    }
+    html += '<small>Promoción válida hasta: ' +
+      promoUntil + '</small><br>';
+    html += '<small>Después vuelve al umbral base de $' +
+      base.toFixed(2) + '</small>';
+  } else {
+    html += 'Delivery gratis con pedidos mayores a $' +
+      base.toFixed(2);
+  }
+  preview.innerHTML = html;
+};
+</script>
+<script>
 window.saveDeliveryConfig = async function() {
   var rateKm = parseFloat(document.getElementById(
     'deliveryRateKm').value);
@@ -1772,6 +1947,16 @@ window.saveDeliveryConfig = async function() {
     .value.trim();
   var storeLng = document.getElementById('storeLng')
     .value.trim();
+  var freeShipActive = document.getElementById(
+    'freeShipActive').checked;
+  var freeShipBase = parseFloat(document.getElementById(
+    'freeShipBase').value) || 40;
+  var freeShipPromo = document.getElementById(
+    'freeShipPromo').checked;
+  var freeShipPromoAmount = parseFloat(document.getElementById(
+    'freeShipPromoAmount').value) || 0;
+  var freeShipPromoUntil = document.getElementById(
+    'freeShipPromoUntil').value || '';
   if (!rateKm || rateKm <= 0) {
     alert('Ingresa una tarifa válida');
     return;
@@ -1787,12 +1972,18 @@ window.saveDeliveryConfig = async function() {
     factor: factor || 1,
     storeLat: parseFloat(storeLat),
     storeLng: parseFloat(storeLng),
+    freeShipActive: freeShipActive,
+    freeShipBase: freeShipBase,
+    freeShipPromo: freeShipPromo,
+    freeShipPromoAmount: freeShipPromoAmount,
+    freeShipPromoUntil: freeShipPromoUntil,
     updatedAt: new Date().toISOString()
   };
   try {
     await db.collection('settings').doc('deliveryConfig')
       .set(config);
     updateStorePreview();
+    updateFreeShipPreview();
     alert('✅ Configuración guardada');
   } catch(e) {
     alert('Error: ' + e.message);
@@ -1815,14 +2006,24 @@ window.openStoreInMaps = function() {
 };
 
 document.addEventListener('change', function(e) {
-  if (e.target && (e.target.id === 'storeLat' ||
-      e.target.id === 'storeLng')) {
+  if (!e.target) return;
+  if (e.target.id === 'storeLat' ||
+      e.target.id === 'storeLng') {
     updateStorePreview();
+  }
+  if (e.target.id === 'freeShipPromo') {
+    togglePromoFields();
+    updateFreeShipPreview();
+  }
+  if (e.target.id === 'freeShipActive' ||
+      e.target.id === 'freeShipPromoAmount' ||
+      e.target.id === 'freeShipPromoUntil' ||
+      e.target.id === 'freeShipBase') {
+    updateFreeShipPreview();
   }
 });
 </script>
 <script>
-/* BCV */
 async function loadBcvRate() {
   try {
     var r = await db.collection('settings')
@@ -1834,6 +2035,7 @@ async function loadBcvRate() {
     }
   } catch(e) { console.log(e); }
 }
+
 window.saveBcvRate = async function() {
   var v = parseFloat(
     document.getElementById('bcvRateInput').value
@@ -1853,7 +2055,6 @@ window.saveBcvRate = async function() {
   } catch(e) { alert('Error: ' + e.message); }
 };
 
-/* PICKUP MAPS */
 async function loadPickupMaps() {
   try {
     var p = await db.collection('settings')
@@ -1864,6 +2065,7 @@ async function loadPickupMaps() {
     }
   } catch(e) { console.log(e); }
 }
+
 window.updatePickupMaps = async function() {
   var url = document.getElementById('pickupMapsInput')
     .value.trim();
@@ -1875,7 +2077,6 @@ window.updatePickupMaps = async function() {
   } catch(e) { alert('Error: ' + e.message); }
 };
 
-/* WHATSAPP */
 async function loadWhatsapp() {
   try {
     var w = await db.collection('settings')
@@ -1887,6 +2088,7 @@ async function loadWhatsapp() {
     }
   } catch(e) { console.log(e); }
 }
+
 window.saveWhatsapp = async function() {
   var num = document.getElementById('whatsappNumber')
     .value.trim();
@@ -1899,7 +2101,6 @@ window.saveWhatsapp = async function() {
   } catch(e) { alert('Error: ' + e.message); }
 };
 
-/* LOGO */
 async function loadLogo() {
   try {
     var l = await db.collection('settings')
@@ -1915,8 +2116,8 @@ async function loadLogo() {
     }
   } catch(e) { console.log(e); }
 }
-
-/* BANNERS */
+</script>
+<script>
 async function loadBanners() {
   try {
     var b = await db.collection('settings')
@@ -1925,6 +2126,7 @@ async function loadBanners() {
     renderBannerPreviews();
   } catch(e) { console.log(e); }
 }
+
 function renderBannerPreviews() {
   var grid = document.getElementById('bannerPreviewGrid');
   if (!grid) return;
@@ -1948,6 +2150,7 @@ function renderBannerPreviews() {
   });
   grid.innerHTML = html;
 }
+
 window.addBanner = async function() {
   var fi = document.getElementById('bannerImageInput');
   var file = fi.files[0];
@@ -1970,6 +2173,7 @@ window.addBanner = async function() {
   };
   reader.readAsDataURL(file);
 };
+
 window.removeBanner = async function(index) {
   if (!confirm('¿Eliminar?')) return;
   banners.splice(index, 1);
@@ -1980,9 +2184,7 @@ window.removeBanner = async function(index) {
     alert('✅ Eliminado');
   } catch(e) { alert('Error: ' + e.message); }
 };
-</script>
-<script>
-/* SITE CONFIG */
+
 async function loadSiteConfig() {
   try {
     var c = await db.collection('settings')
@@ -2010,6 +2212,7 @@ async function loadSiteConfig() {
       .value = siteConfig.tiktok || '';
   } catch(e) { console.log(e); }
 }
+
 window.saveSiteConfig = async function() {
   var config = {
     companyName: document.getElementById('cfgCompanyName')
@@ -2031,8 +2234,8 @@ window.saveSiteConfig = async function() {
     alert('✅ Guardado');
   } catch(e) { alert('Error: ' + e.message); }
 };
-
-/* HERO */
+</script>
+<script>
 async function loadHero() {
   try {
     var h = await db.collection('settings')
@@ -2068,6 +2271,7 @@ async function loadHero() {
     }
   } catch(e) { console.log(e); }
 }
+
 var heroBgInput = document.getElementById('heroBgImage');
 if (heroBgInput) {
   heroBgInput.addEventListener('change', function(e) {
@@ -2087,6 +2291,7 @@ if (heroBgInput) {
     reader.readAsDataURL(file);
   });
 }
+
 window.saveHero = async function() {
   try {
     var data = {
@@ -2117,8 +2322,8 @@ window.saveHero = async function() {
     refreshPreview();
   } catch(e) { alert('Error: ' + e.message); }
 };
-
-/* MARCAS */
+</script>
+<script>
 async function loadBrands() {
   try {
     var s = await db.collection('brands').get();
@@ -2140,6 +2345,7 @@ async function loadBrands() {
     renderAdminBrands();
   } catch(e) { console.error(e); }
 }
+
 function renderAdminBrands() {
   var list = document.getElementById('adminBrandsList');
   if (!list) return;
@@ -2162,6 +2368,7 @@ function renderAdminBrands() {
   });
   list.innerHTML = html;
 }
+
 window.editBrandImage = function(brandId) {
   var b = brands.find(function(x) {
     return x.id === brandId;
@@ -2183,6 +2390,7 @@ window.editBrandImage = function(brandId) {
   document.getElementById('brandModal')
     .classList.add('active');
 };
+
 window.previewBrandImage = function(event) {
   var file = event.target.files[0];
   if (!file) return;
@@ -2201,6 +2409,7 @@ window.previewBrandImage = function(event) {
   };
   reader.readAsDataURL(file);
 };
+
 window.saveBrandImage = async function(event) {
   event.preventDefault();
   var id = document.getElementById('editBrandId').value;
@@ -2214,8 +2423,8 @@ window.saveBrandImage = async function(event) {
     alert('✅ Guardado');
   } catch(e) { alert('Error: ' + e.message); }
 };
-
-/* LISTA DE PRODUCTOS */
+</script>
+<script>
 async function loadProducts() {
   try {
     var s = await db.collection('products').get();
@@ -2289,7 +2498,6 @@ document.getElementById('adminProductSearch')
   });
 </script>
 <script>
-/* PRODUCTOS - MODAL */
 window.openAddProductModal = function() {
   populateCategorySelect();
   currentProductImages = [];
@@ -2382,7 +2590,8 @@ window.editProduct = function(productId) {
   document.getElementById('productModal')
     .classList.add('active');
 };
-
+</script>
+<script>
 function renderProductImages() {
   var c = document.getElementById('productImagesContainer');
   if (currentProductImages.length === 0) {
@@ -2512,7 +2721,8 @@ window.deleteProduct = async function(id) {
     alert('✅ Eliminado');
   } catch(e) { alert('Error: ' + e.message); }
 };
-
+</script>
+<script>
 function populateCategorySelect() {
   var s = document.getElementById('productCategory');
   s.innerHTML = '<option value="">Seleccionar...</option>';
@@ -2698,7 +2908,6 @@ window.calculateSalePrice = function() {
 };
 </script>
 <script>
-/* PEDIDOS (onSnapshot) */
 var ordersUnsubscribe = null;
 
 function loadOrders() {
@@ -2739,8 +2948,9 @@ function renderOrders() {
       var c = (o.customerCode || '').toLowerCase();
       var n = (o.userName || '').toLowerCase();
       var p = (o.userPhone || '').toLowerCase();
+      var e = (o.userEmail || '').toLowerCase();
       return c.includes(sq) || n.includes(sq) ||
-        p.includes(sq);
+        p.includes(sq) || e.includes(sq);
     });
   }
   if (filtered.length === 0) {
@@ -2819,7 +3029,8 @@ document.getElementById('searchOrderCode')
   .addEventListener('input', renderOrders);
 document.getElementById('filterOrderStatus')
   .addEventListener('change', renderOrders);
-
+</script>
+<script>
 window.viewOrderDetail = function(id) {
   var o = orders.find(function(x) {
     return x.id === id;
@@ -2844,6 +3055,8 @@ window.viewOrderDetail = function(id) {
   html += '<div style="margin:1rem 0;">';
   html += '<strong>Cliente:</strong> ';
   html += (o.userName || 'N/A') + '<br>';
+  html += '<strong>Correo:</strong> ';
+  html += (o.userEmail || 'N/A') + '<br>';
   html += '<strong>Teléfono:</strong> ';
   html += (o.userPhone || 'N/A') + '<br>';
   if (o.customerCode) {
@@ -2968,8 +3181,93 @@ window.deleteOrder = async function(id) {
     alert('✅ Eliminado');
   } catch(e) { alert('Error: ' + e.message); }
 };
+</script>
+<script>
+async function loadCustomers() {
+  try {
+    var s = await db.collection('users').get();
+    customers = [];
+    s.forEach(function(d) {
+      var obj = d.data();
+      obj.id = d.id;
+      customers.push(obj);
+    });
+    renderCustomers();
+  } catch(e) { console.error(e); }
+}
 
-/* DOMICILIARIOS */
+function renderCustomers(filter) {
+  var tb = document.getElementById('customersList');
+  if (!tb) return;
+  filter = filter || '';
+  var filtered = customers;
+  if (filter) {
+    var q = filter.toLowerCase();
+    filtered = customers.filter(function(c) {
+      var byName = (c.name || '').toLowerCase()
+        .includes(q);
+      var byPhone = (c.phone || '').includes(q);
+      var byEmail = (c.email || '').toLowerCase()
+        .includes(q);
+      var byCode = (c.customerCode || '').toLowerCase()
+        .includes(q);
+      return byName || byPhone || byEmail || byCode;
+    });
+  }
+  if (filtered.length === 0) {
+    tb.innerHTML = '<tr><td colspan="6" style="' +
+      'text-align:center;color:#666;">Sin clientes</td>' +
+      '</tr>';
+    return;
+  }
+  var cm = {};
+  orders.forEach(function(o) {
+    var k = o.userId || o.userPhone;
+    if (!k) return;
+    if (!cm[k]) {
+      cm[k] = { orders: 0, total: 0 };
+    }
+    cm[k].orders++;
+    cm[k].total += Number(o.total) || 0;
+  });
+  var html = '';
+  filtered.forEach(function(c) {
+    var data = cm[c.id] || cm[c.phone] || {
+      orders: 0, total: 0
+    };
+    var code = c.customerCode || '-';
+    var email = c.email || '-';
+    var phone = c.phone || '-';
+    html += '<tr>';
+    html += '<td style="padding:0.6rem;';
+    html += 'border-bottom:1px solid #eee;">' +
+      code + '</td>';
+    html += '<td style="padding:0.6rem;';
+    html += 'border-bottom:1px solid #eee;">' +
+      (c.name || '-') + '</td>';
+    html += '<td style="padding:0.6rem;';
+    html += 'border-bottom:1px solid #eee;">' +
+      email + '</td>';
+    html += '<td style="padding:0.6rem;';
+    html += 'border-bottom:1px solid #eee;">' +
+      phone + '</td>';
+    html += '<td style="padding:0.6rem;';
+    html += 'border-bottom:1px solid #eee;">' +
+      data.orders + '</td>';
+    html += '<td style="padding:0.6rem;';
+    html += 'border-bottom:1px solid #eee;">$' +
+      data.total.toFixed(2) + '</td>';
+    html += '</tr>';
+  });
+  tb.innerHTML = html;
+}
+
+document.getElementById('searchCustomer')
+  .addEventListener('input', function(e) {
+    renderCustomers(e.target.value);
+  });
+</script>
+<script>
 async function loadDrivers() {
   try {
     var s = await db.collection('drivers').get();
@@ -2991,16 +3289,61 @@ function renderDrivers() {
       'color:#666;padding:1rem;">Sin domiciliarios</p>';
     return;
   }
+  var hoy = new Date();
+  hoy.setHours(0, 0, 0, 0);
+  var inicioSemana = new Date(hoy);
+  var dia = inicioSemana.getDay();
+  var diff = dia === 0 ? 6 : dia - 1;
+  inicioSemana.setDate(inicioSemana.getDate() - diff);
   var html = '';
   drivers.forEach(function(d) {
     var com = Number(d.commission).toFixed(2);
+    var pedidosHoy = 0;
+    var gananciaHoy = 0;
+    var pedidosSemana = 0;
+    var gananciaSemana = 0;
+    var pedidosTotal = 0;
+    var gananciaTotal = 0;
+    orders.forEach(function(o) {
+      if (o.driverId !== d.id) return;
+      var comision = Number(o.driverCommission) || 0;
+      var fecha = new Date(o.date);
+      pedidosTotal++;
+      gananciaTotal += comision;
+      if (fecha >= hoy) {
+        pedidosHoy++;
+        gananciaHoy += comision;
+      }
+      if (fecha >= inicioSemana) {
+        pedidosSemana++;
+        gananciaSemana += comision;
+      }
+    });
     html += '<div class="driver-card">';
-    html += '<div><strong>' + d.name + '</strong><br>';
-    html += '<small>📞 ' + d.phone + ' | 💰 $' +
-      com + '</small></div>';
+    html += '<div class="driver-card-header">';
+    html += '<div><strong style="font-size:1.05rem;">' +
+      d.name + '</strong><br>';
+    html += '<small style="color:#666;">📞 ' + d.phone +
+      ' · Comisión: $' + com + '</small>';
+    html += '</div>';
     html += '<button class="btn btn-small btn-secondary"';
     html += ' onclick="deleteDriver(\'' + d.id + '\')">';
-    html += 'Eliminar</button></div>';
+    html += 'Eliminar</button>';
+    html += '</div>';
+    html += '<div class="driver-stats">';
+    html += '<div class="driver-stat">';
+    html += '<strong>' + pedidosHoy + '</strong>';
+    html += 'Hoy<br>$' + gananciaHoy.toFixed(2);
+    html += '</div>';
+    html += '<div class="driver-stat">';
+    html += '<strong>' + pedidosSemana + '</strong>';
+    html += 'Semana<br>$' + gananciaSemana.toFixed(2);
+    html += '</div>';
+    html += '<div class="driver-stat">';
+    html += '<strong>' + pedidosTotal + '</strong>';
+    html += 'Total<br>$' + gananciaTotal.toFixed(2);
+    html += '</div>';
+    html += '</div></div>';
   });
   list.innerHTML = html;
 }
@@ -3040,94 +3383,6 @@ window.deleteDriver = async function(id) {
 };
 </script>
 <script>
-/* CLIENTES */
-async function loadCustomers() {
-  try {
-    var s = await db.collection('customers').get();
-    customers = [];
-    s.forEach(function(d) {
-      var obj = d.data();
-      obj.id = d.id;
-      customers.push(obj);
-    });
-    renderCustomers();
-  } catch(e) { console.error(e); }
-}
-
-function renderCustomers(filter) {
-  var tb = document.getElementById('customersList');
-  if (!tb) return;
-  filter = filter || '';
-  var filtered = customers;
-  if (filter) {
-    var q = filter.toLowerCase();
-    filtered = customers.filter(function(c) {
-      var byName = (c.name || '').toLowerCase()
-        .includes(q);
-      var byPhone = (c.phone || '').includes(q);
-      var byCode = (c.customerCode || '').toLowerCase()
-        .includes(q);
-      return byName || byPhone || byCode;
-    });
-  }
-  if (filtered.length === 0) {
-    tb.innerHTML = '<tr><td colspan="5" style="' +
-      'text-align:center;color:#666;">Sin clientes</td>' +
-      '</tr>';
-    return;
-  }
-  var cm = {};
-  orders.forEach(function(o) {
-    var k = o.userPhone || o.userName;
-    if (!k) return;
-    if (!cm[k]) {
-      cm[k] = {
-        name: o.userName || 'N/A',
-        phone: o.userPhone || 'N/A',
-        customerCode: o.customerCode || '',
-        orders: 0,
-        total: 0
-      };
-    }
-    cm[k].orders++;
-    cm[k].total += Number(o.total) || 0;
-  });
-  var html = '';
-  filtered.forEach(function(c) {
-    var data = cm[c.phone] || cm[c.name] || {
-      orders: 0,
-      total: 0,
-      customerCode: c.customerCode || ''
-    };
-    var code = c.customerCode || data.customerCode ||
-      '-';
-    html += '<tr>';
-    html += '<td style="padding:0.6rem;';
-    html += 'border-bottom:1px solid #eee;">' +
-      code + '</td>';
-    html += '<td style="padding:0.6rem;';
-    html += 'border-bottom:1px solid #eee;">' +
-      c.name + '</td>';
-    html += '<td style="padding:0.6rem;';
-    html += 'border-bottom:1px solid #eee;">' +
-      c.phone + '</td>';
-    html += '<td style="padding:0.6rem;';
-    html += 'border-bottom:1px solid #eee;">' +
-      data.orders + '</td>';
-    html += '<td style="padding:0.6rem;';
-    html += 'border-bottom:1px solid #eee;">$' +
-      data.total.toFixed(2) + '</td>';
-    html += '</tr>';
-  });
-  tb.innerHTML = html;
-}
-
-document.getElementById('searchCustomer')
-  .addEventListener('input', function(e) {
-    renderCustomers(e.target.value);
-  });
-
-/* RESEÑAS */
 async function loadReviews() {
   try {
     var s = await db.collection('reviews').get();
@@ -3190,8 +3445,8 @@ window.deleteReview = async function(id) {
     alert('✅ Eliminado');
   } catch(e) { alert('Error: ' + e.message); }
 };
-
-/* CUPONES */
+</script>
+<script>
 async function loadCoupons() {
   try {
     var s = await db.collection('coupons').get();
@@ -3205,7 +3460,13 @@ async function loadCoupons() {
   } catch(e) { console.error(e); }
 }
 
-function renderCoupons() {
+function formatearFechaCoupon(iso) {
+  if (!iso) return '';
+  var d = new Date(iso);
+  return d.toLocaleDateString();
+}
+
+window.renderCoupons = function() {
   var list = document.getElementById('couponsList');
   if (!list) return;
   if (coupons.length === 0) {
@@ -3213,31 +3474,125 @@ function renderCoupons() {
       'color:#666;padding:1rem;">Sin cupones</p>';
     return;
   }
+  var hoy = new Date();
   var html = '';
   coupons.forEach(function(c) {
-    html += '<div class="admin-item">';
-    html += '<div class="admin-info"><div>';
-    html += '<strong>' + c.code + '</strong><br>';
-    html += '<small style="color:#666;">' +
-      c.discount + '% | Usos: ' + (c.uses || 0) +
-      '/' + (c.maxUses || '∞') + '</small>';
-    html += '</div></div>';
+    var activo = c.active !== false;
+    var vigente = true;
+    var razon = '';
+    if (c.startDate) {
+      var inicio = new Date(c.startDate + 'T00:00:00');
+      if (inicio > hoy) {
+        vigente = false;
+        razon = 'Aún no inicia';
+      }
+    }
+    if (c.endDate) {
+      var fin = new Date(c.endDate + 'T23:59:59');
+      if (fin < hoy) {
+        vigente = false;
+        razon = 'Expirado';
+      }
+    }
+    var estadoColor = '#28a745';
+    var estadoTexto = '✅ Activo';
+    if (!activo) {
+      estadoColor = '#999';
+      estadoTexto = '⏸️ Desactivado';
+    } else if (!vigente) {
+      estadoColor = '#dc3545';
+      estadoTexto = '⛔ ' + razon;
+    }
+    html += '<div class="admin-item" style="';
+    html += 'flex-direction:column;align-items:stretch;">';
+    html += '<div style="display:flex;';
+    html += 'justify-content:space-between;';
+    html += 'align-items:center;flex-wrap:wrap;';
+    html += 'gap:0.5rem;">';
+    html += '<div>';
+    html += '<strong style="font-size:1.1rem;">' +
+      c.code + '</strong>';
+    html += ' <span style="color:' + estadoColor +
+      ';font-size:0.85rem;">' + estadoTexto + '</span>';
+    html += '<br><small style="color:#666;">' +
+      c.discount + '% descuento · Usos: ' +
+      (c.uses || 0) + '/' +
+      (c.maxUses === 0 ? '∞' : c.maxUses) + '</small>';
+    if (c.onlyVerified) {
+      html += '<br><small style="color:#1565c0;">' +
+        '🔒 Solo correos verificados</small>';
+    }
+    if (c.startDate || c.endDate) {
+      html += '<br><small style="color:#666;">';
+      if (c.startDate) {
+        html += 'Desde: ' +
+          formatearFechaCoupon(c.startDate);
+      }
+      if (c.endDate) {
+        html += ' Hasta: ' +
+          formatearFechaCoupon(c.endDate);
+      }
+      html += '</small>';
+    }
+    html += '</div>';
+    html += '<div style="display:flex;gap:0.3rem;';
+    html += 'flex-wrap:wrap;">';
+    html += '<button class="btn btn-small ' +
+      (activo ? 'btn-warning' : 'btn-success') + '"';
+    html += ' onclick="toggleCouponActive(\'' +
+      c.id + '\')">' +
+      (activo ? 'Desactivar' : 'Activar') + '</button>';
     html += '<button class="btn btn-small btn-secondary"';
-    html += ' onclick="deleteCoupon(\'' + c.id + '\')">';
-    html += 'Eliminar</button></div>';
+    html += ' onclick="deleteCoupon(\'' + c.id +
+      '\')">Eliminar</button>';
+    html += '</div></div></div>';
   });
   list.innerHTML = html;
-}
+};
+
+window.toggleCouponActive = async function(id) {
+  var c = coupons.find(function(x) {
+    return x.id === id;
+  });
+  if (!c) return;
+  var nuevo = c.active === false ? true : false;
+  try {
+    await db.collection('coupons').doc(id)
+      .update({ active: nuevo });
+    await loadCoupons();
+    alert(nuevo ? '✅ Cupón activado' : '⏸️ Cupón desactivado');
+  } catch(e) { alert('Error: ' + e.message); }
+};
 
 window.createCoupon = async function() {
   var code = document.getElementById('couponCode')
     .value.trim().toUpperCase();
-  var d = parseInt(document.getElementById(
-    'couponDiscount').value);
-  var m = parseInt(document.getElementById(
-    'couponMaxUses').value);
-  if (!code || !d || !m) {
-    alert('Completa todos los campos');
+  var d = parseInt(document.getElementById('couponDiscount')
+    .value);
+  var m = parseInt(document.getElementById('couponMaxUses')
+    .value);
+  if (m < 0 || isNaN(m)) m = 0;
+  var verify = document.getElementById('couponVerify')
+    .value === 'yes';
+  var startDate = document.getElementById('couponStart')
+    .value || '';
+  var endDate = document.getElementById('couponEnd')
+    .value || '';
+  var active = document.getElementById('couponActive')
+    .checked;
+  if (!code || !d) {
+    alert('Completa código y descuento');
+    return;
+  }
+  if (d < 1 || d > 100) {
+    alert('El descuento debe estar entre 1 y 100');
+    return;
+  }
+  var existe = coupons.some(function(c) {
+    return c.code === code;
+  });
+  if (existe) {
+    alert('Ya existe un cupón con ese código');
     return;
   }
   try {
@@ -3246,13 +3601,21 @@ window.createCoupon = async function() {
       discount: d,
       maxUses: m,
       uses: 0,
+      active: active,
+      onlyVerified: verify,
+      startDate: startDate,
+      endDate: endDate,
       createdAt: new Date().toISOString()
     });
     document.getElementById('couponCode').value = '';
     document.getElementById('couponDiscount').value = '';
-    document.getElementById('couponMaxUses').value = '';
+    document.getElementById('couponMaxUses').value = '100';
+    document.getElementById('couponVerify').value = 'no';
+    document.getElementById('couponStart').value = '';
+    document.getElementById('couponEnd').value = '';
+    document.getElementById('couponActive').checked = true;
     await loadCoupons();
-    alert('✅ Creado');
+    alert('✅ Cupón creado');
   } catch(e) { alert('Error: ' + e.message); }
 };
 
@@ -3264,8 +3627,8 @@ window.deleteCoupon = async function(id) {
     alert('✅ Eliminado');
   } catch(e) { alert('Error: ' + e.message); }
 };
-
-/* DASHBOARD */
+</script>
+<script>
 async function loadDashboard() {
   try {
     var p = orders.filter(function(o) {
@@ -3284,7 +3647,6 @@ async function loadDashboard() {
   } catch(e) { console.log(e); }
 }
 
-/* ESC */
 document.addEventListener('keydown', function(e) {
   if (e.key === 'Escape') {
     document.querySelectorAll('.modal.active')
@@ -3294,7 +3656,6 @@ document.addEventListener('keydown', function(e) {
   }
 });
 </script>
-
 <script type="module">
 import {
   loginAdmin, logoutAdmin, setupAuthGuard
