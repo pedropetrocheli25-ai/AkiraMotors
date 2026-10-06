@@ -301,6 +301,7 @@ body {
   font-size: 0.9rem;
   margin-top: 0.5rem;
 }
+<style>
 .order-item {
   background: #f8f8f8;
   padding: 1rem;
@@ -484,6 +485,8 @@ body {
   color: #2e7d32;
   font-size: 0.9rem;
   margin-top: 0.5rem;
+  text-align: center;
+  padding: 1rem;
 }
 @media (max-width: 768px) {
   body { flex-direction: column; }
@@ -603,7 +606,7 @@ body {
 
 <div class="admin-content">
 
-<!-- ========== DASHBOARD ========== -->
+<!-- DASHBOARD -->
 <div class="admin-section active" id="section-dashboard">
 <h2 class="section-title">Dashboard</h2>
 <div class="stats-grid">
@@ -626,7 +629,7 @@ body {
 </div>
 </div>
 
-<!-- ========== VISTA PREVIA ========== -->
+<!-- VISTA PREVIA -->
 <div class="admin-section" id="section-preview">
 <h2 class="section-title">Vista Previa en Vivo</h2>
 <div class="alert-info">
@@ -653,7 +656,7 @@ recargar.
 </div>
 </div>
 
-<!-- ========== CATÁLOGO ========== -->
+<!-- CATÁLOGO -->
 <div class="admin-section" id="section-catalogo">
 <h2 class="section-title">
 🗂️ Catálogo: Categorías y Vehículos
@@ -661,9 +664,7 @@ recargar.
 <div class="alert-info">
 Aquí defines la estructura de tu tienda: cada
 categoría tiene sus subcategorías y los vehículos
-(marca → modelos) que le corresponden. Cuando
-agregues un producto, el sistema te sugerirá las
-marcas y modelos de la categoría que elijas.
+(marca → modelos) que le corresponden.
 </div>
 <div class="admin-card">
 <h3>Agregar Categoría</h3>
@@ -686,7 +687,8 @@ marcas y modelos de la categoría que elijas.
 <div id="catalogoEditor"></div>
 </div>
 </div>
-<!-- ========== PRODUCTOS ========== -->
+
+<!-- PRODUCTOS -->
 <div class="admin-section" id="section-products">
 <h2 class="section-title">🛒 Productos</h2>
 <div class="admin-card">
@@ -704,7 +706,7 @@ marcas y modelos de la categoría que elijas.
 </div>
 </div>
 
-<!-- ========== PEDIDOS ========== -->
+<!-- PEDIDOS -->
 <div class="admin-section" id="section-orders">
 <h2 class="section-title">📦 Pedidos</h2>
 <div class="admin-card">
@@ -728,7 +730,7 @@ marcas y modelos de la categoría que elijas.
 </div>
 </div>
 
-<!-- ========== CLIENTES ========== -->
+<!-- CLIENTES -->
 <div class="admin-section" id="section-customers">
 <h2 class="section-title">👥 Clientes</h2>
 <div class="admin-card">
@@ -758,8 +760,7 @@ Total</th>
 </div>
 </div>
 </div>
-
-<!-- ========== DOMICILIARIOS ========== -->
+<!-- DOMICILIARIOS -->
 <div class="admin-section" id="section-drivers">
 <h2 class="section-title">🏍️ Domiciliarios</h2>
 <div class="admin-card">
@@ -788,7 +789,7 @@ Total</th>
 </div>
 </div>
 
-<!-- ========== MARCAS DE REPUESTOS ========== -->
+<!-- MARCAS DE REPUESTOS -->
 <div class="admin-section" id="section-brands">
 <h2 class="section-title">🏷️ Marcas de Repuestos</h2>
 <div class="alert-info">
@@ -801,7 +802,7 @@ tienda con su logo.
 </div>
 </div>
 
-<!-- ========== BANNERS ========== -->
+<!-- BANNERS -->
 <div class="admin-section" id="section-banners">
 <h2 class="section-title">🖼️ Banners</h2>
 <div class="admin-card">
@@ -821,7 +822,7 @@ Máx: 1MB | Máximo 5 imágenes
 </div>
 </div>
 
-<!-- ========== CUPONES ========== -->
+<!-- CUPONES -->
 <div class="admin-section" id="section-coupons">
 <h2 class="section-title">🎟️ Cupones</h2>
 <div class="admin-card">
@@ -851,13 +852,13 @@ Máx: 1MB | Máximo 5 imágenes
 <div id="couponsList"></div>
 </div>
 </div>
-<!-- ========== DELIVERY POR KM ========== -->
+
+<!-- DELIVERY POR KM -->
 <div class="admin-section" id="section-delivery">
 <h2 class="section-title">📍 Delivery por km</h2>
 <div class="alert-info">
 El costo de delivery se calcula por la distancia
-entre tu tienda y el cliente. El cliente selecciona
-su ubicación en la tienda y se calcula automático.
+entre tu tienda y el cliente.
 </div>
 <div class="admin-card">
 <h3>Tarifas</h3>
@@ -865,37 +866,26 @@ su ubicación en la tienda y se calcula automático.
 <div class="form-group">
 <label>Tarifa por km ($)</label>
 <input type="number" id="deliveryRateKm"
-  step="0.01" value="1.30"
-  placeholder="Ej: 1.30">
+  step="0.01" value="1.30">
 </div>
 <div class="form-group">
 <label>Mínimo a cobrar ($)</label>
 <input type="number" id="deliveryMin"
-  step="0.01" value="3"
-  placeholder="Ej: 3">
+  step="0.01" value="3">
 </div>
 </div>
 <div class="form-row">
 <div class="form-group">
 <label>Máximo de distancia (km)</label>
 <input type="number" id="deliveryMax"
-  step="0.1" value="25"
-  placeholder="Ej: 25">
-<div style="font-size:0.75rem;
-  color:#666;margin-top:0.3rem;">
-Ciudad Bolívar tiene ~20 km de ancho. Se
-recomienda 25 km para cubrir toda la ciudad.
-</div>
+  step="0.1" value="25">
 </div>
 <div class="form-group">
 <label>Factor de ajuste</label>
 <input type="number" id="deliveryFactor"
-  step="0.01" value="1.2"
-  placeholder="Ej: 1.2">
+  step="0.01" value="1.2">
 <div style="font-size:0.75rem;
   color:#666;margin-top:0.3rem;">
-La distancia real por calles suele ser ~20% mayor
-que en línea recta. Este factor lo compensa.
 Recomendado: 1.2
 </div>
 </div>
@@ -904,10 +894,7 @@ Recomendado: 1.2
 <div class="admin-card">
 <h3>Ubicación de tu tienda</h3>
 <div class="alert-info">
-Pega las coordenadas de tu local.
-Para obtenerlas: abre Google Maps, mantén pulsado
-sobre tu local hasta que aparezca un pin rojo,
-toca el pin y verás los números abajo.
+Pega las coordenadas de tu local (Google Maps).
 </div>
 <div class="form-row">
 <div class="form-group">
@@ -936,7 +923,7 @@ toca el pin y verás los números abajo.
 💾 Guardar Configuración de Delivery</button>
 </div>
 
-<!-- ========== RESEÑAS ========== -->
+<!-- RESEÑAS -->
 <div class="admin-section" id="section-reviews">
 <h2 class="section-title">⭐ Reseñas</h2>
 <div class="admin-card">
@@ -944,7 +931,7 @@ toca el pin y verás los números abajo.
 </div>
 </div>
 
-<!-- ========== HERO ========== -->
+<!-- HERO -->
 <div class="admin-section" id="section-hero">
 <h2 class="section-title">🎨 Hero / Portada</h2>
 <div class="admin-card">
@@ -1034,7 +1021,7 @@ Segoe UI</option>
 💾 Guardar Hero</button>
 </div>
 
-<!-- ========== PIE DE PÁGINA ========== -->
+<!-- PIE DE PÁGINA -->
 <div class="admin-section" id="section-footer">
 <h2 class="section-title">📄 Pie de página</h2>
 <div class="admin-card">
@@ -1081,7 +1068,7 @@ Segoe UI</option>
 </div>
 </div>
 
-<!-- ========== CONFIGURACIÓN ========== -->
+<!-- CONFIGURACIÓN -->
 <div class="admin-section" id="section-settings">
 <h2 class="section-title">⚙️ Configuración</h2>
 <div class="admin-card">
@@ -1102,7 +1089,6 @@ de tu tienda.
 <h3>WhatsApp</h3>
 <div class="alert-info">
 Este número se usa en toda la tienda.
-Incluye código de país sin +. Ej: 584148700616
 </div>
 <input type="text" id="whatsappNumber"
   placeholder="584148700616"
@@ -1115,8 +1101,7 @@ Incluye código de país sin +. Ej: 584148700616
 <div class="admin-card">
 <h3>Tasa BCV</h3>
 <div class="alert-info">
-Tasa de cambio del dólar según el Banco
-Central de Venezuela.
+Tasa de cambio del dólar según el BCV.
 </div>
 <input type="number" id="bcvRateInput"
   step="0.01" placeholder="Ej: 36.50"
@@ -1130,7 +1115,7 @@ Central de Venezuela.
 </div>
 </div>
 
-<!-- ========== MODAL PRODUCTO ========== -->
+<!-- MODAL PRODUCTO -->
 <div class="modal" id="productModal">
 <div class="modal-content">
 <button class="modal-close"
@@ -1149,13 +1134,13 @@ Central de Venezuela.
 <div class="form-group">
 <label>Marca del repuesto</label>
 <input type="text" id="productBrand"
-  placeholder="Ej: SKF, Monroe, 555">
+  placeholder="Ej: SKF, Monroe">
 </div>
 </div>
 <div class="form-group">
 <label>Nombre del producto *</label>
 <input type="text" id="productName" required
-  placeholder="Ej: Rótula inferior Toyota Corolla">
+  placeholder="Ej: Rótula inferior Corolla">
 </div>
 <div class="form-group">
 <label>Descripción *</label>
@@ -1164,8 +1149,7 @@ Central de Venezuela.
 </div>
 <div class="checkbox-group">
 <input type="checkbox" id="productRecommended">
-<label>Marcar como RECOMENDADO
-(aparece primero)</label>
+<label>Marcar como RECOMENDADO</label>
 </div>
 </div>
 
@@ -1173,8 +1157,7 @@ Central de Venezuela.
 <h3>Ubicación en el Catálogo</h3>
 <div class="alert-info">
 Elige la categoría. Las opciones de subcategoría
-y vehículos se ajustan automáticamente según lo
-que hayas configurado en "Catálogo".
+y vehículos se ajustan automáticamente.
 </div>
 <div class="form-row">
 <div class="form-group">
@@ -1195,8 +1178,7 @@ que hayas configurado en "Catálogo".
 <div class="form-section">
 <h3>Atributos Internos</h3>
 <div class="alert-info">
-Esta información es para ti (no la ve el cliente).
-Sirve para clasificar y ubicar el repuesto.
+Esta información es solo para ti.
 </div>
 <div class="form-row">
 <div class="form-group">
@@ -1238,8 +1220,7 @@ Sirve para clasificar y ubicar el repuesto.
 <div class="form-section">
 <h3>Especificaciones Técnicas</h3>
 <div class="alert-info">
-Detalles técnicos que verá el cliente en la
-ficha técnica del producto.
+Detalles que verá el cliente en la ficha técnica.
 </div>
 <div class="form-row">
 <div class="form-group">
@@ -1265,9 +1246,8 @@ ficha técnica del producto.
 <div class="form-section">
 <h3>Compatibilidad Vehicular</h3>
 <div class="alert-info">
-Agrega los vehículos compatibles. Las marcas y
-modelos disponibles se cargan desde la categoría
-seleccionada arriba.
+Las marcas y modelos se cargan desde la
+categoría seleccionada arriba.
 </div>
 <div class="form-row-4">
 <div class="form-group">
@@ -1303,11 +1283,6 @@ seleccionada arriba.
 
 <div class="form-section">
 <h3>Términos de Búsqueda</h3>
-<div class="alert-info">
-Palabras clave que ayudarán al cliente a
-encontrar el producto (nombres alternativos,
-códigos equivalentes).
-</div>
 <div class="form-group">
 <label>Búsquedas frecuentes</label>
 <textarea id="productSearchTerms"
@@ -1320,7 +1295,7 @@ códigos equivalentes).
 <h3>Precio y Stock</h3>
 <div class="alert-warning">
 <strong>Fórmula:</strong>
-Precio Venta = Costo / (1 - Margen/100)
+Venta = Costo / (1 - Margen/100)
 </div>
 <div class="form-row">
 <div class="form-group">
@@ -1377,7 +1352,7 @@ Máximo 5 imágenes. La primera será la principal.
 </div>
 </div>
 
-<!-- ========== MODAL MARCA (imagen) ========== -->
+<!-- MODAL MARCA -->
 <div class="modal" id="brandModal">
 <div class="modal-content">
 <button class="modal-close"
@@ -1397,13 +1372,13 @@ Máximo 5 imágenes. La primera será la principal.
 </div>
 </div>
 
-<!-- ========== MODAL PEDIDO ========== -->
+<!-- MODAL PEDIDO -->
 <div class="modal" id="orderDetailModal">
 <div class="modal-content"
   id="orderDetailContent"></div>
 </div>
 
-<!-- ========== SCRIPT PUENTE ========== -->
+<!-- SCRIPT PUENTE -->
 <script>
 window.showSection = function(sectionId, event) {
   document.querySelectorAll('.admin-section')
@@ -1491,7 +1466,10 @@ let siteConfig = {
   tiktok: ''
 };
 let whatsappNumber = '584148700616';
-let heroConfig = { visible: false, backgroundImage: null };
+let heroConfig = {
+  visible: false,
+  backgroundImage: null
+};
 let currentProductImages = [];
 let currentSpecifications = [];
 let currentCompatibility = [];
@@ -1516,10 +1494,7 @@ async function loadAll() {
   await loadDashboard();
 }
 
-/* ============================================
-   CATÁLOGO
-   ============================================ */
-
+/* CATÁLOGO */
 async function loadCatalogo() {
   try {
     var snap = await db.collection('settings')
@@ -1554,8 +1529,7 @@ window.renderCatalogo = function() {
   if (catalogo.categorias.length === 0) {
     container.innerHTML = '<p style="text-align:' +
       'center;color:#666;padding:2rem;">' +
-      'No hay categorías. Agrega la primera arriba.' +
-      '</p>';
+      'No hay categorías.</p>';
     return;
   }
   var html = '';
@@ -1566,17 +1540,13 @@ window.renderCatalogo = function() {
     html += '</div>';
     html += '<div class="cat-controls">';
     html += '<button class="alt" onclick="' +
-      'moverCategoria(' + ci + ',-1)" ' +
-      'title="Subir">↑</button>';
+      'moverCategoria(' + ci + ',-1)">↑</button>';
     html += '<button class="alt" onclick="' +
-      'moverCategoria(' + ci + ',1)" ' +
-      'title="Bajar">↓</button>';
+      'moverCategoria(' + ci + ',1)">↓</button>';
     html += '<button onclick="' +
-      'renombrarCategoria(' + ci + ')" ' +
-      'title="Renombrar">✏️</button>';
+      'renombrarCategoria(' + ci + ')">✏️</button>';
     html += '<button class="gray" onclick="' +
-      'eliminarCategoria(' + ci + ')" ' +
-      'title="Eliminar">×</button>';
+      'eliminarCategoria(' + ci + ')">×</button>';
     html += '</div></div>';
 
     html += '<div class="cat-block">';
@@ -1592,9 +1562,8 @@ window.renderCatalogo = function() {
     });
     html += '</div>';
     html += '<div class="inline-add">';
-    html += '<input type="text" ' +
-      'id="newSub-' + ci + '" ' +
-      'placeholder="Nueva subcategoría">';
+    html += '<input type="text" id="newSub-' + ci +
+      '" placeholder="Nueva subcategoría">';
     html += '<button class="btn btn-small btn-primary" ';
     html += 'onclick="agregarSubcategoria(' + ci +
       ')">+ Agregar</button>';
@@ -1610,7 +1579,7 @@ window.renderCatalogo = function() {
       html += '<span>' + v.marca + '</span>';
       html += '<button onclick="' +
         'eliminarMarca(' + ci + ',' + vi +
-        ')" title="Eliminar marca">×</button>';
+        ')">×</button>';
       html += '</div>';
       html += '<div class="chip-list">';
       (v.modelos || []).forEach(function(m, mi) {
@@ -1621,23 +1590,20 @@ window.renderCatalogo = function() {
       });
       html += '</div>';
       html += '<div class="inline-add">';
-      html += '<input type="text" ' +
-        'id="newModel-' + ci + '-' + vi + '" ' +
-        'placeholder="Nuevo modelo">';
+      html += '<input type="text" id="newModel-' +
+        ci + '-' + vi + '" placeholder="Nuevo modelo">';
       html += '<button class="btn btn-small ' +
         'btn-primary" onclick="agregarModelo(' +
         ci + ',' + vi + ')">+ Modelo</button>';
       html += '</div></div>';
     });
     html += '<div class="inline-add">';
-    html += '<input type="text" ' +
-      'id="newMarca-' + ci + '" ' +
-      'placeholder="Nueva marca (Toyota, Nissan...)">';
+    html += '<input type="text" id="newMarca-' + ci +
+      '" placeholder="Nueva marca">';
     html += '<button class="btn btn-small btn-primary" ';
     html += 'onclick="agregarMarca(' + ci +
       ')">+ Marca</button>';
     html += '</div></div>';
-
     html += '</div>';
   });
   container.innerHTML = html;
@@ -1646,18 +1612,12 @@ window.renderCatalogo = function() {
 window.addCategoria = async function() {
   var input = document.getElementById('newCatName');
   var nombre = input.value.trim();
-  if (!nombre) {
-    alert('Ingresa un nombre');
-    return;
-  }
+  if (!nombre) { alert('Ingresa un nombre'); return; }
   var existe = catalogo.categorias.some(function(c) {
     return c.nombre.toLowerCase() ===
       nombre.toLowerCase();
   });
-  if (existe) {
-    alert('Ya existe una categoría con ese nombre');
-    return;
-  }
+  if (existe) { alert('Ya existe'); return; }
   catalogo.categorias.push({
     nombre: nombre,
     subcategorias: [],
@@ -1676,8 +1636,7 @@ window.renombrarCategoria = async function(ci) {
 };
 
 window.eliminarCategoria = async function(ci) {
-  if (!confirm('¿Eliminar esta categoría completa?'))
-    return;
+  if (!confirm('¿Eliminar categoría completa?')) return;
   catalogo.categorias.splice(ci, 1);
   await saveCatalogo();
 };
@@ -1709,7 +1668,7 @@ window.agregarSubcategoria = async function(ci) {
 };
 
 window.eliminarSubcategoria = async function(ci, si) {
-  if (!confirm('¿Eliminar esta subcategoría?')) return;
+  if (!confirm('¿Eliminar subcategoría?')) return;
   catalogo.categorias[ci].subcategorias.splice(si, 1);
   await saveCatalogo();
 };
@@ -1726,18 +1685,14 @@ window.agregarMarca = async function(ci) {
     return v.marca.toLowerCase() ===
       nombre.toLowerCase();
   });
-  if (existe) {
-    alert('Esta marca ya está agregada');
-    return;
-  }
+  if (existe) { alert('Ya existe'); return; }
   veh.push({ marca: nombre, modelos: [] });
   input.value = '';
   await saveCatalogo();
 };
 
 window.eliminarMarca = async function(ci, vi) {
-  if (!confirm('¿Eliminar esta marca completa con ' +
-      'todos sus modelos?')) return;
+  if (!confirm('¿Eliminar marca y modelos?')) return;
   catalogo.categorias[ci].vehiculos.splice(vi, 1);
   await saveCatalogo();
 };
@@ -1760,16 +1715,13 @@ window.agregarModelo = async function(ci, vi) {
 };
 
 window.eliminarModelo = async function(ci, vi, mi) {
-  if (!confirm('¿Eliminar este modelo?')) return;
+  if (!confirm('¿Eliminar modelo?')) return;
   catalogo.categorias[ci].vehiculos[vi].modelos
     .splice(mi, 1);
   await saveCatalogo();
 };
 
-/* ============================================
-   DELIVERY POR KM
-   ============================================ */
-
+/* DELIVERY POR KM */
 async function loadDeliveryConfig() {
   try {
     var snap = await db.collection('settings')
@@ -1799,8 +1751,8 @@ function updateStorePreview() {
   var lat = document.getElementById('storeLat').value.trim();
   var lng = document.getElementById('storeLng').value.trim();
   if (lat && lng) {
-    preview.innerHTML = '📍 <strong>Tu tienda:</strong><br>' +
-      lat + ', ' + lng;
+    preview.innerHTML = '📍 <strong>Tu tienda:</strong>' +
+      '<br>' + lat + ', ' + lng;
   } else {
     preview.innerHTML =
       '📍 Configura tus coordenadas para ver el preview';
@@ -1821,7 +1773,7 @@ window.saveDeliveryConfig = async function() {
   var storeLng = document.getElementById('storeLng')
     .value.trim();
   if (!rateKm || rateKm <= 0) {
-    alert('Ingresa una tarifa por km válida');
+    alert('Ingresa una tarifa válida');
     return;
   }
   if (!storeLat || !storeLng) {
@@ -1870,7 +1822,7 @@ document.addEventListener('change', function(e) {
 });
 </script>
 <script>
-/* ==================== BCV ==================== */
+/* BCV */
 async function loadBcvRate() {
   try {
     var r = await db.collection('settings')
@@ -1901,7 +1853,7 @@ window.saveBcvRate = async function() {
   } catch(e) { alert('Error: ' + e.message); }
 };
 
-/* ==================== PICKUP MAPS ==================== */
+/* PICKUP MAPS */
 async function loadPickupMaps() {
   try {
     var p = await db.collection('settings')
@@ -1923,7 +1875,7 @@ window.updatePickupMaps = async function() {
   } catch(e) { alert('Error: ' + e.message); }
 };
 
-/* ==================== WHATSAPP ==================== */
+/* WHATSAPP */
 async function loadWhatsapp() {
   try {
     var w = await db.collection('settings')
@@ -1947,7 +1899,7 @@ window.saveWhatsapp = async function() {
   } catch(e) { alert('Error: ' + e.message); }
 };
 
-/* ==================== LOGO ==================== */
+/* LOGO */
 async function loadLogo() {
   try {
     var l = await db.collection('settings')
@@ -1964,7 +1916,7 @@ async function loadLogo() {
   } catch(e) { console.log(e); }
 }
 
-/* ==================== BANNERS ==================== */
+/* BANNERS */
 async function loadBanners() {
   try {
     var b = await db.collection('settings')
@@ -2028,8 +1980,9 @@ window.removeBanner = async function(index) {
     alert('✅ Eliminado');
   } catch(e) { alert('Error: ' + e.message); }
 };
-
-/* ==================== SITE CONFIG ==================== */
+</script>
+<script>
+/* SITE CONFIG */
 async function loadSiteConfig() {
   try {
     var c = await db.collection('settings')
@@ -2079,7 +2032,7 @@ window.saveSiteConfig = async function() {
   } catch(e) { alert('Error: ' + e.message); }
 };
 
-/* ==================== HERO ==================== */
+/* HERO */
 async function loadHero() {
   try {
     var h = await db.collection('settings')
@@ -2164,9 +2117,8 @@ window.saveHero = async function() {
     refreshPreview();
   } catch(e) { alert('Error: ' + e.message); }
 };
-</script>
-<script>
-/* ==================== BRANDS ==================== */
+
+/* MARCAS */
 async function loadBrands() {
   try {
     var s = await db.collection('brands').get();
@@ -2263,7 +2215,7 @@ window.saveBrandImage = async function(event) {
   } catch(e) { alert('Error: ' + e.message); }
 };
 
-/* ==================== PRODUCTOS ==================== */
+/* LISTA DE PRODUCTOS */
 async function loadProducts() {
   try {
     var s = await db.collection('products').get();
@@ -2335,7 +2287,9 @@ document.getElementById('adminProductSearch')
   .addEventListener('input', function(e) {
     renderAdminProducts(e.target.value);
   });
-
+</script>
+<script>
+/* PRODUCTOS - MODAL */
 window.openAddProductModal = function() {
   populateCategorySelect();
   currentProductImages = [];
@@ -2428,8 +2382,7 @@ window.editProduct = function(productId) {
   document.getElementById('productModal')
     .classList.add('active');
 };
-</script>
-<script>
+
 function renderProductImages() {
   var c = document.getElementById('productImagesContainer');
   if (currentProductImages.length === 0) {
@@ -2498,8 +2451,8 @@ window.saveProduct = async function(event) {
     subcategory: document.getElementById(
       'productSubcategory').value,
     brand: document.getElementById('productBrand').value,
-    partNumber: document.getElementById('productPartNumber')
-      .value,
+    partNumber: document.getElementById(
+      'productPartNumber').value,
     position: document.getElementById('productPosition')
       .value,
     side: document.getElementById('productSide').value,
@@ -2560,7 +2513,6 @@ window.deleteProduct = async function(id) {
   } catch(e) { alert('Error: ' + e.message); }
 };
 
-/* ==================== CATEGORÍA PRODUCTO ==================== */
 function populateCategorySelect() {
   var s = document.getElementById('productCategory');
   s.innerHTML = '<option value="">Seleccionar...</option>';
@@ -2646,7 +2598,7 @@ window.addCompatibility = function() {
     return c.brand === marca && c.model === modelo;
   });
   if (existe) {
-    alert('Este vehículo ya está agregado');
+    alert('Ya agregado');
     return;
   }
   currentCompatibility.push({
@@ -2664,16 +2616,16 @@ window.addCompatibility = function() {
 function renderCompatibility() {
   var c = document.getElementById('compatibilityContainer');
   if (currentCompatibility.length === 0) {
-    c.innerHTML = '<div style="color:#999;';
-    c.innerHTML += 'font-size:0.85rem;">';
-    c.innerHTML += 'Sin vehículos agregados</div>';
+    c.innerHTML = '<div style="color:#999;' +
+      'font-size:0.85rem;">Sin vehículos</div>';
     return;
   }
   var html = '';
   currentCompatibility.forEach(function(x, i) {
     html += '<div style="background:white;';
     html += 'padding:0.6rem;border-radius:8px;';
-    html += 'margin-bottom:0.4rem;border:1px solid #eee;';
+    html += 'margin-bottom:0.4rem;';
+    html += 'border:1px solid #eee;';
     html += 'display:flex;justify-content:space-between;';
     html += 'align-items:center;">';
     html += '<div><strong>' + x.brand + ' ' + x.model;
@@ -2711,9 +2663,8 @@ window.addSpecification = function() {
 function renderSpecifications() {
   var c = document.getElementById('specificationsContainer');
   if (currentSpecifications.length === 0) {
-    c.innerHTML = '<div style="color:#999;';
-    c.innerHTML += 'font-size:0.85rem;">';
-    c.innerHTML += 'Sin especificaciones</div>';
+    c.innerHTML = '<div style="color:#999;' +
+      'font-size:0.85rem;">Sin especificaciones</div>';
     return;
   }
   var html = '';
@@ -2745,7 +2696,9 @@ window.calculateSalePrice = function() {
   document.getElementById('productPrice').value =
     salePrice.toFixed(2);
 };
-/* ==================== PEDIDOS (onSnapshot) ==================== */
+</script>
+<script>
+/* PEDIDOS (onSnapshot) */
 var ordersUnsubscribe = null;
 
 function loadOrders() {
@@ -2831,14 +2784,19 @@ function renderOrders() {
     html += '<strong>$' + total + '</strong> | ';
     html += delivery;
     if (o.distanceKm) {
-      html += ' | ' + o.distanceKm.toFixed(1) + ' km';
+      html += ' | ' + Number(o.distanceKm)
+        .toFixed(1) + ' km';
+    }
+    if (o.driverName) {
+      html += '<br><small style="color:#9C27B0;">';
+      html += '🏍️ ' + o.driverName + '</small>';
     }
     html += '</div>';
     html += '<div style="display:flex;gap:0.5rem;';
     html += 'flex-wrap:wrap;">';
     html += '<button class="btn btn-small btn-primary"';
     html += ' onclick="viewOrderDetail(\'' + o.id + '\')">';
-    html += 'Ver</button>';
+    html += 'Ver / Asignar</button>';
     html += '<button class="btn btn-small btn-warning"';
     html += ' onclick="updateOrderStatus(\'' + o.id;
     html += '\',\'shipped\')">Enviado</button>';
@@ -2851,7 +2809,7 @@ function renderOrders() {
     html += '<button class="btn btn-small" ';
     html += 'style="background:#999;color:white;" ';
     html += 'onclick="deleteOrder(\'' + o.id + '\')">';
-    html += '🗑️ Eliminar</button>';
+    html += '🗑️</button>';
     html += '</div></div>';
   });
   list.innerHTML = html;
@@ -2901,7 +2859,7 @@ window.viewOrderDetail = function(id) {
   }
   if (o.distanceKm) {
     html += '<br><strong>Distancia:</strong> ';
-    html += o.distanceKm.toFixed(1) + ' km';
+    html += Number(o.distanceKm).toFixed(1) + ' km';
   }
   if (o.gpsLat && o.gpsLng) {
     html += '<br><a href="https://www.google.com/maps?q=';
@@ -2912,6 +2870,7 @@ window.viewOrderDetail = function(id) {
   html += '<br><strong>Estado:</strong> ';
   html += '<span class="order-status ' + o.status + '">';
   html += st + '</span></div>';
+
   html += '<h3 style="margin:1rem 0 0.5rem;';
   html += 'color:#dc3545;">Productos</h3>';
   html += '<div style="background:#f8f8f8;padding:1rem;';
@@ -2925,6 +2884,32 @@ window.viewOrderDetail = function(id) {
       subt + '</div>';
   });
   html += '</div>';
+
+  html += '<h3 style="margin:1rem 0 0.5rem;';
+  html += 'color:#dc3545;">🏍️ Asignar Domiciliario</h3>';
+  html += '<div class="form-group">';
+  html += '<select id="orderDriverSelect" ';
+  html += 'style="width:100%;padding:0.7rem;';
+  html += 'border:1px solid #ddd;';
+  html += 'border-radius:8px;">';
+  html += '<option value="">Sin asignar</option>';
+  drivers.forEach(function(d) {
+    var sel = o.driverId === d.id ? ' selected' : '';
+    html += '<option value="' + d.id + '"' + sel + '>';
+    html += d.name + ' (' + d.phone + ')';
+    html += '</option>';
+  });
+  html += '</select></div>';
+  html += '<button class="btn btn-primary" ';
+  html += 'onclick="assignDriverToOrder(\'' + o.id + '\')" ';
+  html += 'style="width:100%;margin-top:0.5rem;">';
+  html += '💾 Guardar Domiciliario</button>';
+  if (o.driverName) {
+    html += '<p style="margin-top:0.8rem;color:#28a745;';
+    html += 'font-weight:bold;">';
+    html += '✓ Asignado a: ' + o.driverName + '</p>';
+  }
+
   html += '<div style="margin-top:1rem;padding:1rem;';
   html += 'background:#fff5f5;border-radius:8px;">';
   html += '<div style="display:flex;';
@@ -2937,6 +2922,34 @@ window.viewOrderDetail = function(id) {
     .innerHTML = html;
   document.getElementById('orderDetailModal')
     .classList.add('active');
+};
+
+window.assignDriverToOrder = async function(orderId) {
+  var driverId = document.getElementById(
+    'orderDriverSelect').value;
+  try {
+    if (!driverId) {
+      await db.collection('orders').doc(orderId).update({
+        driverId: null,
+        driverName: null,
+        driverCommission: null
+      });
+      alert('✅ Domiciliario removido');
+    } else {
+      var driver = drivers.find(function(d) {
+        return d.id === driverId;
+      });
+      if (!driver) return;
+      await db.collection('orders').doc(orderId).update({
+        driverId: driver.id,
+        driverName: driver.name,
+        driverCommission: driver.commission
+      });
+      alert('✅ Asignado a ' + driver.name);
+    }
+  } catch(e) {
+    alert('Error: ' + e.message);
+  }
 };
 
 window.updateOrderStatus = async function(id, status) {
@@ -2956,7 +2969,7 @@ window.deleteOrder = async function(id) {
   } catch(e) { alert('Error: ' + e.message); }
 };
 
-/* ==================== DOMICILIARIOS ==================== */
+/* DOMICILIARIOS */
 async function loadDrivers() {
   try {
     var s = await db.collection('drivers').get();
@@ -3025,8 +3038,9 @@ window.deleteDriver = async function(id) {
     alert('✅ Eliminado');
   } catch(e) { alert('Error: ' + e.message); }
 };
-
-/* ==================== CLIENTES ==================== */
+</script>
+<script>
+/* CLIENTES */
 async function loadCustomers() {
   try {
     var s = await db.collection('customers').get();
@@ -3088,16 +3102,20 @@ function renderCustomers(filter) {
     var code = c.customerCode || data.customerCode ||
       '-';
     html += '<tr>';
-    html += '<td style="padding:0.6rem;border-bottom:';
-    html += '1px solid #eee;">' + code + '</td>';
-    html += '<td style="padding:0.6rem;border-bottom:';
-    html += '1px solid #eee;">' + c.name + '</td>';
-    html += '<td style="padding:0.6rem;border-bottom:';
-    html += '1px solid #eee;">' + c.phone + '</td>';
-    html += '<td style="padding:0.6rem;border-bottom;';
-    html += '1px solid #eee;">' + data.orders + '</td>';
-    html += '<td style="padding:0.6rem;border-bottom;';
-    html += '1px solid #eee;">$' +
+    html += '<td style="padding:0.6rem;';
+    html += 'border-bottom:1px solid #eee;">' +
+      code + '</td>';
+    html += '<td style="padding:0.6rem;';
+    html += 'border-bottom:1px solid #eee;">' +
+      c.name + '</td>';
+    html += '<td style="padding:0.6rem;';
+    html += 'border-bottom:1px solid #eee;">' +
+      c.phone + '</td>';
+    html += '<td style="padding:0.6rem;';
+    html += 'border-bottom:1px solid #eee;">' +
+      data.orders + '</td>';
+    html += '<td style="padding:0.6rem;';
+    html += 'border-bottom:1px solid #eee;">$' +
       data.total.toFixed(2) + '</td>';
     html += '</tr>';
   });
@@ -3109,7 +3127,7 @@ document.getElementById('searchCustomer')
     renderCustomers(e.target.value);
   });
 
-/* ==================== RESEÑAS ==================== */
+/* RESEÑAS */
 async function loadReviews() {
   try {
     var s = await db.collection('reviews').get();
@@ -3142,8 +3160,9 @@ function renderReviews() {
     var stars = '★'.repeat(r.rating) +
       '☆'.repeat(5 - r.rating);
     var fecha = new Date(r.date).toLocaleDateString();
-    html += '<div style="background:#f8f8f8;padding:1rem;';
-    html += 'border-radius:8px;margin-bottom:0.8rem;">';
+    html += '<div style="background:#f8f8f8;';
+    html += 'padding:1rem;border-radius:8px;';
+    html += 'margin-bottom:0.8rem;">';
     html += '<strong>' + (r.userName || 'Cliente');
     html += '</strong> <span style="color:#666;';
     html += 'font-size:0.85rem;">' + fecha + '</span>';
@@ -3151,7 +3170,8 @@ function renderReviews() {
     html += '</div>';
     html += '<div style="margin:0.5rem 0;">' +
       r.text + '</div>';
-    html += '<div style="font-size:0.85rem;color:#666;">';
+    html += '<div style="font-size:0.85rem;';
+    html += 'color:#666;">';
     html += 'Producto: ' + (p ? p.name : 'N/A');
     html += '</div>';
     html += '<button class="btn btn-small ';
@@ -3171,7 +3191,7 @@ window.deleteReview = async function(id) {
   } catch(e) { alert('Error: ' + e.message); }
 };
 
-/* ==================== CUPONES ==================== */
+/* CUPONES */
 async function loadCoupons() {
   try {
     var s = await db.collection('coupons').get();
@@ -3245,7 +3265,7 @@ window.deleteCoupon = async function(id) {
   } catch(e) { alert('Error: ' + e.message); }
 };
 
-/* ==================== DASHBOARD ==================== */
+/* DASHBOARD */
 async function loadDashboard() {
   try {
     var p = orders.filter(function(o) {
@@ -3264,7 +3284,7 @@ async function loadDashboard() {
   } catch(e) { console.log(e); }
 }
 
-/* ==================== ESC ==================== */
+/* ESC */
 document.addEventListener('keydown', function(e) {
   if (e.key === 'Escape') {
     document.querySelectorAll('.modal.active')
