@@ -29,9 +29,7 @@ body {
   padding: 1.2rem;
   text-align: center;
 }
-.admin-sidebar-header h2 {
-  font-size: 1.2rem;
-}
+.admin-sidebar-header h2 { font-size: 1.2rem; }
 .admin-menu { padding: 1rem 0; }
 .admin-menu-item {
   padding: 0.9rem 1.2rem;
@@ -82,31 +80,12 @@ body {
   font-size: 0.9rem;
   font-weight: 600;
 }
-.btn-primary {
-  background: #dc3545;
-  color: white;
-}
+.btn-primary { background: #dc3545; color: white; }
 .btn-primary:hover { background: #c82333; }
-.btn-secondary {
-  background: #6c757d;
-  color: white;
-}
-.btn-warning {
-  background: #FFC107;
-  color: #333;
-}
-.btn-success {
-  background: #28a745;
-  color: white;
-}
-.btn-small {
-  padding: 0.4rem 0.8rem;
-  font-size: 0.8rem;
-}
-.btn-danger {
-  background: #dc3545;
-  color: white;
-}
+.btn-secondary { background: #6c757d; color: white; }
+.btn-warning { background: #FFC107; color: #333; }
+.btn-success { background: #28a745; color: white; }
+.btn-small { padding: 0.4rem 0.8rem; font-size: 0.8rem; }
 .form-group { margin-bottom: 1rem; }
 .form-group label {
   display: block;
@@ -188,10 +167,8 @@ body {
 .modal {
   display: none;
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
   background: rgba(0,0,0,0.8);
   z-index: 3000;
   align-items: center;
@@ -344,22 +321,10 @@ body {
   font-size: 0.8rem;
   font-weight: bold;
 }
-.order-status.pending {
-  background: #FFC107;
-  color: #333;
-}
-.order-status.shipped {
-  background: #2196F3;
-  color: white;
-}
-.order-status.delivered {
-  background: #4CAF50;
-  color: white;
-}
-.order-status.cancelled {
-  background: #dc3545;
-  color: white;
-}
+.order-status.pending { background: #FFC107; color: #333; }
+.order-status.shipped { background: #2196F3; color: white; }
+.order-status.delivered { background: #4CAF50; color: white; }
+.order-status.cancelled { background: #dc3545; color: white; }
 .driver-card {
   background: #f8f8f8;
   padding: 1rem;
@@ -384,11 +349,9 @@ body {
   background: white;
 }
 .preview-frame iframe {
-  width: 100%;
-  height: 100%;
+  width: 100%; height: 100%;
   border: none;
 }
-/* ======== CATÁLOGO (nueva sección) ======== */
 .cat-card {
   background: white;
   border: 1px solid #e0e0e0;
@@ -424,16 +387,11 @@ body {
   cursor: pointer;
   font-size: 1rem;
 }
-.cat-controls button:hover {
-  background: #c82333;
-}
 .cat-controls button.alt {
   background: #FFC107;
   color: #333;
 }
-.cat-controls button.gray {
-  background: #999;
-}
+.cat-controls button.gray { background: #999; }
 .cat-block {
   margin-top: 0.8rem;
   padding: 0.8rem;
@@ -514,8 +472,19 @@ body {
   border-radius: 6px;
   font-size: 0.85rem;
 }
-
-/* ======== MEDIA QUERIES ======== */
+.map-preview {
+  width: 100%;
+  height: 200px;
+  background: #e8f5e9;
+  border: 2px solid #4caf50;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #2e7d32;
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+}
 @media (max-width: 768px) {
   body { flex-direction: column; }
   .admin-sidebar {
@@ -537,14 +506,10 @@ body {
     border-left: none;
     border-bottom-color: white;
   }
-  .form-row,
-  .form-row-3,
-  .form-row-4 {
+  .form-row, .form-row-3, .form-row-4 {
     grid-template-columns: 1fr;
   }
-  .preview-container {
-    grid-template-columns: 1fr;
-  }
+  .preview-container { grid-template-columns: 1fr; }
 }
 </style>
 </head>
@@ -616,7 +581,7 @@ body {
 🎟️ Cupones</div>
 <div class="admin-menu-item"
   onclick="showSection('delivery', event)">
-📍 Zonas Delivery</div>
+📍 Delivery por km</div>
 <div class="admin-menu-item"
   onclick="showSection('reviews', event)">
 ⭐ Reseñas</div>
@@ -822,6 +787,7 @@ Total</th>
 <div id="driversList"></div>
 </div>
 </div>
+
 <!-- ========== MARCAS DE REPUESTOS ========== -->
 <div class="admin-section" id="section-brands">
 <h2 class="section-title">🏷️ Marcas de Repuestos</h2>
@@ -885,36 +851,89 @@ Máx: 1MB | Máximo 5 imágenes
 <div id="couponsList"></div>
 </div>
 </div>
-
-<!-- ========== ZONAS DELIVERY ========== -->
+<!-- ========== DELIVERY POR KM ========== -->
 <div class="admin-section" id="section-delivery">
-<h2 class="section-title">📍 Zonas Delivery</h2>
+<h2 class="section-title">📍 Delivery por km</h2>
+<div class="alert-info">
+El costo de delivery se calcula por la distancia
+entre tu tienda y el cliente. El cliente selecciona
+su ubicación en la tienda y se calcula automático.
+</div>
 <div class="admin-card">
-<h3>Agregar Zona</h3>
-<div class="form-row-3">
+<h3>Tarifas</h3>
+<div class="form-row">
 <div class="form-group">
-<label>Nombre</label>
-<input type="text" id="zoneName"
-  placeholder="Ej: Centro">
+<label>Tarifa por km ($)</label>
+<input type="number" id="deliveryRateKm"
+  step="0.01" value="1.30"
+  placeholder="Ej: 1.30">
 </div>
 <div class="form-group">
-<label>Costo ($)</label>
-<input type="number" id="zoneCost"
-  step="0.01">
+<label>Mínimo a cobrar ($)</label>
+<input type="number" id="deliveryMin"
+  step="0.01" value="3"
+  placeholder="Ej: 3">
+</div>
+</div>
+<div class="form-row">
+<div class="form-group">
+<label>Máximo de distancia (km)</label>
+<input type="number" id="deliveryMax"
+  step="0.1" value="25"
+  placeholder="Ej: 25">
+<div style="font-size:0.75rem;
+  color:#666;margin-top:0.3rem;">
+Ciudad Bolívar tiene ~20 km de ancho. Se
+recomienda 25 km para cubrir toda la ciudad.
+</div>
 </div>
 <div class="form-group">
-<label>Tiempo estimado</label>
-<input type="text" id="zoneTime"
-  placeholder="Ej: 30 min">
+<label>Factor de ajuste</label>
+<input type="number" id="deliveryFactor"
+  step="0.01" value="1.2"
+  placeholder="Ej: 1.2">
+<div style="font-size:0.75rem;
+  color:#666;margin-top:0.3rem;">
+La distancia real por calles suele ser ~20% mayor
+que en línea recta. Este factor lo compensa.
+Recomendado: 1.2
+</div>
+</div>
+</div>
+</div>
+<div class="admin-card">
+<h3>Ubicación de tu tienda</h3>
+<div class="alert-info">
+Pega las coordenadas de tu local.
+Para obtenerlas: abre Google Maps, mantén pulsado
+sobre tu local hasta que aparezca un pin rojo,
+toca el pin y verás los números abajo.
+</div>
+<div class="form-row">
+<div class="form-group">
+<label>Latitud</label>
+<input type="text" id="storeLat"
+  placeholder="Ej: 8.123456">
+</div>
+<div class="form-group">
+<label>Longitud</label>
+<input type="text" id="storeLng"
+  placeholder="Ej: -63.567890">
+</div>
+</div>
+<button class="btn btn-secondary"
+  onclick="openStoreInMaps()"
+  style="margin-top:0.5rem;">
+🗺️ Ver mi tienda en Google Maps
+</button>
+<div class="map-preview" id="storePreview">
+📍 Configura tus coordenadas para ver el preview
 </div>
 </div>
 <button class="btn btn-primary"
-  onclick="addDeliveryZone()">Agregar</button>
-</div>
-<div class="admin-card">
-<h3>Zonas</h3>
-<div id="deliveryZonesList"></div>
-</div>
+  onclick="saveDeliveryConfig()"
+  style="width:100%;padding:1rem;">
+💾 Guardar Configuración de Delivery</button>
 </div>
 
 <!-- ========== RESEÑAS ========== -->
@@ -1145,8 +1164,8 @@ Central de Venezuela.
 </div>
 <div class="checkbox-group">
 <input type="checkbox" id="productRecommended">
-<label>Marcar como RECOMENDADO (aparece primero)
-</label>
+<label>Marcar como RECOMENDADO
+(aparece primero)</label>
 </div>
 </div>
 
@@ -1174,10 +1193,53 @@ que hayas configurado en "Catálogo".
 </div>
 
 <div class="form-section">
+<h3>Atributos Internos</h3>
+<div class="alert-info">
+Esta información es para ti (no la ve el cliente).
+Sirve para clasificar y ubicar el repuesto.
+</div>
+<div class="form-row">
+<div class="form-group">
+<label>N° Parte / OEM</label>
+<input type="text" id="productPartNumber"
+  placeholder="Ej: SB-3642">
+</div>
+<div class="form-group">
+<label>Posición</label>
+<select id="productPosition">
+<option value="">Seleccionar</option>
+<option value="Delantero">Delantero</option>
+<option value="Trasero">Trasero</option>
+<option value="Ambos">Ambos</option>
+</select>
+</div>
+</div>
+<div class="form-row">
+<div class="form-group">
+<label>Lado</label>
+<select id="productSide">
+<option value="">Seleccionar</option>
+<option value="Izquierdo">Izquierdo</option>
+<option value="Derecho">Derecho</option>
+<option value="Ambos Lados">Ambos Lados</option>
+</select>
+</div>
+<div class="form-group">
+<label>Condición</label>
+<select id="productCondition">
+<option value="Nuevo">Nuevo</option>
+<option value="Reacondicionado">Reacondicionado</option>
+<option value="Usado">Usado</option>
+</select>
+</div>
+</div>
+</div>
+
+<div class="form-section">
 <h3>Especificaciones Técnicas</h3>
 <div class="alert-info">
-Detalles técnicos que verá el cliente:
-medidas, materiales, compatibilidad, etc.
+Detalles técnicos que verá el cliente en la
+ficha técnica del producto.
 </div>
 <div class="form-row">
 <div class="form-group">
@@ -1371,6 +1433,10 @@ window.showSection = function(sectionId, event) {
       typeof loadDashboard === 'function') {
     loadDashboard();
   }
+  if (sectionId === 'delivery' &&
+      typeof loadDeliveryConfig === 'function') {
+    loadDeliveryConfig();
+  }
 };
 
 window.refreshPreview = function() {
@@ -1401,14 +1467,14 @@ if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
 }
 const db = firebase.firestore();
-
+</script>
+<script>
 let products = [];
 let brands = [];
 let banners = [];
 let orders = [];
 let reviews = [];
 let coupons = [];
-let deliveryZones = [];
 let drivers = [];
 let customers = [];
 let catalogo = { categorias: [] };
@@ -1444,14 +1510,14 @@ async function loadAll() {
     loadWhatsapp(), loadBanners(), loadSiteConfig(),
     loadHero(), loadCatalogo(), loadBrands(),
     loadProducts(), loadOrders(), loadReviews(),
-    loadCoupons(), loadDeliveryZones(),
+    loadCoupons(), loadDeliveryConfig(),
     loadDrivers(), loadCustomers()
   ]);
   await loadDashboard();
 }
 
 /* ============================================
-   CATÁLOGO - Categorías + Subcategorías + Vehículos
+   CATÁLOGO
    ============================================ */
 
 async function loadCatalogo() {
@@ -1513,7 +1579,6 @@ window.renderCatalogo = function() {
       'title="Eliminar">×</button>';
     html += '</div></div>';
 
-    // Subcategorías
     html += '<div class="cat-block">';
     html += '<div class="cat-block-title">' +
       '📂 Subcategorías</div>';
@@ -1535,7 +1600,6 @@ window.renderCatalogo = function() {
       ')">+ Agregar</button>';
     html += '</div></div>';
 
-    // Vehículos
     html += '<div class="cat-block">';
     html += '<div class="cat-block-title">' +
       '🚗 Vehículos compatibles</div>';
@@ -1587,7 +1651,8 @@ window.addCategoria = async function() {
     return;
   }
   var existe = catalogo.categorias.some(function(c) {
-    return c.nombre.toLowerCase() === nombre.toLowerCase();
+    return c.nombre.toLowerCase() ===
+      nombre.toLowerCase();
   });
   if (existe) {
     alert('Ya existe una categoría con ese nombre');
@@ -1658,7 +1723,8 @@ window.agregarMarca = async function(ci) {
   }
   var veh = catalogo.categorias[ci].vehiculos;
   var existe = veh.some(function(v) {
-    return v.marca.toLowerCase() === nombre.toLowerCase();
+    return v.marca.toLowerCase() ===
+      nombre.toLowerCase();
   });
   if (existe) {
     alert('Esta marca ya está agregada');
@@ -1699,6 +1765,109 @@ window.eliminarModelo = async function(ci, vi, mi) {
     .splice(mi, 1);
   await saveCatalogo();
 };
+
+/* ============================================
+   DELIVERY POR KM
+   ============================================ */
+
+async function loadDeliveryConfig() {
+  try {
+    var snap = await db.collection('settings')
+      .doc('deliveryConfig').get();
+    if (snap.exists) {
+      var d = snap.data();
+      var el = document.getElementById('deliveryRateKm');
+      if (el) el.value = d.rateKm || 1.30;
+      el = document.getElementById('deliveryMin');
+      if (el) el.value = d.min || 3;
+      el = document.getElementById('deliveryMax');
+      if (el) el.value = d.max || 25;
+      el = document.getElementById('deliveryFactor');
+      if (el) el.value = d.factor || 1.2;
+      el = document.getElementById('storeLat');
+      if (el) el.value = d.storeLat || '';
+      el = document.getElementById('storeLng');
+      if (el) el.value = d.storeLng || '';
+      updateStorePreview();
+    }
+  } catch(e) { console.error('Error delivery:', e); }
+}
+
+function updateStorePreview() {
+  var preview = document.getElementById('storePreview');
+  if (!preview) return;
+  var lat = document.getElementById('storeLat').value.trim();
+  var lng = document.getElementById('storeLng').value.trim();
+  if (lat && lng) {
+    preview.innerHTML = '📍 <strong>Tu tienda:</strong><br>' +
+      lat + ', ' + lng;
+  } else {
+    preview.innerHTML =
+      '📍 Configura tus coordenadas para ver el preview';
+  }
+}
+
+window.saveDeliveryConfig = async function() {
+  var rateKm = parseFloat(document.getElementById(
+    'deliveryRateKm').value);
+  var min = parseFloat(document.getElementById(
+    'deliveryMin').value);
+  var max = parseFloat(document.getElementById(
+    'deliveryMax').value);
+  var factor = parseFloat(document.getElementById(
+    'deliveryFactor').value);
+  var storeLat = document.getElementById('storeLat')
+    .value.trim();
+  var storeLng = document.getElementById('storeLng')
+    .value.trim();
+  if (!rateKm || rateKm <= 0) {
+    alert('Ingresa una tarifa por km válida');
+    return;
+  }
+  if (!storeLat || !storeLng) {
+    alert('Ingresa las coordenadas de tu tienda');
+    return;
+  }
+  var config = {
+    rateKm: rateKm,
+    min: min || 0,
+    max: max || 999,
+    factor: factor || 1,
+    storeLat: parseFloat(storeLat),
+    storeLng: parseFloat(storeLng),
+    updatedAt: new Date().toISOString()
+  };
+  try {
+    await db.collection('settings').doc('deliveryConfig')
+      .set(config);
+    updateStorePreview();
+    alert('✅ Configuración guardada');
+  } catch(e) {
+    alert('Error: ' + e.message);
+  }
+};
+
+window.openStoreInMaps = function() {
+  var lat = document.getElementById('storeLat')
+    .value.trim();
+  var lng = document.getElementById('storeLng')
+    .value.trim();
+  if (!lat || !lng) {
+    alert('Ingresa primero las coordenadas');
+    return;
+  }
+  window.open(
+    'https://www.google.com/maps?q=' + lat + ',' + lng,
+    '_blank'
+  );
+};
+
+document.addEventListener('change', function(e) {
+  if (e.target && (e.target.id === 'storeLat' ||
+      e.target.id === 'storeLng')) {
+    updateStorePreview();
+  }
+});
 </script>
 <script>
 /* ==================== BCV ==================== */
@@ -1723,7 +1892,10 @@ window.saveBcvRate = async function() {
   }
   try {
     await db.collection('settings').doc('bcvRate')
-      .set({ value: v, updatedAt: new Date().toISOString() });
+      .set({
+        value: v,
+        updatedAt: new Date().toISOString()
+      });
     bcvRate = v;
     alert('✅ Tasa guardada');
   } catch(e) { alert('Error: ' + e.message); }
@@ -1992,7 +2164,8 @@ window.saveHero = async function() {
     refreshPreview();
   } catch(e) { alert('Error: ' + e.message); }
 };
-
+</script>
+<script>
 /* ==================== BRANDS ==================== */
 async function loadBrands() {
   try {
@@ -2089,8 +2262,7 @@ window.saveBrandImage = async function(event) {
     alert('✅ Guardado');
   } catch(e) { alert('Error: ' + e.message); }
 };
-</script>
-<script>
+
 /* ==================== PRODUCTOS ==================== */
 async function loadProducts() {
   try {
@@ -2187,6 +2359,10 @@ window.openAddProductModal = function() {
   document.getElementById('productSearchTerms').value = '';
   document.getElementById('productRecommended').checked =
     false;
+  document.getElementById('productPartNumber').value = '';
+  document.getElementById('productPosition').value = '';
+  document.getElementById('productSide').value = '';
+  document.getElementById('productCondition').value = 'Nuevo';
   document.getElementById('productImagesContainer')
     .innerHTML = '';
   document.getElementById('specificationsContainer')
@@ -2237,13 +2413,23 @@ window.editProduct = function(productId) {
     product.searchTerms || '';
   document.getElementById('productRecommended').checked =
     product.recommended || false;
+  var attrs = product.attributes || {};
+  document.getElementById('productPartNumber').value =
+    attrs.partNumber || '';
+  document.getElementById('productPosition').value =
+    attrs.position || '';
+  document.getElementById('productSide').value =
+    attrs.side || '';
+  document.getElementById('productCondition').value =
+    attrs.condition || 'Nuevo';
   renderProductImages();
   renderSpecifications();
   renderCompatibility();
   document.getElementById('productModal')
     .classList.add('active');
 };
-
+</script>
+<script>
 function renderProductImages() {
   var c = document.getElementById('productImagesContainer');
   if (currentProductImages.length === 0) {
@@ -2311,7 +2497,14 @@ window.saveProduct = async function(event) {
       .value,
     subcategory: document.getElementById(
       'productSubcategory').value,
-    brand: document.getElementById('productBrand').value
+    brand: document.getElementById('productBrand').value,
+    partNumber: document.getElementById('productPartNumber')
+      .value,
+    position: document.getElementById('productPosition')
+      .value,
+    side: document.getElementById('productSide').value,
+    condition: document.getElementById('productCondition')
+      .value
   };
   var productData = {
     code: document.getElementById('productCode').value,
@@ -2366,7 +2559,8 @@ window.deleteProduct = async function(id) {
     alert('✅ Eliminado');
   } catch(e) { alert('Error: ' + e.message); }
 };
-/* ==================== CATEGORÍA DEL PRODUCTO ==================== */
+
+/* ==================== CATEGORÍA PRODUCTO ==================== */
 function populateCategorySelect() {
   var s = document.getElementById('productCategory');
   s.innerHTML = '<option value="">Seleccionar...</option>';
@@ -2500,7 +2694,6 @@ window.removeCompatibility = function(i) {
   renderCompatibility();
 };
 
-/* ==================== ESPECIFICACIONES ==================== */
 window.addSpecification = function() {
   var key = document.getElementById('specKey').value.trim();
   var value = document.getElementById('specValue')
@@ -2552,18 +2745,27 @@ window.calculateSalePrice = function() {
   document.getElementById('productPrice').value =
     salePrice.toFixed(2);
 };
-/* ==================== PEDIDOS ==================== */
-async function loadOrders() {
-  try {
-    var s = await db.collection('orders').get();
-    orders = [];
-    s.forEach(function(d) {
-      var obj = d.data();
-      obj.id = d.id;
-      orders.push(obj);
+/* ==================== PEDIDOS (onSnapshot) ==================== */
+var ordersUnsubscribe = null;
+
+function loadOrders() {
+  if (ordersUnsubscribe) {
+    ordersUnsubscribe();
+    ordersUnsubscribe = null;
+  }
+  ordersUnsubscribe = db.collection('orders')
+    .onSnapshot(function(snapshot) {
+      orders = [];
+      snapshot.forEach(function(d) {
+        var obj = d.data();
+        obj.id = d.id;
+        orders.push(obj);
+      });
+      renderOrders();
+      loadDashboard();
+    }, function(error) {
+      console.error('Error escuchando orders:', error);
     });
-    renderOrders();
-  } catch(e) { console.error(e); }
 }
 
 function renderOrders() {
@@ -2627,7 +2829,11 @@ function renderOrders() {
     html += '">' + st + '</span></div>';
     html += '<div style="margin:0.5rem 0;">';
     html += '<strong>$' + total + '</strong> | ';
-    html += delivery + '</div>';
+    html += delivery;
+    if (o.distanceKm) {
+      html += ' | ' + o.distanceKm.toFixed(1) + ' km';
+    }
+    html += '</div>';
     html += '<div style="display:flex;gap:0.5rem;';
     html += 'flex-wrap:wrap;">';
     html += '<button class="btn btn-small btn-primary"';
@@ -2693,6 +2899,16 @@ window.viewOrderDetail = function(id) {
   if (o.address) {
     html += '<br><strong>Dirección:</strong> ' + o.address;
   }
+  if (o.distanceKm) {
+    html += '<br><strong>Distancia:</strong> ';
+    html += o.distanceKm.toFixed(1) + ' km';
+  }
+  if (o.gpsLat && o.gpsLng) {
+    html += '<br><a href="https://www.google.com/maps?q=';
+    html += o.gpsLat + ',' + o.gpsLng + '" ';
+    html += 'target="_blank" style="color:#dc3545;';
+    html += 'font-weight:bold;">📍 Ver ubicación en Maps</a>';
+  }
   html += '<br><strong>Estado:</strong> ';
   html += '<span class="order-status ' + o.status + '">';
   html += st + '</span></div>';
@@ -2728,8 +2944,6 @@ window.updateOrderStatus = async function(id, status) {
   try {
     await db.collection('orders').doc(id)
       .update({ status: status });
-    await loadOrders();
-    await loadDashboard();
     alert('✅ Actualizado');
   } catch(e) { alert('Error: ' + e.message); }
 };
@@ -2738,8 +2952,6 @@ window.deleteOrder = async function(id) {
   if (!confirm('¿Eliminar permanentemente?')) return;
   try {
     await db.collection('orders').doc(id).delete();
-    await loadOrders();
-    await loadDashboard();
     alert('✅ Eliminado');
   } catch(e) { alert('Error: ' + e.message); }
 };
@@ -2882,9 +3094,9 @@ function renderCustomers(filter) {
     html += '1px solid #eee;">' + c.name + '</td>';
     html += '<td style="padding:0.6rem;border-bottom:';
     html += '1px solid #eee;">' + c.phone + '</td>';
-    html += '<td style="padding:0.6rem;border-bottom:';
+    html += '<td style="padding:0.6rem;border-bottom;';
     html += '1px solid #eee;">' + data.orders + '</td>';
-    html += '<td style="padding:0.6rem;border-bottom:';
+    html += '<td style="padding:0.6rem;border-bottom;';
     html += '1px solid #eee;">$' +
       data.total.toFixed(2) + '</td>';
     html += '</tr>';
@@ -2896,8 +3108,7 @@ document.getElementById('searchCustomer')
   .addEventListener('input', function(e) {
     renderCustomers(e.target.value);
   });
-</script>
-<script>
+
 /* ==================== RESEÑAS ==================== */
 async function loadReviews() {
   try {
@@ -3034,76 +3245,6 @@ window.deleteCoupon = async function(id) {
   } catch(e) { alert('Error: ' + e.message); }
 };
 
-/* ==================== ZONAS DELIVERY ==================== */
-async function loadDeliveryZones() {
-  try {
-    var s = await db.collection('deliveryZones').get();
-    deliveryZones = [];
-    s.forEach(function(d) {
-      var obj = d.data();
-      obj.id = d.id;
-      deliveryZones.push(obj);
-    });
-    renderDeliveryZones();
-  } catch(e) { console.error(e); }
-}
-
-function renderDeliveryZones() {
-  var list = document.getElementById('deliveryZonesList');
-  if (!list) return;
-  if (deliveryZones.length === 0) {
-    list.innerHTML = '<p style="text-align:center;' +
-      'color:#666;padding:1rem;">Sin zonas</p>';
-    return;
-  }
-  var html = '';
-  deliveryZones.forEach(function(z) {
-    var cost = Number(z.cost).toFixed(2);
-    html += '<div class="admin-item">';
-    html += '<div class="admin-info"><div>';
-    html += '<strong>' + z.name + '</strong><br>';
-    html += '<small style="color:#666;">$' + cost;
-    html += ' | ' + (z.time || 'N/A') + '</small>';
-    html += '</div></div>';
-    html += '<button class="btn btn-small btn-secondary"';
-    html += ' onclick="deleteDeliveryZone(\'' + z.id;
-    html += '\')">Eliminar</button></div>';
-  });
-  list.innerHTML = html;
-}
-
-window.addDeliveryZone = async function() {
-  var n = document.getElementById('zoneName').value.trim();
-  var c = parseFloat(document.getElementById('zoneCost')
-    .value);
-  var t = document.getElementById('zoneTime').value.trim();
-  if (!n || !c) {
-    alert('Completa nombre y costo');
-    return;
-  }
-  try {
-    await db.collection('deliveryZones').add({
-      name: n,
-      cost: c,
-      time: t,
-      createdAt: new Date().toISOString()
-    });
-    document.getElementById('zoneName').value = '';
-    document.getElementById('zoneCost').value = '';
-    document.getElementById('zoneTime').value = '';
-    await loadDeliveryZones();
-    alert('✅ Agregada');
-  } catch(e) { alert('Error: ' + e.message); }
-};
-
-window.deleteDeliveryZone = async function(id) {
-  if (!confirm('¿Eliminar?')) return;
-  try {
-    await db.collection('deliveryZones').doc(id).delete();
-    await loadDeliveryZones();
-    alert('✅ Eliminada');
-  } catch(e) { alert('Error: ' + e.message); }
-};
 /* ==================== DASHBOARD ==================== */
 async function loadDashboard() {
   try {
@@ -3123,7 +3264,7 @@ async function loadDashboard() {
   } catch(e) { console.log(e); }
 }
 
-/* ==================== CERRAR MODAL CON ESC ==================== */
+/* ==================== ESC ==================== */
 document.addEventListener('keydown', function(e) {
   if (e.key === 'Escape') {
     document.querySelectorAll('.modal.active')
