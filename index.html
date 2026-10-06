@@ -809,16 +809,16 @@ body {
 .delivery-selector {
   display: flex;
   gap: 0.5rem;
-  margin: 0.8rem 0;
+  margin: 0.5rem 0;
 }
 .delivery-option {
   flex: 1;
-  padding: 0.7rem 0.4rem;
+  padding: 0.55rem 0.4rem;
   border: 2px solid #ddd;
   border-radius: 10px;
   cursor: pointer;
   text-align: center;
-  font-size: 0.82rem;
+  font-size: 0.8rem;
   font-weight: 600;
   background: white;
 }
@@ -910,16 +910,26 @@ body {
   text-decoration: underline;
 }
 .checkout-modal .modal-content {
-  max-width: 520px;
-  padding: 1rem 0;
+  max-width: 500px;
+  padding: 0.3rem 0 0.5rem 0;
+}
+.checkout-modal .modal-content h2 {
+  margin-top: 0.3rem !important;
+  margin-bottom: 0.6rem !important;
+  padding: 0 1rem;
+  font-size: 1.1rem !important;
+}
+.checkout-modal .modal-content h3 {
+  font-size: 0.92rem !important;
+  margin-bottom: 0.5rem !important;
 }
 .map-link-box {
   background: #fff5f5;
-  padding: 0.8rem;
+  padding: 0.7rem;
   border-radius: 14px;
-  margin: 0.8rem 0;
+  margin: 0.6rem 0;
   text-align: center;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
 }
 .map-link-box a {
   color: #dc3545;
@@ -998,7 +1008,7 @@ body {
   z-index: 999;
 }
 .whatsapp-float:hover { transform: scale(1.1); }
-.orders-modal .modal-content { max-width: 640px; }
+.orders-modal .modal-content { max-width: 640px; padding: 1.2rem; }
 .order-item {
   background: #f8f8f8;
   padding: 0.9rem;
@@ -1009,6 +1019,8 @@ body {
   display: flex;
   justify-content: space-between;
   margin-bottom: 0.4rem;
+  flex-wrap: wrap;
+  gap: 0.4rem;
 }
 .order-status {
   padding: 0.25rem 0.7rem;
@@ -1027,6 +1039,22 @@ body {
 }
 .order-status.cancelled {
   background: #dc3545; color: white;
+}
+.order-cancel-btn {
+  width: 100%;
+  background: white;
+  color: #dc3545;
+  border: 2px solid #dc3545;
+  padding: 0.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.85rem;
+  margin-top: 0.6rem;
+}
+.order-cancel-btn:hover {
+  background: #dc3545;
+  color: white;
 }
 .pagination {
   display: flex;
@@ -1211,6 +1239,7 @@ window.addEventListener('error', function(e) {
 </div>
 <div id="drawerMenu"></div>
 </aside>
+
 <div class="hero-section" id="heroSection"
   style="display:none;">
 <div class="hero-bg" id="heroBg"></div>
@@ -1247,7 +1276,6 @@ Los repuestos más solicitados
   id="searchResultsGrid"></div>
 <div class="pagination" id="pagination"></div>
 </div>
-
 <div class="modal" id="productDetailModal">
 <div class="modal-content"
   id="productDetailContent"></div>
@@ -1328,16 +1356,15 @@ contraseña?</a>
 </div>
 </div>
 </div>
+
 <div class="modal checkout-modal" id="checkoutModal">
 <div class="modal-content">
 <button class="modal-close"
   onclick="closeModal('checkoutModal')">×</button>
-<h2 style="color:#dc3545;text-align:center;
-  margin-bottom:1rem;font-size:1.2rem;
-  padding:0 1rem;">Finalizar Compra</h2>
+<h2 style="color:#dc3545;text-align:center;">
+Finalizar Compra</h2>
 <div style="padding:0 1.2rem;">
-<h3 style="margin-bottom:0.6rem;
-  font-size:1rem;">Método de entrega:</h3>
+<h3>Método de entrega:</h3>
 <div class="delivery-selector">
 <div class="delivery-option active"
   id="checkoutPickup"
@@ -1362,9 +1389,9 @@ Delivery
 </button>
 <div id="locationResult"
   style="background:#f0f0f0;
-  padding:0.9rem;border-radius:12px;
-  margin:0.8rem 0;color:#666;
-  text-align:center;font-size:0.85rem;">
+  padding:0.7rem;border-radius:12px;
+  margin:0.6rem 0;color:#666;
+  text-align:center;font-size:0.82rem;">
 Aún no has enviado tu ubicación
 </div>
 <input type="hidden" id="gpsLat">
@@ -1380,19 +1407,25 @@ Aún no has enviado tu ubicación
 <div id="pickupMapLink"
   style="display:none;padding:0 1.2rem;">
 <div class="map-link-box">
-<div style="font-size:1.6rem;
-  margin-bottom:0.4rem;">📍</div>
-<div style="margin-bottom:0.4rem;">
+<div style="font-size:1.4rem;
+  margin-bottom:0.3rem;">📍</div>
+<div style="margin-bottom:0.3rem;">
 Ubicación de la tienda:</div>
 <a href="#" id="pickupMapsLink"
   target="_blank">Ver en Google Maps</a>
 </div>
 </div>
+<div id="freeShipNotice"
+  style="display:none;margin:0.5rem 1.2rem;
+  background:#d4edda;color:#155724;
+  padding:0.7rem;border-radius:10px;
+  font-size:0.85rem;text-align:center;
+  font-weight:600;"></div>
 <div id="checkoutTotals"
-  style="margin:0.8rem 1.2rem;"></div>
+  style="margin:0.6rem 1.2rem;"></div>
 <button class="checkout-btn"
   onclick="confirmOrder()"
-  style="margin:0 1.2rem 1.2rem;">
+  style="margin:0 1.2rem 1rem;">
 Confirmar por WhatsApp</button>
 </div>
 </div>
@@ -1407,6 +1440,7 @@ Mis Pedidos</h2>
 <div id="ordersList"></div>
 </div>
 </div>
+
 <div class="cart-sidebar" id="cartSidebar">
 <div class="cart-header">
 <h3 style="font-size:1.05rem;">Tu Carrito</h3>
@@ -1434,9 +1468,8 @@ Finalizar Compra</button>
 
 <a href="#" class="whatsapp-float"
   id="whatsappFloat" target="_blank">💬</a>
-
 <script type="module">
-import { initializeApp }
+import { initializeApp, getApps, getApp }
   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import {
   getFirestore, collection, getDocs,
@@ -1446,7 +1479,7 @@ import {
 import {
   registrarCliente, loginCliente, logoutCliente,
   escucharSesion, reenviarVerificacion,
-  recuperarPassword, refrescarVerificacion
+  recuperarPassword
 }
   from "./assets/js/auth-client.js";
 
@@ -1459,7 +1492,9 @@ messagingSenderId: "657064466850",
 appId: "1:657064466850:web:2d1340db67f790d11ebafb"
 };
 
-const app = initializeApp(firebaseConfig);
+const app = getApps().length > 0
+  ? getApp()
+  : initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 var __banner = document.getElementById('errorBanner');
@@ -1491,6 +1526,7 @@ let activeCategory = null;
 let activeBrand = null;
 let activeModel = null;
 let searchQuery = '';
+let appliedCoupon = null;
 let catalogo = { categorias: [] };
 let deliveryConfig = {
   rateKm: 1.30,
@@ -1498,10 +1534,16 @@ let deliveryConfig = {
   max: 25,
   factor: 1.2,
   storeLat: 0,
-  storeLng: 0
+  storeLng: 0,
+  freeShipActive: false,
+  freeShipBase: 40,
+  freeShipPromo: false,
+  freeShipPromoAmount: 20,
+  freeShipPromoUntil: ''
 };
 let currentDistanceKm = 0;
 let currentDeliveryCost = 0;
+let currentDeliveryFree = false;
 let currentPage = 1;
 const PRODUCTS_PER_PAGE = 25;
 let heroConfig = { visible: false };
@@ -1516,6 +1558,7 @@ let siteConfig = {
   facebook: '', instagram: '', tiktok: ''
 };
 let allReviews = [];
+let allCoupons = [];
 
 let logoClickCount = 0;
 let logoClickTimer;
@@ -1580,6 +1623,7 @@ function renderDrawerMenu() {
   });
   container.innerHTML = html;
 }
+
 window.toggleDrawerCategory = function(catIdx) {
   var list = document.getElementById('dbl-' + catIdx);
   var header = document.getElementById('dch-' + catIdx);
@@ -1671,6 +1715,7 @@ window.showAllProductsFromMenu = function() {
   renderSearchResults(products);
   toggleSidebar();
 };
+
 document.getElementById('searchInput')
   .addEventListener('input', function(e) {
     searchQuery = e.target.value
@@ -2025,6 +2070,7 @@ function applySiteConfig() {
   document.title = siteConfig.companyName +
     ' - Repuestos';
 }
+
 function renderFooterBrands(brands) {
   var container = document.getElementById('footerBrands');
   var activeBrands = brands.filter(function(b) {
@@ -2059,7 +2105,6 @@ function formatPrices(price, discount) {
     hasDiscount: discount && discount > 0
   };
 }
-
 function renderRecommended() {
   var container = document.getElementById(
     'recommendedContainer'
@@ -2079,6 +2124,7 @@ function renderRecommended() {
   });
   container.innerHTML = html;
 }
+
 function renderProductCard(p) {
   var fp = formatPrices(p.price, p.discount);
   var img = '';
@@ -2184,6 +2230,7 @@ function generateTechSheetHTML(product) {
   }
   return html;
 }
+
 window.openProductDetail = function(productId) {
   var product = products.find(function(p) {
     return p.id === productId;
@@ -2298,6 +2345,7 @@ window.openProductDetail = function(productId) {
     reviewsHtml += '¡Sé el primero!</p>';
   }
   reviewsHtml += '</div>';
+
   var stockColor = '#28a745';
   if (product.stock === 0) stockColor = '#dc3545';
   else if (product.stock < 5) stockColor = '#FFC107';
@@ -2353,6 +2401,7 @@ window.openProductDetail = function(productId) {
 };
 
 var selectedRatings = {};
+
 window.selectRating = function(productId, rating) {
   selectedRatings[productId] = rating;
   var stars = document.querySelectorAll(
@@ -2485,10 +2534,132 @@ window.updateQuantity = function(productId, change) {
   saveCart();
 };
 
+function saveCart() {
+  try {
+    localStorage.setItem(
+      'akira_cart', JSON.stringify(cart)
+    );
+  } catch(e) {}
+}
+
+window.toggleCart = function() {
+  document.getElementById('cartSidebar')
+    .classList.toggle('active');
+};
+
+window.selectCartDelivery = function(mode) {
+  deliveryMode = mode;
+  updateCartUI();
+};
+window.applyCouponCode = async function() {
+  var input = document.getElementById('couponCodeInput');
+  var msg = document.getElementById('couponMessage');
+  if (!input || !msg) return;
+  var code = input.value.trim().toUpperCase();
+  if (!code) {
+    msg.innerHTML = '<span style="color:#dc3545;">' +
+      'Ingresa un código</span>';
+    return;
+  }
+  msg.innerHTML = '<span style="color:#666;">' +
+    'Verificando...</span>';
+  try {
+    var s = await getDocs(collection(db, 'coupons'));
+    var found = null;
+    s.forEach(function(d) {
+      var data = d.data();
+      if (data.code === code) {
+        data.id = d.id;
+        found = data;
+      }
+    });
+    if (!found) {
+      msg.innerHTML = '<span style="color:#dc3545;">' +
+        'Cupón no existe</span>';
+      appliedCoupon = null;
+      updateCartUI();
+      return;
+    }
+    if (found.active === false) {
+      msg.innerHTML = '<span style="color:#dc3545;">' +
+        'Cupón desactivado</span>';
+      appliedCoupon = null;
+      updateCartUI();
+      return;
+    }
+    var hoy = new Date();
+    if (found.startDate) {
+      var inicio = new Date(found.startDate + 'T00:00:00');
+      if (inicio > hoy) {
+        msg.innerHTML = '<span style="color:#dc3545;">' +
+          'Cupón aún no vigente</span>';
+        appliedCoupon = null;
+        updateCartUI();
+        return;
+      }
+    }
+    if (found.endDate) {
+      var fin = new Date(found.endDate + 'T23:59:59');
+      if (fin < hoy) {
+        msg.innerHTML = '<span style="color:#dc3545;">' +
+          'Cupón expirado</span>';
+        appliedCoupon = null;
+        updateCartUI();
+        return;
+      }
+    }
+    if (found.maxUses > 0 &&
+        (found.uses || 0) >= found.maxUses) {
+      msg.innerHTML = '<span style="color:#dc3545;">' +
+        'Cupón agotado</span>';
+      appliedCoupon = null;
+      updateCartUI();
+      return;
+    }
+    if (found.onlyVerified) {
+      if (!currentUser) {
+        msg.innerHTML = '<span style="color:#dc3545;">' +
+          'Inicia sesión para usar este cupón</span>';
+        appliedCoupon = null;
+        updateCartUI();
+        return;
+      }
+      if (!currentUser.emailVerified) {
+        msg.innerHTML = '<span style="color:#dc3545;">' +
+          'Debes verificar tu correo primero</span>';
+        appliedCoupon = null;
+        updateCartUI();
+        return;
+      }
+    }
+    appliedCoupon = found;
+    msg.innerHTML = '<span style="color:#28a745;">' +
+      '✅ -' + found.discount + '% aplicado ' +
+      '<button onclick="removeCoupon()" style="' +
+      'background:none;border:none;color:#dc3545;' +
+      'cursor:pointer;text-decoration:underline;' +
+      'font-size:0.8rem;">Quitar</button></span>';
+    updateCartUI();
+  } catch(e) {
+    console.error(e);
+    msg.innerHTML = '<span style="color:#dc3545;">' +
+      'Error al verificar cupón</span>';
+  }
+};
+
+window.removeCoupon = function() {
+  appliedCoupon = null;
+  var input = document.getElementById('couponCodeInput');
+  var msg = document.getElementById('couponMessage');
+  if (input) input.value = '';
+  if (msg) msg.innerHTML = '';
+  updateCartUI();
+};
 function updateCartUI() {
   var cartItems = document.getElementById('cartItems');
   var cartCount = document.getElementById('cartCount');
   var cartTotals = document.getElementById('cartTotals');
+  if (!cartItems || !cartCount || !cartTotals) return;
   var totalItems = 0;
   cart.forEach(function(i) {
     totalItems += i.quantity;
@@ -2538,8 +2709,22 @@ function updateCartUI() {
   cart.forEach(function(item) {
     subtotalUsd += Number(item.price) * item.quantity;
   });
+  var descuentoAplicado = 0;
+  if (appliedCoupon) {
+    descuentoAplicado = subtotalUsd *
+      (appliedCoupon.discount / 100);
+    subtotalUsd -= descuentoAplicado;
+  }
   var ivaUsd = subtotalUsd * 0.16;
+  var totalUsd = subtotalUsd + ivaUsd;
   var th = '';
+  if (appliedCoupon) {
+    th += '<div class="cart-total-row discount">';
+    th += '<span>Descuento (' + appliedCoupon.code +
+      '):</span>';
+    th += '<span>-$' + descuentoAplicado.toFixed(2) +
+      '</span></div>';
+  }
   th += '<div class="cart-total-row">';
   th += '<span>Subtotal:</span>';
   th += '<span>$' + subtotalUsd.toFixed(2) +
@@ -2549,24 +2734,11 @@ function updateCartUI() {
   th += '<span>$' + ivaUsd.toFixed(2) +
     '</span></div>';
   th += '<div class="cart-total-row total">';
-  th += '<span>TOTAL (sin delivery):</span>';
-  th += '<span>$' + (subtotalUsd + ivaUsd).toFixed(2) +
+  th += '<span>TOTAL:</span>';
+  th += '<span>$' + totalUsd.toFixed(2) +
     '</span></div>';
   cartTotals.innerHTML = th;
 }
-
-function saveCart() {
-  try {
-    localStorage.setItem(
-      'akira_cart', JSON.stringify(cart)
-    );
-  } catch(e) {}
-}
-
-window.toggleCart = function() {
-  document.getElementById('cartSidebar')
-    .classList.toggle('active');
-};
 window.switchToLogin = function() {
   closeModal('registerModal');
   document.getElementById('loginModal')
@@ -2790,7 +2962,13 @@ async function showMyOrders() {
         html += 'color:#dc3545;font-size:1rem;">';
         html += 'Total: $' +
           Number(o.total || 0).toFixed(2);
-        html += '</div></div>';
+        html += '</div>';
+        if (o.status === 'pending') {
+          html += '<button class="order-cancel-btn" ';
+          html += 'onclick="cancelarPedido(\'' + o.id +
+            '\')">Cancelar pedido</button>';
+        }
+        html += '</div>';
       });
       list.innerHTML = html;
     }
@@ -2800,18 +2978,37 @@ async function showMyOrders() {
     alert('Error: ' + error.message);
   }
 }
+window.cancelarPedido = async function(orderId) {
+  if (!currentUser) return;
+  if (!confirm('¿Cancelar este pedido? Esta acción no ' +
+      'se puede deshacer.')) return;
+  try {
+    await updateDoc(doc(db, 'orders', orderId), {
+      status: 'cancelled',
+      cancelledBy: 'cliente',
+      cancelledAt: new Date().toISOString()
+    });
+    alert('✅ Pedido cancelado');
+    showMyOrders();
+  } catch(e) {
+    alert('Error al cancelar: ' + e.message);
+  }
+};
 
 function updateHeaderButtons() {
   var accountText = document.getElementById('accountText');
   var accountIcon = document.getElementById('accountIcon');
+  if (!accountText) return;
   if (currentUser) {
     accountText.textContent =
       currentUser.name.split(' ')[0];
-    accountIcon.textContent =
-      currentUser.name.charAt(0).toUpperCase();
+    if (accountIcon) {
+      accountIcon.textContent =
+        currentUser.name.charAt(0).toUpperCase();
+    }
   } else {
     accountText.textContent = 'Cuenta';
-    accountIcon.textContent = '👤';
+    if (accountIcon) accountIcon.textContent = '👤';
   }
 }
 
@@ -2860,6 +3057,7 @@ window.selectCheckoutDelivery = function(mode) {
   if (mode === 'pickup') {
     currentDeliveryCost = 0;
     currentDistanceKm = 0;
+    currentDeliveryFree = false;
   }
   updateCheckoutTotals();
 };
@@ -2912,6 +3110,7 @@ window.getLocation = function() {
           'de entrega. Solo hasta ' + maxKm + ' km.';
         currentDeliveryCost = 0;
         currentDistanceKm = 0;
+        currentDeliveryFree = false;
         updateCheckoutTotals();
         return;
       }
@@ -2929,32 +3128,79 @@ window.getLocation = function() {
     { enableHighAccuracy: true, timeout: 10000 }
   );
 };
+function esPromoVigente() {
+  if (!deliveryConfig.freeShipActive) return false;
+  if (!deliveryConfig.freeShipPromo) return false;
+  if (!deliveryConfig.freeShipPromoUntil) return false;
+  var hoy = new Date();
+  var fin = new Date(
+    deliveryConfig.freeShipPromoUntil + 'T23:59:59'
+  );
+  return fin >= hoy;
+}
+
+function calcularDeliveryFree(subtotal) {
+  if (!deliveryConfig.freeShipActive) return false;
+  if (esPromoVigente()) {
+    var umbralPromo = deliveryConfig.freeShipPromoAmount || 0;
+    if (umbralPromo === 0) return true;
+    return subtotal >= umbralPromo;
+  }
+  var umbralBase = deliveryConfig.freeShipBase || 40;
+  return subtotal >= umbralBase;
+}
 
 function updateCheckoutTotals() {
-  var subtotalUsd = 0;
+  var subtotalBase = 0;
   cart.forEach(function(item) {
-    subtotalUsd += Number(item.price) * item.quantity;
+    subtotalBase += Number(item.price) * item.quantity;
   });
-  var ivaUsd = subtotalUsd * 0.16;
+  var descuento = 0;
+  if (appliedCoupon) {
+    descuento = subtotalBase *
+      (appliedCoupon.discount / 100);
+    subtotalBase -= descuento;
+  }
+  var ivaUsd = subtotalBase * 0.16;
   var deliveryFee = 0;
   if (checkoutDeliveryMode === 'delivery') {
     deliveryFee = currentDeliveryCost;
   }
-  var totalUsd = subtotalUsd + ivaUsd + deliveryFee;
+  var subtotalConIva = subtotalBase + ivaUsd;
+  var esGratis = checkoutDeliveryMode === 'delivery'
+    && currentDistanceKm > 0
+    && calcularDeliveryFree(subtotalConIva);
+  currentDeliveryFree = esGratis;
+  if (esGratis) deliveryFee = 0;
+  var totalUsd = subtotalConIva + deliveryFee;
   var html = '';
+  if (appliedCoupon) {
+    html += '<div class="cart-total-row discount">';
+    html += '<span>Descuento (' + appliedCoupon.code +
+      '):</span>';
+    html += '<span>-$' + descuento.toFixed(2) +
+      '</span></div>';
+  }
   html += '<div class="cart-total-row">';
   html += '<span>Subtotal:</span>';
-  html += '<span>$' + subtotalUsd.toFixed(2) +
+  html += '<span>$' + subtotalBase.toFixed(2) +
     '</span></div>';
   html += '<div class="cart-total-row">';
   html += '<span>IVA (16%):</span>';
   html += '<span>$' + ivaUsd.toFixed(2) +
     '</span></div>';
-  if (deliveryFee > 0) {
-    html += '<div class="cart-total-row">';
-    html += '<span>Delivery:</span>';
-    html += '<span>$' + deliveryFee.toFixed(2) +
-      '</span></div>';
+  if (checkoutDeliveryMode === 'delivery' &&
+      currentDeliveryCost > 0) {
+    if (esGratis) {
+      html += '<div class="cart-total-row discount">';
+      html += '<span>🎁 Delivery:</span>';
+      html += '<span>GRATIS</span></div>';
+    } else {
+      html += '<div class="cart-total-row">';
+      html += '<span>Delivery:</span>';
+      html += '<span>$' + currentDeliveryCost.toFixed(2) +
+        '</span></div>';
+    }
   }
   html += '<div class="cart-total-row total">';
   html += '<span>TOTAL:</span>';
@@ -2962,6 +3208,31 @@ function updateCheckoutTotals() {
     '</span></div>';
   document.getElementById('checkoutTotals')
     .innerHTML = html;
+
+  var notice = document.getElementById('freeShipNotice');
+  if (!notice) return;
+  if (esGratis) {
+    notice.style.display = 'block';
+    notice.innerHTML = '🎁 ¡Tu delivery es GRATIS!';
+  } else if (deliveryConfig.freeShipActive
+      && checkoutDeliveryMode === 'delivery'
+      && currentDistanceKm > 0) {
+    var umbral = esPromoVigente()
+      ? (deliveryConfig.freeShipPromoAmount || 0)
+      : (deliveryConfig.freeShipBase || 40);
+    if (umbral > 0 && subtotalConIva < umbral) {
+      var faltan = umbral - subtotalConIva;
+      notice.style.display = 'block';
+      notice.style.background = '#fff3cd';
+      notice.style.color = '#856404';
+      notice.innerHTML = 'Te faltan $' +
+        faltan.toFixed(2) + ' para delivery GRATIS';
+    } else {
+      notice.style.display = 'none';
+    }
+  } else {
+    notice.style.display = 'none';
+  }
 }
 window.confirmOrder = async function() {
   if (!currentUser) {
@@ -2969,21 +3240,32 @@ window.confirmOrder = async function() {
     return;
   }
   if (checkoutDeliveryMode === 'delivery') {
-    if (currentDeliveryCost <= 0) {
+    if (currentDeliveryCost <= 0 && !currentDeliveryFree) {
       alert('Primero debes obtener tu ubicación');
       return;
     }
   }
-  var subtotalUsd = 0;
+  var subtotalBase = 0;
   cart.forEach(function(item) {
-    subtotalUsd += Number(item.price) * item.quantity;
+    subtotalBase += Number(item.price) * item.quantity;
   });
-  var ivaUsd = subtotalUsd * 0.16;
+  var descuento = 0;
+  if (appliedCoupon) {
+    descuento = subtotalBase *
+      (appliedCoupon.discount / 100);
+    subtotalBase -= descuento;
+  }
+  var ivaUsd = subtotalBase * 0.16;
   var deliveryFee = 0;
   if (checkoutDeliveryMode === 'delivery') {
     deliveryFee = currentDeliveryCost;
   }
-  var totalUsd = subtotalUsd + ivaUsd + deliveryFee;
+  var subtotalConIva = subtotalBase + ivaUsd;
+  var esGratis = checkoutDeliveryMode === 'delivery'
+    && currentDistanceKm > 0
+    && calcularDeliveryFree(subtotalConIva);
+  if (esGratis) deliveryFee = 0;
+  var totalUsd = subtotalConIva + deliveryFee;
   var orderData = {
     userId: currentUser.uid,
     userName: currentUser.name,
@@ -2998,9 +3280,12 @@ window.confirmOrder = async function() {
         price: item.price
       };
     }),
-    subtotal: subtotalUsd,
+    subtotal: subtotalBase + descuento,
+    discount: descuento,
+    couponCode: appliedCoupon ? appliedCoupon.code : null,
     iva: ivaUsd,
     deliveryFee: deliveryFee,
+    deliveryFree: esGratis,
     total: totalUsd,
     deliveryMode: checkoutDeliveryMode,
     status: 'pending',
@@ -3020,6 +3305,20 @@ window.confirmOrder = async function() {
   }
   try {
     await addDoc(collection(db, 'orders'), orderData);
+    if (appliedCoupon && appliedCoupon.id) {
+      try {
+        var couponRef = doc(db, 'coupons', appliedCoupon.id);
+        var couponDoc = await getDoc(couponRef);
+        if (couponDoc.exists()) {
+          var usesActuales = couponDoc.data().uses || 0;
+          await updateDoc(couponRef, {
+            uses: usesActuales + 1
+          });
+        }
+      } catch(errCoupon) {
+        console.error('Error actualizando cupón:', errCoupon);
+      }
+    }
     var cleanNumber = whatsappNumber.replace(/\D/g, '');
     var rawMessage = '¡Hola ' +
       siteConfig.companyName + '! Soy ' +
@@ -3030,12 +3329,24 @@ window.confirmOrder = async function() {
         (Number(item.price) * item.quantity)
         .toFixed(2) + '\n';
     });
+    if (appliedCoupon) {
+      rawMessage += '\nCupón: ' + appliedCoupon.code +
+        ' (-' + appliedCoupon.discount + '%)';
+    }
     rawMessage += '\nSubtotal: $' +
-      subtotalUsd.toFixed(2);
+      (subtotalBase + descuento).toFixed(2);
+    if (descuento > 0) {
+      rawMessage += '\nDescuento: -$' +
+        descuento.toFixed(2);
+    }
     rawMessage += '\nIVA: $' + ivaUsd.toFixed(2);
-    if (deliveryFee > 0) {
-      rawMessage += '\nDelivery: $' +
-        deliveryFee.toFixed(2);
+    if (checkoutDeliveryMode === 'delivery') {
+      if (esGratis) {
+        rawMessage += '\nDelivery: GRATIS 🎁';
+      } else if (deliveryFee > 0) {
+        rawMessage += '\nDelivery: $' +
+          deliveryFee.toFixed(2);
+      }
     }
     rawMessage += '\nTotal: $' + totalUsd.toFixed(2);
     rawMessage += '\nEntrega: ' +
@@ -3053,8 +3364,16 @@ window.confirmOrder = async function() {
       '_blank'
     );
     cart = [];
+    appliedCoupon = null;
     currentDeliveryCost = 0;
     currentDistanceKm = 0;
+    currentDeliveryFree = false;
+    var couponInput = document.getElementById(
+      'couponCodeInput'
+    );
+    if (couponInput) couponInput.value = '';
+    var couponMsg = document.getElementById('couponMessage');
+    if (couponMsg) couponMsg.innerHTML = '';
     updateCartUI();
     saveCart();
     closeModal('checkoutModal');
@@ -3064,7 +3383,6 @@ window.confirmOrder = async function() {
     alert('Error: ' + e.message);
   }
 };
-
 function renderFooter() {
   var html = '';
   html += '<div class="footer-section">';
