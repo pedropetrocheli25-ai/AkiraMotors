@@ -2800,9 +2800,15 @@ window.selectCartDelivery = function(mode) {
       'font-size:0.8rem;">Quitar</button></span>';
     updateCartUI();
   } catch(e) {
-    console.error(e);
+    console.error('Error cupón:', e);
+    var msgError = 'Error al verificar cupón.';
+    if (e.code === 'permission-denied') {
+      msgError = 'Permiso denegado. Contacta soporte.';
+    } else if (e.message) {
+      msgError = 'Error: ' + e.message;
+    }
     msg.innerHTML = '<span style="color:#dc3545;">' +
-      'Error al verificar cupón</span>';
+      msgError + '</span>';
   }
 };
 
