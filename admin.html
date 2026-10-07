@@ -126,7 +126,6 @@ body {
   grid-template-columns: 1fr 1fr 1fr 1fr;
   gap: 0.8rem;
 }
-<style>
 .admin-item {
   display: flex;
   justify-content: space-between;
@@ -284,7 +283,6 @@ body {
   color: #dc3545;
   text-decoration: none;
 }
-<style>
 .stats-grid {
   display: grid;
   grid-template-columns:
@@ -334,12 +332,13 @@ body {
 .order-status.delivered { background: #4CAF50; color: white; }
 .order-status.cancelled { background: #dc3545; color: white; }
 .driver-card {
+  display: flex;
+  flex-direction: column;
   background: #f8f8f8;
   padding: 1rem;
   border-radius: 8px;
   margin-bottom: 0.8rem;
-  flex-wrap: wrap;
-  gap: 1rem;
+  gap: 0.6rem;
 }
 .driver-card-header {
   display: flex;
@@ -347,13 +346,11 @@ body {
   align-items: center;
   flex-wrap: wrap;
   gap: 0.5rem;
-  margin-bottom: 0.6rem;
 }
 .driver-stats {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 0.5rem;
-  margin-top: 0.5rem;
 }
 .driver-stat {
   background: white;
@@ -438,7 +435,6 @@ body {
   letter-spacing: 0.5px;
   margin-bottom: 0.5rem;
 }
-<style>
 .chip-list {
   display: flex;
   flex-wrap: wrap;
@@ -678,8 +674,7 @@ body {
 </aside>
 
 <div class="admin-content">
-
-<div class="admin-section active" id="section-dashboard">
+  <div class="admin-section active" id="section-dashboard">
 <h2 class="section-title">Dashboard</h2>
 <div class="stats-grid">
 <div class="stat-card">
@@ -954,37 +949,71 @@ activo).
 El costo de delivery se calcula por la distancia
 entre tu tienda y el cliente.
 </div>
+
 <div class="admin-card">
-<h3>Tarifas</h3>
+<h3>🏪 Ubicación de tu tienda</h3>
+<div class="alert-info">
+Ingresa las coordenadas GPS de tu tienda.
+Si no las sabes: abre Google Maps, haz clic
+derecho sobre tu local → clic en las coordenadas
+que aparecen → se copian al portapapeles.
+</div>
 <div class="form-row">
 <div class="form-group">
-<label>Tarifa por km ($)</label>
+<label>Latitud *</label>
+<input type="number" id="storeLat"
+  step="0.0000001"
+  placeholder="Ej: 8.1226000">
+</div>
+<div class="form-group">
+<label>Longitud *</label>
+<input type="number" id="storeLng"
+  step="0.0000001"
+  placeholder="Ej: -63.5497000">
+</div>
+</div>
+<div class="map-preview" id="storePreview">
+📍 Configura tus coordenadas para ver el preview
+</div>
+<button type="button"
+  class="btn btn-secondary"
+  onclick="openStoreInMaps()"
+  style="margin-top:0.8rem;">
+🗺️ Ver tienda en Google Maps</button>
+</div>
+
+<div class="admin-card">
+<h3>💵 Tarifas</h3>
+<div class="form-row">
+<div class="form-group">
+<label>Tarifa por km ($) *</label>
 <input type="number" id="deliveryRateKm"
-  step="0.01" value="1.30">
+  step="0.01" value="1.30" min="0.01">
 </div>
 <div class="form-group">
 <label>Mínimo a cobrar ($)</label>
 <input type="number" id="deliveryMin"
-  step="0.01" value="3">
+  step="0.01" value="3" min="0">
 </div>
 </div>
 <div class="form-row">
 <div class="form-group">
 <label>Máximo de distancia (km)</label>
 <input type="number" id="deliveryMax"
-  step="0.1" value="25">
+  step="0.1" value="25" min="0.1">
 </div>
 <div class="form-group">
 <label>Factor de ajuste</label>
 <input type="number" id="deliveryFactor"
-  step="0.01" value="1.2">
+  step="0.01" value="1.2" min="1">
 <div style="font-size:0.75rem;
   color:#666;margin-top:0.3rem;">
-Recomendado: 1.2
+Recomendado: 1.2 (compensa rutas no rectas)
 </div>
 </div>
 </div>
 </div>
+
 <div class="admin-card">
 <h3>🎁 Delivery Gratis</h3>
 <div class="alert-info">
@@ -992,6 +1021,7 @@ Configura cuándo el delivery sale gratis según
 el monto del pedido. El switch principal activa
 o desactiva todo el sistema.
 </div>
+
 <div class="switch-row">
 <label for="freeShipActive">
 Activar sistema de Delivery Gratis
@@ -1001,10 +1031,11 @@ Activar sistema de Delivery Gratis
 <span class="slider"></span>
 </label>
 </div>
+
 <div class="form-group" style="margin-top:1rem;">
 <label>Umbral base ($)</label>
 <input type="number" id="freeShipBase"
-  step="0.01" value="40"
+  step="0.01" value="40" min="0"
   placeholder="Ej: 40">
 <div style="font-size:0.75rem;
   color:#666;margin-top:0.3rem;">
@@ -1012,6 +1043,7 @@ Delivery gratis con pedidos superiores a este
 monto.
 </div>
 </div>
+
 <div class="switch-row">
 <label for="freeShipPromo">
 Activar promoción temporal
@@ -1021,12 +1053,13 @@ Activar promoción temporal
 <span class="slider"></span>
 </label>
 </div>
+
 <div class="form-row" id="promoFields"
   style="display:none;">
 <div class="form-group">
 <label>Umbral promoción ($)</label>
 <input type="number" id="freeShipPromoAmount"
-  step="0.01" value="20">
+  step="0.01" value="20" min="0">
 <div style="font-size:0.75rem;
   color:#666;margin-top:0.3rem;">
 Pon 0 para delivery gratis a TODOS.
@@ -1037,9 +1070,11 @@ Pon 0 para delivery gratis a TODOS.
 <input type="date" id="freeShipPromoUntil">
 </div>
 </div>
+
 <div class="alert-success" id="freeShipPreview"
   style="display:none;"></div>
 </div>
+
 <button class="btn btn-primary"
   onclick="saveDeliveryConfig()"
   style="width:100%;padding:1rem;">
@@ -1186,6 +1221,7 @@ Segoe UI</option>
 💾 Guardar</button>
 </div>
 </div>
+
 <div class="admin-section" id="section-settings">
 <h2 class="section-title">⚙️ Configuración</h2>
 <div class="admin-card">
@@ -1232,7 +1268,6 @@ Tasa de cambio del dólar según el BCV.
 
 </div>
 </div>
-
 <div class="modal" id="productModal">
 <div class="modal-content">
 <button class="modal-close"
@@ -1356,6 +1391,7 @@ Esta información es solo para ti.
   style="display:flex;flex-wrap:wrap;
   gap:0.3rem;margin-top:0.5rem;"></div>
 </div>
+
 <div class="form-section">
 <h3>Compatibilidad Vehicular</h3>
 <div class="form-row-4">
@@ -1483,6 +1519,7 @@ Máximo 5 imágenes. La primera será la principal.
 <div class="modal-content"
   id="orderDetailContent"></div>
 </div>
+
 <script>
 window.showSection = function(sectionId, event) {
   document.querySelectorAll('.admin-section')
@@ -1517,8 +1554,20 @@ window.showSection = function(sectionId, event) {
     loadDeliveryConfig();
   }
   if (sectionId === 'coupons' &&
-      typeof renderCoupons === 'function') {
-    renderCoupons();
+      typeof loadCoupons === 'function') {
+    loadCoupons();
+  }
+  if (sectionId === 'products' &&
+      typeof loadProducts === 'function') {
+    loadProducts();
+  }
+  if (sectionId === 'brands' &&
+      typeof loadBrands === 'function') {
+    loadBrands();
+  }
+  if (sectionId === 'reviews' &&
+      typeof loadReviews === 'function') {
+    loadReviews();
   }
 };
 
@@ -1552,6 +1601,16 @@ if (!firebase.apps.length) {
 const db = firebase.firestore();
 </script>
 <script>
+window.escapeHTML = function(str) {
+  if (str == null) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+};
+
 let products = [];
 let brands = [];
 let banners = [];
@@ -1644,7 +1703,8 @@ window.renderCatalogo = function() {
   catalogo.categorias.forEach(function(cat, ci) {
     html += '<div class="cat-card">';
     html += '<div class="cat-header">';
-    html += '<div class="cat-name">' + cat.nombre;
+    html += '<div class="cat-name">' +
+      escapeHTML(cat.nombre);
     html += '</div>';
     html += '<div class="cat-controls">';
     html += '<button class="alt" onclick="' +
@@ -1663,7 +1723,7 @@ window.renderCatalogo = function() {
     html += '<div class="chip-list">';
     var subs = cat.subcategorias || [];
     subs.forEach(function(sub, si) {
-      html += '<span class="chip">' + sub;
+      html += '<span class="chip">' + escapeHTML(sub);
       html += '<button onclick="' +
         'eliminarSubcategoria(' + ci + ',' +
         si + ')">×</button></span>';
@@ -1684,14 +1744,14 @@ window.renderCatalogo = function() {
     vehiculos.forEach(function(v, vi) {
       html += '<div class="brand-block">';
       html += '<div class="brand-block-header">';
-      html += '<span>' + v.marca + '</span>';
+      html += '<span>' + escapeHTML(v.marca) + '</span>';
       html += '<button onclick="' +
         'eliminarMarca(' + ci + ',' + vi +
         ')">×</button>';
       html += '</div>';
       html += '<div class="chip-list">';
       (v.modelos || []).forEach(function(m, mi) {
-        html += '<span class="chip">' + m;
+        html += '<span class="chip">' + escapeHTML(m);
         html += '<button onclick="' +
           'eliminarModelo(' + ci + ',' + vi +
           ',' + mi + ')">×</button></span>';
@@ -1716,8 +1776,7 @@ window.renderCatalogo = function() {
   });
   container.innerHTML = html;
 };
-</script>
-<script>
+
 window.addCategoria = async function() {
   var input = document.getElementById('newCatName');
   var nombre = input.value.trim();
@@ -1870,11 +1929,13 @@ async function loadDeliveryConfig() {
 function updateStorePreview() {
   var preview = document.getElementById('storePreview');
   if (!preview) return;
-  var lat = document.getElementById('storeLat').value.trim();
-  var lng = document.getElementById('storeLng').value.trim();
+  var latEl = document.getElementById('storeLat');
+  var lngEl = document.getElementById('storeLng');
+  var lat = latEl ? latEl.value.trim() : '';
+  var lng = lngEl ? lngEl.value.trim() : '';
   if (lat && lng) {
     preview.innerHTML = '📍 <strong>Tu tienda:</strong>' +
-      '<br>' + lat + ', ' + lng;
+      '<br>' + escapeHTML(lat) + ', ' + escapeHTML(lng);
   } else {
     preview.innerHTML =
       '📍 Configura tus coordenadas para ver el preview';
@@ -1891,21 +1952,25 @@ window.togglePromoFields = function() {
 window.updateFreeShipPreview = function() {
   var preview = document.getElementById('freeShipPreview');
   if (!preview) return;
-  var active = document.getElementById('freeShipActive')
-    .checked;
+  var activeEl = document.getElementById('freeShipActive');
+  if (!activeEl) return;
+  var active = activeEl.checked;
   if (!active) {
     preview.style.display = 'none';
     return;
   }
   preview.style.display = 'block';
-  var base = parseFloat(document.getElementById(
-    'freeShipBase').value) || 0;
-  var promoActive = document.getElementById('freeShipPromo')
-    .checked;
-  var promoAmt = parseFloat(document.getElementById(
-    'freeShipPromoAmount').value) || 0;
-  var promoUntil = document.getElementById('freeShipPromoUntil')
-    .value;
+  var baseEl = document.getElementById('freeShipBase');
+  var base = baseEl ? parseFloat(baseEl.value) || 0 : 0;
+  var promoEl = document.getElementById('freeShipPromo');
+  var promoActive = promoEl ? promoEl.checked : false;
+  var promoAmtEl = document.getElementById(
+    'freeShipPromoAmount');
+  var promoAmt = promoAmtEl ?
+    parseFloat(promoAmtEl.value) || 0 : 0;
+  var promoUntilEl = document.getElementById(
+    'freeShipPromoUntil');
+  var promoUntil = promoUntilEl ? promoUntilEl.value : '';
   var hoy = new Date();
   var promoVigente = false;
   if (promoActive && promoUntil) {
@@ -1932,46 +1997,64 @@ window.updateFreeShipPreview = function() {
   }
   preview.innerHTML = html;
 };
-</script>
-<script>
+
 window.saveDeliveryConfig = async function() {
-  var rateKm = parseFloat(document.getElementById(
-    'deliveryRateKm').value);
-  var min = parseFloat(document.getElementById(
-    'deliveryMin').value);
-  var max = parseFloat(document.getElementById(
-    'deliveryMax').value);
-  var factor = parseFloat(document.getElementById(
-    'deliveryFactor').value);
-  var storeLat = document.getElementById('storeLat')
-    .value.trim();
-  var storeLng = document.getElementById('storeLng')
-    .value.trim();
-  var freeShipActive = document.getElementById(
-    'freeShipActive').checked;
-  var freeShipBase = parseFloat(document.getElementById(
-    'freeShipBase').value) || 40;
-  var freeShipPromo = document.getElementById(
-    'freeShipPromo').checked;
-  var freeShipPromoAmount = parseFloat(document.getElementById(
-    'freeShipPromoAmount').value) || 0;
-  var freeShipPromoUntil = document.getElementById(
-    'freeShipPromoUntil').value || '';
-  if (!rateKm || rateKm <= 0) {
-    alert('Ingresa una tarifa válida');
+  function val(id, def) {
+    var el = document.getElementById(id);
+    return el ? el.value : (def !== undefined ? def : '');
+  }
+  function chk(id) {
+    var el = document.getElementById(id);
+    return el ? el.checked : false;
+  }
+
+  var rateKm = parseFloat(val('deliveryRateKm', '0'));
+  var min = parseFloat(val('deliveryMin', '0'));
+  var max = parseFloat(val('deliveryMax', '999'));
+  var factor = parseFloat(val('deliveryFactor', '1.2'));
+  var storeLat = parseFloat(val('storeLat', ''));
+  var storeLng = parseFloat(val('storeLng', ''));
+
+  var freeShipActive = chk('freeShipActive');
+  var freeShipBase = parseFloat(val('freeShipBase', '40')) || 0;
+  var freeShipPromo = chk('freeShipPromo');
+  var freeShipPromoAmount = parseFloat(
+    val('freeShipPromoAmount', '0')
+  ) || 0;
+  var freeShipPromoUntil = val('freeShipPromoUntil', '');
+
+  if (isNaN(rateKm) || rateKm <= 0) {
+    alert('⚠️ Ingresa una tarifa por km válida (mayor a 0).');
     return;
   }
-  if (!storeLat || !storeLng) {
-    alert('Ingresa las coordenadas de tu tienda');
+  if (isNaN(storeLat) || isNaN(storeLng) ||
+      storeLat === 0 || storeLng === 0) {
+    alert('⚠️ Ingresa las coordenadas GPS de tu tienda.\n\n' +
+          'Si no las tienes, usa Google Maps y copia ' +
+          'latitud y longitud.');
     return;
   }
+  if (isNaN(min) || min < 0) min = 0;
+  if (isNaN(max) || max <= 0) max = 25;
+  if (isNaN(factor) || factor < 1) factor = 1.2;
+
+  if (freeShipPromo && !freeShipPromoUntil) {
+    var ok = confirm(
+      '⚠️ Activaste "promoción temporal" pero no ' +
+      'pusiste fecha de fin.\n\n' +
+      'La promo NO se aplicará hasta que pongas una ' +
+      'fecha.\n\n¿Guardar de todas formas?'
+    );
+    if (!ok) return;
+  }
+
   var config = {
     rateKm: rateKm,
-    min: min || 0,
-    max: max || 999,
-    factor: factor || 1,
-    storeLat: parseFloat(storeLat),
-    storeLng: parseFloat(storeLng),
+    min: min,
+    max: max,
+    factor: factor,
+    storeLat: storeLat,
+    storeLng: storeLng,
     freeShipActive: freeShipActive,
     freeShipBase: freeShipBase,
     freeShipPromo: freeShipPromo,
@@ -1979,28 +2062,32 @@ window.saveDeliveryConfig = async function() {
     freeShipPromoUntil: freeShipPromoUntil,
     updatedAt: new Date().toISOString()
   };
+
   try {
-    await db.collection('settings').doc('deliveryConfig')
-      .set(config);
+    await db.collection('settings')
+      .doc('deliveryConfig').set(config);
     updateStorePreview();
     updateFreeShipPreview();
-    alert('✅ Configuración guardada');
+    alert('✅ Configuración de delivery guardada');
   } catch(e) {
-    alert('Error: ' + e.message);
+    console.error('Error guardando delivery:', e);
+    alert('❌ Error al guardar: ' + e.message);
   }
 };
 
 window.openStoreInMaps = function() {
-  var lat = document.getElementById('storeLat')
-    .value.trim();
-  var lng = document.getElementById('storeLng')
-    .value.trim();
+  var latEl = document.getElementById('storeLat');
+  var lngEl = document.getElementById('storeLng');
+  var lat = latEl ? latEl.value.trim() : '';
+  var lng = lngEl ? lngEl.value.trim() : '';
   if (!lat || !lng) {
     alert('Ingresa primero las coordenadas');
     return;
   }
   window.open(
-    'https://www.google.com/maps?q=' + lat + ',' + lng,
+    'https://www.google.com/maps?q=' +
+    encodeURIComponent(lat) + ',' +
+    encodeURIComponent(lng),
     '_blank'
   );
 };
@@ -2093,6 +2180,11 @@ window.saveWhatsapp = async function() {
   var num = document.getElementById('whatsappNumber')
     .value.trim();
   if (!num) { alert('Ingresa número'); return; }
+  if (!/^[0-9+\-\s]{7,20}$/.test(num)) {
+    alert('⚠️ Número inválido. Usa solo dígitos. ' +
+      'Ejemplo: 584148700616');
+    return;
+  }
   try {
     await db.collection('settings').doc('whatsapp')
       .set({ number: num });
@@ -2111,13 +2203,12 @@ async function loadLogo() {
       );
       if (preview) {
         preview.innerHTML = '<img src="' +
-          l.data().image + '">';
+          escapeHTML(l.data().image) + '">';
       }
     }
   } catch(e) { console.log(e); }
 }
-</script>
-<script>
+
 async function loadBanners() {
   try {
     var b = await db.collection('settings')
@@ -2138,7 +2229,8 @@ function renderBannerPreviews() {
   var html = '';
   banners.forEach(function(b, i) {
     html += '<div style="position:relative;">';
-    html += '<img src="' + b + '" style="width:100%;';
+    html += '<img src="' + escapeHTML(b) +
+      '" style="width:100%;';
     html += 'height:120px;object-fit:cover;';
     html += 'border-radius:8px;">';
     html += '<button onclick="removeBanner(' + i + ')"';
@@ -2234,8 +2326,7 @@ window.saveSiteConfig = async function() {
     alert('✅ Guardado');
   } catch(e) { alert('Error: ' + e.message); }
 };
-</script>
-<script>
+
 async function loadHero() {
   try {
     var h = await db.collection('settings')
@@ -2266,7 +2357,7 @@ async function loadHero() {
       if (heroConfig.backgroundImage) {
         document.getElementById('heroBgPreview')
           .innerHTML = '<img src="' +
-          heroConfig.backgroundImage + '">';
+          escapeHTML(heroConfig.backgroundImage) + '">';
       }
     }
   } catch(e) { console.log(e); }
@@ -2322,8 +2413,7 @@ window.saveHero = async function() {
     refreshPreview();
   } catch(e) { alert('Error: ' + e.message); }
 };
-</script>
-<script>
+
 async function loadBrands() {
   try {
     var s = await db.collection('brands').get();
@@ -2352,11 +2442,12 @@ function renderAdminBrands() {
   var html = '';
   brands.forEach(function(b) {
     var thumb = b.image ?
-      '<img src="' + b.image + '">' : '';
+      '<img src="' + escapeHTML(b.image) + '">' : '';
     html += '<div class="admin-item">';
     html += '<div class="admin-info">';
     html += '<div class="admin-thumb">' + thumb + '</div>';
-    html += '<div><strong>' + b.name + '</strong><br>';
+    html += '<div><strong>' + escapeHTML(b.name) +
+      '</strong><br>';
     html += '<small style="color:#666">' +
       (b.image ? 'Con imagen' : 'Sin imagen') +
       '</small></div></div>';
@@ -2380,7 +2471,7 @@ window.editBrandImage = function(brandId) {
     .value = b.image || '';
   if (b.image) {
     document.getElementById('brandImagePreview')
-      .innerHTML = '<img src="' + b.image + '">';
+      .innerHTML = '<img src="' + escapeHTML(b.image) + '">';
   } else {
     document.getElementById('brandImagePreview')
       .innerHTML = '<div style="color:#999;">' +
@@ -2464,7 +2555,7 @@ function renderAdminProducts(filter) {
   filtered.forEach(function(p) {
     var imgs = p.images || (p.image ? [p.image] : []);
     var th = imgs.length > 0 ?
-      '<img src="' + imgs[0] + '">' : '';
+      '<img src="' + escapeHTML(imgs[0]) + '">' : '';
     var offerText = p.discount && p.discount > 0 ?
       ' | -' + p.discount + '%' : '';
     var recText = p.recommended ?
@@ -2473,10 +2564,11 @@ function renderAdminProducts(filter) {
     html += '<div class="admin-item">';
     html += '<div class="admin-info">';
     html += '<div class="admin-thumb">' + th + '</div>';
-    html += '<div><strong>' + p.name + '</strong>';
+    html += '<div><strong>' + escapeHTML(p.name) +
+      '</strong>';
     html += recText + '<br>';
     html += '<small style="color:#dc3545;">Código: ';
-    html += (p.code || 'N/A') + '</small><br>';
+    html += escapeHTML(p.code || 'N/A') + '</small><br>';
     html += '<small style="color:#666;">$' + price;
     html += offerText + ' | Stock: ' + p.stock;
     html += '</small></div></div>';
@@ -2496,8 +2588,7 @@ document.getElementById('adminProductSearch')
   .addEventListener('input', function(e) {
     renderAdminProducts(e.target.value);
   });
-</script>
-<script>
+
 window.openAddProductModal = function() {
   populateCategorySelect();
   currentProductImages = [];
@@ -2590,8 +2681,7 @@ window.editProduct = function(productId) {
   document.getElementById('productModal')
     .classList.add('active');
 };
-</script>
-<script>
+
 function renderProductImages() {
   var c = document.getElementById('productImagesContainer');
   if (currentProductImages.length === 0) {
@@ -2602,7 +2692,8 @@ function renderProductImages() {
   var html = '';
   currentProductImages.forEach(function(img, i) {
     html += '<div style="position:relative;">';
-    html += '<img src="' + img + '" style="width:80px;';
+    html += '<img src="' + escapeHTML(img) +
+      '" style="width:80px;';
     html += 'height:80px;object-fit:cover;';
     html += 'border-radius:8px;">';
     html += '<button type="button" ';
@@ -2646,17 +2737,73 @@ window.saveProduct = async function(event) {
   event.preventDefault();
   var editId = document.getElementById('editProductId')
     .value;
+  var code = document.getElementById('productCode')
+    .value.trim();
+  var name = document.getElementById('productName')
+    .value.trim();
+  var description = document.getElementById(
+    'productDescription').value.trim();
+  var category = document.getElementById('productCategory')
+    .value;
   var costPrice = parseFloat(document.getElementById(
-    'productCostPrice').value) || 0;
+    'productCostPrice').value);
   var margin = parseFloat(document.getElementById(
-    'productMargin').value) || 0;
+    'productMargin').value);
   var salePrice = parseFloat(document.getElementById(
-    'productPrice').value) || 0;
+    'productPrice').value);
   var discount = parseFloat(document.getElementById(
     'productDiscount').value) || 0;
+  var stock = parseInt(document.getElementById(
+    'productStock').value);
+
+  if (!code) {
+    alert('⚠️ El código del producto es obligatorio.');
+    return;
+  }
+  if (!name) {
+    alert('⚠️ El nombre del producto es obligatorio.');
+    return;
+  }
+  if (!description) {
+    alert('⚠️ La descripción es obligatoria.');
+    return;
+  }
+  if (!category) {
+    alert('⚠️ Debes seleccionar una categoría.');
+    return;
+  }
+  if (isNaN(costPrice) || costPrice < 0) {
+    alert('⚠️ El costo debe ser mayor o igual a 0.');
+    return;
+  }
+  if (isNaN(margin) || margin < 0 || margin >= 100) {
+    alert('⚠️ El margen debe estar entre 0 y 99.99%.');
+    return;
+  }
+  if (isNaN(salePrice) || salePrice <= 0) {
+    alert('⚠️ El precio de venta debe ser mayor a 0.');
+    return;
+  }
+  if (isNaN(discount) || discount < 0 || discount > 100) {
+    alert('⚠️ El descuento debe estar entre 0 y 100.');
+    return;
+  }
+  if (isNaN(stock) || stock < 0) {
+    alert('⚠️ El stock no puede ser negativo.');
+    return;
+  }
+
+  var codigoDuplicado = products.some(function(p) {
+    return p.code === code && p.id !== editId;
+  });
+  if (codigoDuplicado) {
+    alert('⚠️ Ya existe otro producto con el código "' +
+      code + '". Usa uno diferente.');
+    return;
+  }
+
   var attributes = {
-    category: document.getElementById('productCategory')
-      .value,
+    category: category,
     subcategory: document.getElementById(
       'productSubcategory').value,
     brand: document.getElementById('productBrand').value,
@@ -2669,19 +2816,16 @@ window.saveProduct = async function(event) {
       .value
   };
   var productData = {
-    code: document.getElementById('productCode').value,
+    code: code,
     brand: document.getElementById('productBrand').value,
-    name: document.getElementById('productName').value,
-    description: document.getElementById(
-      'productDescription').value,
+    name: name,
+    description: description,
     costPrice: costPrice,
     margin: margin,
     price: salePrice,
     discount: discount,
-    stock: parseInt(document.getElementById(
-      'productStock').value),
-    category: document.getElementById('productCategory')
-      .value,
+    stock: stock,
+    category: category,
     subcategory: document.getElementById(
       'productSubcategory').value,
     recommended: document.getElementById(
@@ -2709,7 +2853,7 @@ window.saveProduct = async function(event) {
     await loadDashboard();
     closeModal('productModal');
     alert('✅ Producto guardado');
-  } catch(e) { alert('Error: ' + e.message); }
+  } catch(e) { alert('❌ Error: ' + e.message); }
 };
 
 window.deleteProduct = async function(id) {
@@ -2721,14 +2865,14 @@ window.deleteProduct = async function(id) {
     alert('✅ Eliminado');
   } catch(e) { alert('Error: ' + e.message); }
 };
-</script>
-<script>
+
 function populateCategorySelect() {
   var s = document.getElementById('productCategory');
   s.innerHTML = '<option value="">Seleccionar...</option>';
   catalogo.categorias.forEach(function(c) {
-    s.innerHTML += '<option value="' + c.nombre +
-      '">' + c.nombre + '</option>';
+    s.innerHTML += '<option value="' +
+      escapeHTML(c.nombre) +
+      '">' + escapeHTML(c.nombre) + '</option>';
   });
 }
 
@@ -2743,8 +2887,9 @@ window.onProductCategoryChange = function() {
   });
   if (catObj && catObj.subcategorias) {
     catObj.subcategorias.forEach(function(sub) {
-      subSel.innerHTML += '<option value="' + sub +
-        '">' + sub + '</option>';
+      subSel.innerHTML += '<option value="' +
+        escapeHTML(sub) + '">' + escapeHTML(sub) +
+        '</option>';
     });
   }
   var brandSel = document.getElementById(
@@ -2755,7 +2900,8 @@ window.onProductCategoryChange = function() {
   if (catObj && catObj.vehiculos) {
     catObj.vehiculos.forEach(function(v) {
       brandSel.innerHTML += '<option value="' +
-        v.marca + '">' + v.marca + '</option>';
+        escapeHTML(v.marca) + '">' +
+        escapeHTML(v.marca) + '</option>';
     });
   }
   var modelSel = document.getElementById(
@@ -2783,8 +2929,9 @@ window.onCompatBrandChange = function() {
   });
   if (!v) return;
   (v.modelos || []).forEach(function(m) {
-    modelSel.innerHTML += '<option value="' + m +
-      '">' + m + '</option>';
+    modelSel.innerHTML += '<option value="' +
+      escapeHTML(m) + '">' + escapeHTML(m) +
+      '</option>';
   });
 };
 
@@ -2838,10 +2985,11 @@ function renderCompatibility() {
     html += 'border:1px solid #eee;';
     html += 'display:flex;justify-content:space-between;';
     html += 'align-items:center;">';
-    html += '<div><strong>' + x.brand + ' ' + x.model;
+    html += '<div><strong>' + escapeHTML(x.brand) + ' ' +
+      escapeHTML(x.model);
     html += '</strong>';
-    if (x.years) html += ' · ' + x.years;
-    if (x.engine) html += ' · ' + x.engine;
+    if (x.years) html += ' · ' + escapeHTML(x.years);
+    if (x.engine) html += ' · ' + escapeHTML(x.engine);
     html += '</div>';
     html += '<button type="button" class="btn btn-small"';
     html += ' onclick="removeCompatibility(' + i + ')"';
@@ -2880,7 +3028,8 @@ function renderSpecifications() {
   var html = '';
   currentSpecifications.forEach(function(s, i) {
     html += '<span class="chip">';
-    html += '<strong>' + s.key + ':</strong> ' + s.value;
+    html += '<strong>' + escapeHTML(s.key) + ':</strong> ' +
+      escapeHTML(s.value);
     html += '<button type="button" onclick="';
     html += 'removeSpecification(' + i + ')">×</button>';
     html += '</span>';
@@ -2906,8 +3055,7 @@ window.calculateSalePrice = function() {
   document.getElementById('productPrice').value =
     salePrice.toFixed(2);
 };
-</script>
-<script>
+
 var ordersUnsubscribe = null;
 
 function loadOrders() {
@@ -2959,7 +3107,9 @@ function renderOrders() {
     return;
   }
   filtered.sort(function(a, b) {
-    return new Date(b.date) - new Date(a.date);
+    var tA = a.date ? new Date(a.date).getTime() : 0;
+    var tB = b.date ? new Date(b.date).getTime() : 0;
+    return tB - tA;
   });
   var statusMap = {
     pending: 'Pendiente',
@@ -2979,13 +3129,15 @@ function renderOrders() {
     html += '<div class="order-header">';
     html += '<div><strong>#' + idShort + '</strong><br>';
     html += '<small style="color:#666;">';
-    html += (o.userName || 'Cliente') + ' - ';
-    html += (o.userPhone || 'N/A') + '</small><br>';
+    html += (escapeHTML(o.userName) || 'Cliente') + ' - ';
+    html += (escapeHTML(o.userPhone) || 'N/A') +
+      '</small><br>';
     html += '<small style="color:#666;">' + fecha;
     html += '</small>';
     if (o.customerCode) {
       html += '<br><small style="color:#dc3545;">';
-      html += 'Código: ' + o.customerCode + '</small>';
+      html += 'Código: ' +
+        escapeHTML(o.customerCode) + '</small>';
     }
     html += '</div>';
     html += '<span class="order-status ' + o.status;
@@ -2999,7 +3151,8 @@ function renderOrders() {
     }
     if (o.driverName) {
       html += '<br><small style="color:#9C27B0;">';
-      html += '🏍️ ' + o.driverName + '</small>';
+      html += '🏍️ ' + escapeHTML(o.driverName) +
+        '</small>';
     }
     html += '</div>';
     html += '<div style="display:flex;gap:0.5rem;';
@@ -3029,8 +3182,7 @@ document.getElementById('searchOrderCode')
   .addEventListener('input', renderOrders);
 document.getElementById('filterOrderStatus')
   .addEventListener('change', renderOrders);
-</script>
-<script>
+
 window.viewOrderDetail = function(id) {
   var o = orders.find(function(x) {
     return x.id === id;
@@ -3054,21 +3206,22 @@ window.viewOrderDetail = function(id) {
   html += o.id.slice(-6) + '</h2>';
   html += '<div style="margin:1rem 0;">';
   html += '<strong>Cliente:</strong> ';
-  html += (o.userName || 'N/A') + '<br>';
+  html += (escapeHTML(o.userName) || 'N/A') + '<br>';
   html += '<strong>Correo:</strong> ';
-  html += (o.userEmail || 'N/A') + '<br>';
+  html += (escapeHTML(o.userEmail) || 'N/A') + '<br>';
   html += '<strong>Teléfono:</strong> ';
-  html += (o.userPhone || 'N/A') + '<br>';
+  html += (escapeHTML(o.userPhone) || 'N/A') + '<br>';
   if (o.customerCode) {
     html += '<strong>Código:</strong> ';
-    html += o.customerCode + '<br>';
+    html += escapeHTML(o.customerCode) + '<br>';
   }
   html += '<strong>Fecha:</strong> ' + fecha + '<br>';
   html += '<strong>Entrega:</strong> ';
   html += (o.deliveryMode === 'pickup' ?
     'Pickup' : 'Delivery');
   if (o.address) {
-    html += '<br><strong>Dirección:</strong> ' + o.address;
+    html += '<br><strong>Dirección:</strong> ' +
+      escapeHTML(o.address);
   }
   if (o.distanceKm) {
     html += '<br><strong>Distancia:</strong> ';
@@ -3076,7 +3229,8 @@ window.viewOrderDetail = function(id) {
   }
   if (o.gpsLat && o.gpsLng) {
     html += '<br><a href="https://www.google.com/maps?q=';
-    html += o.gpsLat + ',' + o.gpsLng + '" ';
+    html += encodeURIComponent(o.gpsLat) + ',' +
+      encodeURIComponent(o.gpsLng) + '" ';
     html += 'target="_blank" style="color:#dc3545;';
     html += 'font-weight:bold;">📍 Ver ubicación en Maps</a>';
   }
@@ -3093,8 +3247,8 @@ window.viewOrderDetail = function(id) {
       .toFixed(2);
     html += '<div style="padding:0.5rem 0;';
     html += 'border-bottom:1px solid #eee;">';
-    html += it.name + ' x' + it.quantity + ' = $' +
-      subt + '</div>';
+    html += escapeHTML(it.name) + ' x' + it.quantity +
+      ' = $' + subt + '</div>';
   });
   html += '</div>';
 
@@ -3109,7 +3263,8 @@ window.viewOrderDetail = function(id) {
   drivers.forEach(function(d) {
     var sel = o.driverId === d.id ? ' selected' : '';
     html += '<option value="' + d.id + '"' + sel + '>';
-    html += d.name + ' (' + d.phone + ')';
+    html += escapeHTML(d.name) + ' (' +
+      escapeHTML(d.phone) + ')';
     html += '</option>';
   });
   html += '</select></div>';
@@ -3120,7 +3275,8 @@ window.viewOrderDetail = function(id) {
   if (o.driverName) {
     html += '<p style="margin-top:0.8rem;color:#28a745;';
     html += 'font-weight:bold;">';
-    html += '✓ Asignado a: ' + o.driverName + '</p>';
+    html += '✓ Asignado a: ' +
+      escapeHTML(o.driverName) + '</p>';
   }
 
   html += '<div style="margin-top:1rem;padding:1rem;';
@@ -3181,9 +3337,7 @@ window.deleteOrder = async function(id) {
     alert('✅ Eliminado');
   } catch(e) { alert('Error: ' + e.message); }
 };
-</script>
-<script>
-async function loadCustomers() {
+  async function loadCustomers() {
   try {
     var s = await db.collection('users').get();
     customers = [];
@@ -3235,16 +3389,16 @@ function renderCustomers(filter) {
     var data = cm[c.id] || cm[c.phone] || {
       orders: 0, total: 0
     };
-    var code = c.customerCode || '-';
-    var email = c.email || '-';
-    var phone = c.phone || '-';
+    var code = escapeHTML(c.customerCode || '-');
+    var email = escapeHTML(c.email || '-');
+    var phone = escapeHTML(c.phone || '-');
     html += '<tr>';
     html += '<td style="padding:0.6rem;';
     html += 'border-bottom:1px solid #eee;">' +
       code + '</td>';
     html += '<td style="padding:0.6rem;';
     html += 'border-bottom:1px solid #eee;">' +
-      (c.name || '-') + '</td>';
+      escapeHTML(c.name || '-') + '</td>';
     html += '<td style="padding:0.6rem;';
     html += 'border-bottom:1px solid #eee;">' +
       email + '</td>';
@@ -3266,8 +3420,7 @@ document.getElementById('searchCustomer')
   .addEventListener('input', function(e) {
     renderCustomers(e.target.value);
   });
-</script>
-<script>
+
 async function loadDrivers() {
   try {
     var s = await db.collection('drivers').get();
@@ -3322,9 +3475,10 @@ function renderDrivers() {
     html += '<div class="driver-card">';
     html += '<div class="driver-card-header">';
     html += '<div><strong style="font-size:1.05rem;">' +
-      d.name + '</strong><br>';
-    html += '<small style="color:#666;">📞 ' + d.phone +
-      ' · Comisión: $' + com + '</small>';
+      escapeHTML(d.name) + '</strong><br>';
+    html += '<small style="color:#666;">📞 ' +
+      escapeHTML(d.phone) + ' · Comisión: $' + com +
+      '</small>';
     html += '</div>';
     html += '<button class="btn btn-small btn-secondary"';
     html += ' onclick="deleteDriver(\'' + d.id + '\')">';
@@ -3358,6 +3512,11 @@ window.addDriver = async function() {
     alert('Completa todos los campos');
     return;
   }
+  if (!/^[0-9+\-\s]{7,20}$/.test(p)) {
+    alert('⚠️ Teléfono inválido. Usa solo dígitos, ' +
+      'ejemplo: 04141234567');
+    return;
+  }
   try {
     await db.collection('drivers').add({
       name: n,
@@ -3381,8 +3540,7 @@ window.deleteDriver = async function(id) {
     alert('✅ Eliminado');
   } catch(e) { alert('Error: ' + e.message); }
 };
-</script>
-<script>
+
 async function loadReviews() {
   try {
     var s = await db.collection('reviews').get();
@@ -3405,7 +3563,9 @@ function renderReviews() {
     return;
   }
   reviews.sort(function(a, b) {
-    return new Date(b.date) - new Date(a.date);
+    var tA = a.date ? new Date(a.date).getTime() : 0;
+    var tB = b.date ? new Date(b.date).getTime() : 0;
+    return tB - tA;
   });
   var html = '';
   reviews.forEach(function(r) {
@@ -3418,16 +3578,18 @@ function renderReviews() {
     html += '<div style="background:#f8f8f8;';
     html += 'padding:1rem;border-radius:8px;';
     html += 'margin-bottom:0.8rem;">';
-    html += '<strong>' + (r.userName || 'Cliente');
-    html += '</strong> <span style="color:#666;';
+    html += '<strong>' +
+      (escapeHTML(r.userName) || 'Cliente') + '</strong>';
+    html += ' <span style="color:#666;';
     html += 'font-size:0.85rem;">' + fecha + '</span>';
     html += '<div style="color:#FFC107;">' + stars;
     html += '</div>';
     html += '<div style="margin:0.5rem 0;">' +
-      r.text + '</div>';
+      escapeHTML(r.text) + '</div>';
     html += '<div style="font-size:0.85rem;';
     html += 'color:#666;">';
-    html += 'Producto: ' + (p ? p.name : 'N/A');
+    html += 'Producto: ' +
+      (p ? escapeHTML(p.name) : 'N/A');
     html += '</div>';
     html += '<button class="btn btn-small ';
     html += 'btn-secondary" onclick="deleteReview(\'';
@@ -3445,8 +3607,7 @@ window.deleteReview = async function(id) {
     alert('✅ Eliminado');
   } catch(e) { alert('Error: ' + e.message); }
 };
-</script>
-<script>
+
 async function loadCoupons() {
   try {
     var s = await db.collection('coupons').get();
@@ -3511,7 +3672,7 @@ window.renderCoupons = function() {
     html += 'gap:0.5rem;">';
     html += '<div>';
     html += '<strong style="font-size:1.1rem;">' +
-      c.code + '</strong>';
+      escapeHTML(c.code) + '</strong>';
     html += ' <span style="color:' + estadoColor +
       ';font-size:0.85rem;">' + estadoTexto + '</span>';
     html += '<br><small style="color:#666;">' +
@@ -3627,8 +3788,7 @@ window.deleteCoupon = async function(id) {
     alert('✅ Eliminado');
   } catch(e) { alert('Error: ' + e.message); }
 };
-</script>
-<script>
+
 async function loadDashboard() {
   try {
     var p = orders.filter(function(o) {
@@ -3656,6 +3816,7 @@ document.addEventListener('keydown', function(e) {
   }
 });
 </script>
+
 <script type="module">
 import {
   loginAdmin, logoutAdmin, setupAuthGuard
