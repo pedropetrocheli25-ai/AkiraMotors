@@ -669,7 +669,7 @@ body {
 🏷️ Marcas de Repuestos</div>
 <div class="admin-menu-item"
   onclick="showSection('banners', event)">
-🖼️ Carrusel de Portada</div>
+🎠 Carrusel de Portada</div>
 <div class="admin-menu-item"
   onclick="showSection('coupons', event)">
 🎟️ Cupones</div>
@@ -679,9 +679,6 @@ body {
 <div class="admin-menu-item"
   onclick="showSection('reviews', event)">
 ⭐ Reseñas</div>
-<div class="admin-menu-item"
-  onclick="showSection('hero', event)">
-🎨 Hero / Portada</div>
 <div class="admin-menu-item"
   onclick="showSection('footer', event)">
 📄 Pie de página</div>
@@ -853,10 +850,13 @@ Total</th>
 <div class="alert-info">
 Aquí verás las estadísticas de cada domiciliario:
 pedidos y ganancias de hoy, esta semana y total.
+La ganancia se calcula automáticamente según el
+costo de delivery del pedido menos el % de la
+empresa configurado en "Delivery por km".
 </div>
 <div class="admin-card">
 <h3>Agregar Domiciliario</h3>
-<div class="form-row-3">
+<div class="form-row">
 <div class="form-group">
 <label>Nombre</label>
 <input type="text" id="driverName">
@@ -864,11 +864,6 @@ pedidos y ganancias de hoy, esta semana y total.
 <div class="form-group">
 <label>Teléfono</label>
 <input type="tel" id="driverPhone">
-</div>
-<div class="form-group">
-<label>Comisión ($)</label>
-<input type="number" id="driverCommission"
-  step="0.01">
 </div>
 </div>
 <button class="btn btn-primary"
@@ -893,12 +888,13 @@ tienda con su logo.
 </div>
 
 <div class="admin-section" id="section-banners">
-<h2 class="section-title">🖼️ Carrusel de Portada</h2>
+<h2 class="section-title">🎠 Carrusel de Portada</h2>
 <div class="alert-info">
 Sube hasta 5 imágenes para el carrusel principal
 de la tienda. Cada imagen puede tener título,
-subtítulo y botón. El carrusel rota
-automáticamente.
+subtítulo, botón y posición del texto. El carrusel
+rota automáticamente con la duración que definas
+en cada slide.
 </div>
 
 <div class="admin-card">
@@ -959,300 +955,11 @@ automáticamente.
 <div id="carouselSlidesList"></div>
 </div>
 </div>
-<div class="admin-section" id="section-coupons">
-<h2 class="section-title">🎟️ Cupones</h2>
-<div class="admin-card">
-<h3>Crear Cupón</h3>
-<div class="form-row">
-<div class="form-group">
-<label>Código</label>
-<input type="text" id="couponCode"
-  placeholder="Ej: AKIRA10">
-</div>
-<div class="form-group">
-<label>Descuento (%)</label>
-<input type="number" id="couponDiscount"
-  min="1" max="100">
-</div>
-</div>
-<div class="form-row">
-<div class="form-group">
-<label>Usos máximos (0 = ilimitado)</label>
-<input type="number" id="couponMaxUses"
-  min="0" value="100">
-</div>
-<div class="form-group">
-<label>Solo para correos verificados</label>
-<select id="couponVerify">
-<option value="no">No, cualquier usuario</option>
-<option value="yes">Sí, solo verificados</option>
-</select>
-</div>
-</div>
-<div class="alert-info">
-Las fechas son opcionales. Si las dejas vacías,
-el cupón funciona siempre (si el switch está
-activo).
-</div>
-<div class="form-row">
-<div class="form-group">
-<label>Fecha inicio (opcional)</label>
-<input type="date" id="couponStart">
-</div>
-<div class="form-group">
-<label>Fecha fin (opcional)</label>
-<input type="date" id="couponEnd">
-</div>
-</div>
-<div class="checkbox-group" style="margin-bottom:1rem;">
-<input type="checkbox" id="couponActive" checked>
-<label>Activo desde el momento de creación</label>
-</div>
-<button class="btn btn-primary"
-  onclick="createCoupon()">Crear Cupón</button>
-</div>
-<div class="admin-card">
-<h3>Cupones Creados</h3>
-<div id="couponsList"></div>
-</div>
-</div>
-
-<div class="admin-section" id="section-delivery">
-<h2 class="section-title">📍 Delivery por km</h2>
-<div class="alert-info">
-El costo de delivery se calcula por la distancia
-entre tu tienda y el cliente.
-</div>
-
-<div class="admin-card">
-<h3>🏪 Ubicación de tu tienda</h3>
-<div class="alert-info">
-Ingresa las coordenadas GPS de tu tienda.
-Si no las sabes: abre Google Maps, haz clic
-derecho sobre tu local → clic en las coordenadas
-que aparecen → se copian al portapapeles.
-</div>
-<div class="form-row">
-<div class="form-group">
-<label>Latitud *</label>
-<input type="number" id="storeLat"
-  step="0.0000001"
-  placeholder="Ej: 8.1226000">
-</div>
-<div class="form-group">
-<label>Longitud *</label>
-<input type="number" id="storeLng"
-  step="0.0000001"
-  placeholder="Ej: -63.5497000">
-</div>
-</div>
-<div class="map-preview" id="storePreview">
-📍 Configura tus coordenadas para ver el preview
-</div>
-<button type="button"
-  class="btn btn-secondary"
-  onclick="openStoreInMaps()"
-  style="margin-top:0.8rem;">
-🗺️ Ver tienda en Google Maps</button>
-</div>
-
-<div class="admin-card">
-<h3>💵 Tarifas</h3>
-<div class="form-row">
-<div class="form-group">
-<label>Tarifa por km ($) *</label>
-<input type="number" id="deliveryRateKm"
-  step="0.01" value="1.30" min="0.01">
-</div>
-<div class="form-group">
-<label>Mínimo a cobrar ($)</label>
-<input type="number" id="deliveryMin"
-  step="0.01" value="3" min="0">
-</div>
-</div>
-<div class="form-row">
-<div class="form-group">
-<label>Máximo de distancia (km)</label>
-<input type="number" id="deliveryMax"
-  step="0.1" value="25" min="0.1">
-</div>
-<div class="form-group">
-<label>Factor de ajuste</label>
-<input type="number" id="deliveryFactor"
-  step="0.01" value="1.2" min="1">
-<div style="font-size:0.75rem;
-  color:#666;margin-top:0.3rem;">
-Recomendado: 1.2 (compensa rutas no rectas)
-</div>
-</div>
-</div>
-</div>
-
-<div class="admin-card">
-<h3>🎁 Delivery Gratis</h3>
-<div class="alert-info">
-Configura cuándo el delivery sale gratis según
-el monto del pedido. El switch principal activa
-o desactiva todo el sistema.
-</div>
-
-<div class="switch-row">
-<label for="freeShipActive">
-Activar sistema de Delivery Gratis
-</label>
-<label class="switch">
-<input type="checkbox" id="freeShipActive">
-<span class="slider"></span>
-</label>
-</div>
-
-<div class="form-group" style="margin-top:1rem;">
-<label>Umbral base ($)</label>
-<input type="number" id="freeShipBase"
-  step="0.01" value="40" min="0"
-  placeholder="Ej: 40">
-<div style="font-size:0.75rem;
-  color:#666;margin-top:0.3rem;">
-Delivery gratis con pedidos superiores a este
-monto.
-</div>
-</div>
-
-<div class="switch-row">
-<label for="freeShipPromo">
-Activar promoción temporal
-</label>
-<label class="switch">
-<input type="checkbox" id="freeShipPromo">
-<span class="slider"></span>
-</label>
-</div>
-
-<div class="form-row" id="promoFields"
-  style="display:none;">
-<div class="form-group">
-<label>Umbral promoción ($)</label>
-<input type="number" id="freeShipPromoAmount"
-  step="0.01" value="20" min="0">
-<div style="font-size:0.75rem;
-  color:#666;margin-top:0.3rem;">
-Pon 0 para delivery gratis a TODOS.
-</div>
-</div>
-<div class="form-group">
-<label>Promoción válida hasta</label>
-<input type="date" id="freeShipPromoUntil">
-</div>
-</div>
-
-<div class="alert-success" id="freeShipPreview"
-  style="display:none;"></div>
-</div>
-
-<button class="btn btn-primary"
-  onclick="saveDeliveryConfig()"
-  style="width:100%;padding:1rem;">
-💾 Guardar Configuración de Delivery</button>
-</div>
 <div class="admin-section" id="section-reviews">
 <h2 class="section-title">⭐ Reseñas</h2>
 <div class="admin-card">
 <div id="reviewsList"></div>
 </div>
-</div>
-
-<div class="admin-section" id="section-hero">
-<h2 class="section-title">🎨 Hero / Portada</h2>
-<div class="alert-info">
-Esta sección ya no se muestra en la tienda
-porque fue reemplazada por el Carrusel.
-Puedes dejarla como respaldo.
-</div>
-<div class="admin-card">
-<h3>Visibilidad</h3>
-<div class="checkbox-group">
-<input type="checkbox" id="heroVisible">
-<label for="heroVisible" style="margin:0;">
-Mostrar sección Hero en la tienda</label>
-</div>
-</div>
-<div class="admin-card">
-<h3>Imagen de Fondo</h3>
-<div class="form-group">
-<label>Subir imagen (máx. 2MB)</label>
-<input type="file" id="heroBgImage"
-  accept="image/*">
-<div class="image-preview" id="heroBgPreview">
-<div style="color:#999;">Sin imagen</div>
-</div>
-</div>
-</div>
-<div class="admin-card">
-<h3>Título Principal</h3>
-<div class="form-group">
-<label>Texto</label>
-<input type="text" id="heroTitle">
-</div>
-<div class="form-row">
-<div class="form-group">
-<label>Color</label>
-<input type="color" id="heroTitleColor"
-  value="#ffffff">
-</div>
-<div class="form-group">
-<label>Tamaño (px)</label>
-<input type="number" id="heroTitleSize"
-  value="48">
-</div>
-</div>
-<div class="form-group">
-<label>Tipografía</label>
-<select id="heroTitleFont">
-<option value="'Segoe UI', sans-serif">
-Segoe UI</option>
-<option value="Arial, sans-serif">Arial</option>
-<option value="Georgia, serif">Georgia</option>
-</select>
-</div>
-</div>
-<div class="admin-card">
-<h3>Subtítulo</h3>
-<div class="form-group">
-<label>Texto</label>
-<textarea id="heroSubtitle"></textarea>
-</div>
-<div class="form-row">
-<div class="form-group">
-<label>Color</label>
-<input type="color" id="heroSubtitleColor"
-  value="#dddddd">
-</div>
-<div class="form-group">
-<label>Tamaño (px)</label>
-<input type="number" id="heroSubtitleSize"
-  value="20">
-</div>
-</div>
-</div>
-<div class="admin-card">
-<h3>Botón de Acción</h3>
-<div class="form-row">
-<div class="form-group">
-<label>Texto del botón</label>
-<input type="text" id="heroCtaText"
-  placeholder="Ej: Ver productos">
-</div>
-<div class="form-group">
-<label>Enlace</label>
-<input type="text" id="heroCtaLink"
-  placeholder="#productos">
-</div>
-</div>
-</div>
-<button class="btn btn-primary"
-  onclick="saveHero()"
-  style="width:100%;padding:1rem;">
-💾 Guardar Hero</button>
 </div>
 
 <div class="admin-section" id="section-footer">
@@ -1726,8 +1433,10 @@ window.showSection = function(sectionId, event) {
     .forEach(function(m) {
       m.classList.remove('active');
     });
-  document.getElementById('section-' + sectionId)
-    .classList.add('active');
+  var target = document.getElementById(
+    'section-' + sectionId
+  );
+  if (target) target.classList.add('active');
   if (event) event.currentTarget.classList.add('active');
   if (sectionId === 'catalogo' &&
       typeof renderCatalogo === 'function') {
@@ -1815,9 +1524,13 @@ window.escapeHTML = function(str) {
     .replace(/'/g, '&#039;');
 };
 
+window.normalizarTelefono = function(tel) {
+  if (!tel) return '';
+  return String(tel).replace(/\D/g, '');
+};
+
 let products = [];
 let brands = [];
-let banners = [];
 let carouselSlides = [];
 let orders = [];
 let reviews = [];
@@ -1838,10 +1551,7 @@ let siteConfig = {
   tiktok: ''
 };
 let whatsappNumber = '584148700616';
-let heroConfig = {
-  visible: false,
-  backgroundImage: null
-};
+let deliveryCompanyPercent = 1;
 let messagesConfig = {
   enabled: false,
   m1Enabled: false,
@@ -1883,15 +1593,31 @@ const DEFAULT_M3_TEMPLATE =
   '— {empresa}';
 
 async function loadAll() {
-  await Promise.allSettled([
-    loadBcvRate(), loadLogo(), loadPickupMaps(),
-    loadWhatsapp(), loadBanners(), loadSiteConfig(),
-    loadHero(), loadCatalogo(), loadBrands(),
-    loadProducts(), loadOrders(), loadReviews(),
-    loadCoupons(), loadDeliveryConfig(),
-    loadDrivers(), loadCustomers(),
-    loadMessagesConfig()
-  ]);
+  var tareas = [
+    ['bcv', loadBcvRate],
+    ['pickup', loadPickupMaps],
+    ['whatsapp', loadWhatsapp],
+    ['banners', loadBanners],
+    ['siteConfig', loadSiteConfig],
+    ['catalogo', loadCatalogo],
+    ['brands', loadBrands],
+    ['products', loadProducts],
+    ['orders', loadOrders],
+    ['reviews', loadReviews],
+    ['coupons', loadCoupons],
+    ['delivery', loadDeliveryConfig],
+    ['drivers', loadDrivers],
+    ['customers', loadCustomers],
+    ['messages', loadMessagesConfig]
+  ];
+  for (var i = 0; i < tareas.length; i++) {
+    try {
+      await tareas[i][1]();
+    } catch(err) {
+      console.error('[loadAll] Error en ' +
+        tareas[i][0] + ':', err);
+    }
+  }
   await loadDashboard();
 }
 </script>
@@ -1927,7 +1653,8 @@ async function saveCatalogo() {
 window.renderCatalogo = function() {
   var container = document.getElementById('catalogoEditor');
   if (!container) return;
-  if (catalogo.categorias.length === 0) {
+  if (!catalogo.categorias ||
+      catalogo.categorias.length === 0) {
     container.innerHTML = '<p style="text-align:' +
       'center;color:#666;padding:2rem;">' +
       'No hay categorías.</p>';
@@ -2138,6 +1865,11 @@ async function loadDeliveryConfig() {
       if (el) el.value = d.max || 25;
       el = document.getElementById('deliveryFactor');
       if (el) el.value = d.factor || 1.2;
+      el = document.getElementById('deliveryCompanyPercent');
+      if (el) el.value = d.companyPercent !== undefined
+        ? d.companyPercent : 1;
+      deliveryCompanyPercent = d.companyPercent !== undefined
+        ? d.companyPercent : 1;
       el = document.getElementById('storeLat');
       if (el) el.value = d.storeLat || '';
       el = document.getElementById('storeLng');
@@ -2246,6 +1978,13 @@ window.saveDeliveryConfig = async function() {
   var min = parseFloat(val('deliveryMin', '0'));
   var max = parseFloat(val('deliveryMax', '999'));
   var factor = parseFloat(val('deliveryFactor', '1.2'));
+  var companyPercent = parseFloat(
+    val('deliveryCompanyPercent', '1')
+  );
+  if (isNaN(companyPercent) ||
+      companyPercent < 0 || companyPercent > 100) {
+    companyPercent = 1;
+  }
   var storeLat = parseFloat(val('storeLat', ''));
   var storeLng = parseFloat(val('storeLng', ''));
 
@@ -2287,6 +2026,7 @@ window.saveDeliveryConfig = async function() {
     min: min,
     max: max,
     factor: factor,
+    companyPercent: companyPercent,
     storeLat: storeLat,
     storeLng: storeLng,
     freeShipActive: freeShipActive,
@@ -2300,6 +2040,7 @@ window.saveDeliveryConfig = async function() {
   try {
     await db.collection('settings')
       .doc('deliveryConfig').set(config);
+    deliveryCompanyPercent = companyPercent;
     updateStorePreview();
     updateFreeShipPreview();
     alert('✅ Configuración de delivery guardada');
@@ -2381,15 +2122,15 @@ async function loadPickupMaps() {
     var p = await db.collection('settings')
       .doc('pickupMaps').get();
     if (p.exists) {
-      document.getElementById('pickupMapsInput')
-        .value = p.data().url || '';
+      var el = document.getElementById('pickupMapsInput');
+      if (el) el.value = p.data().url || '';
     }
   } catch(e) { console.log(e); }
 }
 
 window.updatePickupMaps = async function() {
-  var url = document.getElementById('pickupMapsInput')
-    .value.trim();
+  var el = document.getElementById('pickupMapsInput');
+  var url = el ? el.value.trim() : '';
   if (!url) { alert('Ingresa link'); return; }
   try {
     await db.collection('settings').doc('pickupMaps')
@@ -2404,15 +2145,15 @@ async function loadWhatsapp() {
       .doc('whatsapp').get();
     if (w.exists && w.data().number) {
       whatsappNumber = w.data().number;
-      document.getElementById('whatsappNumber')
-        .value = whatsappNumber;
+      var el = document.getElementById('whatsappNumber');
+      if (el) el.value = whatsappNumber;
     }
   } catch(e) { console.log(e); }
 }
 
 window.saveWhatsapp = async function() {
-  var num = document.getElementById('whatsappNumber')
-    .value.trim();
+  var el = document.getElementById('whatsappNumber');
+  var num = el ? el.value.trim() : '';
   if (!num) { alert('Ingresa número'); return; }
   if (!/^[0-9+\-\s]{7,20}$/.test(num)) {
     alert('⚠️ Número inválido. Usa solo dígitos. ' +
@@ -2426,22 +2167,6 @@ window.saveWhatsapp = async function() {
     alert('✅ Guardado');
   } catch(e) { alert('Error: ' + e.message); }
 };
-
-async function loadLogo() {
-  try {
-    var l = await db.collection('settings')
-      .doc('logo').get();
-    if (l.exists) {
-      var preview = document.getElementById(
-        'adminLogoPreview'
-      );
-      if (preview) {
-        preview.innerHTML = '<img src="' +
-          escapeHTML(l.data().image) + '">';
-      }
-    }
-  } catch(e) { console.log(e); }
-}
 
 async function loadBanners() {
   try {
@@ -2517,10 +2242,9 @@ window.renderCarouselSlides = function() {
   list.innerHTML = html;
 };
 
-var newSlideImageData = '';
-
 document.addEventListener('change', function(e) {
-  if (e.target && e.target.id === 'bannerImageInput') {
+  if (!e.target) return;
+  if (e.target.id === 'bannerImageInput') {
     var file = e.target.files[0];
     if (!file) return;
     if (file.size > 1024 * 1024) {
@@ -2625,24 +2349,24 @@ async function loadSiteConfig() {
     if (c.exists) {
       siteConfig = Object.assign({}, siteConfig, c.data());
     }
-    document.getElementById('cfgCompanyName')
-      .value = siteConfig.companyName;
-    document.getElementById('cfgSlogan')
-      .value = siteConfig.slogan;
-    document.getElementById('cfgDescription')
-      .value = siteConfig.description;
-    document.getElementById('cfgAddress')
-      .value = siteConfig.address;
-    document.getElementById('cfgPhone')
-      .value = siteConfig.phone;
-    document.getElementById('cfgSchedule')
-      .value = siteConfig.schedule;
-    document.getElementById('cfgFacebook')
-      .value = siteConfig.facebook || '';
-    document.getElementById('cfgInstagram')
-      .value = siteConfig.instagram || '';
-    document.getElementById('cfgTiktok')
-      .value = siteConfig.tiktok || '';
+    var el = document.getElementById('cfgCompanyName');
+    if (el) el.value = siteConfig.companyName;
+    el = document.getElementById('cfgSlogan');
+    if (el) el.value = siteConfig.slogan;
+    el = document.getElementById('cfgDescription');
+    if (el) el.value = siteConfig.description;
+    el = document.getElementById('cfgAddress');
+    if (el) el.value = siteConfig.address;
+    el = document.getElementById('cfgPhone');
+    if (el) el.value = siteConfig.phone;
+    el = document.getElementById('cfgSchedule');
+    if (el) el.value = siteConfig.schedule;
+    el = document.getElementById('cfgFacebook');
+    if (el) el.value = siteConfig.facebook || '';
+    el = document.getElementById('cfgInstagram');
+    if (el) el.value = siteConfig.instagram || '';
+    el = document.getElementById('cfgTiktok');
+    if (el) el.value = siteConfig.tiktok || '';
   } catch(e) { console.log(e); }
 }
 
@@ -2665,93 +2389,6 @@ window.saveSiteConfig = async function() {
       .set(config);
     siteConfig = Object.assign({}, siteConfig, config);
     alert('✅ Guardado');
-  } catch(e) { alert('Error: ' + e.message); }
-};
-
-async function loadHero() {
-  try {
-    var h = await db.collection('settings')
-      .doc('hero').get();
-    if (h.exists) {
-      heroConfig = h.data();
-      document.getElementById('heroVisible')
-        .checked = heroConfig.visible || false;
-      document.getElementById('heroTitle')
-        .value = heroConfig.title || '';
-      document.getElementById('heroSubtitle')
-        .value = heroConfig.subtitle || '';
-      document.getElementById('heroTitleColor')
-        .value = heroConfig.titleColor || '#ffffff';
-      document.getElementById('heroTitleSize')
-        .value = heroConfig.titleSize || 48;
-      document.getElementById('heroTitleFont')
-        .value = heroConfig.titleFont ||
-          "'Segoe UI', sans-serif";
-      document.getElementById('heroSubtitleColor')
-        .value = heroConfig.subtitleColor || '#dddddd';
-      document.getElementById('heroSubtitleSize')
-        .value = heroConfig.subtitleSize || 20;
-      document.getElementById('heroCtaText')
-        .value = heroConfig.ctaText || '';
-      document.getElementById('heroCtaLink')
-        .value = heroConfig.ctaLink || '';
-      if (heroConfig.backgroundImage) {
-        document.getElementById('heroBgPreview')
-          .innerHTML = '<img src="' +
-          escapeHTML(heroConfig.backgroundImage) + '">';
-      }
-    }
-  } catch(e) { console.log(e); }
-}
-
-var heroBgInput = document.getElementById('heroBgImage');
-if (heroBgInput) {
-  heroBgInput.addEventListener('change', function(e) {
-    var file = e.target.files[0];
-    if (!file) return;
-    if (file.size > 2 * 1024 * 1024) {
-      alert('Máximo 2MB');
-      return;
-    }
-    var reader = new FileReader();
-    reader.onload = function(ev) {
-      heroConfig.backgroundImage = ev.target.result;
-      document.getElementById('heroBgPreview')
-        .innerHTML = '<img src="' + ev.target.result +
-        '">';
-    };
-    reader.readAsDataURL(file);
-  });
-}
-
-window.saveHero = async function() {
-  try {
-    var data = {
-      visible: document.getElementById('heroVisible')
-        .checked,
-      title: document.getElementById('heroTitle').value,
-      subtitle: document.getElementById('heroSubtitle')
-        .value,
-      titleColor: document.getElementById('heroTitleColor')
-        .value,
-      titleSize: parseInt(document.getElementById(
-        'heroTitleSize').value),
-      titleFont: document.getElementById('heroTitleFont')
-        .value,
-      subtitleColor: document.getElementById(
-        'heroSubtitleColor').value,
-      subtitleSize: parseInt(document.getElementById(
-        'heroSubtitleSize').value),
-      ctaText: document.getElementById('heroCtaText')
-        .value,
-      ctaLink: document.getElementById('heroCtaLink')
-        .value,
-      backgroundImage: heroConfig.backgroundImage || null,
-      updatedAt: new Date().toISOString()
-    };
-    await db.collection('settings').doc('hero').set(data);
-    alert('✅ Hero guardado');
-    refreshPreview();
   } catch(e) { alert('Error: ' + e.message); }
 };
 
@@ -2805,6 +2442,7 @@ window.editBrandImage = function(brandId) {
   var b = brands.find(function(x) {
     return x.id === brandId;
   });
+  if (!b) return;
   document.getElementById('brandModalTitle')
     .textContent = 'Imagen: ' + b.name;
   document.getElementById('editBrandId').value = brandId;
@@ -2925,10 +2563,15 @@ function renderAdminProducts(filter) {
   list.innerHTML = html;
 }
 
-document.getElementById('adminProductSearch')
-  .addEventListener('input', function(e) {
-    renderAdminProducts(e.target.value);
-  });
+var adminProductSearchEl = document.getElementById(
+  'adminProductSearch'
+);
+if (adminProductSearchEl) {
+  adminProductSearchEl.addEventListener('input',
+    function(e) {
+      renderAdminProducts(e.target.value);
+    });
+}
 
 window.openAddProductModal = function() {
   populateCategorySelect();
@@ -3276,8 +2919,13 @@ window.onCompatBrandChange = function() {
   });
 };
 
-document.getElementById('compatBrandSelect')
-  .addEventListener('change', onCompatBrandChange);
+var compatBrandEl = document.getElementById(
+  'compatBrandSelect'
+);
+if (compatBrandEl) {
+  compatBrandEl.addEventListener('change',
+    onCompatBrandChange);
+}
 
 window.addCompatibility = function() {
   var marca = document.getElementById('compatBrandSelect')
@@ -3423,10 +3071,11 @@ function loadOrders() {
 function renderOrders() {
   var list = document.getElementById('ordersList');
   if (!list) return;
-  var filter = document.getElementById('filterOrderStatus')
-    .value;
-  var sq = (document.getElementById('searchOrderCode')
-    .value || '').toLowerCase().trim();
+  var filterEl = document.getElementById('filterOrderStatus');
+  var filter = filterEl ? filterEl.value : '';
+  var searchEl = document.getElementById('searchOrderCode');
+  var sq = (searchEl ? searchEl.value : '')
+    .toLowerCase().trim();
   var filtered = orders;
   if (filter) {
     filtered = filtered.filter(function(o) {
@@ -3520,10 +3169,14 @@ function renderOrders() {
   list.innerHTML = html;
 }
 
-document.getElementById('searchOrderCode')
-  .addEventListener('input', renderOrders);
-document.getElementById('filterOrderStatus')
-  .addEventListener('change', renderOrders);
+var searchOrderEl = document.getElementById('searchOrderCode');
+if (searchOrderEl) {
+  searchOrderEl.addEventListener('input', renderOrders);
+}
+var filterOrderEl = document.getElementById('filterOrderStatus');
+if (filterOrderEl) {
+  filterOrderEl.addEventListener('change', renderOrders);
+}
 
 window.viewOrderDetail = function(id) {
   var o = orders.find(function(x) {
@@ -3615,10 +3268,16 @@ window.viewOrderDetail = function(id) {
   html += 'style="width:100%;margin-top:0.5rem;">';
   html += '💾 Guardar Domiciliario</button>';
   if (o.driverName) {
+    var driverShare = Number(o.driverShare || 0);
     html += '<p style="margin-top:0.8rem;color:#28a745;';
     html += 'font-weight:bold;">';
     html += '✓ Asignado a: ' +
       escapeHTML(o.driverName) + '</p>';
+    if (driverShare > 0) {
+      html += '<p style="font-size:0.85rem;color:#666;">';
+      html += 'Ganancia del domiciliario: $' +
+        driverShare.toFixed(2) + '</p>';
+    }
   }
 
   html += '<div style="margin-top:1rem;padding:1rem;';
@@ -3681,7 +3340,7 @@ window.assignDriverToOrder = async function(orderId) {
       await db.collection('orders').doc(orderId).update({
         driverId: null,
         driverName: null,
-        driverCommission: null
+        driverShare: null
       });
       alert('✅ Domiciliario removido');
       return;
@@ -3690,12 +3349,18 @@ window.assignDriverToOrder = async function(orderId) {
       return d.id === driverId;
     });
     if (!driver) return;
+    var deliveryFee = Number(order.deliveryFee || 0);
+    var empresaCorte = deliveryFee *
+      (deliveryCompanyPercent / 100);
+    var driverShare = deliveryFee - empresaCorte;
     await db.collection('orders').doc(orderId).update({
       driverId: driver.id,
       driverName: driver.name,
-      driverCommission: driver.commission
+      driverShare: driverShare
     });
-    alert('✅ Asignado a ' + driver.name);
+    alert('✅ Asignado a ' + driver.name +
+      '\nGanancia del domiciliario: $' +
+      driverShare.toFixed(2));
 
     if (messagesConfig.enabled &&
         messagesConfig.m2Enabled) {
@@ -3800,6 +3465,7 @@ async function loadCustomers() {
     s.forEach(function(d) {
       var obj = d.data();
       obj.id = d.id;
+      obj.uid = obj.uid || d.id;
       customers.push(obj);
     });
     renderCustomers();
@@ -3832,19 +3498,29 @@ function renderCustomers(filter) {
   }
   var cm = {};
   orders.forEach(function(o) {
-    var k = o.userId || o.userPhone;
-    if (!k) return;
-    if (!cm[k]) {
-      cm[k] = { orders: 0, total: 0 };
+    var total = Number(o.total) || 0;
+    var keys = [];
+    if (o.userId) keys.push(o.userId);
+    if (o.userPhone) {
+      keys.push(o.userPhone);
+      keys.push(normalizarTelefono(o.userPhone));
     }
-    cm[k].orders++;
-    cm[k].total += Number(o.total) || 0;
+    keys.forEach(function(k) {
+      if (!k) return;
+      if (!cm[k]) {
+        cm[k] = { orders: 0, total: 0 };
+      }
+      cm[k].orders++;
+      cm[k].total += total;
+    });
   });
   var html = '';
   filtered.forEach(function(c) {
-    var data = cm[c.id] || cm[c.phone] || {
-      orders: 0, total: 0
-    };
+    var data = cm[c.id] ||
+      cm[c.uid] ||
+      cm[c.phone] ||
+      cm[normalizarTelefono(c.phone)] ||
+      { orders: 0, total: 0 };
     var code = escapeHTML(c.customerCode || '-');
     var email = escapeHTML(c.email || '-');
     var phone = escapeHTML(c.phone || '-');
@@ -3872,10 +3548,12 @@ function renderCustomers(filter) {
   tb.innerHTML = html;
 }
 
-document.getElementById('searchCustomer')
-  .addEventListener('input', function(e) {
+var searchCustomerEl = document.getElementById('searchCustomer');
+if (searchCustomerEl) {
+  searchCustomerEl.addEventListener('input', function(e) {
     renderCustomers(e.target.value);
   });
+}
 
 async function loadDrivers() {
   try {
@@ -3906,7 +3584,6 @@ function renderDrivers() {
   inicioSemana.setDate(inicioSemana.getDate() - diff);
   var html = '';
   drivers.forEach(function(d) {
-    var com = Number(d.commission).toFixed(2);
     var pedidosHoy = 0;
     var gananciaHoy = 0;
     var pedidosSemana = 0;
@@ -3915,17 +3592,17 @@ function renderDrivers() {
     var gananciaTotal = 0;
     orders.forEach(function(o) {
       if (o.driverId !== d.id) return;
-      var comision = Number(o.driverCommission) || 0;
-      var fecha = new Date(o.date);
+      var share = Number(o.driverShare) || 0;
+      var fecha = o.date ? new Date(o.date) : new Date(0);
       pedidosTotal++;
-      gananciaTotal += comision;
+      gananciaTotal += share;
       if (fecha >= hoy) {
         pedidosHoy++;
-        gananciaHoy += comision;
+        gananciaHoy += share;
       }
       if (fecha >= inicioSemana) {
         pedidosSemana++;
-        gananciaSemana += comision;
+        gananciaSemana += share;
       }
     });
     html += '<div class="driver-card">';
@@ -3933,8 +3610,7 @@ function renderDrivers() {
     html += '<div><strong style="font-size:1.05rem;">' +
       escapeHTML(d.name) + '</strong><br>';
     html += '<small style="color:#666;">📞 ' +
-      escapeHTML(d.phone) + ' · Comisión: $' + com +
-      '</small>';
+      escapeHTML(d.phone) + '</small>';
     html += '</div>';
     html += '<button class="btn btn-small btn-secondary"';
     html += ' onclick="deleteDriver(\'' + d.id + '\')">';
@@ -3962,10 +3638,8 @@ window.addDriver = async function() {
   var n = document.getElementById('driverName').value.trim();
   var p = document.getElementById('driverPhone').value
     .trim();
-  var c = parseFloat(document.getElementById(
-    'driverCommission').value);
-  if (!n || !p || !c) {
-    alert('Completa todos los campos');
+  if (!n || !p) {
+    alert('Completa nombre y teléfono');
     return;
   }
   if (!/^[0-9+\-\s]{7,20}$/.test(p)) {
@@ -3977,12 +3651,10 @@ window.addDriver = async function() {
     await db.collection('drivers').add({
       name: n,
       phone: p,
-      commission: c,
       createdAt: new Date().toISOString()
     });
     document.getElementById('driverName').value = '';
     document.getElementById('driverPhone').value = '';
-    document.getElementById('driverCommission').value = '';
     await loadDrivers();
     alert('✅ Agregado');
   } catch(e) { alert('Error: ' + e.message); }
@@ -3997,7 +3669,7 @@ window.deleteDriver = async function(id) {
   } catch(e) { alert('Error: ' + e.message); }
 };
 </script>
-<script>
+  <script>
 async function loadReviews() {
   try {
     var s = await db.collection('reviews').get();
@@ -4178,7 +3850,8 @@ window.toggleCouponActive = async function(id) {
     await db.collection('coupons').doc(id)
       .update({ active: nuevo });
     await loadCoupons();
-    alert(nuevo ? '✅ Cupón activado' : '⏸️ Cupón desactivado');
+    alert(nuevo ? '✅ Cupón activado' :
+      '⏸️ Cupón desactivado');
   } catch(e) { alert('Error: ' + e.message); }
 };
 
@@ -4307,18 +3980,20 @@ window.saveMessagesConfig = async function() {
 
 async function loadDashboard() {
   try {
-    var p = orders.filter(function(o) {
+    var pendientes = orders.filter(function(o) {
       return o.status === 'pending';
     }).length;
     var stp = document.getElementById('statProducts');
     if (stp) stp.textContent = products.length;
     var sto = document.getElementById('statOrdersPending');
-    if (sto) sto.textContent = p;
+    if (sto) sto.textContent = pendientes;
     var stc = document.getElementById('statCustomers');
     if (stc) stc.textContent = customers.length;
     var stcat = document.getElementById('statCategories');
     if (stcat) {
-      stcat.textContent = catalogo.categorias.length;
+      var numCats = catalogo.categorias
+        ? catalogo.categorias.length : 0;
+      stcat.textContent = numCats;
     }
   } catch(e) { console.log(e); }
 }
