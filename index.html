@@ -131,8 +131,6 @@ body {
   font-weight: 600;
   font-size: 0.8rem;
 }
-</style>
-<style>
 .sidebar-overlay {
   display: none;
   position: fixed;
@@ -283,6 +281,8 @@ body {
   font-weight: bold;
   border-left-color: #dc3545;
 }
+</style>
+<style>
 .hero-section {
   position: relative;
   min-height: 380px;
@@ -330,8 +330,6 @@ body {
   color: white;
 }
 .hero-cta:hover { transform: scale(1.05); }
-</style>
-<style>
 .section {
   padding: 1.8rem 1.2rem;
   max-width: 1400px;
@@ -465,6 +463,8 @@ body {
   background: #ccc;
   cursor: not-allowed;
 }
+</style>
+<style>
 .modal {
   display: none;
   position: fixed;
@@ -614,8 +614,6 @@ body {
   padding: 1rem 1.5rem;
   border-top: 1px solid #eee;
 }
-</style>
-<style>
 .reviews-section {
   padding: 1.2rem 1.5rem;
   border-top: 1px solid #eee;
@@ -699,6 +697,8 @@ body {
   color: #333;
   font-size: 0.88rem;
 }
+</style>
+<style>
 .cart-sidebar {
   position: fixed;
   right: -500px;
@@ -771,6 +771,8 @@ body {
   background: #f8f8f8;
   border-top: 2px solid #dc3545;
   border-radius: 0 0 0 20px;
+  max-height: 55vh;
+  overflow-y: auto;
 }
 .cart-total-row {
   display: flex;
@@ -805,27 +807,6 @@ body {
 .checkout-btn:disabled {
   background: #ccc;
   cursor: not-allowed;
-}
-.delivery-selector {
-  display: flex;
-  gap: 0.5rem;
-  margin: 0.5rem 0;
-}
-.delivery-option {
-  flex: 1;
-  padding: 0.55rem 0.4rem;
-  border: 2px solid #ddd;
-  border-radius: 10px;
-  cursor: pointer;
-  text-align: center;
-  font-size: 0.8rem;
-  font-weight: 600;
-  background: white;
-}
-.delivery-option.active {
-  border-color: #dc3545;
-  background: #dc3545;
-  color: white;
 }
 .auth-modal .modal-content {
   max-width: 420px;
@@ -909,25 +890,138 @@ body {
   cursor: pointer;
   text-decoration: underline;
 }
+
+/* ===================================
+   CHECKOUT REDISEÑADO (Segmented Control)
+   =================================== */
 .checkout-modal .modal-content {
-  max-width: 500px;
-  padding: 0.3rem 0 0.5rem 0;
+  max-width: 460px;
+  padding: 1.5rem 1.2rem;
+  border-radius: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
-.checkout-modal .modal-content h2 {
-  margin-top: 0.3rem !important;
-  margin-bottom: 0.6rem !important;
-  padding: 0 1rem;
-  font-size: 1.1rem !important;
+.checkout-modal h2 {
+  text-align: center;
+  color: #333;
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: 0;
+  padding-right: 2rem;
 }
-.checkout-modal .modal-content h3 {
-  font-size: 0.92rem !important;
-  margin-bottom: 0.5rem !important;
+.checkout-section {
+  width: 100%;
+}
+.checkout-label {
+  display: block;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #666;
+  margin-bottom: 0.5rem;
+}
+.segmented-control {
+  display: flex;
+  background: #f0f0f0;
+  border-radius: 12px;
+  padding: 4px;
+  gap: 4px;
+}
+.segmented-option {
+  flex: 1;
+  padding: 0.6rem 0.4rem;
+  text-align: center;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #666;
+  border-radius: 9px;
+  cursor: pointer;
+  transition: all 0.2s;
+  user-select: none;
+}
+.segmented-option.active {
+  background: white;
+  color: #333;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+.location-card {
+  background: #fafafa;
+  border: 1px solid #eee;
+  border-radius: 12px;
+  padding: 0.9rem;
+  margin-top: 0.6rem;
+  font-size: 0.85rem;
+  color: #666;
+  text-align: center;
+}
+.location-card.success {
+  background: #f0f9f0;
+  border-color: #c3e6cb;
+  color: #155724;
+  font-weight: 600;
+}
+.location-card.error {
+  background: #fff5f5;
+  border-color: #f5c6cb;
+  color: #721c24;
+  font-weight: 600;
+}
+.location-card a {
+  display: inline-block;
+  margin-top: 0.4rem;
+  color: #dc3545;
+  font-weight: 600;
+  text-decoration: none;
+  font-size: 0.85rem;
+}
+.checkout-totals {
+  background: #fafafa;
+  border-radius: 12px;
+  padding: 0.9rem;
+  font-size: 0.9rem;
+}
+.checkout-totals .row {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.25rem 0;
+  color: #555;
+}
+.checkout-totals .row.total {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #dc3545;
+  border-top: 1px solid #ddd;
+  padding-top: 0.6rem;
+  margin-top: 0.5rem;
+}
+.checkout-totals .row.discount {
+  color: #28a745;
+  font-weight: 600;
+}
+.checkout-modal .checkout-btn {
+  width: 100%;
+  background: #25d366;
+  color: white;
+  border: none;
+  padding: 0.95rem;
+  border-radius: 14px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+}
+.checkout-modal .checkout-btn:hover {
+  background: #1eb657;
 }
 .map-link-box {
   background: #fff5f5;
   padding: 0.7rem;
-  border-radius: 14px;
-  margin: 0.6rem 0;
+  border-radius: 12px;
+  margin-top: 0.6rem;
   text-align: center;
   font-size: 0.85rem;
 }
@@ -1008,7 +1102,10 @@ body {
   z-index: 999;
 }
 .whatsapp-float:hover { transform: scale(1.1); }
-.orders-modal .modal-content { max-width: 640px; padding: 1.2rem; }
+.orders-modal .modal-content {
+  max-width: 640px;
+  padding: 1.2rem;
+}
 .order-item {
   background: #f8f8f8;
   padding: 0.9rem;
@@ -1168,7 +1265,9 @@ footer {
   .header-logo-img { width: 30px; height: 30px; }
   .featured-grid { grid-template-columns: 1fr; }
   .search-results-grid { grid-template-columns: 1fr; }
-  .delivery-selector { flex-direction: column; }
+  .checkout-modal .modal-content {
+    padding: 1.2rem 0.9rem;
+  }
 }
 </style>
 </head>
@@ -1357,76 +1456,111 @@ contraseña?</a>
 </div>
 </div>
 
+<div class="modal auth-modal" id="accountModal">
+<div class="modal-content">
+<button class="modal-close"
+  onclick="closeModal('accountModal')">×</button>
+<h2>Mi Cuenta</h2>
+<div id="accountInfo"
+  style="background:#f8f8f8;
+  padding:1rem;border-radius:12px;
+  margin-bottom:1rem;font-size:0.9rem;">
+</div>
+<div style="display:flex;flex-direction:column;gap:0.5rem;">
+<button class="auth-btn" onclick="showMyOrders()">
+📦 Ver mis pedidos</button>
+<button class="auth-btn"
+  style="background:#FFC107;color:#333;"
+  onclick="olvidePassword()">
+🔑 Cambiar contraseña</button>
+<button class="auth-btn"
+  style="background:#25d366;"
+  onclick="soporteWhatsApp()">
+💬 Soporte por WhatsApp</button>
+<button class="guest-btn"
+  onclick="cerrarSesionCliente()">
+🚪 Cerrar sesión</button>
+</div>
+</div>
+</div>
 <div class="modal checkout-modal" id="checkoutModal">
 <div class="modal-content">
 <button class="modal-close"
   onclick="closeModal('checkoutModal')">×</button>
-<h2 style="color:#dc3545;text-align:center;">
-Finalizar Compra</h2>
-<div style="padding:0 1.2rem;">
-<h3>Método de entrega:</h3>
-<div class="delivery-selector">
-<div class="delivery-option active"
+<h2>Finalizar Compra</h2>
+
+<div class="checkout-section">
+<label class="checkout-label">Método de entrega</label>
+<div class="segmented-control">
+<div class="segmented-option active"
   id="checkoutPickup"
   onclick="selectCheckoutDelivery('pickup')">
-Pickup en tienda
+🛍️ Pickup en tienda
 </div>
-<div class="delivery-option"
+<div class="segmented-option"
   id="checkoutDelivery"
   onclick="selectCheckoutDelivery('delivery')">
-Delivery
+🛵 Delivery
 </div>
 </div>
 </div>
+
+<div id="pickupMapLink"
+  style="display:none;">
+<div class="location-card">
+<div style="font-size:1.5rem;
+  margin-bottom:0.3rem;">📍</div>
+<div style="margin-bottom:0.4rem;">
+Ubicación de la tienda:</div>
+<a href="#" id="pickupMapsLink"
+  target="_blank">Ver en Google Maps →</a>
+</div>
+</div>
+
 <div id="deliveryFields"
-  style="display:none;padding:0 1.2rem;">
-<div class="form-group">
-<label>Ubicación de entrega</label>
+  style="display:none;">
+<div class="checkout-section">
+<label class="checkout-label">
+Ubicación de entrega</label>
 <button type="button" class="auth-btn"
   style="background:#28a745;"
   onclick="getLocation()">
 📍 Obtener mi ubicación
 </button>
 <div id="locationResult"
-  style="background:#f0f0f0;
-  padding:0.7rem;border-radius:12px;
-  margin:0.6rem 0;color:#666;
-  text-align:center;font-size:0.82rem;">
+  class="location-card"
+  style="margin-top:0.6rem;">
 Aún no has enviado tu ubicación
 </div>
 <input type="hidden" id="gpsLat">
 <input type="hidden" id="gpsLng">
 </div>
-<div class="form-group">
-<label>Dirección (opcional)</label>
+<div class="checkout-section">
+<label class="checkout-label">
+Dirección (opcional)</label>
 <input type="text"
   id="deliveryAddressInput"
-  placeholder="Calle, número, referencia...">
+  placeholder="Calle, número, referencia..."
+  style="width:100%;padding:0.6rem;
+  border:1px solid #ddd;
+  border-radius:10px;font-size:0.9rem;">
 </div>
 </div>
-<div id="pickupMapLink"
-  style="display:none;padding:0 1.2rem;">
-<div class="map-link-box">
-<div style="font-size:1.4rem;
-  margin-bottom:0.3rem;">📍</div>
-<div style="margin-bottom:0.3rem;">
-Ubicación de la tienda:</div>
-<a href="#" id="pickupMapsLink"
-  target="_blank">Ver en Google Maps</a>
-</div>
-</div>
+
 <div id="freeShipNotice"
-  style="display:none;margin:0.5rem 1.2rem;
+  style="display:none;margin:0;
   background:#d4edda;color:#155724;
   padding:0.7rem;border-radius:10px;
   font-size:0.85rem;text-align:center;
   font-weight:600;"></div>
+
 <div id="checkoutTotals"
-  style="margin:0.6rem 1.2rem;"></div>
+  class="checkout-totals"></div>
+
 <button class="checkout-btn"
-  onclick="confirmOrder()"
-  style="margin:0 1.2rem 1rem;">
-Confirmar por WhatsApp</button>
+  onclick="confirmOrder()">
+💬 Confirmar por WhatsApp
+</button>
 </div>
 </div>
 
@@ -1450,6 +1584,31 @@ Mis Pedidos</h2>
 </div>
 <div class="cart-items" id="cartItems"></div>
 <div class="cart-footer">
+<div style="margin-bottom:0.6rem;
+  border-bottom:1px solid #ddd;
+  padding-bottom:0.6rem;">
+<label style="font-size:0.82rem;
+  font-weight:bold;display:block;
+  margin-bottom:0.4rem;">
+¿Tienes un cupón?</label>
+<div style="display:flex;gap:0.4rem;">
+<input type="text" id="couponCodeInput"
+  placeholder="Ej: AKIRA10"
+  style="flex:1;padding:0.5rem;
+  border:1px solid #ddd;
+  border-radius:8px;font-size:0.85rem;
+  text-transform:uppercase;">
+<button onclick="applyCouponCode()"
+  style="background:#333;color:white;
+  border:none;padding:0.5rem 0.9rem;
+  border-radius:8px;cursor:pointer;
+  font-weight:bold;font-size:0.82rem;">
+Aplicar</button>
+</div>
+<div id="couponMessage"
+  style="font-size:0.78rem;
+  margin-top:0.4rem;min-height:1rem;"></div>
+</div>
 <div id="cartTotals"></div>
 <button class="checkout-btn"
   onclick="openCheckout()">
@@ -1468,7 +1627,7 @@ Finalizar Compra</button>
 
 <a href="#" class="whatsapp-float"
   id="whatsappFloat" target="_blank">💬</a>
-<script type="module">
+  <script type="module">
 import { initializeApp, getApps, getApp }
   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import {
@@ -1558,7 +1717,6 @@ let siteConfig = {
   facebook: '', instagram: '', tiktok: ''
 };
 let allReviews = [];
-let allCoupons = [];
 
 let logoClickCount = 0;
 let logoClickTimer;
@@ -1576,7 +1734,7 @@ document.getElementById('headerLogo')
       window.location.href = 'admin.html';
     }
   });
-window.toggleSidebar = function() {
+    window.toggleSidebar = function() {
   document.getElementById('categorySidebar')
     .classList.toggle('open');
   document.getElementById('sidebarOverlay')
@@ -1658,7 +1816,7 @@ window.toggleDrawerBrand = function(
     brand.classList.add('active');
   }
 };
-window.filterByCategory = function(ev, catIdx) {
+    window.filterByCategory = function(ev, catIdx) {
   if (ev) ev.stopPropagation();
   var cat = catalogo.categorias[catIdx];
   activeCategory = cat.nombre;
@@ -1807,7 +1965,7 @@ function applyFilters() {
       .style.display = 'block';
   }
 }
-function renderSearchResults(filteredProducts) {
+    function renderSearchResults(filteredProducts) {
   var grid = document.getElementById('searchResultsGrid');
   var pagination = document.getElementById('pagination');
   if (filteredProducts.length === 0) {
@@ -1889,7 +2047,7 @@ window.changePage = function(page) {
   document.getElementById('searchResultsContainer')
     .scrollIntoView({ behavior: 'smooth' });
 };
-async function loadData() {
+    async function loadData() {
   try {
     var rateDoc = await getDoc(
       doc(db, 'settings', 'bcvRate')
@@ -2006,7 +2164,7 @@ async function loadData() {
     }
   }
 }
-function renderHero() {
+    function renderHero() {
   var section = document.getElementById('heroSection');
   var bg = document.getElementById('heroBg');
   var overlay = document.getElementById('heroOverlay');
@@ -2105,6 +2263,7 @@ function formatPrices(price, discount) {
     hasDiscount: discount && discount > 0
   };
 }
+
 function renderRecommended() {
   var container = document.getElementById(
     'recommendedContainer'
@@ -2185,7 +2344,7 @@ function renderProductCard(p) {
   html += '</button></div></div>';
   return html;
 }
-function generateTechSheetHTML(product) {
+    function generateTechSheetHTML(product) {
   var specs = product.specifications || [];
   var compatibility = product.compatibility || [];
   var terms = product.searchTerms || '';
@@ -2318,7 +2477,7 @@ window.openProductDetail = function(productId) {
     reviewsHtml += 'Inicia sesión para dejar ';
     reviewsHtml += 'una reseña.</p>';
   }
-  if (productReviews.length > 0) {
+      if (productReviews.length > 0) {
     productReviews.sort(function(a, b) {
       return new Date(b.date) - new Date(a.date);
     });
@@ -2464,7 +2623,7 @@ window.submitReview = async function(productId) {
     alert('Error: ' + error.message);
   }
 };
-window.addToCart = function(productId) {
+    window.addToCart = function(productId) {
   var product = products.find(function(p) {
     return p.id === productId;
   });
@@ -2551,7 +2710,110 @@ window.selectCartDelivery = function(mode) {
   deliveryMode = mode;
   updateCartUI();
 };
-window.applyCouponCode = async function() {
+    window.applyCouponCode = async function() {
+  var input = document.getElementById('couponCodeInput');
+  var msg = document.getElementById('couponMessage');
+  if (!input || !msg) return;
+  var code = input.value.trim().toUpperCase();
+  if (!code) {
+    msg.innerHTML = '<span style="color:#dc3545;">' +
+      'Ingresa un código</span>';
+    return;
+  }
+  msg.innerHTML = '<span style="color:#666;">' +
+    'Verificando...</span>';
+  try {
+    var s = await getDocs(collection(db, 'coupons'));
+    var found = null;
+    s.forEach(function(d) {
+      var data = d.data();
+      if (data.code === code) {
+        data.id = d.id;
+        found = data;
+      }
+    });
+    if (!found) {
+      msg.innerHTML = '<span style="color:#dc3545;">' +
+        'Cupón no existe</span>';
+      appliedCoupon = null;
+      updateCartUI();
+      return;
+    }
+    if (found.active === false) {
+      msg.innerHTML = '<span style="color:#dc3545;">' +
+        'Cupón desactivado</span>';
+      appliedCoupon = null;
+      updateCartUI();
+      return;
+    }
+    var hoy = new Date();
+    if (found.startDate) {
+      var inicio = new Date(found.startDate + 'T00:00:00');
+      if (inicio > hoy) {
+        msg.innerHTML = '<span style="color:#dc3545;">' +
+          'Cupón aún no vigente</span>';
+        appliedCoupon = null;
+        updateCartUI();
+        return;
+      }
+    }
+    if (found.endDate) {
+      var fin = new Date(found.endDate + 'T23:59:59');
+      if (fin < hoy) {
+        msg.innerHTML = '<span style="color:#dc3545;">' +
+          'Cupón expirado</span>';
+        appliedCoupon = null;
+        updateCartUI();
+        return;
+      }
+    }
+    if (found.maxUses > 0 &&
+        (found.uses || 0) >= found.maxUses) {
+      msg.innerHTML = '<span style="color:#dc3545;">' +
+        'Cupón agotado</span>';
+      appliedCoupon = null;
+      updateCartUI();
+      return;
+    }
+    if (found.onlyVerified) {
+      if (!currentUser) {
+        msg.innerHTML = '<span style="color:#dc3545;">' +
+          'Inicia sesión para usar este cupón</span>';
+        appliedCoupon = null;
+        updateCartUI();
+        return;
+      }
+      if (!currentUser.emailVerified) {
+        msg.innerHTML = '<span style="color:#dc3545;">' +
+          'Debes verificar tu correo primero</span>';
+        appliedCoupon = null;
+        updateCartUI();
+        return;
+      }
+    }
+    appliedCoupon = found;
+    msg.innerHTML = '<span style="color:#28a745;">' +
+      '✅ -' + found.discount + '% aplicado ' +
+      '<button onclick="removeCoupon()" style="' +
+      'background:none;border:none;color:#dc3545;' +
+      'cursor:pointer;text-decoration:underline;' +
+      'font-size:0.8rem;">Quitar</button></span>';
+    updateCartUI();
+  } catch(e) {
+    console.error(e);
+    msg.innerHTML = '<span style="color:#dc3545;">' +
+      'Error al verificar cupón</span>';
+  }
+};
+
+window.removeCoupon = function() {
+  appliedCoupon = null;
+  var input = document.getElementById('couponCodeInput');
+  var msg = document.getElementById('couponMessage');
+  if (input) input.value = '';
+  if (msg) msg.innerHTML = '';
+  updateCartUI();
+};window.applyCouponCode = async function() {
   var input = document.getElementById('couponCodeInput');
   var msg = document.getElementById('couponMessage');
   if (!input || !msg) return;
@@ -2655,7 +2917,7 @@ window.removeCoupon = function() {
   if (msg) msg.innerHTML = '';
   updateCartUI();
 };
-function updateCartUI() {
+    function updateCartUI() {
   var cartItems = document.getElementById('cartItems');
   var cartCount = document.getElementById('cartCount');
   var cartTotals = document.getElementById('cartTotals');
@@ -2739,7 +3001,7 @@ function updateCartUI() {
     '</span></div>';
   cartTotals.innerHTML = th;
 }
-window.switchToLogin = function() {
+    window.switchToLogin = function() {
   closeModal('registerModal');
   document.getElementById('loginModal')
     .classList.add('active');
@@ -2874,6 +3136,7 @@ window.reenviarVerificacionEmail = async function() {
 
 window.cerrarSesionCliente = async function() {
   if (!confirm('¿Cerrar sesión?')) return;
+  closeModal('accountModal');
   await logoutCliente();
   alert('Sesión cerrada');
 };
@@ -2899,21 +3162,55 @@ function updateVerifyBanner() {
     banner.classList.remove('active');
   }
 }
-window.handleAccount = function() {
+    window.handleAccount = function() {
   if (currentUser) {
-    var action = prompt(
-      'Hola ' + currentUser.name +
-      '!\n\n1. Ver mis pedidos\n2. Cerrar sesión'
-    );
-    if (action === '1') showMyOrders();
-    else if (action === '2') cerrarSesionCliente();
+    openAccountModal();
   } else {
     openLoginModal();
   }
 };
 
-async function showMyOrders() {
+window.openAccountModal = function() {
+  var info = document.getElementById('accountInfo');
+  if (!info) return;
+  var verificado = currentUser.emailVerified
+    ? '<span style="color:#28a745;">✅ Verificado</span>'
+    : '<span style="color:#dc3545;">⚠️ Sin verificar</span>';
+  var html = '';
+  html += '<div style="margin-bottom:0.5rem;">';
+  html += '<strong>👤 ' + currentUser.name + '</strong>';
+  html += '</div>';
+  html += '<div style="margin-bottom:0.3rem;">';
+  html += '📧 ' + currentUser.email;
+  html += '</div>';
+  html += '<div style="margin-bottom:0.3rem;">';
+  html += '📞 ' + (currentUser.phone || 'Sin teléfono');
+  html += '</div>';
+  if (currentUser.customerCode) {
+    html += '<div style="margin-bottom:0.3rem;">';
+    html += '🎫 Código: ' +
+      currentUser.customerCode + '</div>';
+  }
+  html += '<div>' + verificado + '</div>';
+  info.innerHTML = html;
+  document.getElementById('accountModal')
+    .classList.add('active');
+};
+
+window.soporteWhatsApp = function() {
+  var clean = whatsappNumber.replace(/\D/g, '');
+  var msg = 'Hola, soy ' + currentUser.name +
+    ' (' + currentUser.email + '). ' +
+    'Necesito ayuda con: ';
+  window.open(
+    'https://wa.me/' + clean + '?text=' +
+    encodeURIComponent(msg),
+    '_blank'
+  );
+};
+    async function showMyOrders() {
   if (!currentUser) return;
+  closeModal('accountModal');
   try {
     var snap = await getDocs(collection(db, 'orders'));
     var mine = [];
@@ -2978,6 +3275,7 @@ async function showMyOrders() {
     alert('Error: ' + error.message);
   }
 }
+
 window.cancelarPedido = async function(orderId) {
   if (!currentUser) return;
   if (!confirm('¿Cancelar este pedido? Esta acción no ' +
@@ -3020,7 +3318,7 @@ function updateWhatsAppLinks() {
       '?text=Hola!%20Tengo%20una%20consulta';
   }
 }
-window.openCheckout = function() {
+    window.openCheckout = function() {
   if (cart.length === 0) {
     alert('Tu carrito está vacío');
     return;
@@ -3082,6 +3380,7 @@ window.getLocation = function() {
     return;
   }
   var result = document.getElementById('locationResult');
+  result.className = 'location-card';
   result.textContent = 'Obteniendo ubicación...';
   navigator.geolocation.getCurrentPosition(
     function(pos) {
@@ -3092,6 +3391,7 @@ window.getLocation = function() {
       var storeLat = deliveryConfig.storeLat;
       var storeLng = deliveryConfig.storeLng;
       if (!storeLat || !storeLng) {
+        result.className = 'location-card error';
         result.innerHTML =
           '⚠️ La tienda no ha configurado su ubicación.';
         return;
@@ -3106,6 +3406,7 @@ window.getLocation = function() {
       }
       var maxKm = deliveryConfig.max || 25;
       if (distReal > maxKm) {
+        result.className = 'location-card error';
         result.innerHTML = '❌ Estás fuera del área ' +
           'de entrega. Solo hasta ' + maxKm + ' km.';
         currentDeliveryCost = 0;
@@ -3116,11 +3417,13 @@ window.getLocation = function() {
       }
       currentDistanceKm = distReal;
       currentDeliveryCost = cost;
+      result.className = 'location-card success';
       result.innerHTML = '📍 Ubicación obtenida.<br>' +
         'Entrega disponible en tu zona.';
       updateCheckoutTotals();
     },
     function(err) {
+      result.className = 'location-card error';
       result.innerHTML =
         '❌ No se pudo obtener ubicación: ' +
         err.message;
@@ -3128,7 +3431,7 @@ window.getLocation = function() {
     { enableHighAccuracy: true, timeout: 10000 }
   );
 };
-function esPromoVigente() {
+    function esPromoVigente() {
   if (!deliveryConfig.freeShipActive) return false;
   if (!deliveryConfig.freeShipPromo) return false;
   if (!deliveryConfig.freeShipPromoUntil) return false;
@@ -3175,34 +3478,34 @@ function updateCheckoutTotals() {
   var totalUsd = subtotalConIva + deliveryFee;
   var html = '';
   if (appliedCoupon) {
-    html += '<div class="cart-total-row discount">';
+    html += '<div class="row discount">';
     html += '<span>Descuento (' + appliedCoupon.code +
       '):</span>';
     html += '<span>-$' + descuento.toFixed(2) +
       '</span></div>';
   }
-  html += '<div class="cart-total-row">';
+  html += '<div class="row">';
   html += '<span>Subtotal:</span>';
   html += '<span>$' + subtotalBase.toFixed(2) +
     '</span></div>';
-  html += '<div class="cart-total-row">';
+  html += '<div class="row">';
   html += '<span>IVA (16%):</span>';
   html += '<span>$' + ivaUsd.toFixed(2) +
     '</span></div>';
   if (checkoutDeliveryMode === 'delivery' &&
       currentDeliveryCost > 0) {
     if (esGratis) {
-      html += '<div class="cart-total-row discount">';
+      html += '<div class="row discount">';
       html += '<span>🎁 Delivery:</span>';
       html += '<span>GRATIS</span></div>';
     } else {
-      html += '<div class="cart-total-row">';
+      html += '<div class="row">';
       html += '<span>Delivery:</span>';
       html += '<span>$' + currentDeliveryCost.toFixed(2) +
         '</span></div>';
     }
   }
-  html += '<div class="cart-total-row total">';
+  html += '<div class="row total">';
   html += '<span>TOTAL:</span>';
   html += '<span>$' + totalUsd.toFixed(2) +
     '</span></div>';
@@ -3213,6 +3516,8 @@ function updateCheckoutTotals() {
   if (!notice) return;
   if (esGratis) {
     notice.style.display = 'block';
+    notice.style.background = '#d4edda';
+    notice.style.color = '#155724';
     notice.innerHTML = '🎁 ¡Tu delivery es GRATIS!';
   } else if (deliveryConfig.freeShipActive
       && checkoutDeliveryMode === 'delivery'
@@ -3234,6 +3539,7 @@ function updateCheckoutTotals() {
     notice.style.display = 'none';
   }
 }
+
 window.confirmOrder = async function() {
   if (!currentUser) {
     alert('Debes iniciar sesión primero');
@@ -3383,7 +3689,7 @@ window.confirmOrder = async function() {
     alert('Error: ' + e.message);
   }
 };
-function renderFooter() {
+    function renderFooter() {
   var html = '';
   html += '<div class="footer-section">';
   html += '<h3>' + siteConfig.companyName + '</h3>';
