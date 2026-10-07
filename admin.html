@@ -556,6 +556,28 @@ body {
   font-weight: 500;
   cursor: pointer;
 }
+.slide-card {
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+.slide-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.6rem;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+.slide-thumb {
+  width: 100%;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 0.6rem;
+}
 @media (max-width: 768px) {
   body { flex-direction: column; }
   .admin-sidebar {
@@ -647,7 +669,7 @@ body {
 🏷️ Marcas de Repuestos</div>
 <div class="admin-menu-item"
   onclick="showSection('banners', event)">
-🖼️ Banners</div>
+🖼️ Carrusel de Portada</div>
 <div class="admin-menu-item"
   onclick="showSection('coupons', event)">
 🎟️ Cupones</div>
@@ -663,6 +685,9 @@ body {
 <div class="admin-menu-item"
   onclick="showSection('footer', event)">
 📄 Pie de página</div>
+<div class="admin-menu-item"
+  onclick="showSection('messages', event)">
+💬 Mensajes WhatsApp</div>
 <div class="admin-menu-item"
   onclick="showSection('settings', event)">
 ⚙️ Configuración</div>
@@ -868,21 +893,70 @@ tienda con su logo.
 </div>
 
 <div class="admin-section" id="section-banners">
-<h2 class="section-title">🖼️ Banners</h2>
-<div class="admin-card">
+<h2 class="section-title">🖼️ Carrusel de Portada</h2>
 <div class="alert-info">
-<strong>Tamaños:</strong>
-Web: 1400x400px | Móvil: 750x1000px |
-Máx: 1MB | Máximo 5 imágenes
+Sube hasta 5 imágenes para el carrusel principal
+de la tienda. Cada imagen puede tener título,
+subtítulo y botón. El carrusel rota
+automáticamente.
 </div>
+
+<div class="admin-card">
+<h3>➕ Agregar nueva imagen al carrusel</h3>
+<div class="form-group">
+<label>Imagen (máx. 1MB · 1400x600px recomendado)</label>
 <input type="file" id="bannerImageInput"
-  accept="image/*" style="margin-bottom:1rem;">
+  accept="image/*">
+<div class="image-preview" id="newSlidePreview">
+<div style="color:#999;">Sin imagen</div>
+</div>
+</div>
+<div class="form-group">
+<label>Título (opcional)</label>
+<input type="text" id="newSlideTitle"
+  placeholder="Ej: ¡Ofertas de la semana!">
+</div>
+<div class="form-group">
+<label>Subtítulo (opcional)</label>
+<input type="text" id="newSlideSubtitle"
+  placeholder="Ej: Hasta 30% de descuento en frenos">
+</div>
+<div class="form-row">
+<div class="form-group">
+<label>Texto del botón (opcional)</label>
+<input type="text" id="newSlideCtaText"
+  placeholder="Ej: Ver ofertas">
+</div>
+<div class="form-group">
+<label>Link del botón (opcional)</label>
+<input type="text" id="newSlideCtaLink"
+  placeholder="#productos">
+</div>
+</div>
+<div class="form-row">
+<div class="form-group">
+<label>Duración en pantalla (segundos)</label>
+<input type="number" id="newSlideDuration"
+  value="5" min="2" max="30">
+</div>
+<div class="form-group">
+<label>Posición del texto</label>
+<select id="newSlideAlign">
+<option value="left">Izquierda</option>
+<option value="center" selected>Centro</option>
+<option value="right">Derecha</option>
+</select>
+</div>
+</div>
 <button class="btn btn-primary"
-  onclick="addBanner()">Agregar Banner</button>
-<div id="bannerPreviewGrid"
-  style="margin-top:1rem;display:grid;
-  grid-template-columns:repeat(auto-fill,
-  minmax(200px,1fr));gap:1rem;"></div>
+  onclick="addCarouselSlide()"
+  style="width:100%;">
++ Agregar al carrusel</button>
+</div>
+
+<div class="admin-card">
+<h3>🎬 Slides configurados</h3>
+<div id="carouselSlidesList"></div>
 </div>
 </div>
 <div class="admin-section" id="section-coupons">
@@ -1089,6 +1163,11 @@ Pon 0 para delivery gratis a TODOS.
 
 <div class="admin-section" id="section-hero">
 <h2 class="section-title">🎨 Hero / Portada</h2>
+<div class="alert-info">
+Esta sección ya no se muestra en la tienda
+porque fue reemplazada por el Carrusel.
+Puedes dejarla como respaldo.
+</div>
 <div class="admin-card">
 <h3>Visibilidad</h3>
 <div class="checkbox-group">
@@ -1220,6 +1299,123 @@ Segoe UI</option>
   style="width:100%;padding:1rem;">
 💾 Guardar</button>
 </div>
+</div>
+
+<div class="admin-section" id="section-messages">
+<h2 class="section-title">💬 Mensajes WhatsApp</h2>
+<div class="alert-info">
+Configura los mensajes automáticos que se envían
+por WhatsApp. Usa las variables entre llaves para
+que se reemplacen con los datos reales del pedido.
+</div>
+
+<div class="admin-card">
+<h3>🔘 Interruptor general</h3>
+<div class="switch-row">
+<label for="messagesEnabled">
+Activar mensajes automáticos por WhatsApp
+</label>
+<label class="switch">
+<input type="checkbox" id="messagesEnabled">
+<span class="slider"></span>
+</label>
+</div>
+<div style="font-size:0.8rem;color:#666;
+  margin-top:0.5rem;">
+Si está desactivado, no se abrirá WhatsApp al
+cambiar el estado de un pedido.
+</div>
+</div>
+
+<div class="admin-card">
+<h3>📦 M1 - Pedido en camino (al cliente)</h3>
+<div class="alert-info">
+Se envía al cliente cuando el pedido sale de
+la tienda.
+</div>
+<div class="switch-row">
+<label for="msgM1Enabled">
+Activar este mensaje
+</label>
+<label class="switch">
+<input type="checkbox" id="msgM1Enabled">
+<span class="slider"></span>
+</label>
+</div>
+<div class="form-group" style="margin-top:0.8rem;">
+<label>Plantilla del mensaje</label>
+<textarea id="msgM1Template" rows="5"
+  placeholder="Hola {cliente}, tu pedido #{pedido} ya salió de la tienda y está en camino."></textarea>
+<div style="font-size:0.75rem;color:#666;
+  margin-top:0.4rem;">
+<strong>Variables:</strong>
+{cliente}, {pedido}, {total}, {productos},
+{empresa}
+</div>
+</div>
+</div>
+
+<div class="admin-card">
+<h3>🏍️ M2 - Asignación a domiciliario</h3>
+<div class="alert-info">
+Se envía al domiciliario cuando se le asigna un
+pedido. <strong>No incluye el total</strong> para
+proteger la información del negocio.
+</div>
+<div class="switch-row">
+<label for="msgM2Enabled">
+Activar este mensaje
+</label>
+<label class="switch">
+<input type="checkbox" id="msgM2Enabled">
+<span class="slider"></span>
+</label>
+</div>
+<div class="form-group" style="margin-top:0.8rem;">
+<label>Plantilla del mensaje</label>
+<textarea id="msgM2Template" rows="7"
+  placeholder="Nuevo pedido asignado:&#10;Cliente: {cliente}&#10;Teléfono: {telefono}&#10;Dirección: {direccion}&#10;Ubicación: {maps}&#10;Productos:&#10;{productos}"></textarea>
+<div style="font-size:0.75rem;color:#666;
+  margin-top:0.4rem;">
+<strong>Variables:</strong>
+{cliente}, {telefono}, {pedido}, {productos},
+{direccion}, {maps}, {empresa}
+</div>
+</div>
+</div>
+
+<div class="admin-card">
+<h3>✅ M3 - Pedido entregado (al cliente)</h3>
+<div class="alert-info">
+Se envía al cliente cuando el pedido se marca
+como entregado. Desactivado por defecto.
+</div>
+<div class="switch-row">
+<label for="msgM3Enabled">
+Activar este mensaje
+</label>
+<label class="switch">
+<input type="checkbox" id="msgM3Enabled">
+<span class="slider"></span>
+</label>
+</div>
+<div class="form-group" style="margin-top:0.8rem;">
+<label>Plantilla del mensaje</label>
+<textarea id="msgM3Template" rows="5"
+  placeholder="Gracias por tu compra, {cliente}. Tu pedido #{pedido} fue entregado. Total: ${total}. — {empresa}"></textarea>
+<div style="font-size:0.75rem;color:#666;
+  margin-top:0.4rem;">
+<strong>Variables:</strong>
+{cliente}, {pedido}, {total}, {productos},
+{empresa}
+</div>
+</div>
+</div>
+
+<button class="btn btn-primary"
+  onclick="saveMessagesConfig()"
+  style="width:100%;padding:1rem;">
+💾 Guardar configuración de mensajes</button>
 </div>
 
 <div class="admin-section" id="section-settings">
@@ -1569,6 +1765,14 @@ window.showSection = function(sectionId, event) {
       typeof loadReviews === 'function') {
     loadReviews();
   }
+  if (sectionId === 'messages' &&
+      typeof loadMessagesConfig === 'function') {
+    loadMessagesConfig();
+  }
+  if (sectionId === 'banners' &&
+      typeof renderCarouselSlides === 'function') {
+    renderCarouselSlides();
+  }
 };
 
 window.refreshPreview = function() {
@@ -1614,6 +1818,7 @@ window.escapeHTML = function(str) {
 let products = [];
 let brands = [];
 let banners = [];
+let carouselSlides = [];
 let orders = [];
 let reviews = [];
 let coupons = [];
@@ -1637,9 +1842,19 @@ let heroConfig = {
   visible: false,
   backgroundImage: null
 };
+let messagesConfig = {
+  enabled: false,
+  m1Enabled: false,
+  m1Template: '',
+  m2Enabled: false,
+  m2Template: '',
+  m3Enabled: false,
+  m3Template: ''
+};
 let currentProductImages = [];
 let currentSpecifications = [];
 let currentCompatibility = [];
+let newSlideImageData = '';
 
 const defaultBrands = [
   { id: 'mitsubishi', name: 'Mitsubishi', image: null },
@@ -1649,6 +1864,24 @@ const defaultBrands = [
   { id: 'chevrolet', name: 'Chevrolet', image: null }
 ];
 
+const DEFAULT_M1_TEMPLATE =
+  'Hola {cliente}, tu pedido #{pedido} ya salió ' +
+  'de la tienda y está en camino. Total: ${total}. ' +
+  'Gracias por tu compra. — {empresa}';
+
+const DEFAULT_M2_TEMPLATE =
+  'Nuevo pedido asignado #{pedido}:\n\n' +
+  'Cliente: {cliente}\n' +
+  'Teléfono: {telefono}\n' +
+  'Dirección: {direccion}\n' +
+  'Ubicación: {maps}\n\n' +
+  'Productos:\n{productos}';
+
+const DEFAULT_M3_TEMPLATE =
+  'Gracias por tu compra, {cliente}. Tu pedido ' +
+  '#{pedido} fue entregado. Total: ${total}. ' +
+  '— {empresa}';
+
 async function loadAll() {
   await Promise.allSettled([
     loadBcvRate(), loadLogo(), loadPickupMaps(),
@@ -1656,7 +1889,8 @@ async function loadAll() {
     loadHero(), loadCatalogo(), loadBrands(),
     loadProducts(), loadOrders(), loadReviews(),
     loadCoupons(), loadDeliveryConfig(),
-    loadDrivers(), loadCustomers()
+    loadDrivers(), loadCustomers(),
+    loadMessagesConfig()
   ]);
   await loadDashboard();
 }
@@ -2213,67 +2447,174 @@ async function loadBanners() {
   try {
     var b = await db.collection('settings')
       .doc('banners').get();
-    if (b.exists) banners = b.data().images || [];
-    renderBannerPreviews();
+    if (b.exists) {
+      var data = b.data();
+      if (data.slides && Array.isArray(data.slides)) {
+        carouselSlides = data.slides;
+      } else if (data.images && Array.isArray(data.images)) {
+        carouselSlides = data.images.map(function(img) {
+          return {
+            image: img,
+            title: '',
+            subtitle: '',
+            ctaText: '',
+            ctaLink: '',
+            duration: 5,
+            align: 'center'
+          };
+        });
+        await db.collection('settings').doc('banners')
+          .set({ slides: carouselSlides });
+      }
+    }
+    renderCarouselSlides();
   } catch(e) { console.log(e); }
 }
 
-function renderBannerPreviews() {
-  var grid = document.getElementById('bannerPreviewGrid');
-  if (!grid) return;
-  if (banners.length === 0) {
-    grid.innerHTML = '<p style="color:#666;' +
-      'text-align:center;">Sin banners</p>';
+window.renderCarouselSlides = function() {
+  var list = document.getElementById('carouselSlidesList');
+  if (!list) return;
+  if (carouselSlides.length === 0) {
+    list.innerHTML = '<p style="color:#666;' +
+      'text-align:center;">Sin slides configurados</p>';
     return;
   }
   var html = '';
-  banners.forEach(function(b, i) {
-    html += '<div style="position:relative;">';
-    html += '<img src="' + escapeHTML(b) +
-      '" style="width:100%;';
-    html += 'height:120px;object-fit:cover;';
-    html += 'border-radius:8px;">';
-    html += '<button onclick="removeBanner(' + i + ')"';
-    html += ' style="position:absolute;top:5px;';
-    html += 'right:5px;background:#dc3545;color:white;';
-    html += 'border:none;width:28px;height:28px;';
-    html += 'border-radius:50%;cursor:pointer;">×';
-    html += '</button></div>';
+  carouselSlides.forEach(function(s, i) {
+    html += '<div class="slide-card">';
+    html += '<div class="slide-header">';
+    html += '<strong>Slide ' + (i + 1) + '</strong>';
+    html += '<div style="display:flex;gap:0.3rem;">';
+    html += '<button class="btn btn-small btn-warning"';
+    html += ' onclick="editCarouselSlide(' + i + ')">';
+    html += '✏️ Editar</button>';
+    html += '<button class="btn btn-small btn-secondary"';
+    html += ' onclick="deleteCarouselSlide(' + i + ')">';
+    html += 'Eliminar</button>';
+    html += '</div></div>';
+    if (s.image) {
+      html += '<img class="slide-thumb" src="' +
+        escapeHTML(s.image) + '">';
+    }
+    if (s.title) {
+      html += '<div style="font-weight:600;">' +
+        escapeHTML(s.title) + '</div>';
+    }
+    if (s.subtitle) {
+      html += '<div style="font-size:0.85rem;' +
+        'color:#666;">' + escapeHTML(s.subtitle) +
+        '</div>';
+    }
+    html += '<div style="font-size:0.75rem;' +
+      'color:#999;margin-top:0.4rem;">';
+    html += '⏱️ ' + (s.duration || 5) + 's · ';
+    html += '📍 ' + (s.align || 'center');
+    if (s.ctaText) {
+      html += ' · 🔗 ' + escapeHTML(s.ctaText);
+    }
+    html += '</div></div>';
   });
-  grid.innerHTML = html;
-}
-
-window.addBanner = async function() {
-  var fi = document.getElementById('bannerImageInput');
-  var file = fi.files[0];
-  if (!file) { alert('Selecciona imagen'); return; }
-  if (banners.length >= 5) { alert('Máximo 5'); return; }
-  if (file.size > 1024 * 1024) {
-    alert('Máximo 1MB');
-    return;
-  }
-  var reader = new FileReader();
-  reader.onload = async function(e) {
-    banners.push(e.target.result);
-    try {
-      await db.collection('settings').doc('banners')
-        .set({ images: banners });
-      renderBannerPreviews();
-      fi.value = '';
-      alert('✅ Agregado');
-    } catch(err) { alert('Error: ' + err.message); }
-  };
-  reader.readAsDataURL(file);
+  list.innerHTML = html;
 };
 
-window.removeBanner = async function(index) {
-  if (!confirm('¿Eliminar?')) return;
-  banners.splice(index, 1);
+var newSlideImageData = '';
+
+document.addEventListener('change', function(e) {
+  if (e.target && e.target.id === 'bannerImageInput') {
+    var file = e.target.files[0];
+    if (!file) return;
+    if (file.size > 1024 * 1024) {
+      alert('Máximo 1MB');
+      e.target.value = '';
+      return;
+    }
+    var reader = new FileReader();
+    reader.onload = function(ev) {
+      newSlideImageData = ev.target.result;
+      var prev = document.getElementById('newSlidePreview');
+      if (prev) {
+        prev.innerHTML = '<img src="' + ev.target.result +
+          '">';
+      }
+    };
+    reader.readAsDataURL(file);
+  }
+});
+
+window.addCarouselSlide = async function() {
+  if (!newSlideImageData) {
+    alert('Selecciona una imagen primero');
+    return;
+  }
+  if (carouselSlides.length >= 5) {
+    alert('Máximo 5 slides');
+    return;
+  }
+  var slide = {
+    image: newSlideImageData,
+    title: document.getElementById('newSlideTitle')
+      .value.trim(),
+    subtitle: document.getElementById('newSlideSubtitle')
+      .value.trim(),
+    ctaText: document.getElementById('newSlideCtaText')
+      .value.trim(),
+    ctaLink: document.getElementById('newSlideCtaLink')
+      .value.trim(),
+    duration: parseInt(document.getElementById(
+      'newSlideDuration').value) || 5,
+    align: document.getElementById('newSlideAlign')
+      .value || 'center'
+  };
+  carouselSlides.push(slide);
   try {
     await db.collection('settings').doc('banners')
-      .set({ images: banners });
-    renderBannerPreviews();
+      .set({ slides: carouselSlides });
+    newSlideImageData = '';
+    document.getElementById('bannerImageInput').value = '';
+    document.getElementById('newSlidePreview').innerHTML =
+      '<div style="color:#999;">Sin imagen</div>';
+    document.getElementById('newSlideTitle').value = '';
+    document.getElementById('newSlideSubtitle').value = '';
+    document.getElementById('newSlideCtaText').value = '';
+    document.getElementById('newSlideCtaLink').value = '';
+    document.getElementById('newSlideDuration').value = '5';
+    document.getElementById('newSlideAlign').value =
+      'center';
+    renderCarouselSlides();
+    alert('✅ Slide agregado');
+  } catch(e) { alert('Error: ' + e.message); }
+};
+
+window.deleteCarouselSlide = async function(i) {
+  if (!confirm('¿Eliminar este slide?')) return;
+  carouselSlides.splice(i, 1);
+  try {
+    await db.collection('settings').doc('banners')
+      .set({ slides: carouselSlides });
+    renderCarouselSlides();
     alert('✅ Eliminado');
+  } catch(e) { alert('Error: ' + e.message); }
+};
+
+window.editCarouselSlide = async function(i) {
+  var s = carouselSlides[i];
+  var nuevoTitulo = prompt('Título:', s.title || '');
+  if (nuevoTitulo === null) return;
+  var nuevoSubtitulo = prompt('Subtítulo:', s.subtitle || '');
+  if (nuevoSubtitulo === null) return;
+  var nuevaDuracion = prompt('Duración (segundos):',
+    s.duration || 5);
+  if (nuevaDuracion === null) return;
+  var d = parseInt(nuevaDuracion);
+  if (isNaN(d) || d < 2 || d > 30) d = 5;
+  carouselSlides[i].title = nuevoTitulo.trim();
+  carouselSlides[i].subtitle = nuevoSubtitulo.trim();
+  carouselSlides[i].duration = d;
+  try {
+    await db.collection('settings').doc('banners')
+      .set({ slides: carouselSlides });
+    renderCarouselSlides();
+    alert('✅ Actualizado');
   } catch(e) { alert('Error: ' + e.message); }
 };
 
@@ -3055,7 +3396,8 @@ window.calculateSalePrice = function() {
   document.getElementById('productPrice').value =
     salePrice.toFixed(2);
 };
-
+</script>
+<script>
 var ordersUnsubscribe = null;
 
 function loadOrders() {
@@ -3293,9 +3635,47 @@ window.viewOrderDetail = function(id) {
     .classList.add('active');
 };
 
+function reemplazarVariables(plantilla, datos) {
+  var resultado = plantilla;
+  Object.keys(datos).forEach(function(clave) {
+    var valor = datos[clave] === undefined ||
+      datos[clave] === null ? '' : String(datos[clave]);
+    var regex = new RegExp('\\{' + clave + '\\}', 'g');
+    resultado = resultado.replace(regex, valor);
+  });
+  return resultado;
+}
+
+function construirProductosTexto(items) {
+  var lineas = [];
+  items.forEach(function(it) {
+    lineas.push('• ' + it.name + ' x' + it.quantity);
+  });
+  return lineas.join('\n');
+}
+
+function abrirWhatsApp(numero, mensaje) {
+  if (!numero) {
+    alert('⚠️ No hay número de WhatsApp configurado.');
+    return;
+  }
+  var limpio = String(numero).replace(/\D/g, '');
+  if (!limpio) {
+    alert('⚠️ Número de WhatsApp inválido.');
+    return;
+  }
+  var url = 'https://wa.me/' + limpio +
+    '?text=' + encodeURIComponent(mensaje);
+  window.open(url, '_blank');
+}
+
 window.assignDriverToOrder = async function(orderId) {
   var driverId = document.getElementById(
     'orderDriverSelect').value;
+  var order = orders.find(function(o) {
+    return o.id === orderId;
+  });
+  if (!order) return;
   try {
     if (!driverId) {
       await db.collection('orders').doc(orderId).update({
@@ -3304,17 +3684,48 @@ window.assignDriverToOrder = async function(orderId) {
         driverCommission: null
       });
       alert('✅ Domiciliario removido');
-    } else {
-      var driver = drivers.find(function(d) {
-        return d.id === driverId;
-      });
-      if (!driver) return;
-      await db.collection('orders').doc(orderId).update({
-        driverId: driver.id,
-        driverName: driver.name,
-        driverCommission: driver.commission
-      });
-      alert('✅ Asignado a ' + driver.name);
+      return;
+    }
+    var driver = drivers.find(function(d) {
+      return d.id === driverId;
+    });
+    if (!driver) return;
+    await db.collection('orders').doc(orderId).update({
+      driverId: driver.id,
+      driverName: driver.name,
+      driverCommission: driver.commission
+    });
+    alert('✅ Asignado a ' + driver.name);
+
+    if (messagesConfig.enabled &&
+        messagesConfig.m2Enabled) {
+      var direccion = order.address || '(sin dirección)';
+      var mapsLink = '';
+      if (order.gpsLat && order.gpsLng) {
+        mapsLink = 'https://www.google.com/maps?q=' +
+          order.gpsLat + ',' + order.gpsLng;
+      } else {
+        mapsLink = 'Solicitar ubicación al cliente ' +
+          'por WhatsApp';
+      }
+      var productosTexto = construirProductosTexto(
+        order.items || []
+      );
+      var datos = {
+        cliente: order.userName || 'Cliente',
+        telefono: order.userPhone || '',
+        pedido: order.id.slice(-6),
+        productos: productosTexto,
+        direccion: direccion,
+        maps: mapsLink,
+        empresa: siteConfig.companyName || 'AKIRA MOTORS'
+      };
+      var plantilla = messagesConfig.m2Template ||
+        DEFAULT_M2_TEMPLATE;
+      var mensaje = reemplazarVariables(plantilla, datos);
+      setTimeout(function() {
+        abrirWhatsApp(driver.phone, mensaje);
+      }, 500);
     }
   } catch(e) {
     alert('Error: ' + e.message);
@@ -3323,10 +3734,54 @@ window.assignDriverToOrder = async function(orderId) {
 
 window.updateOrderStatus = async function(id, status) {
   if (!confirm('¿Cambiar a ' + status + '?')) return;
+  var order = orders.find(function(o) {
+    return o.id === id;
+  });
+  if (!order) return;
   try {
     await db.collection('orders').doc(id)
       .update({ status: status });
     alert('✅ Actualizado');
+
+    if (!messagesConfig.enabled) return;
+
+    if (status === 'shipped' && messagesConfig.m1Enabled) {
+      var productosTexto = construirProductosTexto(
+        order.items || []
+      );
+      var datos1 = {
+        cliente: order.userName || 'Cliente',
+        pedido: order.id.slice(-6),
+        total: Number(order.total || 0).toFixed(2),
+        productos: productosTexto,
+        empresa: siteConfig.companyName || 'AKIRA MOTORS'
+      };
+      var plantilla1 = messagesConfig.m1Template ||
+        DEFAULT_M1_TEMPLATE;
+      var mensaje1 = reemplazarVariables(plantilla1, datos1);
+      setTimeout(function() {
+        abrirWhatsApp(order.userPhone, mensaje1);
+      }, 500);
+    }
+
+    if (status === 'delivered' && messagesConfig.m3Enabled) {
+      var productosTexto3 = construirProductosTexto(
+        order.items || []
+      );
+      var datos3 = {
+        cliente: order.userName || 'Cliente',
+        pedido: order.id.slice(-6),
+        total: Number(order.total || 0).toFixed(2),
+        productos: productosTexto3,
+        empresa: siteConfig.companyName || 'AKIRA MOTORS'
+      };
+      var plantilla3 = messagesConfig.m3Template ||
+        DEFAULT_M3_TEMPLATE;
+      var mensaje3 = reemplazarVariables(plantilla3, datos3);
+      setTimeout(function() {
+        abrirWhatsApp(order.userPhone, mensaje3);
+      }, 500);
+    }
   } catch(e) { alert('Error: ' + e.message); }
 };
 
@@ -3337,7 +3792,8 @@ window.deleteOrder = async function(id) {
     alert('✅ Eliminado');
   } catch(e) { alert('Error: ' + e.message); }
 };
-  async function loadCustomers() {
+
+async function loadCustomers() {
   try {
     var s = await db.collection('users').get();
     customers = [];
@@ -3540,7 +3996,8 @@ window.deleteDriver = async function(id) {
     alert('✅ Eliminado');
   } catch(e) { alert('Error: ' + e.message); }
 };
-
+</script>
+<script>
 async function loadReviews() {
   try {
     var s = await db.collection('reviews').get();
@@ -3786,6 +4243,65 @@ window.deleteCoupon = async function(id) {
     await db.collection('coupons').doc(id).delete();
     await loadCoupons();
     alert('✅ Eliminado');
+  } catch(e) { alert('Error: ' + e.message); }
+};
+
+async function loadMessagesConfig() {
+  try {
+    var snap = await db.collection('settings')
+      .doc('messagesConfig').get();
+    if (snap.exists) {
+      messagesConfig = Object.assign(
+        {}, messagesConfig, snap.data()
+      );
+    }
+    var el = document.getElementById('messagesEnabled');
+    if (el) el.checked = messagesConfig.enabled || false;
+    el = document.getElementById('msgM1Enabled');
+    if (el) el.checked = messagesConfig.m1Enabled || false;
+    el = document.getElementById('msgM1Template');
+    if (el) el.value = messagesConfig.m1Template ||
+      DEFAULT_M1_TEMPLATE;
+    el = document.getElementById('msgM2Enabled');
+    if (el) el.checked = messagesConfig.m2Enabled || false;
+    el = document.getElementById('msgM2Template');
+    if (el) el.value = messagesConfig.m2Template ||
+      DEFAULT_M2_TEMPLATE;
+    el = document.getElementById('msgM3Enabled');
+    if (el) el.checked = messagesConfig.m3Enabled || false;
+    el = document.getElementById('msgM3Template');
+    if (el) el.value = messagesConfig.m3Template ||
+      DEFAULT_M3_TEMPLATE;
+  } catch(e) {
+    console.error('Error messages config:', e);
+  }
+}
+
+window.saveMessagesConfig = async function() {
+  var config = {
+    enabled: document.getElementById('messagesEnabled')
+      .checked,
+    m1Enabled: document.getElementById('msgM1Enabled')
+      .checked,
+    m1Template: document.getElementById('msgM1Template')
+      .value,
+    m2Enabled: document.getElementById('msgM2Enabled')
+      .checked,
+    m2Template: document.getElementById('msgM2Template')
+      .value,
+    m3Enabled: document.getElementById('msgM3Enabled')
+      .checked,
+    m3Template: document.getElementById('msgM3Template')
+      .value,
+    updatedAt: new Date().toISOString()
+  };
+  try {
+    await db.collection('settings')
+      .doc('messagesConfig').set(config);
+    messagesConfig = Object.assign(
+      {}, messagesConfig, config
+    );
+    alert('✅ Configuración de mensajes guardada');
   } catch(e) { alert('Error: ' + e.message); }
 };
 
