@@ -2631,12 +2631,6 @@ window.showToast = function(mensaje, tipo) {
   }, 2500);
 };
 
-escucharSesion(function(user) {
-  currentUser = user || null;
-  updateHeaderButtons();
-  updateVerifyBanner();
-});
-</script>
 <script>
 window.toggleSidebar = function() {
   var sb = document.getElementById('categorySidebar');
@@ -3201,7 +3195,7 @@ function restartCarouselTimer() {
   if (carouselTimer) clearTimeout(carouselTimer);
   startCarouselTimer();
 }
-</script>
+
 <script>
 async function loadData() {
   try {
@@ -4005,7 +3999,7 @@ window.removeCoupon = function() {
   if (msg) msg.innerHTML = '';
   updateCartUI();
 };
-</script>
+
 <script>
 window.switchToLogin = function() {
   closeModal('registerModal');
@@ -4746,9 +4740,14 @@ document.addEventListener('keydown', function(e) {
     if (cs) cs.classList.remove('active');
     var sb = document.getElementById('categorySidebar');
     if (sb) sb.classList.remove('open');
-    var ov = document.getElementById('sidebarOverlay');
+    var ov = document.getElementById('sidebarOverlay')
     if (ov) ov.classList.remove('active');
   }
+});
+escucharSesion(function(user) {
+  currentUser = user || null;
+  updateHeaderButtons();
+  updateVerifyBanner();
 });
 
 loadData();
