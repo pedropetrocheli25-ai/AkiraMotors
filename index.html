@@ -2632,6 +2632,7 @@ window.showToast = function(mensaje, tipo) {
   }, 2500);
 };
 
+<script>
 window.toggleSidebar = function() {
   var sb = document.getElementById('categorySidebar');
   var ov = document.getElementById('sidebarOverlay');
@@ -3196,6 +3197,7 @@ function restartCarouselTimer() {
   startCarouselTimer();
 }
 
+<script>
 async function loadData() {
   try {
     try {
@@ -3999,6 +4001,7 @@ window.removeCoupon = function() {
   updateCartUI();
 };
 
+<script>
 window.switchToLogin = function() {
   closeModal('registerModal');
   var el = document.getElementById('loginModal');
@@ -4347,8 +4350,6 @@ window.showMyOrders = async function() {
     showToast('Error: ' + error.message, 'error');
   }
 };
-  }
-  closeModal('accountModal');
   var list = document.getElementById('ordersList');
   if (list) {
     list.innerHTML = '<div class="loading-state">' +
