@@ -577,6 +577,7 @@ svg { display:block; }
   line-height: 1.3;
   display: -webkit-box;
   -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
@@ -757,6 +758,7 @@ svg { display:block; }
   line-height: 1.35;
   display: -webkit-box;
   -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
   min-height: 2.4rem;
@@ -1389,6 +1391,7 @@ svg { display:block; }
   line-height: 1.3;
   display: -webkit-box;
   -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
   margin-bottom: 0.3rem;
@@ -3870,6 +3873,14 @@ window.applyCouponCode = async function() {
   var input = document.getElementById('couponCodeInput');
   var msg = document.getElementById('couponMessage');
   if (!input || !msg) return;
+  if (!currentUser) {
+    msg.innerHTML = '<span style="color:#DC3545;">' +
+      'Debes <a href="#" onclick="openLoginModal();' +
+      'return false;" style="color:#FF6B1A;' +
+      'font-weight:700;">iniciar sesión</a> ' +
+      'para usar cupones</span>';
+    return;
+  }
   var code = input.value.trim().toUpperCase();
   if (!code) {
     msg.innerHTML = '<span style="color:#DC3545;">' +
@@ -4316,17 +4327,9 @@ function updateWhatsAppLinks() {
         'Hola, tengo una consulta sobre repuestos.'
       );
   }
-}
- window.openCheckout = function() {
+window.openCheckout = function() {
   if (cart.length === 0) {
     showToast('Tu carrito está vacío', 'error');
-    return;
-  }
-  if (!currentUser) {
-    showToast('Debes iniciar sesión para comprar', 'error');
-    setTimeout(function() {
-      openLoginModal();
-    }, 600);
     return;
   }
   selectCheckoutDelivery(deliveryMode);
@@ -4538,14 +4541,6 @@ function updateCheckoutTotals() {
 }
 
 window.confirmOrder = async function() {
-  if (!currentUser) {
-    showToast('Debes iniciar sesión primero', 'error');
-    return;
-  }
-  if (!currentUser.emailVerified) {
-    showToast('Verifica tu correo antes de comprar', 'error');
-    return;
-  }
   if (checkoutDeliveryMode === 'delivery') {
     if (currentDeliveryCost <= 0 && !currentDeliveryFree) {
       showToast('Primero debes obtener tu ubicación', 'error');
@@ -4576,13 +4571,20 @@ window.confirmOrder = async function() {
   var totalUsd = subtotalConIva + deliveryFee;
 
   var ud = window.__userData || {};
+  var isGuest = !currentUser;
+  var reservationMinutes = 30;
+  var expiresAt = Date.now() +
+    (reservationMinutes * 60 * 1000);
+
   var orderData = {
-    userId: currentUser.uid,
-    userName: ud.name || currentUser.displayName ||
-      'Cliente',
-    userEmail: currentUser.email,
-    userPhone: ud.phone || '',
-    customerCode: ud.customerCode || '',
+    userId: isGuest ? null : currentUser.uid,
+    userName: isGuest ? 'Invitado' :
+      (ud.name || currentUser.displayName || 'Cliente'),
+    userEmail: isGuest ? null : currentUser.email,
+    userPhone: isGuest ? null : (ud.phone || ''),
+    customerCode: isGuest ? null :
+      (ud.customerCode || ''),
+    isGuest: isGuest,
     items: cart.map(function(item) {
       return {
         id: item.id,
@@ -4593,7 +4595,7 @@ window.confirmOrder = async function() {
     }),
     subtotal: subtotalBase + descuento,
     discount: descuento,
-    couponCode: appliedCoupon ?
+    couponCode: (appliedCoupon && !isGuest) ?
       appliedCoupon.code : null,
     iva: ivaUsd,
     deliveryFee: deliveryFee,
@@ -4602,6 +4604,8 @@ window.confirmOrder = async function() {
     total: totalUsd,
     deliveryMode: checkoutDeliveryMode,
     status: 'pending',
+    stockReserved: true,
+    reservationExpiresAt: expiresAt,
     date: new Date().toISOString()
   };
   if (checkoutDeliveryMode === 'delivery') {
@@ -4615,9 +4619,32 @@ window.confirmOrder = async function() {
       .value;
     orderData.distanceKm = currentDistanceKm;
   }
+
   try {
     await addDoc(collection(db, 'orders'), orderData);
-    if (appliedCoupon && appliedCoupon.id) {
+
+    for (var i = 0; i < cart.length; i++) {
+      var item = cart[i];
+      try {
+        var prodRef = doc(db, 'products', item.id);
+        var prodDoc = await getDoc(prodRef);
+        if (prodDoc.exists()) {
+          var stockActual = Number(
+            prodDoc.data().stock
+          ) || 0;
+          var nuevoStock = Math.max(
+            0, stockActual - item.quantity
+          );
+          await updateDoc(prodRef, {
+            stock: nuevoStock
+          });
+        }
+      } catch(eStock) {
+        console.error('Error stock:', eStock);
+      }
+    }
+
+    if (appliedCoupon && appliedCoupon.id && !isGuest) {
       try {
         var couponRef = doc(db, 'coupons', appliedCoupon.id);
         var couponDoc = await getDoc(couponRef);
@@ -4631,18 +4658,25 @@ window.confirmOrder = async function() {
         console.error('Error cupón:', errCoupon);
       }
     }
+
     var cleanNumber = String(whatsappNumber)
       .replace(/\D/g, '');
     var rawMessage = '¡Hola ' +
-      siteConfig.companyName + '! Soy ' +
-      (ud.name || currentUser.email) + '.\n\nMi pedido:\n';
+      siteConfig.companyName + '!\n\n';
+    if (isGuest) {
+      rawMessage += 'Soy un cliente invitado.\n\n';
+    } else {
+      rawMessage += 'Soy ' +
+        (ud.name || currentUser.email) + '.\n\n';
+    }
+    rawMessage += 'Mi pedido:\n';
     cart.forEach(function(item) {
       rawMessage += '- ' + item.name + ' x' +
         item.quantity + ' = $' +
         (Number(item.price) * item.quantity)
         .toFixed(2) + '\n';
     });
-    if (appliedCoupon) {
+    if (appliedCoupon && !isGuest) {
       rawMessage += '\nCupón: ' + appliedCoupon.code +
         ' (-' + appliedCoupon.discount + '%)';
     }
@@ -4671,11 +4705,17 @@ window.confirmOrder = async function() {
       ).value;
       if (addr) rawMessage += '\nDirección: ' + addr;
     }
+    rawMessage += '\n\n⚠️ Tus productos están apartados ' +
+      'por ' + reservationMinutes + ' minutos. ' +
+      'Concreta la compra dentro de ese tiempo para ' +
+      'asegurar tu pedido.';
+
     window.open(
       'https://wa.me/' + cleanNumber + '?text=' +
       encodeURIComponent(rawMessage),
       '_blank'
     );
+
     cart = [];
     appliedCoupon = null;
     currentDeliveryCost = 0;
@@ -4690,7 +4730,12 @@ window.confirmOrder = async function() {
     updateCartUI();
     saveCart();
     closeModal('checkoutModal');
-    showToast('Pedido enviado con éxito', 'success');
+    showToast('Pedido enviado. Productos apartados por ' +
+      reservationMinutes + ' min', 'success');
+
+    setTimeout(function() {
+      location.reload();
+    }, 2500);
   } catch(e) {
     console.error('Error:', e);
     showToast('Error: ' + e.message, 'error');
