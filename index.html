@@ -2073,7 +2073,7 @@ footer {
   z-index:10000;font-family:monospace;
   font-size:0.8rem;text-align:center;
   word-break:break-word;"></div>
-<script>
+
 window.addEventListener('error', function(e) {
   var el = document.getElementById('errorBanner');
   if (el) {
@@ -2631,6 +2631,7 @@ window.showToast = function(mensaje, tipo) {
     el.classList.remove('show');
   }, 2500);
 };
+
 
 window.toggleSidebar = function() {
   var sb = document.getElementById('categorySidebar');
@@ -3196,7 +3197,6 @@ function restartCarouselTimer() {
   startCarouselTimer();
 }
 
-<script>
 async function loadData() {
   try {
     try {
@@ -4000,7 +4000,6 @@ window.removeCoupon = function() {
   updateCartUI();
 };
 
-<script>
 window.switchToLogin = function() {
   closeModal('registerModal');
   var el = document.getElementById('loginModal');
