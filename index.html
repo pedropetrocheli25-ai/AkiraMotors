@@ -2510,8 +2510,10 @@ Finalizar Compra
 import { initializeApp, getApps, getApp }
   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import {
+  import {
   getFirestore, collection, getDocs,
-  doc, getDoc, updateDoc, addDoc
+  doc, getDoc, updateDoc, addDoc,
+  query, where
 }
   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import {
@@ -2631,6 +2633,7 @@ window.showToast = function(mensaje, tipo) {
   }, 2500);
 };
 
+<script>
 window.toggleSidebar = function() {
   var sb = document.getElementById('categorySidebar');
   var ov = document.getElementById('sidebarOverlay');
@@ -3195,6 +3198,7 @@ function restartCarouselTimer() {
   startCarouselTimer();
 }
 
+<script>
 async function loadData() {
   try {
     try {
@@ -3998,6 +4002,7 @@ window.removeCoupon = function() {
   updateCartUI();
 };
 
+<script>
 window.switchToLogin = function() {
   closeModal('registerModal');
   var el = document.getElementById('loginModal');
@@ -4194,6 +4199,195 @@ window.showMyOrders = async function() {
   if (!currentUser) {
     showToast('Inicia sesión para ver tus pedidos', 'error');
     return;
+  }
+  closeModal('accountModal');
+  var list = document.getElementById('ordersList');
+  if (list) {
+    list.innerHTML = '<div class="loading-state">' +
+      '<div class="loading-spinner"></div>' +
+      '<div>Cargando pedidos...</div></div>';
+  }
+  var modal = document.getElementById('ordersModal');
+  if (modal) modal.classList.add('active');
+  try {
+    var mine = [];
+    try {
+      var q1 = query(
+        collection(db, 'orders'),
+        where('userId', '==', currentUser.uid)
+      );
+      var snap1 = await getDocs(q1);
+      snap1.forEach(function(d) {
+        var data = d.data();
+        data.id = d.id;
+        mine.push(data);
+      });
+    } catch(e1) {
+      console.error('Query userId:', e1);
+    }
+    try {
+      var q2 = query(
+        collection(db, 'orders'),
+        where('userEmail', '==', currentUser.email)
+      );
+      var snap2 = await getDocs(q2);
+      snap2.forEach(function(d) {
+        var data = d.data();
+        data.id = d.id;
+        var existe = mine.some(function(x) {
+          return x.id === d.id;
+        });
+        if (!existe) mine.push(data);
+      });
+    } catch(e2) {
+      console.error('Query email:', e2);
+    }
+    if (!list) return;
+    if (mine.length === 0) {
+      list.innerHTML = '<div style="text-align:center;' +
+        'color:#6C757D;padding:2rem;">' +
+        'Aún no tienes pedidos</div>';
+      return;
+    }
+    mine.sort(function(a, b) {
+      var tA = a.date ? new Date(a.date).getTime() : 0;
+      var tB = b.date ? new Date(b.date).getTime() : 0;
+      return tB - tA;
+    });
+    var html = '';
+    mine.forEach(function(o) {
+      var st = o.status === 'pending' ? 'Pendiente' :
+        o.status === 'shipped' ? 'En camino' :
+        o.status === 'delivered' ? 'Entregado' :
+        'Cancelado';
+      html += '<div class="order-item">';
+      html += '<div class="order-header">';
+      html += '<div><strong>#' + o.id.slice(-6) +
+        '</strong><br>';
+      html += '<small style="color:#6C757D;">';
+      html += o.date ? new Date(o.date)
+        .toLocaleDateString() : '';
+      html += '</small></div>';
+      html += '<span class="order-status ' + o.status +
+        '">' + st + '</span></div>';
+      var items = o.items || [];
+      html += '<div style="margin:0.5rem 0;font-size:0.85rem;">';
+      items.forEach(function(it) {
+        html += '<div>' + escapeHTML(it.name) + ' x' +
+          it.quantity + '</div>';
+      });
+      html += '</div>';
+      html += '<div style="font-weight:800;color:#FF6B1A;' +
+        'font-size:1.05rem;">';
+      html += 'Total: $' + Number(o.total || 0).toFixed(2);
+      html += '</div>';
+      if (o.status === 'pending') {
+        html += '<button class="order-cancel-btn" ';
+        html += 'onclick="cancelarPedido(\'' + o.id +
+          '\')">Cancelar pedido</button>';
+      }
+      html += '</div>';
+    });
+    list.innerHTML = html;
+  } catch (error) {
+    console.error('Error:', error);
+    showToast('Error: ' + error.message, 'error');
+  }
+};
+  closeModal('accountModal');
+  var list = document.getElementById('ordersList');
+  if (list) {
+    list.innerHTML = '<div class="loading-state">' +
+      '<div class="loading-spinner"></div>' +
+      '<div>Cargando pedidos...</div></div>';
+  }
+  var modal = document.getElementById('ordersModal');
+  if (modal) modal.classList.add('active');
+  try {
+    var mine = [];
+    try {
+      var q1 = query(
+        collection(db, 'orders'),
+        where('userId', '==', currentUser.uid)
+      );
+      var snap1 = await getDocs(q1);
+      snap1.forEach(function(d) {
+        var data = d.data();
+        data.id = d.id;
+        mine.push(data);
+      });
+    } catch(e1) {
+      console.error('Query userId:', e1);
+    }
+    try {
+      var q2 = query(
+        collection(db, 'orders'),
+        where('userEmail', '==', currentUser.email)
+      );
+      var snap2 = await getDocs(q2);
+      snap2.forEach(function(d) {
+        var data = d.data();
+        data.id = d.id;
+        var existe = mine.some(function(x) {
+          return x.id === d.id;
+        });
+        if (!existe) mine.push(data);
+      });
+    } catch(e2) {
+      console.error('Query email:', e2);
+    }
+    if (!list) return;
+    if (mine.length === 0) {
+      list.innerHTML = '<div style="text-align:center;' +
+        'color:#6C757D;padding:2rem;">' +
+        'Aún no tienes pedidos</div>';
+      return;
+    }
+    mine.sort(function(a, b) {
+      var tA = a.date ? new Date(a.date).getTime() : 0;
+      var tB = b.date ? new Date(b.date).getTime() : 0;
+      return tB - tA;
+    });
+    var html = '';
+    mine.forEach(function(o) {
+      var st = o.status === 'pending' ? 'Pendiente' :
+        o.status === 'shipped' ? 'En camino' :
+        o.status === 'delivered' ? 'Entregado' :
+        'Cancelado';
+      html += '<div class="order-item">';
+      html += '<div class="order-header">';
+      html += '<div><strong>#' + o.id.slice(-6) +
+        '</strong><br>';
+      html += '<small style="color:#6C757D;">';
+      html += o.date ? new Date(o.date)
+        .toLocaleDateString() : '';
+      html += '</small></div>';
+      html += '<span class="order-status ' + o.status +
+        '">' + st + '</span></div>';
+      var items = o.items || [];
+      html += '<div style="margin:0.5rem 0;font-size:0.85rem;">';
+      items.forEach(function(it) {
+        html += '<div>' + escapeHTML(it.name) + ' x' +
+          it.quantity + '</div>';
+      });
+      html += '</div>';
+      html += '<div style="font-weight:800;color:#FF6B1A;' +
+        'font-size:1.05rem;">';
+      html += 'Total: $' + Number(o.total || 0).toFixed(2);
+      html += '</div>';
+      if (o.status === 'pending') {
+        html += '<button class="order-cancel-btn" ';
+        html += 'onclick="cancelarPedido(\'' + o.id +
+          '\')">Cancelar pedido</button>';
+      }
+      html += '</div>';
+    });
+    list.innerHTML = html;
+  } catch (error) {
+    console.error('Error:', error);
+    showToast('Error: ' + error.message, 'error');
+  }
+};
   }
   closeModal('accountModal');
   var list = document.getElementById('ordersList');
