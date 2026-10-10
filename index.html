@@ -153,7 +153,6 @@ svg { display:block; }
   }
   .header-btn { padding: 0.5rem 0.9rem; }
 }
-
 .verify-banner {
   background: #FFF3CD;
   color: #856404;
@@ -179,7 +178,6 @@ svg { display:block; }
   font-weight: 600;
   font-size: 0.8rem;
 }
-
 .sidebar-overlay {
   display: none;
   position: fixed;
@@ -342,7 +340,6 @@ svg { display:block; }
     align-items: stretch;
   }
 }
-
 .hero-carousel {
   position: relative;
   width: 100%;
@@ -383,12 +380,10 @@ svg { display:block; }
 .carousel-slide-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    180deg,
+  background: linear-gradient(180deg,
     rgba(0,0,0,0.15) 0%,
     rgba(0,0,0,0.55) 55%,
-    rgba(0,0,0,0.85) 100%
-  );
+    rgba(0,0,0,0.85) 100%);
   z-index: 2;
 }
 .carousel-slide-content {
@@ -492,7 +487,6 @@ svg { display:block; }
   .carousel-subtitle { font-size: 1rem; }
   .carousel-slide-content { padding: 2rem 1.8rem; }
 }
-
 .offers-column {
   display: grid;
   grid-template-columns: 1fr;
@@ -513,7 +507,6 @@ svg { display:block; }
     grid-template-columns: 1fr;
   }
 }
-
 .offer-card {
   background: white;
   border-radius: 16px;
@@ -644,7 +637,6 @@ svg { display:block; }
     font-size: 1.1rem;
   }
 }
-
 .recommended-section {
   max-width: 1400px;
   margin: 0 auto;
@@ -660,9 +652,7 @@ svg { display:block; }
   letter-spacing: -0.5px;
   line-height: 1.15;
 }
-.recommended-title span {
-  color: var(--naranja);
-}
+.recommended-title span { color: var(--naranja); }
 .recommended-subtitle {
   color: var(--gris-texto);
   font-size: 0.9rem;
@@ -685,7 +675,6 @@ svg { display:block; }
     gap: 1.2rem;
   }
 }
-
 .product-card {
   background: white;
   border-radius: 14px;
@@ -830,7 +819,6 @@ svg { display:block; }
   color: var(--gris-texto);
   cursor: not-allowed;
 }
-
 .search-results-container {
   padding: 2rem 1rem;
   max-width: 1400px;
@@ -980,7 +968,6 @@ svg { display:block; }
   transition: background 0.2s;
 }
 .modal-close:hover { background: var(--naranja); }
-
 .product-detail {
   display: grid;
   grid-template-columns: 1fr;
@@ -1185,7 +1172,6 @@ svg { display:block; }
   cursor: not-allowed;
   box-shadow: none;
 }
-
 .reviews-section {
   padding: 1.5rem;
   border-top: 1px solid var(--gris-borde);
@@ -1560,7 +1546,6 @@ svg { display:block; }
   cursor: not-allowed;
   box-shadow: none;
 }
-
 .checkout-modal .modal-content {
   max-width: 480px;
   padding: 1.5rem 1.2rem;
@@ -1749,7 +1734,6 @@ svg { display:block; }
   stroke-linecap: round;
   stroke-linejoin: round;
 }
-
 .auth-modal .modal-content {
   max-width: 440px;
   padding: 1.8rem 1.5rem;
@@ -1855,7 +1839,6 @@ svg { display:block; }
   margin-left: 0.3rem;
 }
 .auth-switch a:hover { text-decoration: underline; }
-
 .account-info {
   background: var(--gris-claro);
   padding: 1rem;
@@ -1946,6 +1929,49 @@ svg { display:block; }
 }
 </style>
 <style>
+.about-section {
+  background: var(--blanco);
+  padding: 3rem 1.5rem;
+  border-top: 1px solid var(--gris-borde);
+}
+.about-inner {
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
+}
+.about-title {
+  font-size: 1.7rem;
+  font-weight: 800;
+  color: var(--texto);
+  margin-bottom: 1rem;
+  letter-spacing: -0.5px;
+  line-height: 1.15;
+}
+.about-title span { color: var(--naranja); }
+.about-text {
+  color: var(--gris-texto);
+  font-size: 0.95rem;
+  line-height: 1.75;
+  margin-bottom: 1.5rem;
+}
+.about-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--naranja);
+  font-weight: 700;
+  font-size: 0.95rem;
+  text-decoration: none;
+  border-bottom: 2px solid var(--naranja);
+  padding-bottom: 0.2rem;
+  transition: gap 0.2s;
+}
+.about-link:hover { gap: 0.7rem; }
+@media (min-width: 768px) {
+  .about-section { padding: 4rem 2rem; }
+  .about-title { font-size: 2.1rem; }
+  .about-text { font-size: 1.05rem; }
+}
 footer {
   background: var(--negro);
   color: white;
@@ -2013,7 +2039,6 @@ footer {
   font-size: 0.8rem;
   padding-top: 0.8rem;
 }
-
 .whatsapp-float {
   position: fixed;
   bottom: 20px;
@@ -2040,7 +2065,6 @@ footer {
   height: 30px;
   fill: white;
 }
-
 .toast {
   position: fixed;
   bottom: 90px;
@@ -2073,17 +2097,6 @@ footer {
   z-index:10000;font-family:monospace;
   font-size:0.8rem;text-align:center;
   word-break:break-word;"></div>
-
-window.addEventListener('error', function(e) {
-  var el = document.getElementById('errorBanner');
-  if (el) {
-    el.style.display = 'block';
-    el.textContent = 'ERROR: ' +
-      (e.message || 'desconocido') + ' | ' +
-      (e.filename || '') + ':' + (e.lineno || '');
-  }
-});
-</script>
 
 <div id="verifyBanner" class="verify-banner">
 <div>Verifica tu correo para completar tu registro.
@@ -2197,6 +2210,7 @@ Los repuestos más solicitados por nuestros clientes.
 <div class="search-results-grid" id="searchResultsGrid"></div>
 <div class="pagination" id="pagination"></div>
 </div>
+
 <section class="about-section">
 <div class="about-inner">
 <h2 class="about-title" id="aboutTitle">
@@ -2205,8 +2219,7 @@ Sobre <span>Nosotros</span>
 <p class="about-text" id="aboutText">
 Somos una empresa dedicada a la venta de repuestos
 automotrices de calidad, con atención personalizada
-y envío a domicilio. Nuestra misión es mantener tu
-vehículo en las mejores condiciones.
+y envío a domicilio.
 </p>
 <a href="quienes-somos.html" class="about-link">
 Conoce más
@@ -2228,56 +2241,6 @@ Conoce más
 </a>
 
 <div class="toast" id="toast"></div>
-<style>
-.about-section {
-  background: var(--blanco);
-  padding: 3rem 1.5rem;
-  border-top: 1px solid var(--gris-borde);
-}
-.about-inner {
-  max-width: 800px;
-  margin: 0 auto;
-  text-align: center;
-}
-.about-title {
-  font-size: 1.7rem;
-  font-weight: 800;
-  color: var(--texto);
-  margin-bottom: 1rem;
-  letter-spacing: -0.5px;
-  line-height: 1.15;
-}
-.about-title span {
-  color: var(--naranja);
-}
-.about-text {
-  color: var(--gris-texto);
-  font-size: 0.95rem;
-  line-height: 1.75;
-  margin-bottom: 1.5rem;
-}
-.about-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  color: var(--naranja);
-  font-weight: 700;
-  font-size: 0.95rem;
-  text-decoration: none;
-  border-bottom: 2px solid var(--naranja);
-  padding-bottom: 0.2rem;
-  transition: gap 0.2s;
-}
-.about-link:hover {
-  gap: 0.7rem;
-}
-@media (min-width: 768px) {
-  .about-section { padding: 4rem 2rem; }
-  .about-title { font-size: 2.1rem; }
-  .about-text { font-size: 1.05rem; }
-}
-</style>
-
 <div class="modal" id="productDetailModal">
 <div class="modal-content"
   id="productDetailContent"></div>
@@ -2511,8 +2474,7 @@ import { initializeApp, getApps, getApp }
   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import {
   getFirestore, collection, getDocs,
-  doc, getDoc, updateDoc, addDoc,
-  query, where
+  doc, getDoc, updateDoc, addDoc
 }
   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import {
@@ -2535,18 +2497,6 @@ const app = getApps().length > 0
   ? getApp()
   : initializeApp(firebaseConfig);
 const db = getFirestore(app);
-
-window.__db = db;
-
-window.escapeHTML = function(str) {
-  if (str == null) return '';
-  return String(str)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#039;');
-};
 
 let products = [];
 let cart = [];
@@ -2621,6 +2571,16 @@ if (headerLogoEl) {
   });
 }
 
+window.escapeHTML = function(str) {
+  if (str == null) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+};
+
 window.showToast = function(mensaje, tipo) {
   var el = document.getElementById('toast');
   if (!el) return;
@@ -2632,8 +2592,26 @@ window.showToast = function(mensaje, tipo) {
   }, 2500);
 };
 
+window.closeModal = function(id) {
+  var el = document.getElementById(id);
+  if (el) el.classList.remove('active');
+};
 
-window.toggleSidebar = function() {
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    var modales = document.querySelectorAll('.modal.active');
+    for (var i = 0; i < modales.length; i++) {
+      modales[i].classList.remove('active');
+    }
+    var cs = document.getElementById('cartSidebar');
+    if (cs) cs.classList.remove('active');
+    var sb = document.getElementById('categorySidebar');
+    if (sb) sb.classList.remove('open');
+    var ov = document.getElementById('sidebarOverlay');
+    if (ov) ov.classList.remove('active');
+  }
+});
+  window.toggleSidebar = function() {
   var sb = document.getElementById('categorySidebar');
   var ov = document.getElementById('sidebarOverlay');
   if (sb) sb.classList.toggle('open');
@@ -3196,8 +3174,7 @@ function restartCarouselTimer() {
   if (carouselTimer) clearTimeout(carouselTimer);
   startCarouselTimer();
 }
-
-async function loadData() {
+  async function loadData() {
   try {
     try {
       var rateDoc = await getDoc(
@@ -3999,8 +3976,7 @@ window.removeCoupon = function() {
   if (msg) msg.innerHTML = '';
   updateCartUI();
 };
-
-window.switchToLogin = function() {
+  window.switchToLogin = function() {
   closeModal('registerModal');
   var el = document.getElementById('loginModal');
   if (el) el.classList.add('active');
@@ -4026,8 +4002,9 @@ window.openLoginModal = function() {
   if (el) el.classList.add('active');
 };
 
-document.getElementById('registerForm')
-  .addEventListener('submit', async function(e) {
+var registerFormEl = document.getElementById('registerForm');
+if (registerFormEl) {
+  registerFormEl.addEventListener('submit', async function(e) {
     e.preventDefault();
     var name = document.getElementById('regName')
       .value.trim();
@@ -4067,9 +4044,11 @@ document.getElementById('registerForm')
       btn.textContent = 'Crear Cuenta';
     }
   });
+}
 
-document.getElementById('loginForm')
-  .addEventListener('submit', async function(e) {
+var loginFormEl = document.getElementById('loginForm');
+if (loginFormEl) {
+  loginFormEl.addEventListener('submit', async function(e) {
     e.preventDefault();
     var email = document.getElementById('loginEmail')
       .value.trim().toLowerCase();
@@ -4105,6 +4084,7 @@ document.getElementById('loginForm')
       btn.textContent = 'Ingresar';
     }
   });
+}
 
 window.olvidePassword = async function() {
   var email = prompt(
@@ -4207,156 +4187,6 @@ window.showMyOrders = async function() {
   var modal = document.getElementById('ordersModal');
   if (modal) modal.classList.add('active');
   try {
-    var mine = [];
-    try {
-      var q1 = query(
-        collection(db, 'orders'),
-        where('userId', '==', currentUser.uid)
-      );
-      var snap1 = await getDocs(q1);
-      snap1.forEach(function(d) {
-        var data = d.data();
-        data.id = d.id;
-        mine.push(data);
-      });
-    } catch(e1) {
-      console.error('Query userId:', e1);
-    }
-    try {
-      var q2 = query(
-        collection(db, 'orders'),
-        where('userEmail', '==', currentUser.email)
-      );
-      var snap2 = await getDocs(q2);
-      snap2.forEach(function(d) {
-        var data = d.data();
-        data.id = d.id;
-        var existe = mine.some(function(x) {
-          return x.id === d.id;
-        });
-        if (!existe) mine.push(data);
-      });
-    } catch(e2) {
-      console.error('Query email:', e2);
-    }
-    if (!list) return;
-    if (mine.length === 0) {
-      list.innerHTML = '<div style="text-align:center;' +
-        'color:#6C757D;padding:2rem;">' +
-        'Aún no tienes pedidos</div>';
-      return;
-    }
-    mine.sort(function(a, b) {
-      var tA = a.date ? new Date(a.date).getTime() : 0;
-      var tB = b.date ? new Date(b.date).getTime() : 0;
-      return tB - tA;
-    });
-    var html = '';
-    mine.forEach(function(o) {
-      var st = o.status === 'pending' ? 'Pendiente' :
-        o.status === 'shipped' ? 'En camino' :
-        o.status === 'delivered' ? 'Entregado' :
-        'Cancelado';
-      html += '<div class="order-item">';
-      html += '<div class="order-header">';
-      html += '<div><strong>#' + o.id.slice(-6) +
-        '</strong><br>';
-      html += '<small style="color:#6C757D;">';
-      html += o.date ? new Date(o.date)
-        .toLocaleDateString() : '';
-      html += '</small></div>';
-      html += '<span class="order-status ' + o.status +
-        '">' + st + '</span></div>';
-      var items = o.items || [];
-      html += '<div style="margin:0.5rem 0;font-size:0.85rem;">';
-      items.forEach(function(it) {
-        html += '<div>' + escapeHTML(it.name) + ' x' +
-          it.quantity + '</div>';
-      });
-      html += '</div>';
-      html += '<div style="font-weight:800;color:#FF6B1A;' +
-        'font-size:1.05rem;">';
-      html += 'Total: $' + Number(o.total || 0).toFixed(2);
-      html += '</div>';
-      if (o.status === 'pending') {
-        html += '<button class="order-cancel-btn" ';
-        html += 'onclick="cancelarPedido(\'' + o.id +
-          '\')">Cancelar pedido</button>';
-      }
-      html += '</div>';
-    });
-    list.innerHTML = html;
-  } catch (error) {
-    console.error('Error:', error);
-    showToast('Error: ' + error.message, 'error');
-  }
-};
-  closeModal('accountModal');
-  var list = document.getElementById('ordersList');
-  if (list) {
-    list.innerHTML = '<div class="loading-state">' +
-      '<div class="loading-spinner"></div>' +
-      '<div>Cargando pedidos...</div></div>';
-  }
-  var modal = document.getElementById('ordersModal');
-  if (modal) modal.classList.add('active');
-  try {
-    var mine = [];
-    try {
-      var q1 = query(
-        collection(db, 'orders'),
-        where('userId', '==', currentUser.uid)
-      );
-      var snap1 = await getDocs(q1);
-      snap1.forEach(function(d) {
-        var data = d.data();
-        data.id = d.id;
-        mine.push(data);
-      });
-        'Cancelado';
-      html += '<div class="order-item">';
-      html += '<div class="order-header">';
-      html += '<div><strong>#' + o.id.slice(-6) +
-        '</strong><br>';
-      html += '<small style="color:#6C757D;">';
-      html += o.date ? new Date(o.date)
-        .toLocaleDateString() : '';
-      html += '</small></div>';
-      html += '<span class="order-status ' + o.status +
-        '">' + st + '</span></div>';
-      var items = o.items || [];
-      html += '<div style="margin:0.5rem 0;font-size:0.85rem;">';
-      items.forEach(function(it) {
-        html += '<div>' + escapeHTML(it.name) + ' x' +
-          it.quantity + '</div>';
-      });
-      html += '</div>';
-      html += '<div style="font-weight:800;color:#FF6B1A;' +
-        'font-size:1.05rem;">';
-      html += 'Total: $' + Number(o.total || 0).toFixed(2);
-      html += '</div>';
-      if (o.status === 'pending') {
-        html += '<button class="order-cancel-btn" ';
-        html += 'onclick="cancelarPedido(\'' + o.id +
-          '\')">Cancelar pedido</button>';
-      }
-      html += '</div>';
-    });
-    list.innerHTML = html;
-  } catch (error) {
-    console.error('Error:', error);
-    showToast('Error: ' + error.message, 'error');
-  }
-};
-  var list = document.getElementById('ordersList');
-  if (list) {
-    list.innerHTML = '<div class="loading-state">' +
-      '<div class="loading-spinner"></div>' +
-      '<div>Cargando pedidos...</div></div>';
-  }
-  var modal = document.getElementById('ordersModal');
-  if (modal) modal.classList.add('active');
-  try {
     var snap = await getDocs(collection(db, 'orders'));
     var mine = [];
     var myEmail = (currentUser.email || '').toLowerCase();
@@ -4419,6 +4249,7 @@ window.showMyOrders = async function() {
     });
     list.innerHTML = html;
   } catch (error) {
+    console.error('Error:', error);
     showToast('Error: ' + error.message, 'error');
   }
 };
@@ -4486,15 +4317,10 @@ function updateWhatsAppLinks() {
       );
   }
 }
-
-window.openCheckout = function() {
+ window.openCheckout = function() {
   if (cart.length === 0) {
     showToast('Tu carrito está vacío', 'error');
     return;
-  }
-  if (!currentUser && window.firebase &&
-      firebase.auth && firebase.auth().currentUser) {
-    currentUser = firebase.auth().currentUser;
   }
   if (!currentUser) {
     showToast('Debes iniciar sesión para comprar', 'error');
@@ -4712,10 +4538,6 @@ function updateCheckoutTotals() {
 }
 
 window.confirmOrder = async function() {
-  if (!currentUser && window.firebase &&
-      firebase.auth && firebase.auth().currentUser) {
-    currentUser = firebase.auth().currentUser;
-  }
   if (!currentUser) {
     showToast('Debes iniciar sesión primero', 'error');
     return;
@@ -4870,29 +4692,11 @@ window.confirmOrder = async function() {
     closeModal('checkoutModal');
     showToast('Pedido enviado con éxito', 'success');
   } catch(e) {
+    console.error('Error:', e);
     showToast('Error: ' + e.message, 'error');
   }
 };
 
-window.closeModal = function(id) {
-  var el = document.getElementById(id);
-  if (el) el.classList.remove('active');
-};
-
-document.addEventListener('keydown', function(e) {
-  if (e.key === 'Escape') {
-    document.querySelectorAll('.modal.active')
-      .forEach(function(m) {
-        m.classList.remove('active');
-      });
-    var cs = document.getElementById('cartSidebar');
-    if (cs) cs.classList.remove('active');
-    var sb = document.getElementById('categorySidebar');
-    if (sb) sb.classList.remove('open');
-    var ov = document.getElementById('sidebarOverlay')
-    if (ov) ov.classList.remove('active');
-  }
-});
 escucharSesion(function(user) {
   currentUser = user || null;
   updateHeaderButtons();
@@ -4902,4 +4706,4 @@ escucharSesion(function(user) {
 loadData();
 </script>
 </body>
-</html>
+</html> 
