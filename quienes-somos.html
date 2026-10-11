@@ -809,7 +809,19 @@ async function cargarPagina() {
 
     // Si no hay aboutUs, avisar visualmente
     if (!aboutUs.title && !aboutUs.text &&
-        !aboutUs.mission && !aboutUs.vision) {
+    // Diagnóstico: mostrar qué llegó
+    console.log('aboutUs recibido:', aboutUs);
+    console.log('title:', aboutUs.title);
+    console.log('text:', aboutUs.text ? 'tiene' : 'vacío');
+    console.log('mission:', aboutUs.mission ? 'tiene' : 'vacío');
+    console.log('vision:', aboutUs.vision ? 'tiene' : 'vacío');
+
+    // Si NO hay datos, mostrar fallback
+    var tieneAlgo = aboutUs.title || aboutUs.text ||
+      aboutUs.mission || aboutUs.vision;
+
+    if (!tieneAlgo) {
+      console.warn('aboutUs está vacío, mostrando fallback');
       var fallback = document.getElementById('aboutBlock');
       if (fallback) {
         fallback.innerHTML =
