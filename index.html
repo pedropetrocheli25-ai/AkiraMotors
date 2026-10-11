@@ -4162,8 +4162,9 @@ window.applyCouponCode = async function() {
       updateCartUI();
       return;
     }
-    var found = couponSnap.data();
+      var found = couponSnap.data();
     found.id = couponSnap.id;
+    found.code = couponSnap.id;
     if (found.active === false) {
       msg.innerHTML = '<span style="color:#DC3545;">' +
         'Cupón desactivado</span>';
@@ -5029,6 +5030,13 @@ window.confirmOrder = async function() {
     orderData.gpsLng = document.getElementById('gpsLng').value;
     orderData.distanceKm = currentDistanceKm;
   }
+
+  // Limpiar undefined -> null (Firestore no acepta undefined)
+  Object.keys(orderData).forEach(function(k) {
+    if (orderData[k] === undefined) {
+      orderData[k] = null;
+    }
+  });
 
   // Preparar mensaje de WhatsApp ANTES del await
   var cleanNumber = String(whatsappNumber).replace(/\D/g, '');
