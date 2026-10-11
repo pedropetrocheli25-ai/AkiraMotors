@@ -162,3 +162,731 @@ svg { display:block; }
   fill: var(--texto-sobre-naranja);
 }
 </style>
+<style>
+.about-hero {
+  background: linear-gradient(135deg,
+    var(--negro) 0%, #2a2a2a 100%);
+  color: white;
+  padding: 3rem 1.5rem;
+  text-align: center;
+}
+.about-hero-inner {
+  max-width: 900px;
+  margin: 0 auto;
+}
+.about-hero h1 {
+  font-size: 2rem;
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.5px;
+  margin-bottom: 0.8rem;
+}
+.about-hero h1 span { color: var(--naranja); }
+.about-hero p {
+  color: #B0B0B0;
+  font-size: 1rem;
+  max-width: 700px;
+  margin: 0 auto;
+}
+@media (min-width: 768px) {
+  .about-hero { padding: 5rem 2rem; }
+  .about-hero h1 { font-size: 3rem; }
+  .about-hero p { font-size: 1.15rem; }
+}
+
+.section {
+  padding: 3rem 1.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.section-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+.section-title {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: var(--texto);
+  letter-spacing: -0.5px;
+  line-height: 1.15;
+  margin-bottom: 0.5rem;
+}
+.section-title span { color: var(--naranja-texto); }
+.section-subtitle {
+  color: var(--gris-texto);
+  font-size: 0.95rem;
+}
+
+.about-content {
+  max-width: 800px;
+  margin: 0 auto;
+  font-size: 1rem;
+  line-height: 1.8;
+  color: #333;
+  white-space: pre-line;
+}
+.about-content p { margin-bottom: 1rem; }
+@media (min-width: 768px) {
+  .about-content { font-size: 1.05rem; }
+}
+
+.mv-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+@media (min-width: 768px) {
+  .mv-grid { grid-template-columns: 1fr 1fr; }
+}
+.mv-card {
+  background: var(--gris-claro);
+  border-radius: 16px;
+  padding: 2rem 1.5rem;
+  border-top: 4px solid var(--naranja);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+.mv-card h3 {
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: var(--texto);
+  margin-bottom: 0.8rem;
+  letter-spacing: -0.3px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.mv-card h3 svg {
+  width: 24px;
+  height: 24px;
+  stroke: var(--naranja);
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.mv-card p {
+  color: #444;
+  font-size: 0.95rem;
+  line-height: 1.75;
+  white-space: pre-line;
+}
+
+.media-block {
+  background: var(--gris-claro);
+  padding: 3rem 1.5rem;
+  text-align: center;
+}
+.media-inner {
+  max-width: 900px;
+  margin: 0 auto;
+}
+.media-frame {
+  width: 100%;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+  background: var(--negro);
+}
+.media-frame img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+.media-frame.video {
+  position: relative;
+  padding-bottom: 56.25%;
+  height: 0;
+}
+.media-frame.video iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+@media (min-width: 768px) {
+  .media-block { padding: 4rem 2rem; }
+}
+
+.maps-block {
+  padding: 3rem 1.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.maps-frame {
+  width: 100%;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+  background: var(--gris-claro);
+  min-height: 320px;
+}
+.maps-frame iframe {
+  width: 100%;
+  height: 400px;
+  border: none;
+  display: block;
+}
+@media (min-width: 768px) {
+  .maps-frame iframe { height: 480px; }
+}
+
+.cta-block {
+  background: linear-gradient(135deg,
+    var(--naranja) 0%, var(--naranja-hover) 100%);
+  color: var(--texto-sobre-naranja);
+  padding: 3rem 1.5rem;
+  text-align: center;
+}
+.cta-inner {
+  max-width: 700px;
+  margin: 0 auto;
+}
+.cta-block h2 {
+  font-size: 1.6rem;
+  font-weight: 800;
+  margin-bottom: 0.8rem;
+  letter-spacing: -0.3px;
+}
+.cta-block p {
+  font-size: 1rem;
+  margin-bottom: 1.5rem;
+  opacity: 0.9;
+}
+.cta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--negro);
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 700;
+  transition: all 0.2s;
+  min-height: 48px;
+}
+.cta-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px rgba(0,0,0,0.25);
+}
+.cta-btn svg {
+  width: 18px;
+  height: 18px;
+  stroke: white;
+  fill: none;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+footer {
+  background: var(--negro);
+  color: white;
+  padding: 2.5rem 1.5rem 1rem;
+}
+.footer-content {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.8rem;
+  margin-bottom: 1.5rem;
+}
+.footer-section h3 {
+  color: var(--naranja);
+  margin-bottom: 0.9rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+}
+.footer-section p,
+.footer-section a {
+  color: #B0B0B0;
+  font-size: 0.85rem;
+  margin-bottom: 0.45rem;
+  display: block;
+  text-decoration: none;
+  transition: color 0.2s;
+  line-height: 1.5;
+}
+.footer-section a:hover { color: var(--naranja); }
+.footer-bottom {
+  text-align: center;
+  color: #6B6B6B;
+  font-size: 0.8rem;
+  padding-top: 0.8rem;
+  border-top: 1px solid #2A2A2A;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+</style>
+</head>
+<body>
+
+<div class="top-header">
+<div class="header-left">
+<a href="index.html" class="header-back">
+<svg viewBox="0 0 24 24" aria-hidden="true">
+<polyline points="15 18 9 12 15 6"></polyline>
+</svg>
+Volver
+</a>
+<div class="header-logo">
+<div class="header-logo-img" id="headerLogoImg"></div>
+<span id="headerCompanyName">AKIRA MOTORS</span>
+</div>
+</div>
+</div>
+
+<div id="loadingBlock" class="loading-state">
+<div class="screw-loading">
+<svg viewBox="0 0 24 24"
+  xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+<path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" stroke="#FF6B1A" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="12" cy="12" r="3" stroke="#FF6B1A" stroke-width="2" fill="none"/>
+</svg>
+</div>
+<div>Cargando información...</div>
+</div>
+
+<div id="content" style="display:none;">
+
+<section class="about-hero" id="heroSection"
+  style="display:none;">
+<div class="about-hero-inner">
+<h1 id="heroTitle">Sobre <span>Nosotros</span></h1>
+<p id="heroSubtitle"></p>
+</div>
+</section>
+
+<section class="section" id="aboutBlock"
+  style="display:none;">
+<div class="section-header">
+<h2 class="section-title">
+Quiénes <span>Somos</span>
+</h2>
+</div>
+<div class="about-content" id="aboutText"></div>
+</section>
+
+<section class="section" id="mvBlock"
+  style="display:none;">
+<div class="section-header">
+<h2 class="section-title">
+Nuestra <span>Misión y Visión</span>
+</h2>
+</div>
+<div class="mv-grid">
+<div class="mv-card" id="missionCard"
+  style="display:none;">
+<h3>
+<svg viewBox="0 0 24 24" aria-hidden="true">
+<circle cx="12" cy="12" r="10"></circle>
+<line x1="12" y1="16" x2="12" y2="12"></line>
+<line x1="12" y1="8" x2="12.01" y2="8"></line>
+</svg>
+Misión
+</h3>
+<p id="missionText"></p>
+</div>
+<div class="mv-card" id="visionCard"
+  style="display:none;">
+<h3>
+<svg viewBox="0 0 24 24" aria-hidden="true">
+<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+<circle cx="12" cy="12" r="3"></circle>
+</svg>
+Visión
+</h3>
+<p id="visionText"></p>
+</div>
+</div>
+</section>
+
+<section class="media-block" id="mediaBlock"
+  style="display:none;">
+<div class="media-inner">
+<div class="section-header">
+<h2 class="section-title">
+Nuestro <span>Local</span>
+</h2>
+</div>
+<div id="mediaContainer"></div>
+</div>
+</section>
+
+<section class="maps-block" id="mapsBlock"
+  style="display:none;">
+<div class="section-header">
+<h2 class="section-title">
+Nuestra <span>Ubicación</span>
+</h2>
+</div>
+<div class="maps-frame" id="mapsContainer"></div>
+</section>
+
+<section class="cta-block">
+<div class="cta-inner">
+<h2>¿Listo para tu próximo repuesto?</h2>
+<p>Encuentra lo que necesitas en nuestra tienda online.</p>
+<a href="index.html" class="cta-btn">
+Ir a la tienda
+<svg viewBox="0 0 24 24" aria-hidden="true">
+<line x1="5" y1="12" x2="19" y2="12"></line>
+<polyline points="12 5 19 12 12 19"></polyline>
+</svg>
+</a>
+</div>
+</section>
+
+</div>
+
+<footer id="footer">
+<div class="footer-content" id="footerContent"></div>
+<div class="footer-bottom" id="footerBottom"></div>
+</footer>
+
+<a href="#" class="whatsapp-float" id="whatsappFloat"
+  target="_blank" rel="noopener"
+  aria-label="Abrir WhatsApp">
+<svg viewBox="0 0 24 24"
+  xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+<path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.71.306 1.263.489 1.694.625.712.227 1.36.195 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.465 3.488"/>
+</svg>
+</a>
+<script type="module">
+import { initializeApp, getApps, getApp }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import {
+  getFirestore, doc, getDoc
+}
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAU77yzh7Tm3RPuuvVcxlCt26u2ljmsBK0",
+  authDomain: "akiramotors-cc498.firebaseapp.com",
+  projectId: "akiramotors-cc498",
+  storageBucket: "akiramotors-cc498.firebasestorage.app",
+  messagingSenderId: "657064466850",
+  appId: "1:657064466850:web:2d1340db67f790d11ebafb"
+};
+
+const app = getApps().length > 0
+  ? getApp()
+  : initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+// ============================================================
+// UTILIDADES
+// ============================================================
+function escapeHTML(str) {
+  if (str == null) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+// Extrae el ID de un video de YouTube desde varias formas de URL
+function extraerYouTubeId(url) {
+  if (!url) return null;
+  var u = String(url).trim();
+  // youtube.com/watch?v=XXXX o youtube.com/watch?feature=...&v=XXXX
+  var m1 = u.match(/[?&]v=([a-zA-Z0-9_-]{6,20})/);
+  if (m1) return m1[1];
+  // youtu.be/XXXX
+  var m2 = u.match(/youtu\.be\/([a-zA-Z0-9_-]{6,20})/);
+  if (m2) return m2[1];
+  // youtube.com/embed/XXXX
+  var m3 = u.match(/youtube\.com\/embed\/([a-zA-Z0-9_-]{6,20})/);
+  if (m3) return m3[1];
+  // youtube.com/shorts/XXXX
+  var m4 = u.match(/youtube\.com\/shorts\/([a-zA-Z0-9_-]{6,20})/);
+  if (m4) return m4[1];
+  return null;
+}
+
+// Valida URL de embed de Google Maps
+function esMapsEmbedValido(url) {
+  if (!url) return false;
+  var u = String(url).trim();
+  return u.indexOf('https://www.google.com/maps/embed') === 0;
+}
+
+// ============================================================
+// CARGA PRINCIPAL
+// ============================================================
+async function cargarPagina() {
+  try {
+    // ------------------------------------------------------
+    // 1. Cargar configuraciones en paralelo
+    // ------------------------------------------------------
+    var promesas = await Promise.allSettled([
+      getDoc(doc(db, 'settings', 'aboutUs')),
+      getDoc(doc(db, 'settings', 'siteConfig')),
+      getDoc(doc(db, 'settings', 'whatsapp')),
+      getDoc(doc(db, 'settings', 'logo'))
+    ]);
+
+    var aboutUs = promesas[0].status === 'fulfilled'
+      && promesas[0].value.exists
+      ? promesas[0].value.data() : {};
+    var siteConfig = promesas[1].status === 'fulfilled'
+      && promesas[1].value.exists
+      ? promesas[1].value.data() : {};
+    var whatsappData = promesas[2].status === 'fulfilled'
+      && promesas[2].value.exists
+      ? promesas[2].value.data() : {};
+    var logoData = promesas[3].status === 'fulfilled'
+      && promesas[3].value.exists
+      ? promesas[3].value.data() : {};
+
+    var whatsappNumber = whatsappData.number || '584148700616';
+    var companyName = siteConfig.companyName || 'AKIRA MOTORS';
+
+    // ------------------------------------------------------
+    // 2. Aplicar logo y nombre en el header
+    // ------------------------------------------------------
+    var headerNameEl = document.getElementById('headerCompanyName');
+    if (headerNameEl) headerNameEl.textContent = companyName;
+    if (logoData.image) {
+      var logoImgEl = document.getElementById('headerLogoImg');
+      if (logoImgEl) {
+        logoImgEl.innerHTML = '<img src="' +
+          escapeHTML(logoData.image) + '" alt="Logo">';
+      }
+    }
+    document.title = 'Quiénes Somos - ' + companyName;
+
+    // ------------------------------------------------------
+    // 3. Hero
+    // ------------------------------------------------------
+    if (aboutUs.title) {
+      var heroSection = document.getElementById('heroSection');
+      var heroTitle = document.getElementById('heroTitle');
+      if (heroSection && heroTitle) {
+        heroTitle.innerHTML = escapeHTML(aboutUs.title)
+          .replace(/Akira Motors/gi,
+            '<span>Akira Motors</span>');
+        if (aboutUs.text) {
+          var texto = aboutUs.text;
+          if (texto.length > 160) {
+            texto = texto.substring(0, 160) + '...';
+          }
+          var heroSubtitle = document.getElementById('heroSubtitle');
+          if (heroSubtitle) heroSubtitle.textContent = texto;
+        }
+        heroSection.style.display = 'block';
+      }
+    }
+
+    // ------------------------------------------------------
+    // 4. Bloque "Quiénes Somos"
+    // ------------------------------------------------------
+    if (aboutUs.text) {
+      var aboutBlock = document.getElementById('aboutBlock');
+      var aboutTextEl = document.getElementById('aboutText');
+      if (aboutBlock && aboutTextEl) {
+        aboutTextEl.textContent = aboutUs.text;
+        aboutBlock.style.display = 'block';
+      }
+    }
+
+    // ------------------------------------------------------
+    // 5. Misión y Visión
+    // ------------------------------------------------------
+    var mvBlock = document.getElementById('mvBlock');
+    var hayMV = false;
+
+    if (aboutUs.mission) {
+      var mc = document.getElementById('missionCard');
+      var mt = document.getElementById('missionText');
+      if (mc && mt) {
+        mt.textContent = aboutUs.mission;
+        mc.style.display = 'block';
+        hayMV = true;
+      }
+    }
+    if (aboutUs.vision) {
+      var vc = document.getElementById('visionCard');
+      var vt = document.getElementById('visionText');
+      if (vc && vt) {
+        vt.textContent = aboutUs.vision;
+        vc.style.display = 'block';
+        hayMV = true;
+      }
+    }
+    if (hayMV && mvBlock) {
+      mvBlock.style.display = 'block';
+    }
+
+    // ------------------------------------------------------
+    // 6. Media (video o imagen del local)
+    // ------------------------------------------------------
+    var mediaBlock = document.getElementById('mediaBlock');
+    var mediaContainer = document.getElementById('mediaContainer');
+    var ytId = extraerYouTubeId(aboutUs.videoUrl);
+
+    if (ytId) {
+      // Video de YouTube con nocookie
+      mediaContainer.innerHTML =
+        '<div class="media-frame video">' +
+        '<iframe src="https://www.youtube-nocookie.com/embed/' +
+        encodeURIComponent(ytId) + '" ' +
+        'title="Video del local" ' +
+        'allow="accelerometer; autoplay; clipboard-write; ' +
+        'encrypted-media; gyroscope; picture-in-picture" ' +
+        'allowfullscreen loading="lazy"></iframe>' +
+        '</div>';
+      mediaBlock.style.display = 'block';
+    } else if (aboutUs.image) {
+      // Imagen del local
+      mediaContainer.innerHTML =
+        '<div class="media-frame">' +
+        '<img src="' + escapeHTML(aboutUs.image) +
+        '" alt="Foto de nuestro local" loading="lazy">' +
+        '</div>';
+      mediaBlock.style.display = 'block';
+    }
+
+    // ------------------------------------------------------
+    // 7. Google Maps (solo si es URL válida de embed)
+    // ------------------------------------------------------
+    if (esMapsEmbedValido(aboutUs.mapsEmbed)) {
+      var mapsBlock = document.getElementById('mapsBlock');
+      var mapsContainer = document.getElementById('mapsContainer');
+      if (mapsBlock && mapsContainer) {
+        mapsContainer.innerHTML =
+          '<iframe src="' +
+          escapeHTML(aboutUs.mapsEmbed) + '" ' +
+          'title="Ubicación de la tienda" ' +
+          'allowfullscreen loading="lazy" ' +
+          'referrerpolicy="no-referrer-when-downgrade">' +
+          '</iframe>';
+        mapsBlock.style.display = 'block';
+      }
+    }
+
+    // ------------------------------------------------------
+    // 8. Footer
+    // ------------------------------------------------------
+    renderFooter(siteConfig);
+
+    // ------------------------------------------------------
+    // 9. WhatsApp flotante
+    // ------------------------------------------------------
+    var cleanWhats = String(whatsappNumber).replace(/\D/g, '');
+    var floatBtn = document.getElementById('whatsappFloat');
+    if (floatBtn) {
+      floatBtn.href = 'https://wa.me/' + cleanWhats +
+        '?text=' + encodeURIComponent(
+          'Hola, tengo una consulta sobre repuestos.'
+        );
+    }
+
+    // ------------------------------------------------------
+    // 10. Mostrar contenido y ocultar loading
+    // ------------------------------------------------------
+    var loading = document.getElementById('loadingBlock');
+    var content = document.getElementById('content');
+    if (loading) loading.style.display = 'none';
+    if (content) content.style.display = 'block';
+
+    // Si no hay aboutUs, avisar visualmente
+    if (!aboutUs.title && !aboutUs.text &&
+        !aboutUs.mission && !aboutUs.vision) {
+      var fallback = document.getElementById('aboutBlock');
+      if (fallback) {
+        fallback.innerHTML =
+          '<div class="section-header">' +
+          '<h2 class="section-title">' +
+          'Información <span>próximamente</span></h2>' +
+          '</div>' +
+          '<div class="about-content" ' +
+          'style="text-align:center;">' +
+          'Aún estamos preparando esta sección. ' +
+          'Visita nuestra tienda mientras tanto.' +
+          '</div>';
+        fallback.style.display = 'block';
+      }
+    }
+  } catch (error) {
+    console.error('Error cargando página:', error);
+    var loading = document.getElementById('loadingBlock');
+    if (loading) {
+      loading.innerHTML = '<div style="color:#DC3545;">' +
+        'No se pudo cargar la información.<br>' +
+        'Recarga la página o escríbenos por WhatsApp.' +
+        '</div>';
+    }
+  }
+}
+
+// ============================================================
+// FOOTER (mismo formato que index)
+// ============================================================
+function renderFooter(sc) {
+  var html = '';
+  html += '<div class="footer-section">';
+  html += '<h3>' + escapeHTML(sc.companyName || 'AKIRA MOTORS') +
+    '</h3>';
+  html += '<p>' + escapeHTML(sc.description || '') + '</p>';
+  html += '</div>';
+
+  html += '<div class="footer-section">';
+  html += '<h3>Contacto</h3>';
+  if (sc.address) {
+    html += '<p>' + escapeHTML(sc.address) + '</p>';
+  }
+  if (sc.phone) {
+    html += '<p>' + escapeHTML(sc.phone) + '</p>';
+  }
+  html += '</div>';
+
+  html += '<div class="footer-section">';
+  html += '<h3>Horario</h3>';
+  html += '<p>' + escapeHTML(sc.schedule || '') + '</p>';
+  html += '</div>';
+
+  html += '<div class="footer-section">';
+  html += '<h3>Síguenos</h3>';
+  if (sc.facebook) {
+    html += '<a href="' + escapeHTML(sc.facebook) +
+      '" target="_blank" rel="noopener">Facebook</a>';
+  }
+  if (sc.instagram) {
+    html += '<a href="' + escapeHTML(sc.instagram) +
+      '" target="_blank" rel="noopener">Instagram</a>';
+  }
+  if (sc.tiktok) {
+    html += '<a href="' + escapeHTML(sc.tiktok) +
+      '" target="_blank" rel="noopener">TikTok</a>';
+  }
+  html += '</div>';
+
+  var fc = document.getElementById('footerContent');
+  if (fc) fc.innerHTML = html;
+
+  var fb = document.getElementById('footerBottom');
+  if (fb) {
+    fb.innerHTML = '<p>&copy; ' + new Date().getFullYear() +
+      ' ' + escapeHTML(sc.companyName || 'AKIRA MOTORS') +
+      ' · Todos los derechos reservados · ' +
+      '<a href="index.html" style="color:#FF6B1A;' +
+      'text-decoration:underline;">Volver a la tienda</a>' +
+      '</p>';
+  }
+}
+
+// ============================================================
+// INICIAR
+// ============================================================
+cargarPagina();
+</script>
+</body>
+</html>
