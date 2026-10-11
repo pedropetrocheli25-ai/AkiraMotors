@@ -807,8 +807,6 @@ async function cargarPagina() {
     if (loading) loading.style.display = 'none';
     if (content) content.style.display = 'block';
 
-    // Si no hay aboutUs, avisar visualmente
-    if (!aboutUs.title && !aboutUs.text &&
     // Diagnóstico: mostrar qué llegó
     console.log('aboutUs recibido:', aboutUs);
     console.log('title:', aboutUs.title);
