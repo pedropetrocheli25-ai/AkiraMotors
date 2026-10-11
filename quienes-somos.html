@@ -633,18 +633,28 @@ async function cargarPagina() {
       getDoc(doc(db, 'settings', 'logo'))
     ]);
 
-    var aboutUs = promesas[0].status === 'fulfilled'
-      && promesas[0].value.exists
-      ? promesas[0].value.data() : {};
-    var siteConfig = promesas[1].status === 'fulfilled'
-      && promesas[1].value.exists
-      ? promesas[1].value.data() : {};
-    var whatsappData = promesas[2].status === 'fulfilled'
-      && promesas[2].value.exists
-      ? promesas[2].value.data() : {};
-    var logoData = promesas[3].status === 'fulfilled'
-      && promesas[3].value.exists
-      ? promesas[3].value.data() : {};
+    function leerSettings(promesa) {
+      if (!promesa) return {};
+      if (promesa.status !== 'fulfilled') {
+        console.error('Settings falló:', promesa.reason);
+        return {};
+      }
+      var snap = promesa.value;
+      if (!snap) return {};
+      if (typeof snap.exists !== 'boolean') return {};
+      if (!snap.exists) return {};
+      try {
+        return snap.data() || {};
+      } catch(e) {
+        console.error('Error leyendo settings:', e);
+        return {};
+      }
+    }
+
+    var aboutUs = leerSettings(promesas[0]);
+    var siteConfig = leerSettings(promesas[1]);
+    var whatsappData = leerSettings(promesas[2]);
+    var logoData = leerSettings(promesas[3]);
 
     var whatsappNumber = whatsappData.number || '584148700616';
     var companyName = siteConfig.companyName || 'AKIRA MOTORS';
