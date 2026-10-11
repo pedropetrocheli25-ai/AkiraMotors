@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport"
+  content="width=device-width, initial-scale=1.0">
+<title>Quiénes Somos - Akira Motors</title>
+<meta name="description"
+  content="Conoce la historia, misión y visión de Akira Motors, tu tienda de repuestos automotrices en Ciudad Bolívar.">
+<meta property="og:title" content="Quiénes Somos - Akira Motors">
+<meta property="og:description"
+  content="Conoce la historia de Akira Motors, tu tienda de repuestos automotrices.">
+<meta property="og:type" content="website">
+<link rel="icon"
+  href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='45' fill='%23FF6B1A'/><text x='50' y='68' font-size='60' text-anchor='middle' fill='white' font-family='Arial' font-weight='bold'>A</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect"
+  href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+  rel="stylesheet">
+<style>
+:root {
+  --naranja: #FF6B1A;
+  --naranja-hover: #E55A0F;
+  --naranja-texto: #C2410C;
+  --texto-sobre-naranja: #111111;
+  --negro: #111111;
+  --blanco: #FFFFFF;
+  --gris-claro: #F8F9FA;
+  --gris-borde: #E5E5E5;
+  --gris-texto: #6C757D;
+  --texto: #0D0D0D;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body {
+  font-family: 'Inter', 'Segoe UI', sans-serif;
+  background: var(--blanco);
+  color: var(--texto);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+img { max-width:100%; display:block; }
+button { font-family: inherit; cursor: pointer; }
+a { color: inherit; text-decoration: none; }
+svg { display:block; }
+:focus-visible {
+  outline: 3px solid var(--naranja);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+.loading-state {
+  text-align: center;
+  padding: 4rem 1rem;
+  color: var(--gris-texto);
+}
+.screw-loading {
+  width: 50px;
+  height: 50px;
+  margin: 0 auto 1rem;
+  animation: girar 1.5s linear infinite;
+}
+.screw-loading svg { width: 100%; height: 100%; }
+@keyframes girar {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.top-header {
+  background: var(--negro);
+  color: white;
+  padding: 0.7rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+}
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+.header-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 1.05rem;
+  font-weight: 700;
+  cursor: pointer;
+  letter-spacing: 0.5px;
+}
+.header-logo-img {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--naranja);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.header-logo-img img {
+  width:100%; height:100%;
+  object-fit: cover;
+}
+.header-back {
+  background: rgba(255,255,255,0.08);
+  border: none;
+  color: white;
+  padding: 0.5rem 0.9rem;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: background 0.2s;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.header-back:hover { background: rgba(255,255,255,0.15); }
+.header-back svg {
+  width: 16px;
+  height: 16px;
+  stroke: white;
+  fill: none;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.whatsapp-float {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: #25D366;
+  color: var(--texto-sobre-naranja);
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 20px rgba(37,211,102,0.4);
+  z-index: 999;
+  transition: all 0.25s;
+  text-decoration: none;
+}
+.whatsapp-float:hover {
+  transform: scale(1.08);
+  box-shadow: 0 8px 24px rgba(37,211,102,0.5);
+}
+.whatsapp-float svg {
+  width: 32px;
+  height: 32px;
+  fill: var(--texto-sobre-naranja);
+}
+</style>
