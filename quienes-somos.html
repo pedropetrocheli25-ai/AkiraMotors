@@ -633,8 +633,8 @@ async function cargarPagina() {
       }
       var snap = promesa.value;
       if (!snap) return {};
-      if (typeof snap.exists !== 'boolean') return {};
-      if (!snap.exists) return {};
+      if (typeof snap.exists !== 'function') return {};
+      if (!snap.exists()) return {};
       try {
         return snap.data() || {};
       } catch(e) {
