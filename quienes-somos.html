@@ -557,6 +557,7 @@ Ir a la tienda
 <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.71.306 1.263.489 1.694.625.712.227 1.36.195 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.465 3.488"/>
 </svg>
 </a>
+
 <script type="module">
 import { initializeApp, getApps, getApp }
   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
@@ -592,26 +593,20 @@ function escapeHTML(str) {
     .replace(/'/g, '&#039;');
 }
 
-// Extrae el ID de un video de YouTube desde varias formas de URL
 function extraerYouTubeId(url) {
   if (!url) return null;
   var u = String(url).trim();
-  // youtube.com/watch?v=XXXX o youtube.com/watch?feature=...&v=XXXX
   var m1 = u.match(/[?&]v=([a-zA-Z0-9_-]{6,20})/);
   if (m1) return m1[1];
-  // youtu.be/XXXX
   var m2 = u.match(/youtu\.be\/([a-zA-Z0-9_-]{6,20})/);
   if (m2) return m2[1];
-  // youtube.com/embed/XXXX
   var m3 = u.match(/youtube\.com\/embed\/([a-zA-Z0-9_-]{6,20})/);
   if (m3) return m3[1];
-  // youtube.com/shorts/XXXX
   var m4 = u.match(/youtube\.com\/shorts\/([a-zA-Z0-9_-]{6,20})/);
   if (m4) return m4[1];
   return null;
 }
 
-// Valida URL de embed de Google Maps
 function esMapsEmbedValido(url) {
   if (!url) return false;
   var u = String(url).trim();
@@ -623,9 +618,6 @@ function esMapsEmbedValido(url) {
 // ============================================================
 async function cargarPagina() {
   try {
-    // ------------------------------------------------------
-    // 1. Cargar configuraciones en paralelo
-    // ------------------------------------------------------
     var promesas = await Promise.allSettled([
       getDoc(doc(db, 'settings', 'aboutUs')),
       getDoc(doc(db, 'settings', 'siteConfig')),
@@ -659,9 +651,7 @@ async function cargarPagina() {
     var whatsappNumber = whatsappData.number || '584148700616';
     var companyName = siteConfig.companyName || 'AKIRA MOTORS';
 
-    // ------------------------------------------------------
-    // 2. Aplicar logo y nombre en el header
-    // ------------------------------------------------------
+    // Logo y nombre en header
     var headerNameEl = document.getElementById('headerCompanyName');
     if (headerNameEl) headerNameEl.textContent = companyName;
     if (logoData.image) {
@@ -673,9 +663,7 @@ async function cargarPagina() {
     }
     document.title = 'Quiénes Somos - ' + companyName;
 
-    // ------------------------------------------------------
-    // 3. Hero
-    // ------------------------------------------------------
+    // Hero
     if (aboutUs.title) {
       var heroSection = document.getElementById('heroSection');
       var heroTitle = document.getElementById('heroTitle');
@@ -695,9 +683,7 @@ async function cargarPagina() {
       }
     }
 
-    // ------------------------------------------------------
-    // 4. Bloque "Quiénes Somos"
-    // ------------------------------------------------------
+    // Bloque "Quiénes Somos"
     if (aboutUs.text) {
       var aboutBlock = document.getElementById('aboutBlock');
       var aboutTextEl = document.getElementById('aboutText');
@@ -707,9 +693,7 @@ async function cargarPagina() {
       }
     }
 
-    // ------------------------------------------------------
-    // 5. Misión y Visión
-    // ------------------------------------------------------
+    // Misión y Visión
     var mvBlock = document.getElementById('mvBlock');
     var hayMV = false;
 
@@ -735,15 +719,12 @@ async function cargarPagina() {
       mvBlock.style.display = 'block';
     }
 
-    // ------------------------------------------------------
-    // 6. Media (video o imagen del local)
-    // ------------------------------------------------------
+    // Media (video o imagen)
     var mediaBlock = document.getElementById('mediaBlock');
     var mediaContainer = document.getElementById('mediaContainer');
     var ytId = extraerYouTubeId(aboutUs.videoUrl);
 
     if (ytId) {
-      // Video de YouTube con nocookie
       mediaContainer.innerHTML =
         '<div class="media-frame video">' +
         '<iframe src="https://www.youtube-nocookie.com/embed/' +
@@ -755,7 +736,6 @@ async function cargarPagina() {
         '</div>';
       mediaBlock.style.display = 'block';
     } else if (aboutUs.image) {
-      // Imagen del local
       mediaContainer.innerHTML =
         '<div class="media-frame">' +
         '<img src="' + escapeHTML(aboutUs.image) +
@@ -764,9 +744,7 @@ async function cargarPagina() {
       mediaBlock.style.display = 'block';
     }
 
-    // ------------------------------------------------------
-    // 7. Google Maps (solo si es URL válida de embed)
-    // ------------------------------------------------------
+    // Google Maps
     if (esMapsEmbedValido(aboutUs.mapsEmbed)) {
       var mapsBlock = document.getElementById('mapsBlock');
       var mapsContainer = document.getElementById('mapsContainer');
@@ -782,14 +760,10 @@ async function cargarPagina() {
       }
     }
 
-    // ------------------------------------------------------
-    // 8. Footer
-    // ------------------------------------------------------
+    // Footer
     renderFooter(siteConfig);
 
-    // ------------------------------------------------------
-    // 9. WhatsApp flotante
-    // ------------------------------------------------------
+    // WhatsApp flotante
     var cleanWhats = String(whatsappNumber).replace(/\D/g, '');
     var floatBtn = document.getElementById('whatsappFloat');
     if (floatBtn) {
@@ -799,27 +773,17 @@ async function cargarPagina() {
         );
     }
 
-    // ------------------------------------------------------
-    // 10. Mostrar contenido y ocultar loading
-    // ------------------------------------------------------
+    // Mostrar contenido
     var loading = document.getElementById('loadingBlock');
     var content = document.getElementById('content');
     if (loading) loading.style.display = 'none';
     if (content) content.style.display = 'block';
 
-    // Diagnóstico: mostrar qué llegó
-    console.log('aboutUs recibido:', aboutUs);
-    console.log('title:', aboutUs.title);
-    console.log('text:', aboutUs.text ? 'tiene' : 'vacío');
-    console.log('mission:', aboutUs.mission ? 'tiene' : 'vacío');
-    console.log('vision:', aboutUs.vision ? 'tiene' : 'vacío');
-
-    // Si NO hay datos, mostrar fallback
+    // Fallback si no hay datos
     var tieneAlgo = aboutUs.title || aboutUs.text ||
       aboutUs.mission || aboutUs.vision;
 
     if (!tieneAlgo) {
-      console.warn('aboutUs está vacío, mostrando fallback');
       var fallback = document.getElementById('aboutBlock');
       if (fallback) {
         fallback.innerHTML =
@@ -837,9 +801,9 @@ async function cargarPagina() {
     }
   } catch (error) {
     console.error('Error cargando página:', error);
-    var loading = document.getElementById('loadingBlock');
-    if (loading) {
-      loading.innerHTML = '<div style="color:#DC3545;">' +
+    var loadingEl = document.getElementById('loadingBlock');
+    if (loadingEl) {
+      loadingEl.innerHTML = '<div style="color:#DC3545;">' +
         'No se pudo cargar la información.<br>' +
         'Recarga la página o escríbenos por WhatsApp.' +
         '</div>';
@@ -848,7 +812,7 @@ async function cargarPagina() {
 }
 
 // ============================================================
-// FOOTER (mismo formato que index)
+// FOOTER
 // ============================================================
 function renderFooter(sc) {
   var html = '';
@@ -903,9 +867,6 @@ function renderFooter(sc) {
   }
 }
 
-// ============================================================
-// INICIAR
-// ============================================================
 cargarPagina();
 </script>
 </body>
