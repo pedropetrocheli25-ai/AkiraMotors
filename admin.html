@@ -404,8 +404,6 @@ body {
 }
 .tab-content { display: none; }
 .tab-content.active { display: block; }
-</style>
-<style>
 .order-item {
   background: #f8f8f8;
   padding: 1rem;
@@ -1056,6 +1054,7 @@ categoría tiene sus subcategorías y los vehículos
 <div id="catalogoEditor"></div>
 </div>
 </div>
+
 <div class="admin-section" id="section-products">
 <h2 class="section-title">Productos</h2>
 
@@ -1191,6 +1190,7 @@ la atención del cliente.
 <div id="flashSearchResults"></div>
 </div>
 </div>
+
 <div class="admin-section" id="section-orders">
 <h2 class="section-title">Pedidos</h2>
 <div class="admin-card">
@@ -1314,6 +1314,7 @@ configurado en "Delivery".
 <div id="driversList"></div>
 </div>
 </div>
+
 <div class="admin-section" id="section-brands">
 <h2 class="section-title">Marcas de Repuestos</h2>
 <div class="alert-info">
@@ -1419,6 +1420,41 @@ crea uno nuevo.
 </div>
 
 <div class="admin-card">
+<h3>Cupón de bienvenida</h3>
+<div class="alert-info">
+Se aplica una sola vez por cuenta registrada con
+correo verificado. Se crea/actualiza como
+coupons/{CÓDIGO} con welcome:true,
+onlyVerified:true, maxUses:0.
+</div>
+<div class="switch-row">
+<label for="welcomeCouponActive">
+Activar cupón de bienvenida
+</label>
+<label class="switch">
+<input type="checkbox" id="welcomeCouponActive">
+<span class="slider"></span>
+</label>
+</div>
+<div class="form-row" style="margin-top:1rem;">
+<div class="form-group">
+<label>Código</label>
+<input type="text" id="welcomeCouponCode"
+  value="BIENVENIDA"
+  style="text-transform:uppercase;" maxlength="20">
+</div>
+<div class="form-group">
+<label>Descuento (%)</label>
+<input type="number" id="welcomeCouponDiscount"
+  min="1" max="100" value="10">
+</div>
+</div>
+<button class="btn btn-primary"
+  onclick="saveWelcomeCoupon()">
+Guardar cupón de bienvenida</button>
+</div>
+
+<div class="admin-card">
 <h3>Crear Cupón</h3>
 <div class="form-row">
 <div class="form-group">
@@ -1470,11 +1506,13 @@ activo).
 <button class="btn btn-primary"
   onclick="createCoupon()">Crear Cupón</button>
 </div>
+
 <div class="admin-card">
 <h3>Cupones Creados</h3>
 <div id="couponsList"></div>
 </div>
 </div>
+
 <div class="admin-section" id="section-delivery">
 <h2 class="section-title">Delivery por km</h2>
 <div class="alert-info">
@@ -1719,6 +1757,7 @@ https://www.google.com/maps/embed?pb=...).
   style="padding:1rem;">
 Guardar Quiénes Somos</button>
 </div>
+
 <div class="admin-section" id="section-footer">
 <h2 class="section-title">Pie de página</h2>
 <div class="admin-card">
@@ -2369,6 +2408,19 @@ window.normalizarTelefono = function(tel) {
   return String(tel).replace(/\D/g, '');
 };
 
+// A4: helper de teléfono para wa.me (nuevo y viejo)
+window.telefonoParaWhatsApp = function(tel) {
+  if (!tel) return '';
+  var limpio = String(tel).replace(/\D/g, '');
+  if (/^04[0-9]{9}$/.test(limpio)) {
+    return '58' + limpio.substring(1);
+  }
+  if (/^58[0-9]{10}$/.test(limpio)) {
+    return limpio;
+  }
+  return '';
+};
+
 // ============================================================
 // VARIABLES GLOBALES
 // ============================================================
@@ -2530,7 +2582,6 @@ window.toggleSound = function() {
     soundEnabled ? 'on' : 'off');
 };
 
-// Inicializar sonido desde localStorage
 try {
   var savedSound = localStorage.getItem('admin_sound');
   if (savedSound === 'off') {
@@ -2578,6 +2629,7 @@ async function loadAll() {
   updateLowStockBadge();
 }
 </script>
+
 <script>
 // ============================================================
 // CATÁLOGO
@@ -3088,6 +3140,7 @@ document.addEventListener('change', function(e) {
   }
 });
 </script>
+
 <script>
 // ============================================================
 // MODAL PRODUCTO
@@ -3137,7 +3190,6 @@ window.editProduct = async function(productId) {
   if (!product) return;
   populateCategorySelect();
 
-  // Imágenes: miniaturas de p.images + foto grande de productImages/{id}
   currentProductImages = product.images
     ? product.images.slice() : [];
   currentProductImagesBig = [];
@@ -3158,7 +3210,6 @@ window.editProduct = async function(productId) {
   currentSpecifications = product.specifications || [];
   currentCompatibility = product.compatibility || [];
 
-  // Costos vienen de productCosts (solo admin)
   var costPrice = product.costPrice || 0;
   var margin = product.margin || 0;
   try {
@@ -3247,9 +3298,7 @@ window.addProductImages = async function(event) {
       continue;
     }
     try {
-      // Miniatura 400px para listados
       var thumbData = await comprimirImagen(file, 400, 0.7);
-      // Foto grande 1000px para detalle
       var bigData = await comprimirImagen(file, 1000, 0.75);
 
       if (i === 0 && !currentProductThumb) {
@@ -3365,14 +3414,12 @@ window.saveProduct = async function(event) {
       productId = newRef.id;
     }
 
-    // Guardar costos en productCosts (solo admin)
     await db.collection('productCosts').doc(productId).set({
       costPrice: costPrice,
       margin: margin,
       updatedAt: new Date().toISOString()
     });
 
-    // Guardar imágenes grandes en productImages
     if (currentProductImagesBig.length > 0) {
       await db.collection('productImages').doc(productId).set({
         images: currentProductImagesBig,
@@ -3394,7 +3441,6 @@ window.deleteProduct = async function(id) {
   if (!confirm('¿Eliminar este producto?')) return;
   try {
     await db.collection('products').doc(id).delete();
-    // Borrar también productCosts y productImages
     try {
       await db.collection('productCosts').doc(id).delete();
     } catch(e) {}
@@ -3585,9 +3631,9 @@ window.calculateSalePrice = function() {
     salePrice.toFixed(2);
 };
 </script>
-<script>
+  <script>
 // ============================================================
-// PEDIDOS — Escucha en tiempo real y libera vencidos
+// PEDIDOS — Escucha en tiempo real
 // ============================================================
 function loadOrders() {
   if (ordersUnsubscribe) {
@@ -3603,7 +3649,6 @@ function loadOrders() {
         obj.id = d.id;
         orders.push(obj);
       });
-      // Detectar pedidos nuevos para sonido
       if (prevCount > 0 && orders.length > prevCount) {
         var nuevos = orders.filter(function(o) {
           return o.status === 'pending';
@@ -3648,19 +3693,19 @@ function renderOrders() {
   var sq = (searchEl ? searchEl.value : '')
     .toLowerCase().trim();
 
-  // Estados activos (no historial)
   var activeStatuses = ['pending', 'confirmed',
-    'shipped', 'ready', 'cancel_requested'];
+    'shipped', 'ready'];
 
   var filtered = orders.filter(function(o) {
-    return activeStatuses.indexOf(o.status) !== -1;
+    var esCanc = (o.cancelRequested === true &&
+      o.status === 'pending');
+    if (filter === 'cancel_requested') return esCanc;
+    if (filter) {
+      return o.status === filter && !esCanc;
+    }
+    return activeStatuses.indexOf(o.status) !== -1 ||
+      esCanc;
   });
-
-  if (filter) {
-    filtered = filtered.filter(function(o) {
-      return o.status === filter;
-    });
-  }
   if (sq) {
     filtered = filtered.filter(function(o) {
       var c = (o.customerCode || '').toLowerCase();
@@ -3714,7 +3759,6 @@ function renderOrdersHistory() {
   var sq = (searchEl ? searchEl.value : '')
     .toLowerCase().trim();
 
-  // Estados de historial
   var historyStatuses = ['delivered', 'cancelled', 'expired'];
 
   var filtered = orders.filter(function(o) {
@@ -3768,6 +3812,9 @@ function renderOrdersHistory() {
 
 function renderOrderItem(o, statusMap) {
   var st = statusMap[o.status] || o.status;
+  if (o.cancelRequested === true && o.status === 'pending') {
+    st = 'Cancelación solicitada';
+  }
   var idShort = o.orderCode || o.id.slice(-6);
   var total = Number(o.total).toFixed(2);
   var fecha = new Date(o.date).toLocaleString();
@@ -3792,7 +3839,11 @@ function renderOrderItem(o, statusMap) {
       escapeHTML(o.customerCode) + '</small>';
   }
   html += '</div>';
-  html += '<span class="order-status ' + o.status +
+  var statusClass = o.status;
+  if (o.cancelRequested === true && o.status === 'pending') {
+    statusClass = 'cancel_requested';
+  }
+  html += '<span class="order-status ' + statusClass +
     '">' + st + '</span></div>';
   html += '<div style="margin:0.5rem 0;">';
   html += '<strong>$' + total + '</strong> | ' + delivery;
@@ -3813,25 +3864,24 @@ function renderOrderItem(o, statusMap) {
   }
   html += '</div>';
 
-  // Acciones según estado
   html += '<div class="order-actions">';
 
-  if (o.status === 'pending') {
-    html += '<button class="btn btn-small btn-success"';
-    html += ' onclick="confirmarPedido(\'' + o.id +
-      '\')">Confirmar pedido</button>';
-    html += '<button class="btn btn-small btn-danger"';
-    html += ' onclick="cancelarPedidoAdmin(\'' + o.id +
-      '\')">Cancelar</button>';
-  }
-
-  if (o.status === 'cancel_requested') {
+  var esCanc = (o.cancelRequested === true &&
+    o.status === 'pending');
+  if (esCanc) {
     html += '<button class="btn btn-small btn-danger"';
     html += ' onclick="cancelarPedidoAdmin(\'' + o.id +
       '\')">Aprobar cancelación</button>';
     html += '<button class="btn btn-small btn-secondary"';
     html += ' onclick="rechazarCancelacion(\'' + o.id +
       '\')">Rechazar solicitud</button>';
+  } else if (o.status === 'pending') {
+    html += '<button class="btn btn-small btn-success"';
+    html += ' onclick="confirmarPedido(\'' + o.id +
+      '\')">Confirmar disponibilidad (descuenta stock)</button>';
+    html += '<button class="btn btn-small btn-danger"';
+    html += ' onclick="cancelarPedidoAdmin(\'' + o.id +
+      '\')">Cancelar</button>';
   }
 
   if (o.status === 'confirmed') {
@@ -3882,7 +3932,7 @@ document.addEventListener('change', function(e) {
 });
 
 // ============================================================
-// LIBERAR RESERVAS VENCIDAS (al abrir admin)
+// LIBERAR RESERVAS VENCIDAS
 // ============================================================
 async function liberarReservasVencidas() {
   var ahora = Date.now();
@@ -3908,30 +3958,98 @@ async function liberarReservasVencidas() {
 }
 
 // ============================================================
-// CONFIRMAR PEDIDO — descuenta stock e incrementa cupón
-// Idempotente: se puede pulsar varias veces sin duplicar
+// A4 helpers WhatsApp
+// ============================================================
+function construirWhatsAppUrl(tel, mensaje) {
+  var num = telefonoParaWhatsApp(tel);
+  if (!num) {
+    alert('Teléfono inválido en este pedido: "' +
+      (tel || '(vacío)') + '"');
+    return null;
+  }
+  return 'https://wa.me/' + num + '?text=' +
+    encodeURIComponent(mensaje);
+}
+
+function mostrarBotonWhatsApp(orderId, etiqueta, url) {
+  if (!url) return;
+  var existing = document.getElementById('waBtn-' + orderId);
+  if (existing) existing.remove();
+  var container = document.getElementById('ordersList');
+  if (!container) return;
+  var box = document.createElement('div');
+  box.id = 'waBtn-' + orderId;
+  box.style.cssText =
+    'background:#25D366;color:#111;padding:0.8rem;' +
+    'border-radius:8px;margin:0.5rem 0;' +
+    'display:flex;justify-content:space-between;' +
+    'align-items:center;gap:0.5rem;font-weight:700;' +
+    'font-size:0.9rem;';
+  box.innerHTML = '<span>' + etiqueta + '</span>';
+  var btn = document.createElement('a');
+  btn.href = url;
+  btn.target = '_blank';
+  btn.rel = 'noopener';
+  btn.textContent = 'Abrir WhatsApp';
+  btn.style.cssText =
+    'background:#111;color:#fff;padding:0.5rem 0.9rem;' +
+    'border-radius:6px;text-decoration:none;font-weight:700;';
+  box.appendChild(btn);
+  container.insertBefore(box, container.firstChild);
+}
+
+// ============================================================
+// CONFIRMAR PEDIDO — A1 + A2 + W4
 // ============================================================
 window.confirmarPedido = async function(orderId) {
-  if (!confirm('¿Confirmar este pedido? Se descontará ' +
-      'el stock de los productos.')) return;
+  var order = orders.find(function(o) { return o.id === orderId; });
+  if (!order) { alert('Pedido no encontrado'); return; }
+
+  // A2: verificación de precio vigente
+  var avisos = [];
+  (order.items || []).forEach(function(it) {
+    var p = products.find(function(x) { return x.id === it.id; });
+    if (!p) {
+      avisos.push('Producto eliminado: ' + it.name);
+      return;
+    }
+    var precioVigente = Number(p.price) || 0;
+    if (p.discount && p.discount > 0) {
+      precioVigente = precioVigente -
+        (precioVigente * p.discount / 100);
+    }
+    var precioPedido = Number(it.price) || 0;
+    if (Math.abs(precioVigente - precioPedido) > 0.01) {
+      avisos.push(it.name + ': pedido $' +
+        precioPedido.toFixed(2) + ' / actual $' +
+        precioVigente.toFixed(2));
+    }
+  });
+  var msg = '¿Confirmar disponibilidad y descontar stock?';
+  if (avisos.length > 0) {
+    msg = '¡ATENCIÓN! El precio de estos ítems cambió:\n\n' +
+      avisos.join('\n') +
+      '\n\n¿Confirmar de todas formas con el precio del pedido?';
+  }
+  if (!confirm(msg)) return;
 
   try {
     await db.runTransaction(async function(transaction) {
       var orderRef = db.collection('orders').doc(orderId);
+
+      // ---- LECTURAS ----
       var orderSnap = await transaction.get(orderRef);
       if (!orderSnap.exists) {
         throw new Error('Pedido no encontrado');
       }
-      var order = orderSnap.data();
+      var orderData = orderSnap.data();
 
-      // Idempotencia
-      if (order.stockDeducted) {
+      if (orderData.stockDeducted) {
         throw new Error('Ya se descontó el stock');
       }
 
-      // Verificar stock de TODOS los ítems
-      var items = order.items || [];
-      var stocks = [];
+      var items = orderData.items || [];
+      var stockData = [];
       for (var i = 0; i < items.length; i++) {
         var prodRef = db.collection('products').doc(items[i].id);
         var prodSnap = await transaction.get(prodRef);
@@ -3946,42 +4064,59 @@ window.confirmarPedido = async function(orderId) {
             stockActual + ', necesitas: ' +
             items[i].quantity);
         }
-        stocks.push({
+        stockData.push({
           ref: prodRef,
           actual: stockActual,
           cantidad: items[i].quantity
         });
       }
 
-      // Descontar stock
-      for (var j = 0; j < stocks.length; j++) {
-        transaction.update(stocks[j].ref, {
-          stock: stocks[j].actual - stocks[j].cantidad
+      var couponRef = null;
+      var couponSnap = null;
+      if (orderData.couponId && !orderData.couponCounted) {
+        couponRef = db.collection('coupons')
+          .doc(orderData.couponId);
+        couponSnap = await transaction.get(couponRef);
+      }
+
+      var userRef = null;
+      var userSnap = null;
+      var esWelcome = !!(couponSnap && couponSnap.exists() &&
+        couponSnap.data().welcome === true);
+      if (esWelcome && orderData.userId) {
+        userRef = db.collection('users').doc(orderData.userId);
+        userSnap = await transaction.get(userRef);
+        if (userSnap.exists &&
+            userSnap.data().welcomeUsed === true) {
+          throw new Error('El cupón de bienvenida de este ' +
+            'cliente ya fue usado.');
+        }
+      }
+
+      // ---- ESCRITURAS ----
+      for (var j = 0; j < stockData.length; j++) {
+        transaction.update(stockData[j].ref, {
+          stock: stockData[j].actual - stockData[j].cantidad
         });
       }
 
-      // Marcar pedido confirmado
+      if (couponRef && couponSnap && couponSnap.exists()) {
+        var uses = Number(couponSnap.data().uses) || 0;
+        transaction.update(couponRef, { uses: uses + 1 });
+      }
+
+      if (esWelcome && userRef && userSnap &&
+          userSnap.exists()) {
+        transaction.update(userRef, { welcomeUsed: true });
+      }
+
       transaction.update(orderRef, {
         status: 'confirmed',
         stockDeducted: true,
+        couponCounted: !!(couponRef && couponSnap &&
+          couponSnap.exists()) || !!orderData.couponCounted,
         confirmedAt: new Date().toISOString()
       });
-
-      // Incrementar cupón si aplica (y no se ha contado)
-      if (order.couponId && !order.couponCounted) {
-        var couponRef = db.collection('coupons')
-          .doc(order.couponId);
-        var couponSnap = await transaction.get(couponRef);
-        if (couponSnap.exists) {
-          var uses = Number(couponSnap.data().uses) || 0;
-          transaction.update(couponRef, {
-            uses: uses + 1
-          });
-          transaction.update(orderRef, {
-            couponCounted: true
-          });
-        }
-      }
     });
 
     alert('Pedido confirmado. Stock descontado.');
@@ -3993,7 +4128,7 @@ window.confirmarPedido = async function(orderId) {
 };
 
 // ============================================================
-// CANCELAR PEDIDO — devuelve stock si estaba descontado
+// CANCELAR PEDIDO — W4 (restaurar welcome)
 // ============================================================
 window.cancelarPedidoAdmin = async function(orderId) {
   if (!confirm('¿Cancelar este pedido?')) return;
@@ -4004,35 +4139,69 @@ window.cancelarPedidoAdmin = async function(orderId) {
       if (!orderSnap.exists) throw new Error('No existe');
       var order = orderSnap.data();
 
-      // Si ya se descontó stock y no se ha devuelto, devolver
+      var items = order.items || [];
+      var stockData = [];
       if (order.stockDeducted && !order.stockReturned) {
-        var items = order.items || [];
         for (var i = 0; i < items.length; i++) {
           var prodRef = db.collection('products')
             .doc(items[i].id);
           var prodSnap = await transaction.get(prodRef);
           if (prodSnap.exists) {
-            var stockActual = Number(
-              prodSnap.data().stock
-            ) || 0;
-            transaction.update(prodRef, {
-              stock: stockActual + items[i].quantity
+            stockData.push({
+              ref: prodRef,
+              actual: Number(prodSnap.data().stock) || 0,
+              cantidad: items[i].quantity
             });
           }
         }
-        transaction.update(orderRef, {
-          status: 'cancelled',
-          stockReturned: true,
-          cancelledAt: new Date().toISOString(),
-          cancelledBy: 'admin'
-        });
-      } else {
-        transaction.update(orderRef, {
-          status: 'cancelled',
-          cancelledAt: new Date().toISOString(),
-          cancelledBy: 'admin'
+      }
+
+      var couponRef = null;
+      var couponSnap = null;
+      var esWelcome = false;
+      if (order.couponId && order.couponCounted &&
+          !order.couponReturned) {
+        couponRef = db.collection('coupons')
+          .doc(order.couponId);
+        couponSnap = await transaction.get(couponRef);
+        esWelcome = !!(couponSnap.exists &&
+          couponSnap.data().welcome === true);
+      }
+      var userRef = null;
+      var userSnap = null;
+      if (esWelcome && order.userId) {
+        userRef = db.collection('users').doc(order.userId);
+        userSnap = await transaction.get(userRef);
+      }
+
+      for (var j = 0; j < stockData.length; j++) {
+        transaction.update(stockData[j].ref, {
+          stock: stockData[j].actual + stockData[j].cantidad
         });
       }
+      if (esWelcome && couponRef && couponSnap &&
+          couponSnap.exists()) {
+        var uses = Number(couponSnap.data().uses) || 0;
+        transaction.update(couponRef, {
+          uses: Math.max(0, uses - 1)
+        });
+      }
+      if (esWelcome && userRef && userSnap &&
+          userSnap.exists()) {
+        transaction.update(userRef, { welcomeUsed: false });
+      }
+
+      var upd = {
+        status: 'cancelled',
+        cancelledAt: new Date().toISOString(),
+        cancelledBy: 'admin',
+        cancelRequested: false
+      };
+      if (order.stockDeducted && !order.stockReturned) {
+        upd.stockReturned = true;
+      }
+      if (esWelcome) upd.couponReturned = true;
+      transaction.update(orderRef, upd);
     });
     alert('Pedido cancelado');
   } catch(e) {
@@ -4045,7 +4214,6 @@ window.rechazarCancelacion = async function(orderId) {
   if (!confirm('¿Rechazar la solicitud de cancelación?')) return;
   try {
     await db.collection('orders').doc(orderId).update({
-      status: 'pending',
       cancelRequested: false,
       cancelRejectedAt: new Date().toISOString()
     });
@@ -4055,6 +4223,9 @@ window.rechazarCancelacion = async function(orderId) {
   }
 };
 
+// ============================================================
+// CAMBIAR ESTADO + botón visible WhatsApp (A4)
+// ============================================================
 window.cambiarEstadoPedido = async function(orderId, nuevoEstado) {
   var labels = {
     shipped: 'En camino',
@@ -4073,25 +4244,24 @@ window.cambiarEstadoPedido = async function(orderId, nuevoEstado) {
     }
     await db.collection('orders').doc(orderId).update(updateData);
 
-    // WhatsApp al cliente en shipped o delivered
     var order = orders.find(function(o) {
       return o.id === orderId;
     });
-    if (order && messagesConfig.enabled && order.userPhone) {
-      if (nuevoEstado === 'shipped' &&
-          messagesConfig.m1Enabled) {
-        var m1 = construirMensajeM1(order);
-        setTimeout(function() {
-          abrirWhatsApp(order.userPhone, m1);
-        }, 500);
-      }
-      if (nuevoEstado === 'delivered' &&
-          messagesConfig.m3Enabled) {
-        var m3 = construirMensajeM3(order);
-        setTimeout(function() {
-          abrirWhatsApp(order.userPhone, m3);
-        }, 500);
-      }
+    if (!order) return;
+
+    if (nuevoEstado === 'shipped' && messagesConfig.m1Enabled) {
+      var urlM1 = construirWhatsAppUrl(
+        order.userPhone, construirMensajeM1(order)
+      );
+      mostrarBotonWhatsApp(orderId,
+        'Enviar WhatsApp al cliente (M1)', urlM1);
+    }
+    if (nuevoEstado === 'delivered' && messagesConfig.m3Enabled) {
+      var urlM3 = construirWhatsAppUrl(
+        order.userPhone, construirMensajeM3(order)
+      );
+      mostrarBotonWhatsApp(orderId,
+        'Enviar WhatsApp al cliente (M3)', urlM3);
     }
   } catch(e) {
     alert('Error: ' + e.message);
@@ -4099,7 +4269,7 @@ window.cambiarEstadoPedido = async function(orderId, nuevoEstado) {
 };
 
 // ============================================================
-// WHATSAPP
+// CONSTRUCCIÓN DE MENSAJES
 // ============================================================
 function reemplazarVariables(plantilla, datos) {
   var resultado = plantilla;
@@ -4118,20 +4288,6 @@ function construirProductosTexto(items) {
     lineas.push('- ' + it.name + ' x' + it.quantity);
   });
   return lineas.join('\n');
-}
-
-function abrirWhatsApp(numero, mensaje) {
-  if (!numero) {
-    alert('No hay número de WhatsApp configurado');
-    return;
-  }
-  var limpio = String(numero).replace(/\D/g, '');
-  if (!limpio) {
-    alert('Número de WhatsApp inválido');
-    return;
-  }
-  window.open('https://wa.me/' + limpio +
-    '?text=' + encodeURIComponent(mensaje), '_blank');
 }
 
 function construirMensajeM1(order) {
@@ -4200,6 +4356,9 @@ window.viewOrderDetail = function(id) {
     cancel_requested: 'Cancelación solicitada'
   };
   var st = statusMap[o.status] || o.status;
+  if (o.cancelRequested === true && o.status === 'pending') {
+    st = 'Cancelación solicitada';
+  }
   var items = o.items || [];
   var total = Number(o.total).toFixed(2);
   var fecha = new Date(o.date).toLocaleString();
@@ -4243,7 +4402,11 @@ window.viewOrderDetail = function(id) {
     html += 'font-weight:bold;">Ver ubicación en Maps</a>';
   }
   html += '<br><strong>Estado:</strong> ';
-  html += '<span class="order-status ' + o.status + '">';
+  var statusClass = o.status;
+  if (o.cancelRequested === true && o.status === 'pending') {
+    statusClass = 'cancel_requested';
+  }
+  html += '<span class="order-status ' + statusClass + '">';
   html += st + '</span></div>';
 
   html += '<h3 style="margin:1rem 0 0.5rem;';
@@ -4259,7 +4422,6 @@ window.viewOrderDetail = function(id) {
   });
   html += '</div>';
 
-  // Asignar domiciliario (solo delivery)
   if (o.deliveryMode === 'delivery') {
     html += '<h3 style="margin:1rem 0 0.5rem;';
     html += 'color:#FF6B1A;">Asignar Domiciliario</h3>';
@@ -4300,7 +4462,9 @@ window.viewOrderDetail = function(id) {
 };
 
 window.assignDriverToOrder = async function(orderId) {
-  var driverId = document.getElementById('orderDriverSelect').value;
+  var driverId = document.getElementById(
+    'orderDriverSelect'
+  ).value;
   var order = orders.find(function(o) { return o.id === orderId; });
   if (!order) return;
   try {
@@ -4333,15 +4497,16 @@ window.assignDriverToOrder = async function(orderId) {
 
     if (messagesConfig.enabled && messagesConfig.m2Enabled) {
       var mensaje = construirMensajeM2(order, driver);
-      setTimeout(function() {
-        abrirWhatsApp(driver.phone, mensaje);
-      }, 500);
+      var urlM2 = construirWhatsAppUrl(driver.phone, mensaje);
+      mostrarBotonWhatsApp(orderId,
+        'Enviar WhatsApp al domiciliario (M2)', urlM2);
     }
   } catch(e) {
     alert('Error: ' + e.message);
   }
 };
 </script>
+
 <script>
 // ============================================================
 // CLIENTES
@@ -4657,7 +4822,7 @@ window.saveBrandImage = async function(event) {
 };
 
 // ============================================================
-// CARRUSEL (colección carouselSlides)
+// CARRUSEL
 // ============================================================
 async function loadCarouselSlides() {
   try {
@@ -4672,7 +4837,6 @@ async function loadCarouselSlides() {
     renderCarouselSlides();
   } catch(e) {
     console.error('Error carrusel:', e);
-    // Fallback si no hay índice en 'order'
     try {
       var s2 = await db.collection('carouselSlides').get();
       carouselSlides = [];
@@ -4744,9 +4908,7 @@ document.addEventListener('change', async function(e) {
     return;
   }
   try {
-    // Miniatura para listados admin
     newSlideThumbData = await comprimirImagen(file, 500, 0.7);
-    // Foto grande para el hero
     newSlideImageData = await comprimirImagen(file, 1400, 0.75);
     var prev = document.getElementById('newSlidePreview');
     if (prev) {
@@ -4838,9 +5000,10 @@ window.editCarouselSlide = async function(id) {
     alert('Error: ' + e.message);
   }
 };
-
+</script>
+  <script>
 // ============================================================
-// CUPONES (ID = código)
+// CUPONES
 // ============================================================
 async function loadCoupons() {
   try {
@@ -4852,6 +5015,7 @@ async function loadCoupons() {
       coupons.push(obj);
     });
     renderCoupons();
+    await loadWelcomeCoupon();
   } catch(e) { console.error(e); }
 }
 
@@ -4910,6 +5074,12 @@ window.renderCoupons = function() {
     html += ' <span style="color:' + estadoColor +
       ';font-size:0.85rem;font-weight:700;">' +
       estadoTexto + '</span>';
+    if (c.welcome === true) {
+      html += ' <span style="background:#FFF3CD;' +
+        'color:#856404;font-size:0.7rem;font-weight:700;' +
+        'padding:0.15rem 0.5rem;border-radius:8px;">' +
+        'BIENVENIDA</span>';
+    }
     html += '<br><small style="color:#666;">' +
       c.discount + '% descuento · Usos: ' +
       (c.uses || 0) + '/' +
@@ -4987,7 +5157,6 @@ window.createCoupon = async function() {
   }
 
   try {
-    // ID del doc = código
     var existing = await db.collection('coupons')
       .doc(code).get();
     if (existing.exists) {
@@ -5027,7 +5196,69 @@ window.deleteCoupon = async function(id) {
     alert('Error: ' + e.message);
   }
 };
+
+// ============================================================
+// CUPÓN DE BIENVENIDA (W1)
+// ============================================================
+async function loadWelcomeCoupon() {
+  try {
+    var snap = await db.collection('settings')
+      .doc('welcomeCoupon').get();
+    if (snap.exists) {
+      var d = snap.data();
+      var el = document.getElementById('welcomeCouponActive');
+      if (el) el.checked = !!d.active;
+      el = document.getElementById('welcomeCouponCode');
+      if (el) el.value = d.code || 'BIENVENIDA';
+      el = document.getElementById('welcomeCouponDiscount');
+      if (el) el.value = d.discount || 10;
+    }
+  } catch(e) {
+    console.error('welcomeCoupon:', e);
+  }
+}
+
+window.saveWelcomeCoupon = async function() {
+  var active = document.getElementById(
+    'welcomeCouponActive'
+  ).checked;
+  var code = (document.getElementById('welcomeCouponCode')
+    .value || '').trim().toUpperCase();
+  var discount = parseInt(document.getElementById(
+    'welcomeCouponDiscount').value);
+  if (!code || !/^[A-Z0-9]{3,20}$/.test(code)) {
+    alert('Código inválido (letras y números, 3-20)');
+    return;
+  }
+  if (isNaN(discount) || discount < 1 || discount > 100) {
+    alert('Descuento entre 1 y 100'); return;
+  }
+  try {
+    await db.collection('coupons').doc(code).set({
+      discount: discount,
+      maxUses: 0,
+      uses: 0,
+      active: active,
+      onlyVerified: true,
+      welcome: true,
+      startDate: '',
+      endDate: '',
+      createdAt: new Date().toISOString()
+    }, { merge: true });
+    await db.collection('settings').doc('welcomeCoupon').set({
+      active: active,
+      code: code,
+      discount: discount,
+      updatedAt: new Date().toISOString()
+    });
+    alert('Cupón de bienvenida guardado');
+    await loadCoupons();
+  } catch(e) {
+    alert('Error: ' + e.message);
+  }
+};
 </script>
+
 <script>
 // ============================================================
 // DELIVERY
@@ -5379,7 +5610,7 @@ window.saveAboutUs = async function() {
 };
 
 // ============================================================
-// FOOTER (siteConfig)
+// FOOTER
 // ============================================================
 async function loadSiteConfig() {
   try {
@@ -5487,7 +5718,7 @@ window.saveMessagesConfig = async function() {
 };
 
 // ============================================================
-// SETTINGS (IVA, reserva, pago, pickup, whatsapp, BCV)
+// SETTINGS
 // ============================================================
 async function loadSettings() {
   try {
@@ -5530,7 +5761,6 @@ window.saveReservationConfig = async function() {
   }
 };
 
-// Guardar IVA también cuando cambia el switch
 document.addEventListener('change', async function(e) {
   if (e.target && e.target.id === 'ivaEnabled') {
     try {
@@ -5985,12 +6215,10 @@ window.migrarImagenesGrandes = async function() {
     var p = products[i];
     try {
       if (p.images && p.images.length > 0) {
-        // Asumimos que las images actuales son las grandes
         await db.collection('productImages').doc(p.id).set({
           images: p.images,
           updatedAt: new Date().toISOString()
         });
-        // Si no tienen thumbnail, generar uno con la primera
         if (!p.thumbnail) {
           var thumb = p.images[0];
           await db.collection('products').doc(p.id).update({
@@ -6046,7 +6274,7 @@ window.migrarCarrusel = async function() {
 };
 
 // ============================================================
-// ESCUCHA DE NUEVOS PEDIDOS AL CARGAR
+// VISIBILIDAD
 // ============================================================
 document.addEventListener('visibilitychange', function() {
   if (!document.hidden) {
