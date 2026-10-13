@@ -2339,7 +2339,8 @@ Conoce más
 
 <div class="toast" id="toast" role="status"
   aria-live="polite"></div>
-  <div class="modal" id="productDetailModal"
+
+<div class="modal" id="productDetailModal"
   role="dialog" aria-modal="true">
 <div class="modal-content"
   id="productDetailContent"></div>
@@ -2411,7 +2412,8 @@ la factura por correo.
 <div class="form-group">
 <label for="regPhone">Teléfono</label>
 <input type="tel" id="regPhone" required
-  placeholder="0414-1234567"
+  placeholder="04121234567"
+  inputmode="tel" maxlength="11"
   autocomplete="tel">
 </div>
 <div class="form-group">
@@ -2455,7 +2457,8 @@ coordinar la entrega por WhatsApp.
 <div class="form-group">
 <label for="guestPhone">Teléfono</label>
 <input type="tel" id="guestPhone" required
-  placeholder="0414-1234567"
+  placeholder="04121234567"
+  inputmode="tel" maxlength="11"
   autocomplete="tel">
 </div>
 <div class="auth-error" id="guestError"></div>
@@ -2507,6 +2510,7 @@ Cerrar sesión
 <div id="ordersList"></div>
 </div>
 </div>
+
 <div class="modal checkout-modal" id="checkoutModal"
   role="dialog" aria-modal="true">
 <div class="modal-content">
@@ -2641,14 +2645,14 @@ import { initializeApp, getApps, getApp }
 import {
   getFirestore, collection, getDocs,
   doc, getDoc, setDoc, updateDoc, addDoc,
-  query, where, orderBy, limit
+  query, where
 }
   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import {
   registrarCliente, loginCliente, logoutCliente,
   loginAnonimo, escucharSesion, reenviarVerificacion,
   recuperarPassword, refrescarVerificacion,
-  normalizarTelefono
+  normalizarTelefono, telefonoParaWhatsApp
 }
   from "./assets/js/auth-client.js";
 
@@ -2667,14 +2671,12 @@ const app = getApps().length > 0
 const db = getFirestore(app);
 
 // ============================================================
-// VARIABLES GLOBALES DEL MÓDULO
+// VARIABLES GLOBALES
 // ============================================================
 let products = [];
 let cart = [];
 try {
-  cart = JSON.parse(
-    localStorage.getItem('akira_cart')
-  ) || [];
+  cart = JSON.parse(localStorage.getItem('akira_cart')) || [];
 } catch(e) { cart = []; }
 
 let currentUser = null;
@@ -2705,7 +2707,13 @@ let deliveryConfig = {
   freeShipPromoAmount: 20,
   freeShipPromoUntil: '',
   reservationMinutes: 30,
-  ivaEnabled: true
+  ivaEnabled: true,
+  paymentInfoText: ''
+};
+let welcomeCouponSettings = {
+  active: false,
+  code: 'BIENVENIDA',
+  discount: 0
 };
 let currentDistanceKm = 0;
 let currentDeliveryCost = 0;
@@ -2720,19 +2728,19 @@ let siteConfig = {
   address: 'Calle Caracas, Local 70-E, Ciudad Bolívar',
   phone: '0414-8700616',
   schedule: 'Lun-Vie: 8AM-5PM',
-  facebook: '', instagram: '', tiktok: ''
+  facebook: '',
+  instagram: '',
+  tiktok: ''
 };
-let allReviews = [];
 let carouselSlides = [];
 let currentSlide = 0;
 let carouselTimer = null;
 let flashSalesIds = [];
 let aboutUsData = {};
-let currentSlideData = null;
 let pendingWhatsAppUrl = null;
 
 // ============================================================
-// UTILIDADES GLOBALES
+// UTILIDADES
 // ============================================================
 window.escapeHTML = function(str) {
   if (str == null) return '';
@@ -2789,7 +2797,7 @@ document.addEventListener('keydown', function(e) {
 });
 
 // ============================================================
-// DRAWER (categorías)
+// DRAWER
 // ============================================================
 window.toggleSidebar = function() {
   var sb = document.getElementById('categorySidebar');
@@ -2801,8 +2809,7 @@ window.toggleSidebar = function() {
 function renderDrawerMenu() {
   var container = document.getElementById('drawerMenu');
   if (!container) return;
-  if (!catalogo.categorias ||
-      catalogo.categorias.length === 0) {
+  if (!catalogo.categorias || catalogo.categorias.length === 0) {
     container.innerHTML = '<div style="padding:1.5rem;' +
       'text-align:center;color:#6C757D;font-size:0.85rem;">' +
       'Sin categorías configuradas</div>';
@@ -3384,12 +3391,12 @@ function restartCarouselTimer() {
   if (carouselTimer) clearTimeout(carouselTimer);
   startCarouselTimer();
 }
-  // ============================================================
-// LOAD DATA — Lee todo de Firestore
+
+// ============================================================
+// LOAD DATA
 // ============================================================
 async function loadData() {
   try {
-    // BCV
     try {
       var rateDoc = await getDoc(
         doc(db, 'settings', 'bcvRate')
@@ -3399,7 +3406,6 @@ async function loadData() {
       }
     } catch(e) { console.error('BCV:', e); }
 
-    // Logo
     try {
       var logoDoc = await getDoc(
         doc(db, 'settings', 'logo')
@@ -3414,7 +3420,6 @@ async function loadData() {
       }
     } catch(e) { console.error('Logo:', e); }
 
-    // Pickup Maps
     try {
       var pickupDoc = await getDoc(
         doc(db, 'settings', 'pickupMaps')
@@ -3424,7 +3429,6 @@ async function loadData() {
       }
     } catch(e) { console.error('Pickup:', e); }
 
-    // Site Config
     try {
       var cfgDoc = await getDoc(
         doc(db, 'settings', 'siteConfig')
@@ -3439,7 +3443,6 @@ async function loadData() {
       }
     } catch(e) { console.error('SiteConfig:', e); }
 
-    // WhatsApp
     try {
       var waDoc = await getDoc(
         doc(db, 'settings', 'whatsapp')
@@ -3449,7 +3452,6 @@ async function loadData() {
       }
     } catch(e) { console.error('WhatsApp:', e); }
 
-    // Catálogo
     try {
       var catalogoDoc = await getDoc(
         doc(db, 'settings', 'catalogo')
@@ -3462,7 +3464,6 @@ async function loadData() {
       }
     } catch(e) { console.error('Catálogo:', e); }
 
-    // Delivery Config
     try {
       var deliveryDoc = await getDoc(
         doc(db, 'settings', 'deliveryConfig')
@@ -3474,7 +3475,38 @@ async function loadData() {
       }
     } catch(e) { console.error('Delivery:', e); }
 
-    // Carrusel (colección)
+    // appSettings manda sobre deliveryConfig
+    try {
+      var appSetDoc = await getDoc(
+        doc(db, 'settings', 'appSettings')
+      );
+      if (appSetDoc.exists()) {
+        var as = appSetDoc.data();
+        if (typeof as.ivaEnabled === 'boolean') {
+          deliveryConfig.ivaEnabled = as.ivaEnabled;
+        }
+        if (typeof as.reservationMinutes === 'number') {
+          deliveryConfig.reservationMinutes =
+            as.reservationMinutes;
+        }
+        if (typeof as.paymentInfoText === 'string') {
+          deliveryConfig.paymentInfoText = as.paymentInfoText;
+        }
+      }
+    } catch(e) { console.error('appSettings:', e); }
+
+    // Cupón de bienvenida
+    try {
+      var wc = await getDoc(
+        doc(db, 'settings', 'welcomeCoupon')
+      );
+      if (wc.exists()) {
+        welcomeCouponSettings = Object.assign(
+          {}, welcomeCouponSettings, wc.data()
+        );
+      }
+    } catch(e) { console.error('welcomeCoupon:', e); }
+
     try {
       var slidesSnap = await getDocs(
         collection(db, 'carouselSlides')
@@ -3490,7 +3522,6 @@ async function loadData() {
       });
     } catch(e) { console.error('Carrusel:', e); }
 
-    // Flash Sales
     try {
       var flashDoc = await getDoc(
         doc(db, 'settings', 'flashSales')
@@ -3500,7 +3531,6 @@ async function loadData() {
       }
     } catch(e) { console.error('Flash:', e); }
 
-    // About Us
     try {
       var aboutDoc = await getDoc(
         doc(db, 'settings', 'aboutUs')
@@ -3510,7 +3540,6 @@ async function loadData() {
       }
     } catch(e) { console.error('AboutUs:', e); }
 
-    // Products
     try {
       var snapshot = await getDocs(
         collection(db, 'products')
@@ -3523,7 +3552,6 @@ async function loadData() {
       });
     } catch(e) { console.error('Products:', e); }
 
-    // Brands
     try {
       var brandsSnap = await getDocs(
         collection(db, 'brands')
@@ -3689,7 +3717,6 @@ function generateTechSheetHTML(product) {
   return html;
 }
 
-// Cache de reseñas por producto para no descargar todo
 var reviewsCache = {};
 async function getReviewsForProduct(productId) {
   if (reviewsCache[productId]) {
@@ -4044,6 +4071,12 @@ window.toggleCart = function() {
   if (el) el.classList.toggle('active');
 };
 
+function esElegibleBienvenida() {
+  return currentUser && !isGuestUser &&
+    currentUser.emailVerified &&
+    (!userData || userData.welcomeUsed !== true);
+}
+
 function updateCartUI() {
   var cartItems = document.getElementById('cartItems');
   var cartCount = document.getElementById('cartCount');
@@ -4126,10 +4159,36 @@ function updateCartUI() {
     ' / Bs. ' + (totalUsd * bcvRate).toFixed(2) +
     '</span></div>';
   cartTotals.innerHTML = th;
+
+  var welcomeHint = document.getElementById('welcomeCouponHint');
+  if (!welcomeHint) {
+    welcomeHint = document.createElement('div');
+    welcomeHint.id = 'welcomeCouponHint';
+    welcomeHint.style.cssText = 'background:#FFF5EC;' +
+      'border:1px solid #FF6B1A;color:#C2410C;' +
+      'padding:0.6rem;border-radius:8px;font-size:0.8rem;' +
+      'margin-bottom:0.6rem;font-weight:600;';
+    var couponBox = document.querySelector('.coupon-box');
+    if (couponBox && couponBox.parentNode) {
+      couponBox.parentNode.insertBefore(welcomeHint, couponBox);
+    }
+  }
+  if (welcomeCouponSettings.active &&
+      esElegibleBienvenida() &&
+      !(appliedCoupon &&
+        appliedCoupon.code === welcomeCouponSettings.code)) {
+    welcomeHint.style.display = 'block';
+    welcomeHint.innerHTML = 'Tienes ' +
+      welcomeCouponSettings.discount +
+      '% de bienvenida. Usa el código <strong>' +
+      escapeHTML(welcomeCouponSettings.code) + '</strong>';
+  } else {
+    welcomeHint.style.display = 'none';
+  }
 }
 
 // ============================================================
-// CUPONES (A4: get por ID = código)
+// CUPONES
 // ============================================================
 window.applyCouponCode = async function() {
   var input = document.getElementById('couponCodeInput');
@@ -4162,7 +4221,7 @@ window.applyCouponCode = async function() {
       updateCartUI();
       return;
     }
-      var found = couponSnap.data();
+    var found = couponSnap.data();
     found.id = couponSnap.id;
     found.code = couponSnap.id;
     if (found.active === false) {
@@ -4201,10 +4260,31 @@ window.applyCouponCode = async function() {
       updateCartUI();
       return;
     }
-    if (found.onlyVerified) {
+    if (found.onlyVerified && !currentUser.emailVerified) {
+      msg.innerHTML = '<span style="color:#DC3545;">' +
+        'Debes verificar tu correo primero</span>';
+      appliedCoupon = null;
+      updateCartUI();
+      return;
+    }
+    if (found.welcome === true) {
+      if (!currentUser || isGuestUser) {
+        msg.innerHTML = '<span style="color:#DC3545;">' +
+          'Solo para cuentas registradas</span>';
+        appliedCoupon = null;
+        updateCartUI();
+        return;
+      }
       if (!currentUser.emailVerified) {
         msg.innerHTML = '<span style="color:#DC3545;">' +
           'Debes verificar tu correo primero</span>';
+        appliedCoupon = null;
+        updateCartUI();
+        return;
+      }
+      if (userData && userData.welcomeUsed === true) {
+        msg.innerHTML = '<span style="color:#DC3545;">' +
+          'Ya usaste este cupón</span>';
         appliedCoupon = null;
         updateCartUI();
         return;
@@ -4233,8 +4313,8 @@ window.removeCoupon = function() {
   if (msg) msg.innerHTML = '';
   updateCartUI();
 };
- // ============================================================
-// AUTH: LOGIN / REGISTRO / INVITADO
+  // ============================================================
+// AUTH
 // ============================================================
 window.switchToLogin = function() {
   closeModal('registerModal');
@@ -4271,7 +4351,6 @@ window.openGuestModal = function() {
   if (el) el.classList.add('active');
 };
 
-// Registrar
 var registerFormEl = document.getElementById('registerForm');
 if (registerFormEl) {
   registerFormEl.addEventListener('submit', async function(e) {
@@ -4284,6 +4363,12 @@ if (registerFormEl) {
     var btn = document.getElementById('registerBtn');
     var err = document.getElementById('registerError');
     err.textContent = '';
+    if (!name || name.length < 2) {
+      err.textContent = 'Ingresa tu nombre completo';
+      return;
+    }
+    try { normalizarTelefono(phone); }
+    catch(e2) { err.textContent = e2.message; return; }
     btn.disabled = true;
     btn.textContent = 'Creando cuenta...';
     try {
@@ -4293,19 +4378,21 @@ if (registerFormEl) {
       showToast('¡Bienvenido ' + name + '!', 'success');
     } catch (e2) {
       console.error('Error registro:', e2);
-      var msg = 'No se pudo crear la cuenta.';
+      var m = 'No se pudo crear la cuenta.';
       if (e2.code === 'phone-taken') {
-        msg = 'Ese teléfono ya está registrado.';
+        m = 'Ese teléfono ya está registrado.';
       } else if (e2.code === 'auth/email-already-in-use') {
-        msg = 'Ese correo ya está registrado.';
+        m = 'Ese correo ya está registrado.';
       } else if (e2.code === 'auth/weak-password') {
-        msg = 'Contraseña muy débil (mín 6 caracteres).';
+        m = 'Contraseña muy débil (mín 6 caracteres).';
       } else if (e2.code === 'auth/invalid-email') {
-        msg = 'El correo no es válido.';
+        m = 'El correo no es válido.';
       } else if (e2.code === 'invalid-phone') {
-        msg = 'El teléfono no es válido.';
+        m = e2.message;
+      } else if (e2.code === 'batch-failed') {
+        m = e2.message;
       }
-      err.textContent = msg;
+      err.textContent = m;
     } finally {
       btn.disabled = false;
       btn.textContent = 'Crear Cuenta';
@@ -4313,7 +4400,6 @@ if (registerFormEl) {
   });
 }
 
-// Login
 var loginFormEl = document.getElementById('loginForm');
 if (loginFormEl) {
   loginFormEl.addEventListener('submit', async function(e) {
@@ -4333,17 +4419,17 @@ if (loginFormEl) {
       showToast('Sesión iniciada', 'success');
     } catch (e2) {
       console.error('Error login:', e2);
-      var msg = 'No se pudo iniciar sesión.';
+      var m = 'No se pudo iniciar sesión.';
       if (e2.code === 'auth/invalid-credential' ||
           e2.code === 'auth/wrong-password' ||
           e2.code === 'auth/user-not-found') {
-        msg = 'Correo o contraseña incorrectos.';
+        m = 'Correo o contraseña incorrectos.';
       } else if (e2.code === 'auth/too-many-requests') {
-        msg = 'Demasiados intentos. Espera un momento.';
+        m = 'Demasiados intentos. Espera un momento.';
       } else if (e2.code === 'no-user-data') {
-        msg = 'Cuenta sin datos. Contacta soporte.';
+        m = 'Cuenta sin datos. Contacta soporte.';
       }
-      err.textContent = msg;
+      err.textContent = m;
     } finally {
       btn.disabled = false;
       btn.textContent = 'Ingresar';
@@ -4351,7 +4437,6 @@ if (loginFormEl) {
   });
 }
 
-// Invitado
 var guestFormEl = document.getElementById('guestForm');
 if (guestFormEl) {
   guestFormEl.addEventListener('submit', async function(e) {
@@ -4366,12 +4451,8 @@ if (guestFormEl) {
       return;
     }
     var telNorm;
-    try {
-      telNorm = normalizarTelefono(phone);
-    } catch(e2) {
-      err.textContent = 'Teléfono inválido';
-      return;
-    }
+    try { telNorm = normalizarTelefono(phone); }
+    catch(e2) { err.textContent = e2.message; return; }
     btn.disabled = true;
     btn.textContent = 'Continuando...';
     try {
@@ -4396,7 +4477,6 @@ if (guestFormEl) {
   });
 }
 
-// Recuperar contraseña
 window.olvidePassword = async function() {
   var email = prompt(
     'Ingresa tu correo para restablecer la contraseña:'
@@ -4425,6 +4505,7 @@ window.refrescarVerificacionUI = async function() {
     if (verificado) {
       if (currentUser) currentUser.emailVerified = true;
       updateVerifyBanner();
+      updateCartUI();
       showToast('¡Correo verificado!', 'success');
     } else {
       showToast('Aún no está verificado', 'error');
@@ -4457,9 +4538,7 @@ window.cerrarSesionCliente = async function() {
 // CUENTA
 // ============================================================
 window.handleAccount = function() {
-  if (currentUser && !isGuestUser) {
-    openAccountModal();
-  } else if (currentUser && isGuestUser) {
+  if (currentUser) {
     openAccountModal();
   } else {
     openLoginModal();
@@ -4478,8 +4557,7 @@ window.openAccountModal = function() {
     html += '<div style="margin-bottom:0.5rem;">' +
       escapeHTML(guestPhone || '') + '</div>';
     html += '<div style="font-size:0.8rem;color:#6C757D;">' +
-      'Regístrate para guardar tus pedidos y ' +
-      'acceder a descuentos.</div>';
+      'Regístrate para guardar tus pedidos.</div>';
   } else {
     var verificado = currentUser.emailVerified
       ? '<span class="badge-verified ok">Verificado</span>'
@@ -4487,8 +4565,7 @@ window.openAccountModal = function() {
         'Sin verificar</span>';
     html += '<div style="margin-bottom:0.4rem;">';
     html += '<strong>' + escapeHTML(
-      (userData && userData.name) ||
-      currentUser.displayName || 'Cliente'
+      (userData && userData.name) || 'Cliente'
     ) + '</strong>';
     html += '</div>';
     html += '<div style="margin-bottom:0.3rem;">';
@@ -4511,11 +4588,11 @@ window.openAccountModal = function() {
 };
 
 window.soporteWhatsApp = function() {
-  var clean = String(whatsappNumber).replace(/\D/g, '');
+  var clean = telefonoParaWhatsApp(whatsappNumber) ||
+    String(whatsappNumber).replace(/\D/g, '');
   var nombre = isGuestUser
     ? (guestName || 'Invitado')
-    : ((userData && userData.name) ||
-       (currentUser && currentUser.email) || 'Cliente');
+    : ((userData && userData.name) || 'Cliente');
   var msg = 'Hola, soy ' + nombre +
     '. Necesito ayuda con mi cuenta.';
   window.open(
@@ -4537,7 +4614,6 @@ window.showMyOrders = async function() {
   var list = document.getElementById('ordersList');
   if (list) {
     list.innerHTML = '<div class="loading-state">' +
-      '<div class="loading-spinner"></div>' +
       '<div>Cargando pedidos...</div></div>';
   }
   var modal = document.getElementById('ordersModal');
@@ -4649,9 +4725,7 @@ function updateHeaderButtons() {
     if (isGuestUser) {
       accountText.textContent = 'Invitado';
     } else {
-      var nombre = (userData && userData.name) ||
-        currentUser.displayName ||
-        (currentUser.email || '').split('@')[0] || 'Cuenta';
+      var nombre = (userData && userData.name) || 'Cuenta';
       accountText.textContent = nombre.split(' ')[0];
     }
   } else {
@@ -4671,7 +4745,8 @@ function updateVerifyBanner() {
 }
 
 function updateWhatsAppLinks() {
-  var clean = String(whatsappNumber).replace(/\D/g, '');
+  var clean = telefonoParaWhatsApp(whatsappNumber) ||
+    String(whatsappNumber).replace(/\D/g, '');
   var floatBtn = document.getElementById('whatsappFloat');
   if (floatBtn) {
     floatBtn.href = 'https://wa.me/' + clean +
@@ -4691,7 +4766,6 @@ window.openCheckout = function() {
   }
   toggleCart();
   if (!currentUser) {
-    // No hay sesión: ofrecer invitado o login
     showToast('Continúa como invitado o inicia sesión');
     setTimeout(function() {
       openGuestModal();
@@ -4735,10 +4809,9 @@ function calcularDistanciaKm(lat1, lng1, lat2, lng2) {
     Math.cos(lat1 * Math.PI / 180) *
     Math.cos(lat2 * Math.PI / 180) *
     Math.sin(dLng/2) * Math.sin(dLng/2);
-  var c = 2 * Math.atan2(
+  return R * 2 * Math.atan2(
     Math.sqrt(a), Math.sqrt(1 - a)
   );
-  return R * c;
 }
 
 window.getLocation = function() {
@@ -4818,8 +4891,7 @@ function calcularDeliveryFree(subtotal) {
     if (umbralPromo === 0) return true;
     return subtotal >= umbralPromo;
   }
-  var umbralBase = deliveryConfig.freeShipBase || 40;
-  return subtotal >= umbralBase;
+  return subtotal >= (deliveryConfig.freeShipBase || 40);
 }
 
 function updateCheckoutTotals() {
@@ -4835,14 +4907,12 @@ function updateCheckoutTotals() {
   }
   var ivaUsd = deliveryConfig.ivaEnabled !== false
     ? subtotalBase * 0.16 : 0;
-  var deliveryFee = 0;
-  if (checkoutDeliveryMode === 'delivery') {
-    deliveryFee = currentDeliveryCost;
-  }
+  var deliveryFee = checkoutDeliveryMode === 'delivery'
+    ? currentDeliveryCost : 0;
   var subtotalConIva = subtotalBase + ivaUsd;
-  var esGratis = checkoutDeliveryMode === 'delivery'
-    && currentDistanceKm > 0
-    && calcularDeliveryFree(subtotalConIva);
+  var esGratis = checkoutDeliveryMode === 'delivery' &&
+    currentDistanceKm > 0 &&
+    calcularDeliveryFree(subtotalConIva);
   currentDeliveryFree = esGratis;
   if (esGratis) deliveryFee = 0;
   var totalUsd = subtotalConIva + deliveryFee;
@@ -4939,7 +5009,39 @@ window.confirmOrder = async function() {
     btn.textContent = 'Enviando pedido...';
   }
 
-  // Cálculos
+  var finalName, finalPhone, finalEmail, finalCode, finalIsGuest;
+  if (isGuestUser) {
+    finalName = (guestName || '').trim();
+    finalPhone = (guestPhone || '').trim();
+    finalEmail = null;
+    finalCode = null;
+    finalIsGuest = true;
+  } else {
+    finalName = ((userData && userData.name) || '').trim();
+    finalPhone = ((userData && userData.phone) || '').trim();
+    finalEmail = currentUser.email;
+    finalCode = (userData && userData.customerCode) || '';
+    finalIsGuest = false;
+  }
+  if (!finalName || finalName.length < 2) {
+    showError('Falta tu nombre. Complétalo en tu cuenta ' +
+      'o como invitado.');
+    if (btn) {
+      btn.disabled = false;
+      btn.textContent = 'Confirmar por WhatsApp';
+    }
+    return;
+  }
+  try { finalPhone = normalizarTelefono(finalPhone); }
+  catch (e) {
+    showError(e.message);
+    if (btn) {
+      btn.disabled = false;
+      btn.textContent = 'Confirmar por WhatsApp';
+    }
+    return;
+  }
+
   var subtotalBase = 0;
   cart.forEach(function(item) {
     subtotalBase += Number(item.price) * item.quantity;
@@ -4953,35 +5055,14 @@ window.confirmOrder = async function() {
   var ivaUsd = deliveryConfig.ivaEnabled !== false
     ? subtotalBase * 0.16 : 0;
   var deliveryFeeReal = currentDeliveryCost;
-  var deliveryFee = 0;
-  if (checkoutDeliveryMode === 'delivery') {
-    deliveryFee = currentDeliveryCost;
-  }
+  var deliveryFee = checkoutDeliveryMode === 'delivery'
+    ? currentDeliveryCost : 0;
   var subtotalConIva = subtotalBase + ivaUsd;
-  var esGratis = checkoutDeliveryMode === 'delivery'
-    && currentDistanceKm > 0
-    && calcularDeliveryFree(subtotalConIva);
+  var esGratis = checkoutDeliveryMode === 'delivery' &&
+    currentDistanceKm > 0 &&
+    calcularDeliveryFree(subtotalConIva);
   if (esGratis) deliveryFee = 0;
   var totalUsd = subtotalConIva + deliveryFee;
-
-  // Datos del cliente
-  var finalName, finalPhone, finalEmail, finalCode, finalIsGuest;
-  if (isGuestUser) {
-    finalName = guestName;
-    finalPhone = guestPhone;
-    finalEmail = null;
-    finalCode = null;
-    finalIsGuest = true;
-  } else {
-    finalName = (userData && userData.name) ||
-      currentUser.displayName || 'Cliente';
-    finalPhone = (userData && userData.phone) || '';
-    finalEmail = currentUser.email;
-    finalCode = (userData && userData.customerCode) || '';
-    finalIsGuest = false;
-  }
-
-  // reservationMinutes desde config (default 30)
   var reservationMinutes =
     Number(deliveryConfig.reservationMinutes) || 30;
   var expiresAt = Date.now() +
@@ -5018,6 +5099,7 @@ window.confirmOrder = async function() {
     stockDeducted: false,
     stockReturned: false,
     couponCounted: false,
+    couponReturned: false,
     reservationExpiresAt: expiresAt,
     orderCode: generarOrderCode(),
     date: new Date().toISOString()
@@ -5031,24 +5113,21 @@ window.confirmOrder = async function() {
     orderData.distanceKm = currentDistanceKm;
   }
 
-  // Limpiar undefined -> null (Firestore no acepta undefined)
   Object.keys(orderData).forEach(function(k) {
     if (orderData[k] === undefined) {
       orderData[k] = null;
     }
   });
 
-  // Preparar mensaje de WhatsApp ANTES del await
-  var cleanNumber = String(whatsappNumber).replace(/\D/g, '');
+  var cleanNumber = telefonoParaWhatsApp(whatsappNumber) ||
+    String(whatsappNumber).replace(/\D/g, '');
   var rawMessage = '¡Hola ' + siteConfig.companyName + '!\n\n';
   if (finalIsGuest) {
     rawMessage += 'Soy un cliente invitado.\n';
   }
   rawMessage += 'Pedido: #' + orderData.orderCode + '\n';
   rawMessage += 'Nombre: ' + finalName + '\n';
-  if (finalPhone) {
-    rawMessage += 'Teléfono: ' + finalPhone + '\n';
-  }
+  rawMessage += 'Teléfono: ' + finalPhone + '\n';
   rawMessage += '\nProductos:\n';
   cart.forEach(function(item) {
     rawMessage += '- ' + item.name + ' x' +
@@ -5078,20 +5157,20 @@ window.confirmOrder = async function() {
   rawMessage += '\nEntrega: ' +
     (checkoutDeliveryMode === 'pickup' ? 'Pickup' : 'Delivery');
   if (checkoutDeliveryMode === 'delivery') {
-    var addr = document.getElementById(
+    var addr2 = document.getElementById(
       'deliveryAddressInput'
     ).value;
-    if (addr) rawMessage += '\nDirección: ' + addr;
+    if (addr2) rawMessage += '\nDirección: ' + addr2;
   }
-  rawMessage += '\n\nImportante: tus productos quedan ' +
-    'apartados ' + reservationMinutes + ' minutos. ' +
-    'Concreta el pago dentro de ese lapso para asegurar ' +
-    'tu pedido.';
+  var payInfo = (deliveryConfig.paymentInfoText || '').trim() ||
+    'Te enviaremos los datos de pago por WhatsApp.';
+  rawMessage += '\n\n' + payInfo;
+  rawMessage += '\n\nTu pedido queda registrado. ' +
+    'Te confirmamos disponibilidad y datos de pago por WhatsApp.';
 
   var whatsappUrl = 'https://wa.me/' + cleanNumber +
     '?text=' + encodeURIComponent(rawMessage);
 
-  // Guardar pedido en Firestore
   try {
     await addDoc(collection(db, 'orders'), orderData);
   } catch (e) {
@@ -5104,7 +5183,6 @@ window.confirmOrder = async function() {
     return;
   }
 
-  // Abrir WhatsApp: primero el fallback visible, luego intentar window.open
   var fallbackBox = document.getElementById('whatsappFallback');
   var fallbackLink = document.getElementById(
     'whatsappFallbackLink'
@@ -5120,11 +5198,9 @@ window.confirmOrder = async function() {
     console.error('window.open falló:', e);
   }
   if (!opened) {
-    // intentar con location
     window.location.href = whatsappUrl;
   }
 
-  // Limpiar carrito
   cart = [];
   appliedCoupon = null;
   currentDeliveryCost = 0;
@@ -5140,7 +5216,6 @@ window.confirmOrder = async function() {
   showToast('Pedido enviado. Espera confirmación por ' +
     'WhatsApp.', 'success');
 
-  // Recargar productos para reflejar stock real del admin
   setTimeout(function() {
     location.reload();
   }, 3500);
@@ -5164,8 +5239,14 @@ escucharSesion(async function(user) {
     guestName = localStorage.getItem('akira_guest_name') || '';
     guestPhone = localStorage.getItem('akira_guest_phone') || '';
     userData = null;
+  } else if (user.isAdmin) {
+    userData = null;
+    showToast('Estás como administrador. Abre en ' +
+      'ventana privada para probar la tienda.', 'error');
+    setTimeout(function() {
+      showError('Cierra sesión admin o usa ventana privada.');
+    }, 1500);
   } else {
-    // Traer datos del cliente
     try {
       var ud = await getDoc(doc(db, 'users', user.uid));
       userData = ud.exists() ? ud.data() : null;
@@ -5175,6 +5256,7 @@ escucharSesion(async function(user) {
   }
   updateHeaderButtons();
   updateVerifyBanner();
+  updateCartUI();
 });
 
 // ============================================================
@@ -5183,4 +5265,4 @@ escucharSesion(async function(user) {
 loadData();
 </script>
 </body>
-</html> 
+</html>
