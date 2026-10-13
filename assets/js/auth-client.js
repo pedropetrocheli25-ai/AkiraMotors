@@ -4,12 +4,10 @@
 
 import {
   initializeApp, getApps, getApp
-}
-  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import {
-  getFirestore, doc, getDoc, setDoc
-}
-  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+  getFirestore, doc, getDoc, setDoc, writeBatch
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import {
   getAuth,
   createUserWithEmailAndPassword,
@@ -19,8 +17,7 @@ import {
   onAuthStateChanged,
   sendEmailVerification,
   sendPasswordResetEmail
-}
-  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAU77yzh7Tm3RPuuvVcxlCt26u2ljmsBK0",
@@ -31,33 +28,34 @@ const firebaseConfig = {
   appId: "1:657064466850:web:2d1340db67f790d11ebafb"
 };
 
-const app = getApps().length > 0
-  ? getApp()
-  : initializeApp(firebaseConfig);
+const app = getApps().length > 0 ? getApp() : initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
 
 // ============================================================
-// NORMALIZACIÓN DE TELÉFONO (B4)
-// Acepta 0414..., +58..., 414..., con espacios o guiones
-// Devuelve 58XXXXXXXXXX o lanza si no es válido
+// TELÉFONO — formato ÚNICO 04XXXXXXXXX (11 dígitos)
 // ============================================================
 export function normalizarTelefono(tel) {
-  if (!tel) return '';
-  let limpio = String(tel).replace(/\D/g, '');
-  if (limpio.startsWith('58')) {
-    // ya tiene 58
-  } else if (limpio.startsWith('0')) {
-    limpio = '58' + limpio.substring(1);
-  } else if (limpio.length === 10) {
-    limpio = '58' + limpio;
-  }
-  if (limpio.length < 12 || limpio.length > 13) {
-    const err = new Error('Teléfono inválido');
+  const limpio = String(tel || '').replace(/[\s\-()]/g, '');
+  if (!/^04[0-9]{9}$/.test(limpio)) {
+    const err = new Error('Escribe tu número como 0412XXXXXXX');
     err.code = 'invalid-phone';
     throw err;
   }
   return limpio;
+}
+
+// Para wa.me: acepta 04XXXXXXXXX (nuevo) o 58XXXXXXXXXX (viejo)
+export function telefonoParaWhatsApp(tel) {
+  if (!tel) return '';
+  const limpio = String(tel).replace(/\D/g, '');
+  if (/^04[0-9]{9}$/.test(limpio)) {
+    return '58' + limpio.substring(1);
+  }
+  if (/^58[0-9]{10}$/.test(limpio)) {
+    return limpio;
+  }
+  return '';
 }
 
 // ============================================================
@@ -66,9 +64,7 @@ export function normalizarTelefono(tel) {
 export async function telefonoExiste(phone) {
   try {
     const normalizado = normalizarTelefono(phone);
-    const snap = await getDoc(
-      doc(db, 'phones', normalizado)
-    );
+    const snap = await getDoc(doc(db, 'phones', normalizado));
     return snap.exists();
   } catch (e) {
     if (e.code === 'invalid-phone') return false;
@@ -78,24 +74,19 @@ export async function telefonoExiste(phone) {
 }
 
 // ============================================================
-// REGISTRO DE CLIENTE
+// REGISTRO DE CLIENTE — atómico con writeBatch
 // ============================================================
-export async function registrarCliente(
-  name, email, password, phone
-) {
+export async function registrarCliente(name, email, password, phone) {
   const telefonoNorm = normalizarTelefono(phone);
+
   const existe = await telefonoExiste(telefonoNorm);
   if (existe) {
-    const err = new Error(
-      'Este teléfono ya está registrado'
-    );
+    const err = new Error('Este teléfono ya está registrado');
     err.code = 'phone-taken';
     throw err;
   }
 
-  const cred = await createUserWithEmailAndPassword(
-    auth, email, password
-  );
+  const cred = await createUserWithEmailAndPassword(auth, email, password);
   const uid = cred.user.uid;
 
   const customerCode = 'AM-' + Math.random()
@@ -106,14 +97,26 @@ export async function registrarCliente(
     email: email,
     phone: telefonoNorm,
     customerCode: customerCode,
+    welcomeUsed: false,
     createdAt: new Date().toISOString()
   };
 
-  await setDoc(doc(db, 'users', uid), userData);
-  await setDoc(doc(db, 'phones', telefonoNorm), {
-    uid: uid,
-    createdAt: new Date().toISOString()
-  });
+  try {
+    const batch = writeBatch(db);
+    batch.set(doc(db, 'users', uid), userData);
+    batch.set(doc(db, 'phones', telefonoNorm), {
+      uid: uid,
+      createdAt: new Date().toISOString()
+    });
+    await batch.commit();
+  } catch (e) {
+    console.error('Error creando usuario/phones:', e);
+    const err = new Error(
+      'No se pudo crear la cuenta. Contacta soporte.'
+    );
+    err.code = 'batch-failed';
+    throw err;
+  }
 
   try {
     await sendEmailVerification(cred.user);
@@ -136,12 +139,9 @@ export async function registrarCliente(
 // LOGIN DE CLIENTE
 // ============================================================
 export async function loginCliente(email, password) {
-  const cred = await signInWithEmailAndPassword(
-    auth, email, password
-  );
+  const cred = await signInWithEmailAndPassword(auth, email, password);
   const uid = cred.user.uid;
 
-  // B1: reintentos por si el doc users aún no existe
   let snap = null;
   for (let intento = 0; intento < 5; intento++) {
     snap = await getDoc(doc(db, 'users', uid));
@@ -150,9 +150,7 @@ export async function loginCliente(email, password) {
   }
 
   if (!snap || !snap.exists()) {
-    const err = new Error(
-      'Cuenta sin datos. Contacta soporte.'
-    );
+    const err = new Error('Cuenta sin datos. Contacta soporte.');
     err.code = 'no-user-data';
     throw err;
   }
@@ -209,7 +207,7 @@ export async function recuperarPassword(email) {
 }
 
 // ============================================================
-// ESCUCHAR SESIÓN (B1, B2, B3)
+// ESCUCHAR SESIÓN
 // ============================================================
 export function escucharSesion(callback) {
   onAuthStateChanged(auth, async function(user) {
@@ -218,7 +216,6 @@ export function escucharSesion(callback) {
       return;
     }
 
-    // Invitado: no hay doc en users, devolvemos datos mínimos
     if (user.isAnonymous) {
       callback({
         uid: user.uid,
@@ -232,7 +229,6 @@ export function escucharSesion(callback) {
       return;
     }
 
-    // Usuario registrado: reintentar por si el doc aún no existe
     let snap = null;
     for (let intento = 0; intento < 5; intento++) {
       try {
@@ -253,11 +249,11 @@ export function escucharSesion(callback) {
         phone: data.phone || '',
         customerCode: data.customerCode || '',
         emailVerified: user.emailVerified,
-        isAnonymous: false
+        isAnonymous: false,
+        isAdmin: false
       });
     } else {
-      // Sesión creada pero doc no disponible: devolvemos
-      // la sesión mínima en vez de "cerrar sesión"
+      // Sesión válida pero sin doc users: probablemente admin.
       callback({
         uid: user.uid,
         email: user.email,
@@ -265,14 +261,15 @@ export function escucharSesion(callback) {
         phone: '',
         customerCode: '',
         emailVerified: user.emailVerified,
-        isAnonymous: false
+        isAnonymous: false,
+        isAdmin: true
       });
     }
   });
 }
 
 // ============================================================
-// REFRESCAR VERIFICACIÓN (B2)
+// REFRESCAR VERIFICACIÓN
 // ============================================================
 export async function refrescarVerificacion() {
   if (!auth.currentUser) return false;
@@ -281,7 +278,7 @@ export async function refrescarVerificacion() {
 }
 
 // ============================================================
-// OBTENER USUARIO ACTUAL (helper)
+// HELPER
 // ============================================================
 export function getUsuarioActual() {
   const u = auth.currentUser;
