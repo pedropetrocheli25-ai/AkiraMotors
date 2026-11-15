@@ -4081,7 +4081,7 @@ window.confirmarPedido = async function(orderId) {
 
       var userRef = null;
       var userSnap = null;
-      var esWelcome = !!(couponSnap && couponSnap.exists() &&
+      var esWelcome = !!(couponSnap && couponSnap.exists &&
         couponSnap.data().welcome === true);
       if (esWelcome && orderData.userId) {
         userRef = db.collection('users').doc(orderData.userId);
@@ -4100,13 +4100,13 @@ window.confirmarPedido = async function(orderId) {
         });
       }
 
-      if (couponRef && couponSnap && couponSnap.exists()) {
+      if (couponRef && couponSnap && couponSnap.exists) {
         var uses = Number(couponSnap.data().uses) || 0;
         transaction.update(couponRef, { uses: uses + 1 });
       }
 
       if (esWelcome && userRef && userSnap &&
-          userSnap.exists()) {
+          userSnap.exists) {
         transaction.update(userRef, { welcomeUsed: true });
       }
 
@@ -4114,7 +4114,7 @@ window.confirmarPedido = async function(orderId) {
         status: 'confirmed',
         stockDeducted: true,
         couponCounted: !!(couponRef && couponSnap &&
-          couponSnap.exists()) || !!orderData.couponCounted,
+          couponSnap.exists) || !!orderData.couponCounted,
         confirmedAt: new Date().toISOString()
       });
     });
@@ -4180,14 +4180,14 @@ window.cancelarPedidoAdmin = async function(orderId) {
         });
       }
       if (esWelcome && couponRef && couponSnap &&
-          couponSnap.exists()) {
+          couponSnap.exists) {
         var uses = Number(couponSnap.data().uses) || 0;
         transaction.update(couponRef, {
           uses: Math.max(0, uses - 1)
         });
       }
       if (esWelcome && userRef && userSnap &&
-          userSnap.exists()) {
+          userSnap.exists) {
         transaction.update(userRef, { welcomeUsed: false });
       }
 

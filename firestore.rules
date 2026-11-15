@@ -1,0 +1,272 @@
+rules_version = '2';
+// ============================================================
+// AKIRA MOTORS — Reglas de Firestore (archivo de referencia)
+// Estas reglas NO se publican solas desde GitHub:
+// copia TODO este contenido en Firebase Console >
+// Firestore Database > Reglas > Publicar.
+// ============================================================
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // =========================================================
+    // HELPERS
+    // =========================================================
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isAnonymous() {
+      return isSignedIn()
+        && request.auth.token.firebase.sign_in_provider == 'anonymous';
+    }
+
+    function isAdmin() {
+      return isSignedIn()
+        && exists(/databases/$(database)/documents/admins/$(request.auth.uid))
+        && get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.isAdmin == true;
+    }
+
+    function isOwner(uid) {
+      return isSignedIn() && request.auth.uid == uid;
+    }
+
+    // =========================================================
+    // VALIDACIONES
+    // =========================================================
+    function isValidUser(d) {
+      return d.name is string
+        && d.name.size() >= 2 && d.name.size() <= 100
+        && d.email is string
+        && d.email.size() >= 5 && d.email.size() <= 120
+        && d.phone is string
+        && d.phone.matches('^04[0-9]{9}$')
+        && d.customerCode is string
+        && d.customerCode.size() >= 5;
+    }
+
+    function isValidReview(d) {
+      return d.rating is int
+        && d.rating >= 1 && d.rating <= 5
+        && d.text is string
+        && d.text.size() >= 5 && d.text.size() <= 150
+        && d.productId is string
+        && d.productId.size() > 0
+        && d.userId is string
+        && d.userId == request.auth.uid;
+    }
+
+    // =========================================================
+    // USERS
+    //  - El cliente no puede cambiar welcomeUsed (lo hace el admin)
+    // =========================================================
+    match /users/{uid} {
+      allow read: if isOwner(uid) || isAdmin();
+
+      allow create: if isOwner(uid)
+        && !isAnonymous()
+        && isValidUser(request.resource.data)
+        && request.resource.data.get('welcomeUsed', false) == false;
+
+      allow update: if isAdmin()
+        || (isOwner(uid)
+            && !isAnonymous()
+            && isValidUser(request.resource.data)
+            && !request.resource.data.diff(resource.data)
+                 .affectedKeys().hasAny(['welcomeUsed']));
+
+      allow delete: if isAdmin();
+    }
+
+    // =========================================================
+    // PHONES (solo get por ID, nunca list). ID = 04XXXXXXXXX
+    // =========================================================
+    match /phones/{phone} {
+      allow get: if true;
+      allow list: if isAdmin();
+      allow create: if isSignedIn()
+        && !isAnonymous()
+        && phone.matches('^04[0-9]{9}$')
+        && request.resource.data.uid == request.auth.uid;
+      allow update: if false;
+      allow delete: if isAdmin();
+    }
+
+    // =========================================================
+    // ADMINS
+    // =========================================================
+    match /admins/{adminId} {
+      allow get: if isSignedIn() && (request.auth.uid == adminId || isAdmin());
+      allow list: if isAdmin();
+      allow write: if isAdmin();
+    }
+
+    // =========================================================
+    // SETTINGS
+    //  - Público: la tienda lee tasa, IVA, envío, etc.
+    //  - messagesConfig y adminSettings: SOLO admin
+    // =========================================================
+    match /settings/{docId} {
+      allow read: if (docId != 'messagesConfig' && docId != 'adminSettings')
+                  || isAdmin();
+      allow write: if isAdmin();
+    }
+
+    // =========================================================
+    // CATÁLOGO
+    // =========================================================
+    match /products/{productId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Costos y márgenes: PRIVADOS
+    match /productCosts/{productId} {
+      allow read, write: if isAdmin();
+    }
+
+    match /productImages/{productId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /brands/{brandId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /carouselSlides/{slideId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /deliveryZones/{zoneId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /drivers/{driverId} {
+      allow read, write: if isAdmin();
+    }
+
+    match /customers/{customerId} {
+      allow read, write: if isAdmin();
+    }
+
+    // =========================================================
+    // REVIEWS (ID = productId_uid, una por cliente y producto)
+    // =========================================================
+    match /reviews/{reviewId} {
+      allow read: if true;
+      allow create: if isSignedIn()
+        && !isAnonymous()
+        && reviewId == request.resource.data.productId + '_' + request.auth.uid
+        && request.resource.data.keys().hasOnly([
+          'productId', 'userId', 'userName',
+          'rating', 'text', 'date'
+        ])
+        && isValidReview(request.resource.data);
+      allow update, delete: if isAdmin();
+    }
+
+    // =========================================================
+    // COUPONS (ID = código en mayúsculas)
+    //  - get por código; list solo admin
+    // =========================================================
+    match /coupons/{couponId} {
+      allow get: if true;
+      allow list: if isAdmin();
+      allow write: if isAdmin();
+    }
+
+    // =========================================================
+    // ORDERS (pedidos de la tienda web)
+    //  - IMPORTANTE: NUNCA 'read: if true' (expone datos de clientes)
+    // =========================================================
+    match /orders/{orderId} {
+
+      // ---------- CREAR PEDIDO (cliente o invitado) ----------
+      allow create: if isSignedIn()
+        && request.resource.data.keys().hasOnly([
+          'userId', 'userName', 'userEmail', 'userPhone',
+          'customerCode', 'isGuest', 'items',
+          'subtotal', 'discount', 'couponCode', 'couponId',
+          'iva', 'deliveryFee', 'deliveryCostReal',
+          'deliveryFree', 'total', 'deliveryMode',
+          'status', 'stockDeducted', 'stockReturned',
+          'couponCounted', 'couponReturned',
+          'reservationExpiresAt', 'orderCode', 'date',
+          'address', 'gpsLat', 'gpsLng', 'distanceKm'
+        ])
+        && request.resource.data.userId == request.auth.uid
+        && request.resource.data.status == 'pending'
+        && request.resource.data.stockDeducted == false
+        && request.resource.data.stockReturned == false
+        && request.resource.data.couponCounted == false
+        && request.resource.data.isGuest is bool
+        && request.resource.data.userName is string
+        && request.resource.data.userName.size() >= 2
+        && request.resource.data.userName.size() <= 100
+        && request.resource.data.userPhone is string
+        && request.resource.data.userPhone.matches('^04[0-9]{9}$')
+        && request.resource.data.subtotal is number
+        && request.resource.data.subtotal >= 0
+        && request.resource.data.discount is number
+        && request.resource.data.discount >= 0
+        && request.resource.data.iva is number
+        && request.resource.data.iva >= 0
+        && request.resource.data.deliveryFee is number
+        && request.resource.data.deliveryFee >= 0
+        && request.resource.data.deliveryCostReal is number
+        && request.resource.data.deliveryCostReal >= 0
+        && request.resource.data.total is number
+        && request.resource.data.total >= 0
+        && request.resource.data.total <= 100000
+        && request.resource.data.reservationExpiresAt is number
+        && request.resource.data.orderCode is string
+        && request.resource.data.orderCode.size() >= 4
+        && request.resource.data.orderCode.size() <= 20
+        && request.resource.data.items is list
+        && request.resource.data.items.size() >= 1
+        && request.resource.data.items.size() <= 50;
+
+      // ---------- LEER: admin o el dueño del pedido ----------
+      allow get, list: if isAdmin()
+        || (isSignedIn() && resource.data.userId == request.auth.uid);
+
+      // ---------- CLIENTE SOLICITA CANCELACIÓN ----------
+      // Solo el dueño, solo si está 'pending', solo escribe
+      // cancelRequested: true, y solo si no estaba ya en true.
+      allow update: if isAdmin()
+        || (isSignedIn()
+            && resource.data.userId == request.auth.uid
+            && resource.data.status == 'pending'
+            && request.resource.data.cancelRequested == true
+            && resource.data.get('cancelRequested', false) != true
+            && request.resource.data.diff(resource.data)
+                 .affectedKeys().hasOnly(['cancelRequested']));
+
+      allow delete: if isAdmin();
+    }
+
+    // =========================================================
+    // SISTEMA INTERNO: INVENTARIO, COMPRAS Y CAJA (POS)
+    // Todo SOLO para administrador.
+    //  - purchases: facturas de compra a proveedores
+    //  - costHistory: historial de costo/precio por producto
+    //  - stockMovements: kárdex (quién cambió qué stock y cuándo)
+    //  - sales: ventas de caja (mostrador)
+    // =========================================================
+    match /purchases/{id} {
+      allow read, write: if isAdmin();
+    }
+    match /costHistory/{id} {
+      allow read, write: if isAdmin();
+    }
+    match /stockMovements/{id} {
+      allow read, write: if isAdmin();
+    }
+    match /sales/{id} {
+      allow read, write: if isAdmin();
+    }
+  }
+}
