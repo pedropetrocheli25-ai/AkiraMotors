@@ -3406,6 +3406,16 @@ window.saveProduct = async function(event) {
 
   try {
     var productId = editId;
+    var oldProd = editId ? products.find(function(x) {
+      return x.id === editId;
+    }) : null;
+    var oldCost = null;
+    if (editId) {
+      try {
+        var oc = await db.collection('productCosts').doc(editId).get();
+        if (oc.exists) oldCost = Number(oc.data().costPrice) || 0;
+      } catch(e) { console.error('costo anterior:', e); }
+    }
     if (editId) {
       await db.collection('products').doc(editId).update(productData);
     } else {
@@ -3419,6 +3429,34 @@ window.saveProduct = async function(event) {
       margin: margin,
       updatedAt: new Date().toISOString()
     });
+
+    // Historial de costos/precios y kárdex (no bloquea el guardado)
+    try {
+      var nowH = new Date().toISOString();
+      var oldPrice = oldProd ? (Number(oldProd.price) || 0) : 0;
+      var oldStock = oldProd ? (Number(oldProd.stock) || 0) : 0;
+      var costChanged = (oldCost === null ? 0 : oldCost) !== costPrice;
+      if (!editId || costChanged || oldPrice !== salePrice) {
+        await db.collection('costHistory').add({
+          productId: productId, code: code, name: name,
+          type: editId ? 'manual' : 'alta', refId: '',
+          supplier: '', invoiceNumber: '',
+          costBefore: oldCost === null ? 0 : oldCost, costAfter: costPrice,
+          priceBefore: oldPrice, priceAfter: salePrice,
+          qty: 0, dateKey: nowH.slice(0, 10), createdAt: nowH,
+          user: (firebase.auth().currentUser || {}).email || 'admin'
+        });
+      }
+      if (!editId || oldStock !== stock) {
+        await db.collection('stockMovements').add({
+          productId: productId, code: code, name: name,
+          type: editId ? 'ajuste' : 'alta', qty: stock - oldStock,
+          stockBefore: oldStock, stockAfter: stock,
+          refType: 'product', refId: productId, createdAt: nowH,
+          user: (firebase.auth().currentUser || {}).email || 'admin'
+        });
+      }
+    } catch(he) { console.error('Historial:', he); }
 
     if (currentProductImagesBig.length > 0) {
       await db.collection('productImages').doc(productId).set({
@@ -6282,6 +6320,11 @@ document.addEventListener('visibilitychange', function() {
   }
 });
 </script>
+
+<script src="assets/js/admin/sistema-core.js"></script>
+<script src="assets/js/admin/compras.js"></script>
+<script src="assets/js/admin/caja.js"></script>
+<script src="assets/js/admin/ventas.js"></script>
 
 <script type="module">
 import {
