@@ -327,7 +327,7 @@
 
   // Después de cambiar productos, refrescar también las listas del admin
   AKS.refreshAdminProducts = function () {
-    AKS.products = [];
+    AKS.loadProducts(true).catch(function (e) { console.error(e); });
     if (typeof window.loadProducts === 'function') {
       try { window.loadProducts(); } catch (e) { /* ignorar */ }
     }
