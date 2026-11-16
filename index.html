@@ -2902,14 +2902,10 @@ function renderProductCard(p) {
   var stockClass = 'in';
   var stockText = 'Disponible';
   var stockUrgent = '';
-  if (p.stock === 0) {
+  // El cliente nunca ve cantidades: solo Disponible / No disponible
+  if (!(p.stock > 0)) {
     stockClass = 'out';
     stockText = 'No disponible';
-  } else if (p.stock < 5) {
-    stockClass = 'low';
-    stockText = 'Últimas ' + p.stock + ' unidades';
-    stockUrgent = '<div class="product-stock-urgent">' +
-      'Últimas ' + p.stock + '</div>';
   }
   var tags = '';
   if (fp.hasDiscount) {
@@ -2936,9 +2932,9 @@ function renderProductCard(p) {
   html += '<button class="product-add-btn" ';
   html += 'onclick="event.stopPropagation();';
   html += 'addToCart(\'' + p.id + '\')"';
-  if (p.stock === 0) html += ' disabled';
+  if (!(p.stock > 0)) html += ' disabled';
   html += '>';
-  html += p.stock === 0 ? 'No disponible' : 'Agregar';
+  html += !(p.stock > 0) ? 'No disponible' : 'Agregar';
   html += '</button></div></div>';
   return html;
 }
@@ -3024,9 +3020,9 @@ function renderOffers() {
     html += '<button class="offer-card-btn" ';
     html += 'onclick="event.stopPropagation();';
     html += 'addToCart(\'' + p.id + '\')"';
-    if (p.stock === 0) html += ' disabled';
+    if (!(p.stock > 0)) html += ' disabled';
     html += '>';
-    html += p.stock === 0 ? 'No disponible' : 'Agregar al carrito';
+    html += !(p.stock > 0) ? 'No disponible' : 'Agregar al carrito';
     html += '</button></div></div>';
   });
   container.innerHTML = html;
@@ -3490,12 +3486,10 @@ window.openProductDetail = async function(productId) {
   var techSheetHtml = generateTechSheetHTML(product);
 
   var stockClass = 'in';
-  if (product.stock === 0) stockClass = 'out';
-  else if (product.stock < 5) stockClass = 'low';
-  var stockLabel = 'Disponible: ' + product.stock + ' unidades';
-  if (product.stock === 0) stockLabel = 'No disponible';
-  else if (product.stock < 5) {
-    stockLabel = 'Últimas ' + product.stock + ' unidades';
+  var stockLabel = 'Disponible';
+  if (!(product.stock > 0)) {
+    stockClass = 'out';
+    stockLabel = 'No disponible';
   }
 
   var detailHtml = '';
@@ -3527,9 +3521,9 @@ window.openProductDetail = async function(productId) {
   detailHtml += '<button class="detail-add-btn" ';
   detailHtml += 'onclick="addToCart(\'' + product.id +
     '\');closeModal(\'productDetailModal\')"';
-  if (product.stock === 0) detailHtml += ' disabled';
+  if (!(product.stock > 0)) detailHtml += ' disabled';
   detailHtml += '>';
-  detailHtml += product.stock === 0 ?
+  detailHtml += !(product.stock > 0) ?
     'No disponible' : 'Agregar al carrito';
   detailHtml += '</button>';
   detailHtml += '<button class="detail-add-btn wa" ';
