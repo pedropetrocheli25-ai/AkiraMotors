@@ -127,5 +127,11 @@ service cloud.firestore {
     match /sales/{id} {
       allow read, write: if isAdmin();
     }
+    match /clients/{id} {
+      allow read, write: if isAdmin();
+    }
+    match /bcvHistory/{id} {
+      allow read, write: if isAdmin();
+    }
   }
 }

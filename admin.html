@@ -894,21 +894,7 @@ Volver a la tienda</a>
 <span>Dashboard</span>
 </div>
 <div class="admin-menu-group" data-g="caja">Caja</div>
-<div class="admin-menu-group" data-g="pedidos">Pedidos y clientes</div>
-<div class="admin-menu-item"
-  onclick="showSection('orders', event)">
-<span>Pedidos</span>
-<span class="menu-badge" id="ordersBadge"
-  style="display:none;">0</span>
-</div>
-<div class="admin-menu-item"
-  onclick="showSection('customers', event)">
-<span>Clientes</span>
-</div>
-<div class="admin-menu-item"
-  onclick="showSection('drivers', event)">
-<span>Domiciliarios</span>
-</div>
+<div class="admin-menu-group" data-g="ventas">Ventas</div>
 <div class="admin-menu-group" data-g="inventario">Inventario</div>
 <div class="admin-menu-item"
   onclick="showSection('products', event)">
@@ -923,16 +909,13 @@ Volver a la tienda</a>
   onclick="showSection('catalogo', event)">
 <span>Catálogo</span>
 </div>
-<div class="admin-menu-group" data-g="ventas">Ventas</div>
-<div class="admin-menu-group" data-g="tienda">Tienda web</div>
+<div class="admin-menu-group" data-g="clientes">Clientes</div>
+<div class="admin-menu-group" data-g="config">Configuración</div>
 <div class="admin-menu-item"
-  onclick="showSection('preview', event)">
-<span>Vista Previa</span>
+  onclick="showSection('settings', event)">
+<span>Ajustes</span>
 </div>
-<div class="admin-menu-item"
-  onclick="showSection('flashsales', event)">
-<span>Ofertas Flash</span>
-</div>
+<div class="admin-menu-group" data-g="tienda">Catálogo web</div>
 <div class="admin-menu-item"
   onclick="showSection('brands', event)">
 <span>Marcas</span>
@@ -942,33 +925,12 @@ Volver a la tienda</a>
 <span>Carrusel</span>
 </div>
 <div class="admin-menu-item"
-  onclick="showSection('coupons', event)">
-<span>Cupones</span>
-</div>
-<div class="admin-menu-item"
-  onclick="showSection('delivery', event)">
-<span>Delivery</span>
-</div>
-<div class="admin-menu-item"
-  onclick="showSection('reviews', event)">
-<span>Reseñas</span>
-</div>
-<div class="admin-menu-item"
   onclick="showSection('aboutus', event)">
 <span>Quiénes Somos</span>
 </div>
 <div class="admin-menu-item"
   onclick="showSection('footer', event)">
 <span>Pie de página</span>
-</div>
-<div class="admin-menu-item"
-  onclick="showSection('messages', event)">
-<span>Mensajes WA</span>
-</div>
-<div class="admin-menu-group" data-g="config">Configuración</div>
-<div class="admin-menu-item"
-  onclick="showSection('settings', event)">
-<span>Configuración</span>
 </div>
 <div class="admin-menu-item"
   onclick="logoutAdmin()"
@@ -2624,12 +2586,7 @@ async function loadAll() {
     ['brands', loadBrands],
     ['flashSales', loadFlashSales],
     ['products', loadProducts],
-    ['orders', loadOrders],
-    ['reviews', loadReviews],
-    ['coupons', loadCoupons],
     ['delivery', loadDeliveryConfig],
-    ['drivers', loadDrivers],
-    ['customers', loadCustomers],
     ['messages', loadMessagesConfig],
     ['settings', loadSettings]
   ];
