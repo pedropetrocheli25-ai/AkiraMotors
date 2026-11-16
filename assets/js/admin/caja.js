@@ -33,7 +33,7 @@
   catch (e) { favs = {}; }
 
   function newTicket(name) {
-    return { name: name, cart: [], disc: '', cname: '', cphone: '', cdoc: '' };
+    return { name: name, cart: [], disc: '', cname: '', cphone: '', cdoc: '', clientId: '' };
   }
   function T() { return tickets[cur]; }
   function $(id) { return document.getElementById(id); }
@@ -172,9 +172,11 @@
       '<div class="kpos-head"><h3>Factura <span class="aks-muted" id="aksK-tname"></span></h3>' +
       '<div class="aks-muted" id="aksK-rate"></div></div>' +
       '<div class="kpos-fields">' +
-      '<div class="full"><label>Cliente</label><input type="text" id="aksK-cname" ' +
-      'maxlength="80" placeholder="Consumidor final"></div>' +
-      '<div><label>RIF / Cédula</label><input type="text" id="aksK-cdoc" maxlength="20"></div>' +
+      '<div class="full"><label>Cliente (escribe para buscar o registrar)</label>' +
+      '<input type="text" id="aksK-cname" maxlength="80" placeholder="Consumidor final" ' +
+      'autocomplete="off"><div id="aksK-cres" class="aks-results"></div></div>' +
+      '<div><label>RIF / Cédula</label><input type="text" id="aksK-cdoc" maxlength="20" ' +
+      'placeholder="V-12345678"></div>' +
       '<div><label>Teléfono</label><input type="tel" id="aksK-cphone" maxlength="11" ' +
       'placeholder="0412XXXXXXX"></div>' +
       '<div><label>Descuento %</label><input type="number" id="aksK-disc" ' +
@@ -327,6 +329,16 @@
     if ($('aksK-paymodal').classList.contains('on')) renderPaySummary();
   }
 
+  function showClients(q) {
+    var box = $('aksK-cres');
+    var found = (AKS.clientes && q.trim().length >= 2) ? AKS.clientes.search(q, 6) : [];
+    box.innerHTML = found.map(function (c) {
+      return '<div class="aks-result" data-client="' + AKS.esc(c.id) + '"><div><strong>' +
+        AKS.esc(c.name) + '</strong><small>' + AKS.esc(c.doc) + (c.phone ? ' · ' + AKS.esc(c.phone) : '') +
+        '</small></div></div>';
+    }).join('');
+  }
+
   function renderAll() { renderTabs(); renderGrid(); renderTicket(); }
 
   // ------------------------------------------------------------
@@ -409,7 +421,14 @@
         alert('El pago no cubre el total. Falta ' + AKS.usd(t.total - p.paidUsd));
         return;
       }
+      var clientId = tk.clientId || '';
+      if (!clientId && AKS.clientes) {
+        try {
+          clientId = await AKS.clientes.ensure({ name: tk.cname, doc: tk.cdoc, phone: tk.cphone }) || '';
+        } catch (e) { console.error('cliente:', e); }
+      }
       var db = AKS.db();
+      var clientRef = clientId ? db.collection('clients').doc(clientId) : null;
       var saleRef = db.collection('sales').doc();
       var counterRef = db.collection('settings').doc('adminSettings');
       var nowIso = new Date().toISOString();
@@ -418,6 +437,7 @@
 
       await db.runTransaction(async function (tx) {
         var counterSnap = await tx.get(counterRef);
+        var clientSnap = clientRef ? await tx.get(clientRef) : null;
         var prodSnaps = [], costSnaps = [];
         for (var a = 0; a < cart.length; a++) {
           prodSnaps.push(await tx.get(db.collection('products').doc(cart[a].productId)));
@@ -461,11 +481,19 @@
           costUsd: AKS.r2(costTotal), profitUsd: profit, payments: p.list,
           paidUsd: p.paidUsd, changeUsd: AKS.r2(Math.max(0, p.paidUsd - t.total)),
           customerName: tk.cname.trim(), customerPhone: tk.cphone.trim(),
-          customerDoc: tk.cdoc.trim(), channel: 'mostrador', dateKey: AKS.dateKey(),
+          customerDoc: tk.cdoc.trim(), clientId: (clientSnap && clientSnap.exists) ? clientId : '',
+          channel: 'mostrador', dateKey: AKS.dateKey(),
           status: 'completed', seller: user, createdAt: nowIso
         };
         tx.set(saleRef, result);
+        if (clientSnap && clientSnap.exists) {
+          var cd = clientSnap.data();
+          tx.update(clientRef, { purchases: (Number(cd.purchases) || 0) + 1,
+            totalSpentUsd: AKS.r2((Number(cd.totalSpentUsd) || 0) + t.total),
+            lastPurchaseAt: nowIso });
+        }
       });
+      if (AKS.clientes) AKS.clientes.load(true).catch(function () {});
 
       printReceipt(result);
       tickets[cur] = newTicket(tk.name);
@@ -567,7 +595,7 @@
     }
   }
 
-  async function voidSale(s) {
+  async function voidSale(s, done) {
     var reason = prompt('Motivo de la anulación de ' + s.saleNumber + ':');
     if (!reason || !reason.trim()) return;
     var db = AKS.db();
@@ -580,6 +608,8 @@
         for (var i = 0; i < s.items.length; i++) {
           snaps.push(await tx.get(db.collection('products').doc(s.items[i].productId)));
         }
+        var cRef = s.clientId ? db.collection('clients').doc(s.clientId) : null;
+        var cSnap = cRef ? await tx.get(cRef) : null;
         var added = {};
         for (var k = 0; k < s.items.length; k++) {
           var it = s.items[k];
@@ -595,11 +625,18 @@
         }
         tx.update(ref, { status: 'voided', voidReason: reason.trim(), voidedBy: AKS.userLabel(),
           voidedAt: new Date().toISOString() });
+        if (cSnap && cSnap.exists) {
+          var cc = cSnap.data();
+          tx.update(cRef, { purchases: Math.max(0, (Number(cc.purchases) || 0) - 1),
+            totalSpentUsd: Math.max(0, AKS.r2((Number(cc.totalSpentUsd) || 0) - s.totalUsd)) });
+        }
       });
+      if (AKS.clientes) AKS.clientes.load(true).catch(function () {});
       AKS.refreshAdminProducts();
       await AKS.loadProducts(true);
       renderGrid();
       await loadToday();
+      if (typeof done === 'function') await done();
     } catch (e) {
       console.error(e);
       alert('No se pudo anular: ' + e.message);
@@ -613,8 +650,8 @@
     root.addEventListener('input', function (ev) {
       var t = ev.target, tk = T();
       if (t.id === 'aksK-search') { if (mode === 'search') renderGrid(); return; }
-      if (t.id === 'aksK-cname') { tk.cname = t.value; return; }
-      if (t.id === 'aksK-cdoc') { tk.cdoc = t.value; return; }
+      if (t.id === 'aksK-cname') { tk.cname = t.value; tk.clientId = ''; showClients(t.value); return; }
+      if (t.id === 'aksK-cdoc') { tk.cdoc = t.value; tk.clientId = ''; showClients(t.value); return; }
       if (t.id === 'aksK-cphone') { tk.cphone = t.value; return; }
       if (t.id === 'aksK-disc') { tk.disc = t.value; renderTotals(); return; }
       if (t.hasAttribute('data-pay')) { renderPaySummary(); return; }
@@ -670,6 +707,17 @@
         $('aksK-search').focus();
         return;
       }
+      var cres = t.closest && t.closest('[data-client]');
+      if (cres && AKS.clientes) {
+        var c = AKS.clientes.getList().filter(function (x) { return x.id === cres.getAttribute('data-client'); })[0];
+        if (c) {
+          var tk2 = T();
+          tk2.cname = c.name; tk2.cdoc = c.doc; tk2.cphone = c.phone || ''; tk2.clientId = c.id;
+          $('aksK-cres').innerHTML = '';
+          renderTicket();
+        }
+        return;
+      }
       var card = t.closest && t.closest('.kpos-card');
       if (card) {
         var p = AKS.products.filter(function (x) { return x.id === card.getAttribute('data-id'); })[0];
@@ -705,6 +753,7 @@
       await AKS.loadProducts(true);
       rate = await AKS.getRate(true);
       settings = await AKS.getSettings(true);
+      if (AKS.clientes) await AKS.clientes.load(true);
     } catch (e) { alert(e.message); return; }
     renderAll();
     loadToday();
@@ -720,6 +769,6 @@
     AKS.addMenuItem('Caja (POS)', 'caja', open, 'caja');
   });
 
-  AKS.caja = { open: open, charge: charge, addProduct: addProduct, openPay: openPay,
+  AKS.caja = { printReceipt: printReceipt, voidSale: voidSale, open: open, charge: charge, addProduct: addProduct, openPay: openPay,
     getCart: function () { return T().cart; } };
 })();
