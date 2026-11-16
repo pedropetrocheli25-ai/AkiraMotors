@@ -272,8 +272,12 @@
       var supplierKey = AKS.norm(supplier);
       var dup = await db.collection('purchases')
         .where('supplierKey', '==', supplierKey)
-        .where('invoiceNumber', '==', invoice).limit(1).get();
-      if (!dup.empty) {
+        .where('invoiceNumber', '==', invoice).get();
+      var dupActive = false;
+      dup.forEach(function (d) {
+        if (d.data().status !== 'voided') dupActive = true;
+      });
+      if (dupActive) {
         alert('Esa factura ya fue registrada para este proveedor.');
         return;
       }
@@ -352,7 +356,7 @@
           supplier: supplier, supplierKey: supplierKey,
           invoiceNumber: invoice, invoiceDate: date,
           items: lines, itemCount: lines.length,
-          totalUsd: total, notes: notes,
+          totalUsd: total, notes: notes, status: 'active',
           user: user, createdAt: nowIso
         });
       });
@@ -400,8 +404,13 @@
           '<td>' + AKS.esc(p.invoiceNumber) + '</td>' +
           '<td>' + (p.itemCount || 0) + '</td>' +
           '<td>' + AKS.usd(p.totalUsd) + '</td>' +
-          '<td><button class="btn btn-secondary btn-small" ' +
-          'data-act="detail" data-id="' + d.id + '">Ver</button></td></tr>' +
+          '<td>' + (p.status === 'voided'
+            ? '<span class="aks-bad">Anulada</span> ' : '') +
+          '<button class="btn btn-secondary btn-small" ' +
+          'data-act="detail" data-id="' + d.id + '">Ver</button> ' +
+          (p.status === 'voided' ? '' :
+            '<button class="btn btn-danger btn-small" data-act="void" ' +
+            'data-id="' + d.id + '">Anular</button>') + '</td></tr>' +
           '<tr id="aksC-d-' + d.id + '" style="display:none"><td colspan="6">' +
           detailHtml(p) + '</td></tr>';
       });
@@ -417,6 +426,59 @@
       console.error('Error cargando facturas:', e);
       box.innerHTML = '<span class="aks-bad">No se pudieron cargar ' +
         'las facturas: ' + AKS.esc(e.message) + '</span>';
+    }
+  }
+
+  async function voidPurchase(id) {
+    if (!confirm('Anular esta factura quita del inventario las unidades ' +
+      'que sumó. Los costos y precios NO se revierten (corrígelos ' +
+      'en Productos si hace falta). ¿Continuar?')) return;
+    var reason = prompt('Motivo de la anulación:');
+    if (!reason || !reason.trim()) return;
+    var db = AKS.db();
+    try {
+      await db.runTransaction(async function (tx) {
+        var ref = db.collection('purchases').doc(id);
+        var cur = await tx.get(ref);
+        if (!cur.exists || cur.data().status === 'voided') {
+          throw new Error('La factura ya está anulada.');
+        }
+        var its = cur.data().items || [];
+        var snaps = [];
+        for (var i = 0; i < its.length; i++) {
+          snaps.push(await tx.get(
+            db.collection('products').doc(its[i].productId)));
+        }
+        for (var j = 0; j < its.length; j++) {
+          if (!snaps[j].exists) continue;
+          var st = Number(snaps[j].data().stock) || 0;
+          if (st < its[j].qty) {
+            throw new Error('No se puede anular: "' + its[j].name +
+              '" tiene stock ' + st + ' y la factura sumó ' + its[j].qty +
+              ' (ya se vendieron).');
+          }
+        }
+        for (var k = 0; k < its.length; k++) {
+          if (!snaps[k].exists) continue;
+          var before = Number(snaps[k].data().stock) || 0;
+          var after = before - its[k].qty;
+          tx.update(db.collection('products').doc(its[k].productId), {
+            stock: after, updatedAt: new Date().toISOString() });
+          AKS.movement(tx, { productId: its[k].productId,
+            code: its[k].code, name: its[k].name,
+            type: 'anulacion_compra', qty: -its[k].qty,
+            stockBefore: before, stockAfter: after,
+            refType: 'purchase', refId: id });
+        }
+        tx.update(ref, { status: 'voided', voidReason: reason.trim(),
+          voidedBy: AKS.userLabel(),
+          voidedAt: new Date().toISOString() });
+      });
+      AKS.refreshAdminProducts();
+      await loadList();
+    } catch (e) {
+      console.error(e);
+      alert('No se pudo anular: ' + e.message);
     }
   }
 
@@ -584,6 +646,8 @@
         var i = parseInt(tr.getAttribute('data-i'), 10);
         items.splice(i, 1);
         renderItems();
+      } else if (act === 'void') {
+        voidPurchase(t.getAttribute('data-id'));
       } else if (act === 'detail') {
         var row = $('aksC-d-' + t.getAttribute('data-id'));
         if (row) {
