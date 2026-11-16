@@ -518,7 +518,7 @@
   }
 
   AKS.init(function () {
-    var sec = $('section-ventas');
+    var sec = $('section-dashboard');
     if (!sec) return;
     var card = document.createElement('div');
     card.className = 'admin-card';
@@ -538,8 +538,7 @@
       'a <input type="date" id="aksX-to"></span>' +
       '<button class="btn btn-primary" id="aksX-go">Descargar Excel</button></div>' +
       '<div id="aksX-label" class="aks-muted" style="margin-top:.5rem"></div>';
-    var h = sec.querySelector('h2');
-    if (h && h.nextSibling) sec.insertBefore(card, h.nextSibling); else sec.appendChild(card);
+    sec.appendChild(card);
     $('aksX-ref').value = AKS.dateKey();
     ['aksX-kind', 'aksX-ref', 'aksX-from', 'aksX-to'].forEach(function (id) {
       $(id).addEventListener('change', updateLabel);
