@@ -55,6 +55,14 @@ body {
   opacity: 0.8;
 }
 .admin-menu { padding: 1rem 0; }
+.admin-menu-group {
+  padding: 1rem 1.5rem 0.3rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #FF6B1A;
+}
 .admin-menu-item {
   padding: 0.9rem 1.2rem;
   cursor: pointer;
@@ -820,6 +828,7 @@ body {
     overflow-x: auto;
     padding: 0.5rem;
   }
+  .admin-menu-group { display: none; }
   .admin-menu-item {
     white-space: nowrap;
     border-left: none;
@@ -883,27 +892,8 @@ Volver a la tienda</a>
   onclick="showSection('dashboard', event)">
 <span>Dashboard</span>
 </div>
-<div class="admin-menu-item"
-  onclick="showSection('preview', event)">
-<span>Vista Previa</span>
-</div>
-<div class="admin-menu-item"
-  onclick="showSection('catalogo', event)">
-<span>Catálogo</span>
-</div>
-<div class="admin-menu-item"
-  onclick="showSection('products', event)">
-<span>Productos</span>
-</div>
-<div class="admin-menu-item"
-  onclick="showSection('lowstock', event)">
-<span>Bajo Stock</span>
-<span class="menu-badge" id="lowStockBadge">0</span>
-</div>
-<div class="admin-menu-item"
-  onclick="showSection('flashsales', event)">
-<span>Ofertas Flash</span>
-</div>
+<div class="admin-menu-group" data-g="caja">Caja</div>
+<div class="admin-menu-group" data-g="pedidos">Pedidos y clientes</div>
 <div class="admin-menu-item"
   onclick="showSection('orders', event)">
 <span>Pedidos</span>
@@ -917,6 +907,30 @@ Volver a la tienda</a>
 <div class="admin-menu-item"
   onclick="showSection('drivers', event)">
 <span>Domiciliarios</span>
+</div>
+<div class="admin-menu-group" data-g="inventario">Inventario</div>
+<div class="admin-menu-item"
+  onclick="showSection('products', event)">
+<span>Productos</span>
+</div>
+<div class="admin-menu-item"
+  onclick="showSection('lowstock', event)">
+<span>Bajo Stock</span>
+<span class="menu-badge" id="lowStockBadge">0</span>
+</div>
+<div class="admin-menu-item"
+  onclick="showSection('catalogo', event)">
+<span>Catálogo</span>
+</div>
+<div class="admin-menu-group" data-g="ventas">Ventas</div>
+<div class="admin-menu-group" data-g="tienda">Tienda web</div>
+<div class="admin-menu-item"
+  onclick="showSection('preview', event)">
+<span>Vista Previa</span>
+</div>
+<div class="admin-menu-item"
+  onclick="showSection('flashsales', event)">
+<span>Ofertas Flash</span>
 </div>
 <div class="admin-menu-item"
   onclick="showSection('brands', event)">
@@ -950,6 +964,7 @@ Volver a la tienda</a>
   onclick="showSection('messages', event)">
 <span>Mensajes WA</span>
 </div>
+<div class="admin-menu-group" data-g="config">Configuración</div>
 <div class="admin-menu-item"
   onclick="showSection('settings', event)">
 <span>Configuración</span>

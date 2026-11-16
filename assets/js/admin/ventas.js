@@ -170,7 +170,7 @@
       $('aksV-to').style.display = c ? '' : 'none';
     });
     $('aksV-go').addEventListener('click', run);
-    AKS.addMenuItem('Ventas / Reportes', 'ventas', run);
+    AKS.addMenuItem('Ventas / Reportes', 'ventas', run, 'ventas');
   });
 
   AKS.ventas = { run: run };

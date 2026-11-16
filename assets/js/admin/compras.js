@@ -620,7 +620,7 @@
     root = AKS.addSection('compras', html());
     if (!root) return;
     bind();
-    AKS.addMenuItem('Compras / Facturas', 'compras', open);
+    AKS.addMenuItem('Compras / Facturas', 'compras', open, 'inventario');
   });
 
   // Exponer para pruebas

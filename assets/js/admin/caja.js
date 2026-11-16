@@ -517,7 +517,7 @@
     root = AKS.addSection('caja', html());
     if (!root) return;
     bind();
-    AKS.addMenuItem('Caja (POS)', 'caja', open);
+    AKS.addMenuItem('Caja (POS)', 'caja', open, 'caja');
   });
 
   AKS.caja = { open: open, charge: charge, addProduct: addProduct,

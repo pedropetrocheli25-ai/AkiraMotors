@@ -284,7 +284,7 @@
     return div;
   };
 
-  AKS.addMenuItem = function (label, sectionId, onOpen) {
+  AKS.addMenuItem = function (label, sectionId, onOpen, group) {
     var menu = document.querySelector('.admin-menu');
     if (!menu) return null;
     var item = document.createElement('div');
@@ -300,6 +300,19 @@
         catch (e) { console.error('Error abriendo ' + sectionId, e); }
       }
     });
+    // Dentro de su grupo (después de sus opciones), si el grupo existe
+    var head = group ? menu.querySelector(
+      '.admin-menu-group[data-g="' + group + '"]') : null;
+    if (head) {
+      var nxt = head.nextElementSibling;
+      while (nxt && !nxt.classList.contains('admin-menu-group') &&
+             (nxt.getAttribute('onclick') || '')
+               .indexOf('logoutAdmin') === -1) {
+        nxt = nxt.nextElementSibling;
+      }
+      menu.insertBefore(item, nxt);
+      return item;
+    }
     // Antes del botón "Salir", si existe; si no, al final
     var logout = null;
     var items = menu.querySelectorAll('.admin-menu-item');
