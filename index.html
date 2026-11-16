@@ -2173,19 +2173,6 @@ footer {
   font-size:0.8rem;text-align:center;
   word-break:break-word;"></div>
 
-<div id="verifyBanner" class="verify-banner">
-<div>Verifica tu correo para completar tu registro.
-Revisa tu bandeja de entrada o spam.</div>
-<div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
-<button onclick="refrescarVerificacionUI()">
-Ya verifiqué
-</button>
-<button onclick="reenviarVerificacionEmail()">
-Reenviar correo
-</button>
-</div>
-</div>
-
 <div class="top-header">
 <div class="header-left">
 <button class="menu-btn" onclick="toggleSidebar()"
@@ -2205,15 +2192,6 @@ Reenviar correo
 </div>
 </div>
 <div class="header-right">
-<button class="header-btn" id="accountBtn"
-  onclick="handleAccount()"
-  aria-label="Mi cuenta">
-<svg viewBox="0 0 24 24" aria-hidden="true">
-<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-<circle cx="12" cy="7" r="4"></circle>
-</svg>
-<span id="accountText">Cuenta</span>
-</button>
 <button class="header-btn" onclick="toggleCart()"
   aria-label="Abrir carrito">
 <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -2346,267 +2324,6 @@ Conoce más
   id="productDetailContent"></div>
 </div>
 
-<div class="modal auth-modal" id="loginModal"
-  role="dialog" aria-modal="true">
-<div class="modal-content">
-<button class="modal-close"
-  onclick="closeModal('loginModal')"
-  aria-label="Cerrar">×</button>
-<h2>Iniciar Sesión</h2>
-<p class="auth-sub">
-Ingresa para completar tu compra y ver tus pedidos.
-</p>
-<form id="loginForm">
-<div class="form-group">
-<label for="loginEmail">Correo electrónico</label>
-<input type="email" id="loginEmail" required
-  placeholder="tucorreo@ejemplo.com"
-  autocomplete="email">
-</div>
-<div class="form-group">
-<label for="loginPassword">Contraseña</label>
-<input type="password" id="loginPassword"
-  required placeholder="Tu contraseña"
-  autocomplete="current-password">
-</div>
-<div class="auth-error" id="loginError"></div>
-<button type="submit" class="auth-btn"
-  id="loginBtn">Ingresar</button>
-</form>
-<div class="auth-switch">
-<a onclick="olvidePassword()">
-¿Olvidaste tu contraseña?
-</a>
-</div>
-<div class="auth-switch">
-¿No tienes cuenta?
-<a onclick="switchToRegister()">Regístrate</a>
-</div>
-</div>
-</div>
-
-<div class="modal auth-modal" id="registerModal"
-  role="dialog" aria-modal="true">
-<div class="modal-content">
-<button class="modal-close"
-  onclick="closeModal('registerModal')"
-  aria-label="Cerrar">×</button>
-<h2>Crea tu Cuenta</h2>
-<p class="auth-sub">
-Regístrate para completar tu compra y recibir
-la factura por correo.
-</p>
-<form id="registerForm">
-<div class="form-group">
-<label for="regName">Nombre completo</label>
-<input type="text" id="regName" required
-  placeholder="Tu nombre completo"
-  autocomplete="name">
-</div>
-<div class="form-group">
-<label for="regEmail">Correo electrónico</label>
-<input type="email" id="regEmail" required
-  placeholder="tucorreo@ejemplo.com"
-  autocomplete="email">
-</div>
-<div class="form-group">
-<label for="regPhone">Teléfono</label>
-<input type="tel" id="regPhone" required
-  placeholder="04121234567"
-  inputmode="tel" maxlength="11"
-  autocomplete="tel">
-</div>
-<div class="form-group">
-<label for="regPassword">
-Contraseña (mínimo 6 caracteres)
-</label>
-<input type="password" id="regPassword"
-  required minlength="6"
-  placeholder="Tu contraseña"
-  autocomplete="new-password">
-</div>
-<div class="auth-error" id="registerError"></div>
-<button type="submit" class="auth-btn"
-  id="registerBtn">Crear Cuenta</button>
-</form>
-<div class="auth-switch">
-¿Ya tienes cuenta?
-<a onclick="switchToLogin()">Inicia sesión</a>
-</div>
-</div>
-</div>
-
-<div class="modal auth-modal" id="guestModal"
-  role="dialog" aria-modal="true">
-<div class="modal-content">
-<button class="modal-close"
-  onclick="closeModal('guestModal')"
-  aria-label="Cerrar">×</button>
-<h2>Comprar como Invitado</h2>
-<p class="auth-sub">
-Solo necesitamos tu nombre y teléfono para
-coordinar la entrega por WhatsApp.
-</p>
-<form id="guestForm">
-<div class="form-group">
-<label for="guestName">Nombre completo</label>
-<input type="text" id="guestName" required
-  placeholder="Tu nombre completo"
-  autocomplete="name">
-</div>
-<div class="form-group">
-<label for="guestPhone">Teléfono</label>
-<input type="tel" id="guestPhone" required
-  placeholder="04121234567"
-  inputmode="tel" maxlength="11"
-  autocomplete="tel">
-</div>
-<div class="auth-error" id="guestError"></div>
-<button type="submit" class="auth-btn"
-  id="guestBtn">Continuar</button>
-</form>
-<div class="auth-switch">
-¿Prefieres tener cuenta?
-<a onclick="switchToRegister()">Regístrate</a>
-</div>
-</div>
-</div>
-
-<div class="modal auth-modal" id="accountModal"
-  role="dialog" aria-modal="true">
-<div class="modal-content">
-<button class="modal-close"
-  onclick="closeModal('accountModal')"
-  aria-label="Cerrar">×</button>
-<h2>Mi Cuenta</h2>
-<div class="account-info" id="accountInfo"></div>
-<div class="account-buttons">
-<button class="auth-btn" onclick="showMyOrders()">
-Ver mis pedidos
-</button>
-<button class="guest-btn" onclick="olvidePassword()">
-Cambiar contraseña
-</button>
-<button class="guest-btn"
-  style="background:#25D366;color:#111;border-color:#25D366;"
-  onclick="soporteWhatsApp()">
-Soporte por WhatsApp
-</button>
-<button class="guest-btn"
-  onclick="cerrarSesionCliente()">
-Cerrar sesión
-</button>
-</div>
-</div>
-</div>
-
-<div class="modal orders-modal" id="ordersModal"
-  role="dialog" aria-modal="true">
-<div class="modal-content">
-<button class="modal-close"
-  onclick="closeModal('ordersModal')"
-  aria-label="Cerrar">×</button>
-<h2>Mis Pedidos</h2>
-<div id="ordersList"></div>
-</div>
-</div>
-
-<div class="modal checkout-modal" id="checkoutModal"
-  role="dialog" aria-modal="true">
-<div class="modal-content">
-<button class="modal-close"
-  onclick="closeModal('checkoutModal')"
-  aria-label="Cerrar">×</button>
-<h2>Finalizar Compra</h2>
-
-<div class="checkout-section">
-<label class="checkout-label">Método de entrega</label>
-<div class="segmented-control">
-<div class="segmented-option active"
-  id="checkoutPickup"
-  onclick="selectCheckoutDelivery('pickup')">
-Pickup en tienda
-</div>
-<div class="segmented-option"
-  id="checkoutDelivery"
-  onclick="selectCheckoutDelivery('delivery')">
-Delivery
-</div>
-</div>
-</div>
-
-<div id="pickupMapLink" style="display:none;">
-<div class="location-card">
-<div style="font-weight:700;margin-bottom:0.4rem;">
-Ubicación de la tienda
-</div>
-<a href="#" id="pickupMapsLink" target="_blank"
-  rel="noopener">
-Ver en Google Maps
-</a>
-</div>
-</div>
-
-<div id="deliveryFields" style="display:none;">
-<div class="checkout-section">
-<label class="checkout-label">
-Ubicación de entrega
-</label>
-<button type="button" class="gps-btn"
-  onclick="getLocation()">
-<svg viewBox="0 0 24 24" aria-hidden="true">
-<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-<circle cx="12" cy="10" r="3"></circle>
-</svg>
-Obtener mi ubicación
-</button>
-<div id="locationResult" class="location-card"
-  style="margin-top:0.6rem;">
-Aún no has enviado tu ubicación
-</div>
-<input type="hidden" id="gpsLat">
-<input type="hidden" id="gpsLng">
-</div>
-<div class="checkout-section">
-<label class="checkout-label" for="deliveryAddressInput">
-Dirección (opcional)
-</label>
-<input type="text" id="deliveryAddressInput"
-  class="checkout-input"
-  placeholder="Calle, número, referencia...">
-</div>
-</div>
-
-<div class="free-ship-notice" id="freeShipNotice"></div>
-
-<div class="checkout-totals" id="checkoutTotals"></div>
-
-<button class="confirm-order-btn"
-  id="confirmOrderBtn"
-  onclick="confirmOrder()">
-<svg viewBox="0 0 24 24" aria-hidden="true">
-<path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
-</svg>
-Confirmar por WhatsApp
-</button>
-
-<div id="whatsappFallback"
-  style="display:none;margin-top:0.8rem;">
-<div class="location-card"
-  style="background:#FFF3CD;border-color:#FFC107;
-  color:#856404;font-weight:600;">
-Si WhatsApp no se abre automáticamente,
-<a id="whatsappFallbackLink" href="#"
-  target="_blank" rel="noopener"
-  style="color:#856404;font-weight:700;
-  text-decoration:underline;">
-haz clic aquí
-</a>
-</div>
-</div>
-</div>
-</div>
-
 <div class="cart-sidebar" id="cartSidebar"
   aria-label="Carrito de compras">
 <div class="cart-header">
@@ -2623,19 +2340,9 @@ Tu Carrito
 </div>
 <div class="cart-items" id="cartItems"></div>
 <div class="cart-footer">
-<div class="coupon-box">
-<label for="couponCodeInput">Tienes un cupón</label>
-<div class="coupon-input-group">
-<input type="text" id="couponCodeInput"
-  placeholder="Ej: AKIRA10"
-  autocomplete="off">
-<button onclick="applyCouponCode()">Aplicar</button>
-</div>
-<div class="coupon-message" id="couponMessage"></div>
-</div>
 <div class="cart-totals" id="cartTotals"></div>
-<button class="checkout-btn" onclick="openCheckout()">
-Finalizar Compra
+<button class="checkout-btn" onclick="pedirPorWhatsApp()">
+Pedir por WhatsApp
 </button>
 </div>
 </div>
@@ -2644,17 +2351,17 @@ import { initializeApp, getApps, getApp }
   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import {
   getFirestore, collection, getDocs,
-  doc, getDoc, setDoc, updateDoc, addDoc,
-  query, where
+  doc, getDoc
 }
   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-import {
-  registrarCliente, loginCliente, logoutCliente,
-  loginAnonimo, escucharSesion, reenviarVerificacion,
-  recuperarPassword, refrescarVerificacion,
-  normalizarTelefono, telefonoParaWhatsApp
+// Tienda solo catálogo: sin cuentas de cliente ni pedidos en la base.
+// Convierte 0412XXXXXXX (o 58412XXXXXXX) al formato de wa.me
+function telefonoParaWhatsApp(raw) {
+  var d = String(raw || '').replace(/\D/g, '');
+  if (/^04\d{9}$/.test(d)) return '58' + d.slice(1);
+  if (/^58\d{10}$/.test(d)) return d;
+  return '';
 }
-  from "./assets/js/auth-client.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAU77yzh7Tm3RPuuvVcxlCt26u2ljmsBK0",
@@ -3495,18 +3202,6 @@ async function loadData() {
       }
     } catch(e) { console.error('appSettings:', e); }
 
-    // Cupón de bienvenida
-    try {
-      var wc = await getDoc(
-        doc(db, 'settings', 'welcomeCoupon')
-      );
-      if (wc.exists()) {
-        welcomeCouponSettings = Object.assign(
-          {}, welcomeCouponSettings, wc.data()
-        );
-      }
-    } catch(e) { console.error('welcomeCoupon:', e); }
-
     try {
       var slidesSnap = await getDocs(
         collection(db, 'carouselSlides')
@@ -3574,7 +3269,6 @@ async function loadData() {
     renderRecommended();
     renderFooterBrands(window.__brands || []);
     updateCartUI();
-    updateHeaderButtons();
     updateWhatsAppLinks();
   } catch (error) {
     console.error('Error general:', error);
@@ -3717,31 +3411,6 @@ function generateTechSheetHTML(product) {
   return html;
 }
 
-var reviewsCache = {};
-async function getReviewsForProduct(productId) {
-  if (reviewsCache[productId]) {
-    return reviewsCache[productId];
-  }
-  try {
-    var q = query(
-      collection(db, 'reviews'),
-      where('productId', '==', productId)
-    );
-    var snap = await getDocs(q);
-    var list = [];
-    snap.forEach(function(d) {
-      var obj = d.data();
-      obj.id = d.id;
-      list.push(obj);
-    });
-    reviewsCache[productId] = list;
-    return list;
-  } catch(e) {
-    console.error('Error reviews:', e);
-    return [];
-  }
-}
-
 window.openProductDetail = async function(productId) {
   var product = products.find(function(p) {
     return p.id === productId;
@@ -3780,94 +3449,6 @@ window.openProductDetail = async function(productId) {
   }
   var techSheetHtml = generateTechSheetHTML(product);
 
-  var productReviews = await getReviewsForProduct(productId);
-  var avgRating = 0;
-  if (productReviews.length > 0) {
-    var sum = 0;
-    productReviews.forEach(function(r) {
-      sum += Number(r.rating) || 0;
-    });
-    avgRating = (sum / productReviews.length).toFixed(1);
-  }
-
-  var reviewsHtml = '<div class="reviews-section">';
-  reviewsHtml += '<h3>Reseñas (' + productReviews.length +
-    ')';
-  if (productReviews.length > 0) {
-    reviewsHtml += '<span class="reviews-avg">' +
-      avgRating + '/5</span>';
-  }
-  reviewsHtml += '</h3>';
-
-  if (currentUser && !isGuestUser) {
-    var existing = productReviews.find(function(r) {
-      return r.userId === currentUser.uid;
-    });
-    if (!existing) {
-      reviewsHtml += '<div class="review-form">';
-      reviewsHtml += '<label>Tu calificación:</label>';
-      reviewsHtml += '<div class="stars-input" ';
-      reviewsHtml += 'id="starsInput-' + productId + '">';
-      for (var i = 1; i <= 5; i++) {
-        reviewsHtml += '<span class="star" ';
-        reviewsHtml += 'role="button" tabindex="0" ';
-        reviewsHtml += 'onclick="selectRating(\'';
-        reviewsHtml += productId + '\',' + i +
-          ')">★</span>';
-      }
-      reviewsHtml += '</div>';
-      reviewsHtml += '<textarea id="reviewText-';
-      reviewsHtml += productId + '" maxlength="150" ';
-      reviewsHtml += 'placeholder="Tu comentario" ';
-      reviewsHtml += 'oninput="updateCharCount(\'';
-      reviewsHtml += productId + '\')"></textarea>';
-      reviewsHtml += '<div class="char-count" ';
-      reviewsHtml += 'id="charCount-' + productId +
-        '">0/150</div>';
-      reviewsHtml += '<button onclick="';
-      reviewsHtml += 'submitReview(\'' + productId +
-        '\')">Publicar</button>';
-      reviewsHtml += '</div>';
-    }
-  } else {
-    reviewsHtml += '<p class="review-empty">';
-    reviewsHtml += isGuestUser
-      ? 'Regístrate para dejar reseñas.'
-      : 'Inicia sesión para dejar una reseña.';
-    reviewsHtml += '</p>';
-  }
-
-  if (productReviews.length > 0) {
-    productReviews.sort(function(a, b) {
-      var tA = a.date ? new Date(a.date).getTime() : 0;
-      var tB = b.date ? new Date(b.date).getTime() : 0;
-      return tB - tA;
-    });
-    productReviews.forEach(function(r) {
-      var rating = Number(r.rating) || 0;
-      var stars = '★'.repeat(rating) +
-        '☆'.repeat(5 - rating);
-      reviewsHtml += '<div class="review-item">';
-      reviewsHtml += '<div class="review-item-header">';
-      reviewsHtml += '<span class="review-item-user">';
-      reviewsHtml += (escapeHTML(r.userName) || 'Cliente');
-      reviewsHtml += '</span>';
-      reviewsHtml += '<span class="review-item-stars">';
-      reviewsHtml += stars + '</span></div>';
-      reviewsHtml += '<div class="review-item-text">' +
-        escapeHTML(r.text) + '</div>';
-      reviewsHtml += '<div class="review-item-date">';
-      reviewsHtml += r.date ? new Date(r.date)
-        .toLocaleDateString() : '';
-      reviewsHtml += '</div></div>';
-    });
-  } else {
-    reviewsHtml += '<p class="review-empty">';
-    reviewsHtml += 'Aún no hay reseñas. Sé el primero.';
-    reviewsHtml += '</p>';
-  }
-  reviewsHtml += '</div>';
-
   var stockClass = 'in';
   if (product.stock === 0) stockClass = 'out';
   else if (product.stock < 5) stockClass = 'low';
@@ -3902,7 +3483,6 @@ window.openProductDetail = async function(productId) {
   }
   detailHtml += techSheetHtml;
   detailHtml += '</div></div>';
-  detailHtml += reviewsHtml;
   detailHtml += '<div class="detail-actions">';
   detailHtml += '<button class="detail-add-btn" ';
   detailHtml += 'onclick="addToCart(\'' + product.id +
@@ -3911,76 +3491,25 @@ window.openProductDetail = async function(productId) {
   detailHtml += '>';
   detailHtml += product.stock === 0 ?
     'No disponible' : 'Agregar al carrito';
-  detailHtml += '</button></div>';
+  detailHtml += '</button>';
+  detailHtml += '<button class="detail-add-btn" ';
+  detailHtml += 'style="background:#25D366;margin-top:.5rem" ';
+  detailHtml += 'onclick="pedirProducto(\'' + product.id +
+    '\')">Pedir por WhatsApp</button>';
+  detailHtml += '<button class="detail-add-btn" ';
+  detailHtml += 'style="background:#111;margin-top:.5rem" ';
+  detailHtml += 'onclick="compartirProducto(\'' + product.id +
+    '\')">Compartir por WhatsApp</button>';
+  detailHtml += '<button class="detail-add-btn" ';
+  detailHtml += 'style="background:#FF6B1A;margin-top:.5rem" ';
+  detailHtml += 'onclick="copiarEnlaceProducto(\'' + product.id +
+    '\')">Copiar enlace</button>';
+  detailHtml += '</div>';
 
   var content = document.getElementById('productDetailContent');
   var modal = document.getElementById('productDetailModal');
   if (content) content.innerHTML = detailHtml;
   if (modal) modal.classList.add('active');
-};
-
-var selectedRatings = {};
-
-window.selectRating = function(productId, rating) {
-  selectedRatings[productId] = rating;
-  var stars = document.querySelectorAll(
-    '#starsInput-' + productId + ' .star'
-  );
-  for (var i = 0; i < stars.length; i++) {
-    stars[i].classList.toggle('active', i < rating);
-  }
-};
-
-window.updateCharCount = function(productId) {
-  var textEl = document.getElementById(
-    'reviewText-' + productId
-  );
-  var countEl = document.getElementById('charCount-' + productId);
-  if (textEl && countEl) {
-    countEl.textContent = textEl.value.length + '/150';
-  }
-};
-
-window.submitReview = async function(productId) {
-  if (!currentUser || isGuestUser) {
-    showError('Debes tener cuenta registrada para reseñar');
-    return;
-  }
-  var rating = selectedRatings[productId];
-  var textEl = document.getElementById(
-    'reviewText-' + productId
-  );
-  var text = textEl ? textEl.value.trim() : '';
-  if (!rating) {
-    showError('Selecciona una calificación');
-    return;
-  }
-  if (!text || text.length < 5) {
-    showError('Escribe un comentario (mín 5 caracteres)');
-    return;
-  }
-  if (text.length > 150) {
-    showError('Máximo 150 caracteres');
-    return;
-  }
-  try {
-    var userName = (userData && userData.name) || 'Cliente';
-    var reviewId = productId + '_' + currentUser.uid;
-    await setDoc(doc(db, 'reviews', reviewId), {
-      productId: productId,
-      userId: currentUser.uid,
-      userName: userName,
-      rating: rating,
-      text: text,
-      date: new Date().toISOString()
-    });
-    showToast('Reseña publicada', 'success');
-    delete reviewsCache[productId];
-    openProductDetail(productId);
-  } catch (error) {
-    console.error('Error review:', error);
-    showError('No se pudo publicar la reseña');
-  }
 };
 
 // ============================================================
@@ -4071,12 +3600,6 @@ window.toggleCart = function() {
   if (el) el.classList.toggle('active');
 };
 
-function esElegibleBienvenida() {
-  return currentUser && !isGuestUser &&
-    currentUser.emailVerified &&
-    (!userData || userData.welcomeUsed !== true);
-}
-
 function updateCartUI() {
   var cartItems = document.getElementById('cartItems');
   var cartCount = document.getElementById('cartCount');
@@ -4124,1145 +3647,135 @@ function updateCartUI() {
   cart.forEach(function(item) {
     subtotalUsd += Number(item.price) * item.quantity;
   });
-  var descuentoAplicado = 0;
-  if (appliedCoupon) {
-    descuentoAplicado = subtotalUsd *
-      (appliedCoupon.discount / 100);
-    subtotalUsd -= descuentoAplicado;
-  }
-  var ivaUsd = deliveryConfig.ivaEnabled !== false
-    ? subtotalUsd * 0.16 : 0;
-  var totalUsd = subtotalUsd + ivaUsd;
+  var totalUsd = subtotalUsd;
   var th = '';
   th += '<div class="cart-total-row">';
   th += '<span>Subtotal:</span>';
   th += '<span>$' + subtotalUsd.toFixed(2) +
     ' / Bs. ' + (subtotalUsd * bcvRate).toFixed(2) +
     '</span></div>';
-  if (appliedCoupon) {
-    th += '<div class="cart-total-row discount">';
-    th += '<span>Descuento (' +
-      escapeHTML(appliedCoupon.code) + '):</span>';
-    th += '<span>-$' + descuentoAplicado.toFixed(2) +
-      '</span></div>';
-  }
-  if (deliveryConfig.ivaEnabled !== false) {
-    th += '<div class="cart-total-row">';
-    th += '<span>IVA (16%):</span>';
-    th += '<span>$' + ivaUsd.toFixed(2) +
-      ' / Bs. ' + (ivaUsd * bcvRate).toFixed(2) +
-      '</span></div>';
-  }
   th += '<div class="cart-total-row total">';
   th += '<span>TOTAL:</span>';
   th += '<span>$' + totalUsd.toFixed(2) +
     ' / Bs. ' + (totalUsd * bcvRate).toFixed(2) +
     '</span></div>';
   cartTotals.innerHTML = th;
-
-  var welcomeHint = document.getElementById('welcomeCouponHint');
-  if (!welcomeHint) {
-    welcomeHint = document.createElement('div');
-    welcomeHint.id = 'welcomeCouponHint';
-    welcomeHint.style.cssText = 'background:#FFF5EC;' +
-      'border:1px solid #FF6B1A;color:#C2410C;' +
-      'padding:0.6rem;border-radius:8px;font-size:0.8rem;' +
-      'margin-bottom:0.6rem;font-weight:600;';
-    var couponBox = document.querySelector('.coupon-box');
-    if (couponBox && couponBox.parentNode) {
-      couponBox.parentNode.insertBefore(welcomeHint, couponBox);
-    }
-  }
-  if (welcomeCouponSettings.active &&
-      esElegibleBienvenida() &&
-      !(appliedCoupon &&
-        appliedCoupon.code === welcomeCouponSettings.code)) {
-    welcomeHint.style.display = 'block';
-    welcomeHint.innerHTML = 'Tienes ' +
-      welcomeCouponSettings.discount +
-      '% de bienvenida. Usa el código <strong>' +
-      escapeHTML(welcomeCouponSettings.code) + '</strong>';
-  } else {
-    welcomeHint.style.display = 'none';
-  }
 }
 
 // ============================================================
-// CUPONES
+// WHATSAPP: pedir y compartir (no se guarda nada en la base)
 // ============================================================
-window.applyCouponCode = async function() {
-  var input = document.getElementById('couponCodeInput');
-  var msg = document.getElementById('couponMessage');
-  if (!input || !msg) return;
-  if (isGuestUser || !currentUser) {
-    msg.innerHTML = '<span style="color:#DC3545;">' +
-      'Debes <a href="#" onclick="openLoginModal();' +
-      'return false;" style="color:#C2410C;' +
-      'font-weight:700;">iniciar sesión</a> ' +
-      'para usar cupones</span>';
-    return;
-  }
-  var code = input.value.trim().toUpperCase();
-  if (!code) {
-    msg.innerHTML = '<span style="color:#DC3545;">' +
-      'Ingresa un código</span>';
-    return;
-  }
-  msg.innerHTML = '<span style="color:#6C757D;">' +
-    'Verificando...</span>';
-  try {
-    var couponSnap = await getDoc(
-      doc(db, 'coupons', code)
-    );
-    if (!couponSnap.exists()) {
-      msg.innerHTML = '<span style="color:#DC3545;">' +
-        'Cupón no existe</span>';
-      appliedCoupon = null;
-      updateCartUI();
-      return;
-    }
-    var found = couponSnap.data();
-    found.id = couponSnap.id;
-    found.code = couponSnap.id;
-    if (found.active === false) {
-      msg.innerHTML = '<span style="color:#DC3545;">' +
-        'Cupón desactivado</span>';
-      appliedCoupon = null;
-      updateCartUI();
-      return;
-    }
-    var hoy = new Date();
-    if (found.startDate) {
-      var inicio = new Date(found.startDate + 'T00:00:00');
-      if (inicio > hoy) {
-        msg.innerHTML = '<span style="color:#DC3545;">' +
-          'Cupón aún no vigente</span>';
-        appliedCoupon = null;
-        updateCartUI();
-        return;
-      }
-    }
-    if (found.endDate) {
-      var fin = new Date(found.endDate + 'T23:59:59');
-      if (fin < hoy) {
-        msg.innerHTML = '<span style="color:#DC3545;">' +
-          'Cupón expirado</span>';
-        appliedCoupon = null;
-        updateCartUI();
-        return;
-      }
-    }
-    if (found.maxUses > 0 &&
-        (found.uses || 0) >= found.maxUses) {
-      msg.innerHTML = '<span style="color:#DC3545;">' +
-        'Cupón agotado</span>';
-      appliedCoupon = null;
-      updateCartUI();
-      return;
-    }
-    if (found.onlyVerified && !currentUser.emailVerified) {
-      msg.innerHTML = '<span style="color:#DC3545;">' +
-        'Debes verificar tu correo primero</span>';
-      appliedCoupon = null;
-      updateCartUI();
-      return;
-    }
-    if (found.welcome === true) {
-      if (!currentUser || isGuestUser) {
-        msg.innerHTML = '<span style="color:#DC3545;">' +
-          'Solo para cuentas registradas</span>';
-        appliedCoupon = null;
-        updateCartUI();
-        return;
-      }
-      if (!currentUser.emailVerified) {
-        msg.innerHTML = '<span style="color:#DC3545;">' +
-          'Debes verificar tu correo primero</span>';
-        appliedCoupon = null;
-        updateCartUI();
-        return;
-      }
-      if (userData && userData.welcomeUsed === true) {
-        msg.innerHTML = '<span style="color:#DC3545;">' +
-          'Ya usaste este cupón</span>';
-        appliedCoupon = null;
-        updateCartUI();
-        return;
-      }
-    }
-    appliedCoupon = found;
-    msg.innerHTML = '<span style="color:#22C55E;">' +
-      'Descuento de ' + found.discount + '% aplicado ' +
-      '<button onclick="removeCoupon()" style="' +
-      'background:none;border:none;color:#DC3545;' +
-      'cursor:pointer;text-decoration:underline;' +
-      'font-size:0.78rem;">Quitar</button></span>';
-    updateCartUI();
-  } catch(e) {
-    console.error('Error cupón:', e);
-    msg.innerHTML = '<span style="color:#DC3545;">' +
-      'Error al verificar cupón</span>';
-  }
-};
-
-window.removeCoupon = function() {
-  appliedCoupon = null;
-  var input = document.getElementById('couponCodeInput');
-  var msg = document.getElementById('couponMessage');
-  if (input) input.value = '';
-  if (msg) msg.innerHTML = '';
-  updateCartUI();
-};
-  // ============================================================
-// AUTH
-// ============================================================
-window.switchToLogin = function() {
-  closeModal('registerModal');
-  closeModal('guestModal');
-  var el = document.getElementById('loginModal');
-  if (el) el.classList.add('active');
-};
-
-window.switchToRegister = function() {
-  closeModal('loginModal');
-  closeModal('guestModal');
-  var el = document.getElementById('registerModal');
-  if (el) el.classList.add('active');
-};
-
-window.openLoginModal = function() {
-  var err = document.getElementById('loginError');
-  if (err) err.textContent = '';
-  var el = document.getElementById('loginModal');
-  if (el) el.classList.add('active');
-};
-
-window.openRegisterModal = function() {
-  var err = document.getElementById('registerError');
-  if (err) err.textContent = '';
-  var el = document.getElementById('registerModal');
-  if (el) el.classList.add('active');
-};
-
-window.openGuestModal = function() {
-  var err = document.getElementById('guestError');
-  if (err) err.textContent = '';
-  var el = document.getElementById('guestModal');
-  if (el) el.classList.add('active');
-};
-
-var registerFormEl = document.getElementById('registerForm');
-if (registerFormEl) {
-  registerFormEl.addEventListener('submit', async function(e) {
-    e.preventDefault();
-    var name = document.getElementById('regName').value.trim();
-    var email = document.getElementById('regEmail')
-      .value.trim().toLowerCase();
-    var phone = document.getElementById('regPhone').value.trim();
-    var password = document.getElementById('regPassword').value;
-    var btn = document.getElementById('registerBtn');
-    var err = document.getElementById('registerError');
-    err.textContent = '';
-    if (!name || name.length < 2) {
-      err.textContent = 'Ingresa tu nombre completo';
-      return;
-    }
-    try { normalizarTelefono(phone); }
-    catch(e2) { err.textContent = e2.message; return; }
-    btn.disabled = true;
-    btn.textContent = 'Creando cuenta...';
-    try {
-      await registrarCliente(name, email, password, phone);
-      closeModal('registerModal');
-      document.getElementById('registerForm').reset();
-      showToast('¡Bienvenido ' + name + '!', 'success');
-    } catch (e2) {
-      console.error('Error registro:', e2);
-      var m = 'No se pudo crear la cuenta.';
-      if (e2.code === 'phone-taken') {
-        m = 'Ese teléfono ya está registrado.';
-      } else if (e2.code === 'auth/email-already-in-use') {
-        m = 'Ese correo ya está registrado.';
-      } else if (e2.code === 'auth/weak-password') {
-        m = 'Contraseña muy débil (mín 6 caracteres).';
-      } else if (e2.code === 'auth/invalid-email') {
-        m = 'El correo no es válido.';
-      } else if (e2.code === 'invalid-phone') {
-        m = e2.message;
-      } else if (e2.code === 'batch-failed') {
-        m = e2.message;
-      }
-      err.textContent = m;
-    } finally {
-      btn.disabled = false;
-      btn.textContent = 'Crear Cuenta';
-    }
-  });
-}
-
-var loginFormEl = document.getElementById('loginForm');
-if (loginFormEl) {
-  loginFormEl.addEventListener('submit', async function(e) {
-    e.preventDefault();
-    var email = document.getElementById('loginEmail')
-      .value.trim().toLowerCase();
-    var password = document.getElementById('loginPassword').value;
-    var btn = document.getElementById('loginBtn');
-    var err = document.getElementById('loginError');
-    err.textContent = '';
-    btn.disabled = true;
-    btn.textContent = 'Ingresando...';
-    try {
-      await loginCliente(email, password);
-      closeModal('loginModal');
-      document.getElementById('loginForm').reset();
-      showToast('Sesión iniciada', 'success');
-    } catch (e2) {
-      console.error('Error login:', e2);
-      var m = 'No se pudo iniciar sesión.';
-      if (e2.code === 'auth/invalid-credential' ||
-          e2.code === 'auth/wrong-password' ||
-          e2.code === 'auth/user-not-found') {
-        m = 'Correo o contraseña incorrectos.';
-      } else if (e2.code === 'auth/too-many-requests') {
-        m = 'Demasiados intentos. Espera un momento.';
-      } else if (e2.code === 'no-user-data') {
-        m = 'Cuenta sin datos. Contacta soporte.';
-      }
-      err.textContent = m;
-    } finally {
-      btn.disabled = false;
-      btn.textContent = 'Ingresar';
-    }
-  });
-}
-
-var guestFormEl = document.getElementById('guestForm');
-if (guestFormEl) {
-  guestFormEl.addEventListener('submit', async function(e) {
-    e.preventDefault();
-    var name = document.getElementById('guestName').value.trim();
-    var phone = document.getElementById('guestPhone').value.trim();
-    var btn = document.getElementById('guestBtn');
-    var err = document.getElementById('guestError');
-    err.textContent = '';
-    if (!name || name.length < 2) {
-      err.textContent = 'Ingresa tu nombre completo';
-      return;
-    }
-    var telNorm;
-    try { telNorm = normalizarTelefono(phone); }
-    catch(e2) { err.textContent = e2.message; return; }
-    btn.disabled = true;
-    btn.textContent = 'Continuando...';
-    try {
-      await loginAnonimo();
-      guestName = name;
-      guestPhone = telNorm;
-      isGuestUser = true;
-      localStorage.setItem('akira_guest_name', name);
-      localStorage.setItem('akira_guest_phone', telNorm);
-      closeModal('guestModal');
-      showToast('Listo, continúa con tu pedido', 'success');
-      var checkoutModal = document.getElementById('checkoutModal');
-      if (checkoutModal) checkoutModal.classList.add('active');
-      updateCheckoutTotals();
-    } catch (e2) {
-      console.error('Error invitado:', e2);
-      err.textContent = 'No se pudo continuar como invitado.';
-    } finally {
-      btn.disabled = false;
-      btn.textContent = 'Continuar';
-    }
-  });
-}
-
-window.olvidePassword = async function() {
-  var email = prompt(
-    'Ingresa tu correo para restablecer la contraseña:'
-  );
-  if (!email) return;
-  try {
-    await recuperarPassword(email.trim().toLowerCase());
-    showToast('Te enviamos un correo', 'success');
-  } catch (e) {
-    showError('No se pudo enviar el correo');
-  }
-};
-
-window.reenviarVerificacionEmail = async function() {
-  try {
-    await reenviarVerificacion();
-    showToast('Correo de verificación reenviado', 'success');
-  } catch (e) {
-    showError('No se pudo reenviar');
-  }
-};
-
-window.refrescarVerificacionUI = async function() {
-  try {
-    var verificado = await refrescarVerificacion();
-    if (verificado) {
-      if (currentUser) currentUser.emailVerified = true;
-      updateVerifyBanner();
-      updateCartUI();
-      showToast('¡Correo verificado!', 'success');
-    } else {
-      showToast('Aún no está verificado', 'error');
-    }
-  } catch (e) {
-    showError('No se pudo verificar');
-  }
-};
-
-window.cerrarSesionCliente = async function() {
-  if (!confirm('¿Cerrar sesión?')) return;
-  try {
-    closeModal('accountModal');
-    cart = [];
-    saveCart();
-    updateCartUI();
-    guestName = '';
-    guestPhone = '';
-    isGuestUser = false;
-    localStorage.removeItem('akira_guest_name');
-    localStorage.removeItem('akira_guest_phone');
-    await logoutCliente();
-    showToast('Sesión cerrada', 'success');
-  } catch(e) {
-    showError('No se pudo cerrar sesión');
-  }
-};
-
-// ============================================================
-// CUENTA
-// ============================================================
-window.handleAccount = function() {
-  if (currentUser) {
-    openAccountModal();
-  } else {
-    openLoginModal();
-  }
-};
-
-window.openAccountModal = function() {
-  var info = document.getElementById('accountInfo');
-  if (!info || !currentUser) return;
-  var html = '';
-  if (isGuestUser) {
-    html += '<div style="margin-bottom:0.5rem;">' +
-      '<strong>Invitado</strong></div>';
-    html += '<div style="margin-bottom:0.3rem;">' +
-      escapeHTML(guestName || 'Sin nombre') + '</div>';
-    html += '<div style="margin-bottom:0.5rem;">' +
-      escapeHTML(guestPhone || '') + '</div>';
-    html += '<div style="font-size:0.8rem;color:#6C757D;">' +
-      'Regístrate para guardar tus pedidos.</div>';
-  } else {
-    var verificado = currentUser.emailVerified
-      ? '<span class="badge-verified ok">Verificado</span>'
-      : '<span class="badge-verified pending">' +
-        'Sin verificar</span>';
-    html += '<div style="margin-bottom:0.4rem;">';
-    html += '<strong>' + escapeHTML(
-      (userData && userData.name) || 'Cliente'
-    ) + '</strong>';
-    html += '</div>';
-    html += '<div style="margin-bottom:0.3rem;">';
-    html += escapeHTML(currentUser.email || '');
-    html += '</div>';
-    html += '<div style="margin-bottom:0.3rem;">';
-    html += escapeHTML(
-      (userData && userData.phone) || 'Sin teléfono'
-    );
-    html += '</div>';
-    if (userData && userData.customerCode) {
-      html += '<div style="margin-bottom:0.3rem;">';
-      html += 'Código: ' +
-        escapeHTML(userData.customerCode) + '</div>';
-    }
-    html += '<div>' + verificado + '</div>';
-  }
-  info.innerHTML = html;
-  document.getElementById('accountModal').classList.add('active');
-};
-
-window.soporteWhatsApp = function() {
-  var clean = telefonoParaWhatsApp(whatsappNumber) ||
+function waNumber() {
+  return telefonoParaWhatsApp(whatsappNumber) ||
     String(whatsappNumber).replace(/\D/g, '');
-  var nombre = isGuestUser
-    ? (guestName || 'Invitado')
-    : ((userData && userData.name) || 'Cliente');
-  var msg = 'Hola, soy ' + nombre +
-    '. Necesito ayuda con mi cuenta.';
-  window.open(
-    'https://wa.me/' + clean + '?text=' +
-    encodeURIComponent(msg),
-    '_blank'
-  );
-};
+}
 
-// ============================================================
-// MIS PEDIDOS
-// ============================================================
-window.showMyOrders = async function() {
-  if (!currentUser) {
-    showError('Inicia sesión para ver tus pedidos');
+function abrirWhatsApp(url) {
+  var opened = false;
+  try {
+    opened = !!window.open(url, '_blank', 'noopener');
+  } catch (e) { opened = false; }
+  if (!opened) window.location.href = url;
+}
+
+window.pedirPorWhatsApp = function() {
+  if (cart.length === 0) {
+    showError('Tu carrito está vacío');
     return;
   }
-  closeModal('accountModal');
-  var list = document.getElementById('ordersList');
-  if (list) {
-    list.innerHTML = '<div class="loading-state">' +
-      '<div>Cargando pedidos...</div></div>';
-  }
-  var modal = document.getElementById('ordersModal');
-  if (modal) modal.classList.add('active');
-  try {
-    var q = query(
-      collection(db, 'orders'),
-      where('userId', '==', currentUser.uid)
-    );
-    var snap = await getDocs(q);
-    var mine = [];
-    snap.forEach(function(d) {
-      var data = d.data();
-      data.id = d.id;
-      mine.push(data);
-    });
-    if (!list) return;
-    if (mine.length === 0) {
-      list.innerHTML = '<div style="text-align:center;' +
-        'color:#6C757D;padding:2rem;">' +
-        'Aún no tienes pedidos</div>';
-      return;
-    }
-    mine.sort(function(a, b) {
-      var tA = a.date ? new Date(a.date).getTime() : 0;
-      var tB = b.date ? new Date(b.date).getTime() : 0;
-      return tB - tA;
-    });
-    var statusLabels = {
-      pending: 'Pendiente',
-      confirmed: 'Confirmado',
-      shipped: 'En camino',
-      ready: 'Listo para retirar',
-      delivered: 'Entregado',
-      cancelled: 'Cancelado',
-      expired: 'Expirado',
-      cancel_requested: 'Cancelación solicitada'
-    };
-    var html = '';
-    mine.forEach(function(o) {
-      var st = statusLabels[o.status] || o.status;
-      html += '<div class="order-item">';
-      html += '<div class="order-header">';
-      html += '<div><strong>#' +
-        (o.orderCode || o.id.slice(-6)) + '</strong><br>';
-      html += '<small style="color:#6C757D;">';
-      html += o.date ? new Date(o.date).toLocaleString() : '';
-      html += '</small></div>';
-      html += '<span class="order-status ' + o.status +
-        '">' + st + '</span></div>';
-      var items = o.items || [];
-      html += '<div style="margin:0.5rem 0;font-size:0.85rem;">';
-      items.forEach(function(it) {
-        html += '<div>' + escapeHTML(it.name) + ' x' +
-          it.quantity + '</div>';
-      });
-      html += '</div>';
-      html += '<div style="font-weight:800;color:#C2410C;' +
-        'font-size:1.05rem;">';
-      html += 'Total: $' + Number(o.total || 0).toFixed(2);
-      html += ' / Bs. ' +
-        (Number(o.total || 0) * bcvRate).toFixed(2);
-      html += '</div>';
-      if (o.status === 'pending' && !o.cancelRequested) {
-        html += '<button class="order-cancel-btn" ';
-        html += 'onclick="cancelarPedido(\'' + o.id +
-          '\')">Solicitar cancelación</button>';
-      } else if (o.status === 'cancel_requested' ||
-                 o.cancelRequested) {
-        html += '<div style="font-size:0.82rem;' +
-          'color:#856404;margin-top:0.5rem;">' +
-          'Esperando confirmación del administrador</div>';
-      }
-      html += '</div>';
-    });
-    list.innerHTML = html;
-  } catch (error) {
-    console.error('Error:', error);
-    if (list) {
-      list.innerHTML = '<div style="text-align:center;' +
-        'color:#DC3545;padding:2rem;">' +
-        'No se pudieron cargar tus pedidos</div>';
-    }
-  }
+  var sub = 0;
+  var msg = 'Hola, quisiera pedir estos repuestos:\n\n';
+  cart.forEach(function(item) {
+    var line = Number(item.price) * item.quantity;
+    sub += line;
+    msg += '- ' + item.name + ' x' + item.quantity +
+      ' = $' + line.toFixed(2) + '\n';
+  });
+  var total = sub;
+  msg += '\nTotal: $' + total.toFixed(2) +
+    ' / Bs. ' + (total * bcvRate).toFixed(2) +
+    ' (BCV ' + bcvRate + ')';
+  msg += '\n\n¿Me confirman disponibilidad y forma de pago?';
+  abrirWhatsApp('https://wa.me/' + waNumber() +
+    '?text=' + encodeURIComponent(msg));
 };
 
-window.cancelarPedido = async function(orderId) {
-  if (!currentUser) return;
-  if (!confirm('¿Solicitar cancelación de este pedido?')) return;
-  try {
-    await updateDoc(doc(db, 'orders', orderId), {
-      cancelRequested: true
-    });
-    showToast('Solicitud enviada. El admin la revisará.', 'success');
-    showMyOrders();
-  } catch(e) {
-    console.error('Error:', e);
-    showError('No se pudo solicitar la cancelación');
-  }
+window.pedirProducto = function(productId) {
+  var p = products.find(function(x) { return x.id === productId; });
+  if (!p) return;
+  var fp = formatPrices(p.price, p.discount);
+  var msg = 'Hola, me interesa este repuesto:\n\n' + p.name +
+    (p.code ? ' (Código ' + p.code + ')' : '') +
+    '\nPrecio: $' + fp.finalPrice.toFixed(2) +
+    ' / Bs. ' + fp.priceBs.toFixed(2) +
+    '\n\n¿Está disponible?';
+  abrirWhatsApp('https://wa.me/' + waNumber() +
+    '?text=' + encodeURIComponent(msg));
 };
 
-// ============================================================
-// HEADER / BANNER
-// ============================================================
-function updateHeaderButtons() {
-  var accountText = document.getElementById('accountText');
-  if (!accountText) return;
-  if (currentUser) {
-    if (isGuestUser) {
-      accountText.textContent = 'Invitado';
-    } else {
-      var nombre = (userData && userData.name) || 'Cuenta';
-      accountText.textContent = nombre.split(' ')[0];
-    }
-  } else {
-    accountText.textContent = 'Cuenta';
+window.copiarEnlaceProducto = function(productId) {
+  var url = location.origin + location.pathname + '?p=' +
+    encodeURIComponent(productId);
+  function ok() { showToast('Enlace copiado', 'success'); }
+  function fallback() {
+    try {
+      var t = document.createElement('textarea');
+      t.value = url;
+      t.style.position = 'fixed';
+      t.style.opacity = '0';
+      document.body.appendChild(t);
+      t.select();
+      document.execCommand('copy');
+      t.remove();
+      ok();
+    } catch (e) { showError('No se pudo copiar. Enlace: ' + url); }
   }
-}
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(url).then(ok, fallback);
+  } else { fallback(); }
+};
 
-function updateVerifyBanner() {
-  var banner = document.getElementById('verifyBanner');
-  if (!banner) return;
-  if (currentUser && !isGuestUser &&
-      !currentUser.emailVerified) {
-    banner.classList.add('active');
-  } else {
-    banner.classList.remove('active');
-  }
-}
+window.compartirProducto = function(productId) {
+  var p = products.find(function(x) { return x.id === productId; });
+  if (!p) return;
+  var fp = formatPrices(p.price, p.discount);
+  var msg = '*' + p.name + '*\n';
+  if (p.code) msg += 'Código: ' + p.code + '\n';
+  msg += 'Precio: $' + fp.finalPrice.toFixed(2) +
+    ' / Bs. ' + fp.priceBs.toFixed(2) + '\n';
+  (p.specifications || []).forEach(function(s) {
+    if (s && s.key && s.value) msg += s.key + ': ' + s.value + '\n';
+  });
+  msg += '\nVer en Akira Motors: ' + location.origin +
+    location.pathname + '?p=' + encodeURIComponent(p.id);
+  abrirWhatsApp('https://wa.me/?text=' + encodeURIComponent(msg));
+};
 
 function updateWhatsAppLinks() {
-  var clean = telefonoParaWhatsApp(whatsappNumber) ||
-    String(whatsappNumber).replace(/\D/g, '');
   var floatBtn = document.getElementById('whatsappFloat');
   if (floatBtn) {
-    floatBtn.href = 'https://wa.me/' + clean +
+    floatBtn.href = 'https://wa.me/' + waNumber() +
       '?text=' + encodeURIComponent(
         'Hola, tengo una consulta sobre repuestos.'
       );
   }
 }
 
-// ============================================================
-// CHECKOUT
-// ============================================================
-window.openCheckout = function() {
-  if (cart.length === 0) {
-    showError('Tu carrito está vacío');
-    return;
-  }
-  toggleCart();
-  if (!currentUser) {
-    showToast('Continúa como invitado o inicia sesión');
-    setTimeout(function() {
-      openGuestModal();
-    }, 400);
-    return;
-  }
-  selectCheckoutDelivery(deliveryMode);
-  updateCheckoutTotals();
-  document.getElementById('checkoutModal').classList.add('active');
-};
-
-window.selectCheckoutDelivery = function(mode) {
-  checkoutDeliveryMode = mode;
-  var pu = document.getElementById('checkoutPickup');
-  var de = document.getElementById('checkoutDelivery');
-  if (pu) pu.classList.toggle('active', mode === 'pickup');
-  if (de) de.classList.toggle('active', mode === 'delivery');
-  var df = document.getElementById('deliveryFields');
-  if (df) df.style.display = mode === 'delivery' ?
-    'block' : 'none';
-  var pl = document.getElementById('pickupMapLink');
-  if (pl) pl.style.display = mode === 'pickup' ?
-    'block' : 'none';
-  if (mode === 'pickup' && pickupMapsUrl) {
-    var link = document.getElementById('pickupMapsLink');
-    if (link) link.href = pickupMapsUrl;
-  }
-  if (mode === 'pickup') {
-    currentDeliveryCost = 0;
-    currentDistanceKm = 0;
-    currentDeliveryFree = false;
-  }
-  updateCheckoutTotals();
-};
-
-function calcularDistanciaKm(lat1, lng1, lat2, lng2) {
-  var R = 6371;
-  var dLat = (lat2 - lat1) * Math.PI / 180;
-  var dLng = (lng2 - lng1) * Math.PI / 180;
-  var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-    Math.cos(lat1 * Math.PI / 180) *
-    Math.cos(lat2 * Math.PI / 180) *
-    Math.sin(dLng/2) * Math.sin(dLng/2);
-  return R * 2 * Math.atan2(
-    Math.sqrt(a), Math.sqrt(1 - a)
-  );
-}
-
-window.getLocation = function() {
-  if (!navigator.geolocation) {
-    showError('Tu navegador no soporta geolocalización');
-    return;
-  }
-  var result = document.getElementById('locationResult');
-  if (result) {
-    result.className = 'location-card';
-    result.textContent = 'Obteniendo ubicación...';
-  }
-  navigator.geolocation.getCurrentPosition(
-    function(pos) {
-      var lat = pos.coords.latitude;
-      var lng = pos.coords.longitude;
-      document.getElementById('gpsLat').value = lat;
-      document.getElementById('gpsLng').value = lng;
-      var storeLat = deliveryConfig.storeLat;
-      var storeLng = deliveryConfig.storeLng;
-      if (!storeLat || !storeLng) {
-        result.className = 'location-card error';
-        result.innerHTML = 'La tienda no ha configurado ' +
-          'su ubicación. Contáctanos por WhatsApp.';
-        return;
-      }
-      var dist = calcularDistanciaKm(
-        storeLat, storeLng, lat, lng
-      );
-      var distReal = dist * (deliveryConfig.factor || 1.2);
-      var cost = distReal * (deliveryConfig.rateKm || 1.30);
-      if (cost < (deliveryConfig.min || 3)) {
-        cost = deliveryConfig.min || 3;
-      }
-      var maxKm = deliveryConfig.max || 25;
-      if (distReal > maxKm) {
-        result.className = 'location-card error';
-        result.innerHTML = 'Estás fuera del área ' +
-          'de entrega. Solo hasta ' + maxKm + ' km.';
-        currentDeliveryCost = 0;
-        currentDistanceKm = 0;
-        currentDeliveryFree = false;
-        updateCheckoutTotals();
-        return;
-      }
-      currentDistanceKm = distReal;
-      currentDeliveryCost = cost;
-      result.className = 'location-card success';
-      result.innerHTML = 'Ubicación obtenida.<br>' +
-        'Entrega disponible en tu zona.';
-      updateCheckoutTotals();
-    },
-    function(err) {
-      result.className = 'location-card error';
-      result.innerHTML =
-        'No se pudo obtener ubicación: ' + err.message;
-    },
-    { enableHighAccuracy: true, timeout: 10000 }
-  );
-};
-
-function esPromoVigente() {
-  if (!deliveryConfig.freeShipActive) return false;
-  if (!deliveryConfig.freeShipPromo) return false;
-  if (!deliveryConfig.freeShipPromoUntil) return false;
-  var hoy = new Date();
-  var fin = new Date(
-    deliveryConfig.freeShipPromoUntil + 'T23:59:59'
-  );
-  return fin >= hoy;
-}
-
-function calcularDeliveryFree(subtotal) {
-  if (!deliveryConfig.freeShipActive) return false;
-  if (esPromoVigente()) {
-    var umbralPromo = deliveryConfig.freeShipPromoAmount || 0;
-    if (umbralPromo === 0) return true;
-    return subtotal >= umbralPromo;
-  }
-  return subtotal >= (deliveryConfig.freeShipBase || 40);
-}
-
-function updateCheckoutTotals() {
-  var subtotalBase = 0;
-  cart.forEach(function(item) {
-    subtotalBase += Number(item.price) * item.quantity;
-  });
-  var descuento = 0;
-  if (appliedCoupon) {
-    descuento = subtotalBase *
-      (appliedCoupon.discount / 100);
-    subtotalBase -= descuento;
-  }
-  var ivaUsd = deliveryConfig.ivaEnabled !== false
-    ? subtotalBase * 0.16 : 0;
-  var deliveryFee = checkoutDeliveryMode === 'delivery'
-    ? currentDeliveryCost : 0;
-  var subtotalConIva = subtotalBase + ivaUsd;
-  var esGratis = checkoutDeliveryMode === 'delivery' &&
-    currentDistanceKm > 0 &&
-    calcularDeliveryFree(subtotalConIva);
-  currentDeliveryFree = esGratis;
-  if (esGratis) deliveryFee = 0;
-  var totalUsd = subtotalConIva + deliveryFee;
-  var html = '';
-  html += '<div class="row">';
-  html += '<span>Subtotal:</span>';
-  html += '<span>$' + subtotalBase.toFixed(2) +
-    ' / Bs. ' + (subtotalBase * bcvRate).toFixed(2) +
-    '</span></div>';
-  if (appliedCoupon) {
-    html += '<div class="row discount">';
-    html += '<span>Descuento (' +
-      escapeHTML(appliedCoupon.code) + '):</span>';
-    html += '<span>-$' + descuento.toFixed(2) + '</span></div>';
-  }
-  if (deliveryConfig.ivaEnabled !== false) {
-    html += '<div class="row">';
-    html += '<span>IVA (16%):</span>';
-    html += '<span>$' + ivaUsd.toFixed(2) +
-      ' / Bs. ' + (ivaUsd * bcvRate).toFixed(2) +
-      '</span></div>';
-  }
-  if (checkoutDeliveryMode === 'delivery' &&
-      currentDeliveryCost > 0) {
-    if (esGratis) {
-      html += '<div class="row discount">';
-      html += '<span>Delivery:</span>';
-      html += '<span>GRATIS</span></div>';
-    } else {
-      html += '<div class="row">';
-      html += '<span>Delivery:</span>';
-      html += '<span>$' + currentDeliveryCost.toFixed(2) +
-        ' / Bs. ' +
-        (currentDeliveryCost * bcvRate).toFixed(2) +
-        '</span></div>';
-    }
-  }
-  html += '<div class="row total">';
-  html += '<span>TOTAL:</span>';
-  html += '<span>$' + totalUsd.toFixed(2) +
-    ' / Bs. ' + (totalUsd * bcvRate).toFixed(2) +
-    '</span></div>';
-  var tot = document.getElementById('checkoutTotals');
-  if (tot) tot.innerHTML = html;
-
-  var notice = document.getElementById('freeShipNotice');
-  if (!notice) return;
-  if (esGratis) {
-    notice.style.display = 'block';
-    notice.innerHTML = 'Tu delivery es GRATIS';
-  } else if (deliveryConfig.freeShipActive
-      && checkoutDeliveryMode === 'delivery'
-      && currentDistanceKm > 0) {
-    var umbral = esPromoVigente()
-      ? (deliveryConfig.freeShipPromoAmount || 0)
-      : (deliveryConfig.freeShipBase || 40);
-    if (umbral > 0 && subtotalConIva < umbral) {
-      var faltan = umbral - subtotalConIva;
-      notice.style.display = 'block';
-      notice.style.background = '#FFF3CD';
-      notice.style.color = '#856404';
-      notice.innerHTML = 'Te faltan $' +
-        faltan.toFixed(2) + ' para delivery GRATIS';
-    } else {
-      notice.style.display = 'none';
-    }
-  } else {
-    notice.style.display = 'none';
-  }
-}
-
-// ============================================================
-// CONFIRMAR PEDIDO
-// ============================================================
-window.confirmOrder = async function() {
-  if (cart.length === 0) {
-    showError('Tu carrito está vacío');
-    return;
-  }
-  if (!currentUser) {
-    showError('Debes continuar como invitado o iniciar sesión');
-    openGuestModal();
-    return;
-  }
-  if (checkoutDeliveryMode === 'delivery') {
-    if (currentDeliveryCost <= 0 && !currentDeliveryFree) {
-      showError('Primero debes obtener tu ubicación');
-      return;
-    }
-  }
-  var btn = document.getElementById('confirmOrderBtn');
-  if (btn) {
-    btn.disabled = true;
-    btn.textContent = 'Enviando pedido...';
-  }
-
-  var finalName, finalPhone, finalEmail, finalCode, finalIsGuest;
-  if (isGuestUser) {
-    finalName = (guestName || '').trim();
-    finalPhone = (guestPhone || '').trim();
-    finalEmail = null;
-    finalCode = null;
-    finalIsGuest = true;
-  } else {
-    finalName = ((userData && userData.name) || '').trim();
-    finalPhone = ((userData && userData.phone) || '').trim();
-    finalEmail = currentUser.email;
-    finalCode = (userData && userData.customerCode) || '';
-    finalIsGuest = false;
-  }
-  if (!finalName || finalName.length < 2) {
-    showError('Falta tu nombre. Complétalo en tu cuenta ' +
-      'o como invitado.');
-    if (btn) {
-      btn.disabled = false;
-      btn.textContent = 'Confirmar por WhatsApp';
-    }
-    return;
-  }
-  try { finalPhone = normalizarTelefono(finalPhone); }
-  catch (e) {
-    showError(e.message);
-    if (btn) {
-      btn.disabled = false;
-      btn.textContent = 'Confirmar por WhatsApp';
-    }
-    return;
-  }
-
-  var subtotalBase = 0;
-  cart.forEach(function(item) {
-    subtotalBase += Number(item.price) * item.quantity;
-  });
-  var descuento = 0;
-  if (appliedCoupon) {
-    descuento = subtotalBase *
-      (appliedCoupon.discount / 100);
-    subtotalBase -= descuento;
-  }
-  var ivaUsd = deliveryConfig.ivaEnabled !== false
-    ? subtotalBase * 0.16 : 0;
-  var deliveryFeeReal = currentDeliveryCost;
-  var deliveryFee = checkoutDeliveryMode === 'delivery'
-    ? currentDeliveryCost : 0;
-  var subtotalConIva = subtotalBase + ivaUsd;
-  var esGratis = checkoutDeliveryMode === 'delivery' &&
-    currentDistanceKm > 0 &&
-    calcularDeliveryFree(subtotalConIva);
-  if (esGratis) deliveryFee = 0;
-  var totalUsd = subtotalConIva + deliveryFee;
-  var reservationMinutes =
-    Number(deliveryConfig.reservationMinutes) || 30;
-  var expiresAt = Date.now() +
-    (reservationMinutes * 60 * 1000);
-
-  var orderData = {
-    userId: currentUser.uid,
-    userName: finalName,
-    userEmail: finalEmail,
-    userPhone: finalPhone,
-    customerCode: finalCode,
-    isGuest: finalIsGuest,
-    items: cart.map(function(item) {
-      return {
-        id: item.id,
-        name: item.name,
-        quantity: item.quantity,
-        price: item.price
-      };
-    }),
-    subtotal: subtotalBase + descuento,
-    discount: descuento,
-    couponCode: (appliedCoupon && !finalIsGuest) ?
-      appliedCoupon.code : null,
-    couponId: (appliedCoupon && !finalIsGuest) ?
-      appliedCoupon.id : null,
-    iva: ivaUsd,
-    deliveryFee: deliveryFee,
-    deliveryCostReal: deliveryFeeReal,
-    deliveryFree: esGratis,
-    total: totalUsd,
-    deliveryMode: checkoutDeliveryMode,
-    status: 'pending',
-    stockDeducted: false,
-    stockReturned: false,
-    couponCounted: false,
-    couponReturned: false,
-    reservationExpiresAt: expiresAt,
-    orderCode: generarOrderCode(),
-    date: new Date().toISOString()
-  };
-
-  if (checkoutDeliveryMode === 'delivery') {
-    var addrEl = document.getElementById('deliveryAddressInput');
-    orderData.address = addrEl ? addrEl.value : '';
-    orderData.gpsLat = document.getElementById('gpsLat').value;
-    orderData.gpsLng = document.getElementById('gpsLng').value;
-    orderData.distanceKm = currentDistanceKm;
-  }
-
-  Object.keys(orderData).forEach(function(k) {
-    if (orderData[k] === undefined) {
-      orderData[k] = null;
-    }
-  });
-
-  var cleanNumber = telefonoParaWhatsApp(whatsappNumber) ||
-    String(whatsappNumber).replace(/\D/g, '');
-  var rawMessage = '¡Hola ' + siteConfig.companyName + '!\n\n';
-  if (finalIsGuest) {
-    rawMessage += 'Soy un cliente invitado.\n';
-  }
-  rawMessage += 'Pedido: #' + orderData.orderCode + '\n';
-  rawMessage += 'Nombre: ' + finalName + '\n';
-  rawMessage += 'Teléfono: ' + finalPhone + '\n';
-  rawMessage += '\nProductos:\n';
-  cart.forEach(function(item) {
-    rawMessage += '- ' + item.name + ' x' +
-      item.quantity + ' = $' +
-      (Number(item.price) * item.quantity).toFixed(2) + '\n';
-  });
-  if (appliedCoupon && !finalIsGuest) {
-    rawMessage += '\nCupón: ' + appliedCoupon.code +
-      ' (-' + appliedCoupon.discount + '%)';
-  }
-  rawMessage += '\nSubtotal: $' +
-    (subtotalBase + descuento).toFixed(2);
-  if (descuento > 0) {
-    rawMessage += '\nDescuento: -$' + descuento.toFixed(2);
-  }
-  if (deliveryConfig.ivaEnabled !== false) {
-    rawMessage += '\nIVA: $' + ivaUsd.toFixed(2);
-  }
-  if (checkoutDeliveryMode === 'delivery') {
-    if (esGratis) {
-      rawMessage += '\nDelivery: GRATIS';
-    } else if (deliveryFee > 0) {
-      rawMessage += '\nDelivery: $' + deliveryFee.toFixed(2);
-    }
-  }
-  rawMessage += '\nTotal: $' + totalUsd.toFixed(2);
-  rawMessage += '\nEntrega: ' +
-    (checkoutDeliveryMode === 'pickup' ? 'Pickup' : 'Delivery');
-  if (checkoutDeliveryMode === 'delivery') {
-    var addr2 = document.getElementById(
-      'deliveryAddressInput'
-    ).value;
-    if (addr2) rawMessage += '\nDirección: ' + addr2;
-  }
-  var payInfo = (deliveryConfig.paymentInfoText || '').trim() ||
-    'Te enviaremos los datos de pago por WhatsApp.';
-  rawMessage += '\n\n' + payInfo;
-  rawMessage += '\n\nTu pedido queda registrado. ' +
-    'Te confirmamos disponibilidad y datos de pago por WhatsApp.';
-
-  var whatsappUrl = 'https://wa.me/' + cleanNumber +
-    '?text=' + encodeURIComponent(rawMessage);
-
+// Enlace directo a un producto: ?p=ID
+function abrirProductoDesdeUrl() {
   try {
-    await addDoc(collection(db, 'orders'), orderData);
-  } catch (e) {
-    console.error('Error guardando pedido:', e);
-    showError('No se pudo guardar el pedido. Intenta de nuevo.');
-    if (btn) {
-      btn.disabled = false;
-      btn.textContent = 'Confirmar por WhatsApp';
+    var id = new URLSearchParams(location.search).get('p');
+    if (id && /^[A-Za-z0-9_-]{1,40}$/.test(id) &&
+        products.some(function(x) { return x.id === id; })) {
+      openProductDetail(id);
     }
-    return;
-  }
-
-  var fallbackBox = document.getElementById('whatsappFallback');
-  var fallbackLink = document.getElementById(
-    'whatsappFallbackLink'
-  );
-  if (fallbackLink) fallbackLink.href = whatsappUrl;
-  if (fallbackBox) fallbackBox.style.display = 'block';
-
-  var opened = false;
-  try {
-    var win = window.open(whatsappUrl, '_blank');
-    opened = !!win;
-  } catch (e) {
-    console.error('window.open falló:', e);
-  }
-  if (!opened) {
-    window.location.href = whatsappUrl;
-  }
-
-  cart = [];
-  appliedCoupon = null;
-  currentDeliveryCost = 0;
-  currentDistanceKm = 0;
-  currentDeliveryFree = false;
-  var couponInput = document.getElementById('couponCodeInput');
-  if (couponInput) couponInput.value = '';
-  var couponMsg = document.getElementById('couponMessage');
-  if (couponMsg) couponMsg.innerHTML = '';
-  updateCartUI();
-  saveCart();
-
-  showToast('Pedido enviado. Espera confirmación por ' +
-    'WhatsApp.', 'success');
-
-  setTimeout(function() {
-    location.reload();
-  }, 3500);
-};
-
-// ============================================================
-// AUTH LISTENER
-// ============================================================
-escucharSesion(async function(user) {
-  if (!user) {
-    currentUser = null;
-    userData = null;
-    isGuestUser = false;
-    updateHeaderButtons();
-    updateVerifyBanner();
-    return;
-  }
-  currentUser = user;
-  isGuestUser = !!user.isAnonymous;
-  if (isGuestUser) {
-    guestName = localStorage.getItem('akira_guest_name') || '';
-    guestPhone = localStorage.getItem('akira_guest_phone') || '';
-    userData = null;
-  } else if (user.isAdmin) {
-    userData = null;
-    showToast('Estás como administrador. Abre en ' +
-      'ventana privada para probar la tienda.', 'error');
-    setTimeout(function() {
-      showError('Cierra sesión admin o usa ventana privada.');
-    }, 1500);
-  } else {
-    try {
-      var ud = await getDoc(doc(db, 'users', user.uid));
-      userData = ud.exists() ? ud.data() : null;
-    } catch(e) {
-      userData = null;
-    }
-  }
-  updateHeaderButtons();
-  updateVerifyBanner();
-  updateCartUI();
-});
+  } catch (e) { /* ignorar */ }
+}
 
 // ============================================================
 // INICIAR
 // ============================================================
-loadData();
+loadData().then(abrirProductoDesdeUrl);
 </script>
 </body>
 </html>
