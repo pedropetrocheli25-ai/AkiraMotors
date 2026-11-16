@@ -1107,6 +1107,10 @@ button:focus:not(:focus-visible) { outline: none; }
   box-shadow: var(--sombra-naranja);
   min-height: 48px;
 }
+.detail-add-btn.wa { background: #1FA855; color: #FFFFFF; margin-top: 0.5rem; }
+.detail-add-btn.dark { background: #111111; color: #FFFFFF; margin-top: 0.5rem; }
+.detail-add-btn.copy { background: #FFFFFF; color: #111111; margin-top: 0.5rem;
+  border: 2px solid #111111; box-shadow: none; }
 .detail-add-btn:hover:not(:disabled) {
   background: var(--naranja-hover);
   transform: translateY(-1px);
@@ -2044,7 +2048,10 @@ footer {
   position: fixed;
   bottom: 90px;
   left: 50%;
-  transform: translateX(-50%) translateY(120%);
+  transform: translateX(-50%) translateY(400%);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
   background: var(--negro);
   color: white;
   padding: 0.9rem 1.3rem;
@@ -2053,12 +2060,15 @@ footer {
   font-weight: 600;
   z-index: 5000;
   box-shadow: var(--sombra-lg);
-  transition: transform 0.3s ease;
+  transition: transform 0.3s ease, opacity 0.3s ease,
+    visibility 0.3s;
   max-width: 90vw;
   text-align: center;
 }
 .toast.show {
   transform: translateX(-50%) translateY(0);
+  opacity: 1;
+  visibility: visible;
 }
 .toast.success { background: var(--verde); color: var(--texto-sobre-naranja); }
 .toast.error { background: var(--rojo); color: white; }
@@ -2465,7 +2475,8 @@ window.showToast = function(mensaje, tipo) {
   el.textContent = mensaje;
   el.className = 'toast ' + (tipo || '');
   el.classList.add('show');
-  setTimeout(function() {
+  clearTimeout(window.__toastTimer);
+  window.__toastTimer = setTimeout(function() {
     el.classList.remove('show');
   }, 2500);
 };
@@ -2513,6 +2524,27 @@ window.toggleSidebar = function() {
   if (ov) ov.classList.toggle('active');
 };
 
+// ¿Este producto pertenece a categoría / marca / modelo?
+// (misma lógica que usan los filtros de la tienda)
+function productoCoincide(p, catName, brandName, modelName) {
+  if (p.category !== catName) return false;
+  if (brandName) {
+    var b = brandName.toLowerCase();
+    var okB = (p.compatibility || []).some(function(c) {
+      return c.brand && c.brand.toLowerCase().includes(b);
+    }) || (p.brand && p.brand.toLowerCase().includes(b));
+    if (!okB) return false;
+  }
+  if (modelName) {
+    var m = modelName.toLowerCase();
+    var okM = (p.compatibility || []).some(function(c) {
+      return c.model && c.model.toLowerCase().includes(m);
+    });
+    if (!okM) return false;
+  }
+  return true;
+}
+
 function renderDrawerMenu() {
   var container = document.getElementById('drawerMenu');
   if (!container) return;
@@ -2538,6 +2570,10 @@ function renderDrawerMenu() {
     html += 'id="dbl-' + catIdx + '">';
     var vehiculos = cat.vehiculos || [];
     vehiculos.forEach(function(v, brandIdx) {
+      var hayMarca = products.some(function(p) {
+        return productoCoincide(p, cat.nombre, v.marca, null);
+      });
+      if (!hayMarca) return;
       html += '<div class="drawer-brand" ';
       html += 'id="db-' + catIdx + '-' + brandIdx + '" ';
       html += 'onclick="toggleDrawerBrand(event,';
@@ -2548,6 +2584,10 @@ function renderDrawerMenu() {
       html += '<div class="drawer-model-list" ';
       html += 'id="dml-' + catIdx + '-' + brandIdx + '">';
       (v.modelos || []).forEach(function(model, modelIdx) {
+        var hayModelo = products.some(function(p) {
+          return productoCoincide(p, cat.nombre, v.marca, model);
+        });
+        if (!hayModelo) return;
         html += '<div class="drawer-model" ';
         html += 'onclick="filterByModel(event,';
         html += catIdx + ',' + brandIdx + ',';
@@ -3492,16 +3532,13 @@ window.openProductDetail = async function(productId) {
   detailHtml += product.stock === 0 ?
     'No disponible' : 'Agregar al carrito';
   detailHtml += '</button>';
-  detailHtml += '<button class="detail-add-btn" ';
-  detailHtml += 'style="background:#25D366;margin-top:.5rem" ';
+  detailHtml += '<button class="detail-add-btn wa" ';
   detailHtml += 'onclick="pedirProducto(\'' + product.id +
     '\')">Pedir por WhatsApp</button>';
-  detailHtml += '<button class="detail-add-btn" ';
-  detailHtml += 'style="background:#111;margin-top:.5rem" ';
+  detailHtml += '<button class="detail-add-btn dark" ';
   detailHtml += 'onclick="compartirProducto(\'' + product.id +
     '\')">Compartir por WhatsApp</button>';
-  detailHtml += '<button class="detail-add-btn" ';
-  detailHtml += 'style="background:#FF6B1A;margin-top:.5rem" ';
+  detailHtml += '<button class="detail-add-btn copy" ';
   detailHtml += 'onclick="copiarEnlaceProducto(\'' + product.id +
     '\')">Copiar enlace</button>';
   detailHtml += '</div>';
