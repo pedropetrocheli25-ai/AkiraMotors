@@ -139,7 +139,9 @@
         searchTerms: p.searchTerms || '',
         price: Number(p.price) || 0,
         discount: Number(p.discount) || 0,
-        stock: Number(p.stock) || 0
+        stock: Number(p.stock) || 0,
+        thumb: (typeof p.thumbnail === 'string' && p.thumbnail.length < 200000)
+          ? p.thumbnail : ''
       });
     });
     list.sort(function (a, b) {
