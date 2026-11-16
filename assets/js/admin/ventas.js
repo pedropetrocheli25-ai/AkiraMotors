@@ -87,7 +87,7 @@
         (s.items || []).forEach(function (it) {
           units += it.qty;
           var k = it.name;
-          prod[k] = prod[k] || { q: 0, usd: 0 };
+          prod[k] = prod[k] || { q: 0, usd: 0, code: it.code };
           prod[k].q += it.qty; prod[k].usd += it.lineTotal;
         });
         (s.payments || []).forEach(function (p) {
@@ -107,6 +107,10 @@
         return { k: AKS.fmtDate(k), v: day[k] };
       });
 
+      var allP = Object.keys(prod).map(function (k) {
+        return { name: k, code: prod[k].code, q: prod[k].q, usd: prod[k].usd };
+      }).sort(function (a, b) { return b.q - a.q; });
+
       var kp = function (l, v, s) {
         return '<div class="aks-kpi"><div class="aks-muted">' + l + '</div>' +
           '<div style="font-size:1.5rem;font-weight:800">' + v + '</div>' +
@@ -124,6 +128,14 @@
         '</div><div class="admin-card"><h3>Por método de pago</h3>' +
         (payR.length ? bars(payR, AKS.usd) : '<div class="aks-muted">Sin datos</div>') +
         '</div></div>';
+      h += '<div class="admin-card"><h3>Productos vendidos en el periodo</h3>' +
+        (allP.length ? '<div class="aks-wrap"><table class="aks-table"><thead><tr>' +
+        '<th>Código</th><th>Producto</th><th>Unidades</th><th>Total $</th></tr></thead><tbody>' +
+        allP.map(function (x) {
+          return '<tr><td>' + AKS.esc(x.code) + '</td><td>' + AKS.esc(x.name) +
+            '</td><td><strong>' + x.q + '</strong></td><td>' + AKS.usd(x.usd) + '</td></tr>';
+        }).join('') + '</tbody></table></div>'
+        : '<div class="aks-muted">No hay ventas en este periodo.</div>') + '</div>';
       if (dayR.length > 1) {
         h += '<div class="admin-card"><h3>Ventas por día</h3>' + bars(dayR, AKS.usd) + '</div>';
       }

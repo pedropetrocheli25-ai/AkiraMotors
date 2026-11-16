@@ -49,6 +49,8 @@
       '<div class="form-group"><label>Teléfono</label>' +
       '<input type="tel" id="aksK-cphone" maxlength="11" ' +
       'placeholder="0412XXXXXXX"></div>' +
+      '<div class="form-group"><label>RIF / Cédula</label>' +
+      '<input type="text" id="aksK-cdoc" maxlength="20" placeholder="V-12345678"></div>' +
       '<div class="form-group"><label>Descuento general %</label>' +
       '<input type="number" id="aksK-disc" min="0" max="100" step="0.5" ' +
       'value="0"></div></div></div></div>' +
@@ -281,7 +283,8 @@
           profitUsd: profit, payments: p.list, paidUsd: p.paidUsd,
           changeUsd: AKS.r2(Math.max(0, p.paidUsd - t.total)),
           customerName: $('aksK-cname').value.trim(),
-          customerPhone: phone, channel: 'mostrador',
+          customerPhone: phone,
+          customerDoc: $('aksK-cdoc').value.trim(), channel: 'mostrador',
           dateKey: AKS.dateKey(), status: 'completed',
           seller: user, createdAt: nowIso
         };
@@ -295,6 +298,7 @@
       });
       $('aksK-cname').value = '';
       $('aksK-cphone').value = '';
+      $('aksK-cdoc').value = '';
       $('aksK-disc').value = '0';
       AKS.refreshAdminProducts();
       await AKS.loadProducts(true);
@@ -326,16 +330,18 @@
         '</div>';
     }).join('');
     w.document.write('<!doctype html><html><head><meta charset="utf-8">' +
-      '<title>' + AKS.esc(s.saleNumber) + '</title><style>' +
+      '<title>Factura ' + AKS.esc(s.saleNumber) + '</title><style>' +
       'body{font:13px monospace;margin:10px;max-width:340px}' +
       'table{width:100%}hr{border:0;border-top:1px dashed #000}' +
       '</style></head><body><h3 style="text-align:center;margin:0">' +
       AKS.esc(settings.companyName) + '</h3>' +
-      '<div style="text-align:center">Recibo interno · NO es factura fiscal' +
+      '<div style="text-align:center"><strong>FACTURA INTERNA N° ' +
+      AKS.esc(s.saleNumber) + '</strong><br>Documento de control · no es factura fiscal' +
       '</div><hr><div>' + AKS.esc(s.saleNumber) + ' · ' +
       AKS.esc(AKS.fmtDateTime(s.createdAt)) + '</div>' +
       (s.customerName ? '<div>Cliente: ' + AKS.esc(s.customerName) +
-        '</div>' : '') + '<hr><table>' + rows + '</table><hr>' +
+        '</div>' : '') + (s.customerDoc ? '<div>RIF/C.I.: ' +
+        AKS.esc(s.customerDoc) + '</div>' : '') + '<hr><table>' + rows + '</table><hr>' +
       '<table><tr><td>Subtotal</td><td style="text-align:right">' +
       AKS.usd(s.subtotal) + '</td></tr>' +
       (s.discount ? '<tr><td>Descuento</td><td style="text-align:right">-' +
