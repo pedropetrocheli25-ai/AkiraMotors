@@ -2833,7 +2833,14 @@ window.agregarMarca = async function(ci) {
     return v.marca.toLowerCase() === nombre.toLowerCase();
   });
   if (existe) { alert('Ya existe'); return; }
-  veh.push({ marca: nombre, modelos: [] });
+  // Se agrega en TODAS las categorías (si no existe ya en esa)
+  catalogo.categorias.forEach(function(cat) {
+    if (!cat.vehiculos) cat.vehiculos = [];
+    var yaEsta = cat.vehiculos.some(function(v) {
+      return v.marca.toLowerCase() === nombre.toLowerCase();
+    });
+    if (!yaEsta) cat.vehiculos.push({ marca: nombre, modelos: [] });
+  });
   input.value = '';
   await saveCatalogo();
 };
@@ -2855,7 +2862,20 @@ window.agregarModelo = async function(ci, vi) {
   if (marca.modelos.indexOf(nombre) !== -1) {
     alert('Ya existe'); return;
   }
-  marca.modelos.push(nombre);
+  // Se agrega a la misma marca en TODAS las categorías
+  var nombreMarca = marca.marca.toLowerCase();
+  catalogo.categorias.forEach(function(cat) {
+    if (!cat.vehiculos) cat.vehiculos = [];
+    var m = cat.vehiculos.find(function(v) {
+      return v.marca.toLowerCase() === nombreMarca;
+    });
+    if (!m) {
+      m = { marca: marca.marca, modelos: [] };
+      cat.vehiculos.push(m);
+    }
+    if (!m.modelos) m.modelos = [];
+    if (m.modelos.indexOf(nombre) === -1) m.modelos.push(nombre);
+  });
   input.value = '';
   await saveCatalogo();
 };
