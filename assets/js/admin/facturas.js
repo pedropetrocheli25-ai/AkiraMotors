@@ -91,10 +91,89 @@
       '<div class="aks-muted" style="margin-top:.4rem">Tasa BCV: ' + Number(s.rate).toFixed(2) +
       ' · Subtotal ' + AKS.usd(s.subtotal) + (s.discount ? ' · Descuento ' + AKS.usd(s.discount) : '') +
       (s.changeUsd ? ' · Vuelto ' + AKS.usd(s.changeUsd) : '') + ' · Ganancia estimada ' + AKS.usd(s.profitUsd || 0) + '</div>';
+    if (s.refunds && s.refunds.length) {
+      h += '<div class="aks-muted" style="margin-top:.4rem">Devoluciones: ' + s.refunds.map(function (r) {
+        return AKS.esc(AKS.fmtDateTime(r.at)) + ' · ' + AKS.usd(r.amountUsd) + ' por ' + AKS.esc(METHOD[r.method] || r.method) +
+          (r.reason ? ' (' + AKS.esc(r.reason) + ')' : '');
+      }).join('; ') + '</div>';
+    }
+    if (s.status === 'completed') {
+      h += '<div data-ret="' + AKS.esc(s._id) + '" style="margin-top:.6rem;padding-top:.5rem;border-top:1px dashed #ccc">' +
+        '<strong>Devolución parcial</strong> <span class="aks-muted">(cantidad a devolver por producto)</span><br>' +
+        (s.items || []).map(function (x, k) {
+          return '<label style="display:inline-block;margin:.3rem .8rem .3rem 0">' + AKS.esc(x.name) + ' (máx. ' + x.qty +
+            ') <input type="number" min="0" max="' + x.qty + '" step="1" value="0" data-rq="' + k + '" style="width:70px"></label>';
+        }).join('') + '<div class="aks-inline" style="margin-top:.4rem"><select data-rm>' +
+        Object.keys(METHOD).map(function (m) { return '<option value="' + m + '">Reembolso: ' + METHOD[m] + '</option>'; }).join('') +
+        '</select><input type="text" data-rr placeholder="Motivo" style="min-width:200px">' +
+        '<button class="btn btn-danger btn-small" data-act="doreturn" data-id="' + AKS.esc(s._id) + '">Registrar devolución</button></div></div>';
+    }
     if (s.status !== 'completed') {
       h += '<div class="aks-bad">Anulada por ' + AKS.esc(s.voidedBy || '') + ': ' + AKS.esc(s.voidReason || '') + '</div>';
     }
     return h + '</div>';
+  }
+
+  async function doReturn(btn) {
+    var box = btn.closest('[data-ret]'), id = btn.getAttribute('data-id');
+    var qtys = {}, any = false;
+    box.querySelectorAll('[data-rq]').forEach(function (i) {
+      var q = Math.floor(AKS.num(i.value));
+      if (q > 0) { qtys[i.getAttribute('data-rq')] = q; any = true; }
+    });
+    if (!any) { alert('Escribe la cantidad a devolver'); return; }
+    var method = box.querySelector('[data-rm]').value, reason = box.querySelector('[data-rr]').value.trim();
+    if (!reason) { alert('Escribe el motivo'); return; }
+    if (!confirm('¿Registrar la devolución? El stock se repone y la factura se reduce.')) return;
+    var db = AKS.db(), res = null;
+    btn.disabled = true;
+    try {
+      await db.runTransaction(async function (tx) {
+        var ref = db.collection('sales').doc(id), cur = await tx.get(ref);
+        if (!cur.exists || cur.data().status !== 'completed') throw new Error('La venta ya no está activa.');
+        var s = cur.data(), items = s.items.map(function (x) { return Object.assign({}, x); });
+        var keys = Object.keys(qtys), snaps = {}, k, it;
+        for (k = 0; k < keys.length; k++) {
+          it = items[keys[k]];
+          if (!it || qtys[keys[k]] > it.qty) throw new Error('Cantidad mayor a la vendida.');
+          if (!snaps[it.productId]) snaps[it.productId] = await tx.get(db.collection('products').doc(it.productId));
+        }
+        var cRef = s.clientId ? db.collection('clients').doc(s.clientId) : null;
+        var cSnap = cRef ? await tx.get(cRef) : null;
+        var costBack = 0, now = new Date().toISOString(), added = {};
+        for (k = 0; k < keys.length; k++) {
+          it = items[keys[k]]; var q = qtys[keys[k]];
+          it.qty -= q; it.lineTotal = AKS.r2(it.qty * it.unitPrice); costBack += (it.unitCost || 0) * q;
+          var sn = snaps[it.productId];
+          if (sn.exists) {
+            var before = (Number(sn.data().stock) || 0) + (added[it.productId] || 0), after = before + q;
+            added[it.productId] = (added[it.productId] || 0) + q;
+            tx.update(db.collection('products').doc(it.productId), { stock: after, updatedAt: now });
+            AKS.movement(tx, { productId: it.productId, code: it.code, name: it.name, type: 'devolucion', qty: q,
+              stockBefore: before, stockAfter: after, refType: 'sale', refId: id });
+          }
+        }
+        var remaining = items.filter(function (x) { return x.qty > 0; });
+        if (!remaining.length) throw new Error('Se devolvería todo: usa "Anular" en su lugar.');
+        var sub = AKS.r2(items.reduce(function (a, x) { return a + x.qty * x.unitPrice; }, 0));
+        var ratio = s.subtotal > 0 ? (s.discount || 0) / s.subtotal : 0;
+        var disc = AKS.r2(sub * ratio), total = AKS.r2(sub - disc), refund = AKS.r2(s.totalUsd - total);
+        var cur2 = METHOD[method] && /_bs$|movil|punto|transferencia/.test(method) ? 'VES' : 'USD';
+        var amount = cur2 === 'USD' ? refund : AKS.r2(refund * s.rate);
+        var refunds = (s.refunds || []).concat([{ at: now, by: AKS.userLabel(), reason: reason, method: method,
+          currency: cur2, amount: amount, amountUsd: refund }]);
+        tx.update(ref, { items: items, subtotal: sub, discount: disc, totalUsd: total, totalBs: AKS.r2(total * s.rate),
+          costUsd: AKS.r2((s.costUsd || 0) - costBack), profitUsd: AKS.r2(total - ((s.costUsd || 0) - costBack)), refunds: refunds });
+        if (cSnap && cSnap.exists) {
+          tx.update(cRef, { totalSpentUsd: Math.max(0, AKS.r2((Number(cSnap.data().totalSpentUsd) || 0) - refund)) });
+        }
+        res = { refund: refund, amount: amount, cur: cur2 };
+      });
+      alert('Devolución registrada. Devuelve al cliente ' + (res.cur === 'USD' ? AKS.usd(res.amount) : AKS.bs(res.amount)) + '.');
+      AKS.refreshAdminProducts();
+      if (AKS.clientes) AKS.clientes.load(true).catch(function () {});
+      await search();
+    } catch (e) { console.error(e); alert('No se pudo registrar: ' + e.message); btn.disabled = false; }
   }
 
   function bind() {
@@ -104,6 +183,7 @@
     root.addEventListener('click', function (ev) {
       var act = ev.target.getAttribute && ev.target.getAttribute('data-act');
       if (!act) return;
+      if (act === 'doreturn') { doReturn(ev.target); return; }
       var i = parseInt(ev.target.getAttribute('data-i'), 10), s = rows[i];
       if (!s) return;
       if (act === 'view') {

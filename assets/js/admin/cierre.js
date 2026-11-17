@@ -67,6 +67,7 @@
         if (s.status !== 'completed') return;
         nSales++; totalUsd += s.totalUsd; changeUsd += s.changeUsd || 0;
         (s.payments || []).forEach(function (p) { expected[p.method] = (expected[p.method] || 0) + p.amount; });
+        (s.refunds || []).forEach(function (r) { expected[r.method] = (expected[r.method] || 0) - r.amount; });
       });
       $('aksQ-info').innerHTML = 'Facturas completadas: <strong>' + nSales + '</strong> · Total vendido: <strong>' +
         AKS.usd(totalUsd) + '</strong> · Vuelto entregado: ' + AKS.usd(changeUsd);

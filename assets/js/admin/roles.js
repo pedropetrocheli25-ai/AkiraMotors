@@ -37,7 +37,7 @@
 
   AKS.init(function () {
     var st = document.createElement('style');
-    st.textContent = '.aks-cashier [data-act="void"]{display:none!important}';
+    st.textContent = '.aks-cashier [data-act="void"],.aks-cashier [data-ret]{display:none!important}';
     document.head.appendChild(st);
     firebase.auth().onAuthStateChanged(async function (u) {
       if (!u) return;
