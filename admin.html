@@ -2221,6 +2221,11 @@ Venta = Costo / (1 - Margen/100)
 <input type="number" id="productStock"
   required>
 </div>
+<div class="form-group">
+<label>Stock mínimo (alerta)</label>
+<input type="number" id="productMinStock" min="0"
+  placeholder="4 si lo dejas vacío">
+</div>
 </div>
 
 <div class="form-section">
@@ -3173,6 +3178,7 @@ window.openAddProductModal = function() {
   document.getElementById('productPrice').value = '';
   document.getElementById('productDiscount').value = '';
   document.getElementById('productStock').value = '';
+  document.getElementById('productMinStock').value = '';
   document.getElementById('productCategory').value = '';
   document.getElementById('productSubcategory').innerHTML =
     '<option value="">(Sin subcategoría)</option>';
@@ -3247,6 +3253,8 @@ window.editProduct = async function(productId) {
   document.getElementById('productDiscount').value =
     product.discount || '';
   document.getElementById('productStock').value = product.stock || '';
+  document.getElementById('productMinStock').value =
+    (product.minStock === undefined || product.minStock === null) ? '' : product.minStock;
   document.getElementById('productCategory').value =
     product.category || '';
   onProductCategoryChange();
@@ -3469,6 +3477,10 @@ window.saveProduct = async function(event) {
     price: salePrice,
     discount: discount,
     stock: stock,
+    minStock: (function() {
+      var m = parseInt(document.getElementById('productMinStock').value);
+      return isNaN(m) || m < 0 ? null : m;
+    })(),
     category: category,
     subcategory: document.getElementById('productSubcategory').value,
     recommended: document.getElementById('productRecommended').checked,
@@ -6073,9 +6085,15 @@ window.saveBcvRate = async function() {
 // ============================================================
 // BAJO STOCK
 // ============================================================
+function lowThr(p) {
+  var m = Number(p.minStock);
+  return (p.minStock === null || p.minStock === undefined ||
+    isNaN(m) || m < 0) ? 4 : m;
+}
+
 function updateLowStockBadge() {
   var count = products.filter(function(p) {
-    return Number(p.stock) <= 4;
+    return Number(p.stock) <= lowThr(p);
   }).length;
   var badge = document.getElementById('lowStockBadge');
   if (badge) {
@@ -6100,7 +6118,7 @@ window.renderLowStockList = function() {
 
   var low = products.filter(function(p) {
     var stock = Number(p.stock) || 0;
-    if (stock > 4) return false;
+    if (stock > lowThr(p)) return false;
     if (range === 'out' && stock !== 0) return false;
     if (range === 'low1' && (stock < 1 || stock > 2)) return false;
     if (range === 'low2' && (stock < 3 || stock > 4)) return false;

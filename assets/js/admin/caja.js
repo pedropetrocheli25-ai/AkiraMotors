@@ -272,7 +272,7 @@
         (favs[p.id] ? '★' : '☆') + '</button>' +
         '<div class="kpos-img">' + (p.thumb && /^(data:image|https:)/.test(p.thumb)
           ? '<img alt="" src="' + AKS.esc(p.thumb) + '">' : '&#9881;') + '</div>' +
-        '<div class="kpos-inv' + (p.stock <= 3 ? ' low' : '') + '">Inv. ' + p.stock + '</div>' +
+        '<div class="kpos-inv' + (p.stock <= p.minStock ? ' low' : '') + '">Inv. ' + p.stock + '</div>' +
         '<div class="kpos-name">' + AKS.esc(p.name) + '</div>' +
         '<div class="kpos-price">' + AKS.usd(price) +
         '<small>' + AKS.bs(price * rate) + '</small></div></div>';

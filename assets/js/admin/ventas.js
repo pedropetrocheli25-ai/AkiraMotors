@@ -121,7 +121,7 @@
       AKS.products.forEach(function (p) {
         invCost += p.stock * (costs[p.id] || 0);
         invPrice += p.stock * AKS.effectivePrice(p);
-        if (p.stock <= 3) low.push(p);
+        if (p.stock <= p.minStock) low.push(p);
       });
       low.sort(function (a, b) { return a.stock - b.stock || a.name.localeCompare(b.name, 'es'); });
       var clientsN = 0;
@@ -164,7 +164,7 @@
         kpi('Compras a proveedores', AKS.usd(purchTot), purchN + ' facturas') +
         kpi('Inventario al costo', AKS.usd(invCost), 'A precio de venta: ' + AKS.usd(invPrice)) +
         kpi('Gastos del periodo', AKS.usd(expTot), 'Por pagar: ' + AKS.usd(expPend) + ' · Resultado: ' + AKS.usd(profit - expTot)) +
-        kpi('Productos con stock bajo', low.length, 'Quedan 3 o menos') +
+        kpi('Productos con stock bajo', low.length, 'En su mínimo o por debajo') +
         kpi('Clientes registrados', clientsN, '') + '</div>';
 
       h += '<div class="aks-grid"><div class="admin-card"><h3>Ventas ' + (single ? 'por hora' : 'por día') + ' ($)</h3>' +

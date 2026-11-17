@@ -140,6 +140,7 @@
         price: Number(p.price) || 0,
         discount: Number(p.discount) || 0,
         stock: Number(p.stock) || 0,
+        minStock: (p.minStock === null || p.minStock === undefined || isNaN(Number(p.minStock))) ? 4 : Number(p.minStock),
         thumb: (typeof p.thumbnail === 'string' && p.thumbnail.length < 200000)
           ? p.thumbnail : ''
       });
