@@ -133,5 +133,8 @@ service cloud.firestore {
     match /bcvHistory/{id} {
       allow read, write: if isAdmin();
     }
+    match /cashCloses/{id} {
+      allow read, write: if isAdmin();
+    }
   }
 }
