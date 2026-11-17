@@ -20,3 +20,19 @@ async function getDoc(path) {
   return obj(d.fields || {});
 }
 module.exports = { getDoc };
+
+// Ids de todos los productos (lectura publica)
+async function listProductIds() {
+  const ids = [];
+  let token = '';
+  for (let n = 0; n < 20; n++) {
+    const r = await fetch(BASE + 'products?pageSize=300&mask.fieldPaths=name' + (token ? '&pageToken=' + encodeURIComponent(token) : ''));
+    if (!r.ok) break;
+    const d = await r.json();
+    (d.documents || []).forEach(x => ids.push(x.name.split('/').pop()));
+    token = d.nextPageToken || '';
+    if (!token) break;
+  }
+  return ids;
+}
+module.exports.listProductIds = listProductIds;
