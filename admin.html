@@ -2141,12 +2141,16 @@ Esta información es solo para ti.
 <select id="compatBrandSelect">
 <option value="">Seleccionar marca</option>
 </select>
+<button type="button" class="btn btn-small btn-secondary"
+  style="margin-top:.3rem" onclick="quickAddBrand()">+ Nueva marca</button>
 </div>
 <div class="form-group">
 <label>Modelo</label>
 <select id="compatModelSelect">
 <option value="">Seleccionar modelo</option>
 </select>
+<button type="button" class="btn btn-small btn-secondary"
+  style="margin-top:.3rem" onclick="quickAddModel()">+ Nuevo modelo</button>
 </div>
 <div class="form-group">
 <label>Años</label>
@@ -3140,6 +3144,7 @@ document.addEventListener('change', function(e) {
 // ============================================================
 window.openAddProductModal = function() {
   populateCategorySelect();
+  populateCompatBrands();
   currentProductImages = [];
   currentProductImagesBig = [];
   currentProductThumb = '';
@@ -3516,37 +3521,96 @@ window.onProductCategoryChange = function() {
         escapeHTML(sub) + '">' + escapeHTML(sub) + '</option>';
     });
   }
-  var brandSel = document.getElementById('compatBrandSelect');
-  brandSel.innerHTML = '<option value="">Seleccionar marca</option>';
-  if (catObj && catObj.vehiculos) {
-    catObj.vehiculos.forEach(function(v) {
-      brandSel.innerHTML += '<option value="' +
-        escapeHTML(v.marca) + '">' + escapeHTML(v.marca) +
-        '</option>';
+  populateCompatBrands();
+};
+
+// Marcas y modelos de TODAS las categorías (se crean una sola vez)
+function allVehicles() {
+  var map = {};
+  (catalogo.categorias || []).forEach(function(c) {
+    (c.vehiculos || []).forEach(function(v) {
+      if (!map[v.marca]) map[v.marca] = {};
+      (v.modelos || []).forEach(function(m) { map[v.marca][m] = 1; });
     });
-  }
-  var modelSel = document.getElementById('compatModelSelect');
-  modelSel.innerHTML = '<option value="">Seleccionar modelo</option>';
+  });
+  return map;
+}
+
+window.populateCompatBrands = function() {
+  var sel = document.getElementById('compatBrandSelect');
+  if (!sel) return;
+  var keep = sel.value;
+  var map = allVehicles();
+  sel.innerHTML = '<option value="">Seleccionar marca</option>';
+  Object.keys(map).sort(function(a, b) {
+    return a.localeCompare(b, 'es');
+  }).forEach(function(m) {
+    sel.innerHTML += '<option value="' + escapeHTML(m) + '">' +
+      escapeHTML(m) + '</option>';
+  });
+  if (keep && map[keep]) sel.value = keep;
+  onCompatBrandChange();
 };
 
 window.onCompatBrandChange = function() {
-  var cat = document.getElementById('productCategory').value;
   var marca = document.getElementById('compatBrandSelect').value;
   var modelSel = document.getElementById('compatModelSelect');
+  var keep = modelSel.value;
   modelSel.innerHTML = '<option value="">Seleccionar modelo</option>';
-  if (!cat || !marca) return;
-  var catObj = catalogo.categorias.find(function(c) {
-    return c.nombre === cat;
+  if (!marca) return;
+  var models = Object.keys(allVehicles()[marca] || {}).sort(
+    function(a, b) { return a.localeCompare(b, 'es'); });
+  models.forEach(function(m) {
+    modelSel.innerHTML += '<option value="' + escapeHTML(m) +
+      '">' + escapeHTML(m) + '</option>';
   });
-  if (!catObj || !catObj.vehiculos) return;
-  var v = catObj.vehiculos.find(function(x) {
-    return x.marca === marca;
+  if (keep && models.indexOf(keep) !== -1) modelSel.value = keep;
+};
+
+// Crear marca / modelo sin salir del producto
+window.quickAddBrand = async function() {
+  var nombre = (prompt('Nueva marca de vehículo (ej: Ford):') || '').trim();
+  if (!nombre) return;
+  if (!catalogo.categorias.length) {
+    alert('Primero crea una categoría en Inventario → Catálogo');
+    return;
+  }
+  catalogo.categorias.forEach(function(cat) {
+    if (!cat.vehiculos) cat.vehiculos = [];
+    var ya = cat.vehiculos.some(function(v) {
+      return v.marca.toLowerCase() === nombre.toLowerCase();
+    });
+    if (!ya) cat.vehiculos.push({ marca: nombre, modelos: [] });
   });
-  if (!v) return;
-  (v.modelos || []).forEach(function(m) {
-    modelSel.innerHTML += '<option value="' +
-      escapeHTML(m) + '">' + escapeHTML(m) + '</option>';
+  await saveCatalogo();
+  populateCompatBrands();
+  var real = Object.keys(allVehicles()).filter(function(m) {
+    return m.toLowerCase() === nombre.toLowerCase();
+  })[0];
+  if (real) {
+    document.getElementById('compatBrandSelect').value = real;
+    onCompatBrandChange();
+  }
+};
+
+window.quickAddModel = async function() {
+  var marca = document.getElementById('compatBrandSelect').value;
+  if (!marca) { alert('Primero elige la marca'); return; }
+  var nombre = (prompt('Nuevo modelo de ' + marca + ':') || '').trim();
+  if (!nombre) return;
+  catalogo.categorias.forEach(function(cat) {
+    if (!cat.vehiculos) cat.vehiculos = [];
+    var v = cat.vehiculos.find(function(x) { return x.marca === marca; });
+    if (!v) { v = { marca: marca, modelos: [] }; cat.vehiculos.push(v); }
+    if (!v.modelos) v.modelos = [];
+    var ya = v.modelos.some(function(m) {
+      return m.toLowerCase() === nombre.toLowerCase();
+    });
+    if (!ya) v.modelos.push(nombre);
   });
+  await saveCatalogo();
+  onCompatBrandChange();
+  document.getElementById('compatModelSelect').value = nombre;
 };
 
 document.addEventListener('change', function(e) {
