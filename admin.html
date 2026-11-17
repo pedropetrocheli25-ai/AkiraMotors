@@ -2188,10 +2188,13 @@ Venta = Costo / (1 - Margen/100)
 </div>
 <div class="form-row">
 <div class="form-group">
-<label>Costo ($) *</label>
+<label>Costo ($) * <span id="costHint"
+  style="font-weight:400;color:#888;font-size:.75rem;"></span></label>
 <input type="number" id="productCostPrice"
   step="0.01" required
   oninput="calculateSalePrice()">
+<a href="#" id="costUnlock" style="display:none;font-size:.75rem;"
+  onclick="unlockCost();return false;">Corregir costo manualmente</a>
 </div>
 <div class="form-group">
 <label>Margen (%) *</label>
@@ -3165,6 +3168,7 @@ window.openAddProductModal = function() {
   document.getElementById('productName').value = '';
   document.getElementById('productDescription').value = '';
   document.getElementById('productCostPrice').value = '';
+  lockCost(false);
   document.getElementById('productMargin').value = '';
   document.getElementById('productPrice').value = '';
   document.getElementById('productDiscount').value = '';
@@ -3237,6 +3241,7 @@ window.editProduct = async function(productId) {
   document.getElementById('productDescription').value =
     product.description || '';
   document.getElementById('productCostPrice').value = costPrice;
+  lockCost(Number(costPrice) > 0);
   document.getElementById('productMargin').value = margin;
   document.getElementById('productPrice').value = product.price || '';
   document.getElementById('productDiscount').value =
@@ -3788,6 +3793,22 @@ function renderSpecifications() {
 window.removeSpecification = function(i) {
   currentSpecifications.splice(i, 1);
   renderSpecifications();
+};
+
+// El costo se actualiza solo con las facturas de compra; aquí solo se
+// define la ganancia (%). Se puede desbloquear para corregir un error.
+window.lockCost = function(lock) {
+  var inp = document.getElementById('productCostPrice');
+  inp.readOnly = !!lock;
+  inp.style.background = lock ? '#f0f0f0' : '';
+  document.getElementById('costUnlock').style.display =
+    lock ? 'inline' : 'none';
+  document.getElementById('costHint').textContent = lock
+    ? '(viene de las facturas de compra)' : '(costo inicial)';
+};
+window.unlockCost = function() {
+  if (confirm('El costo normalmente se actualiza con las facturas de ' +
+      'compra. ¿Corregirlo manualmente?')) lockCost(false);
 };
 
 window.calculateSalePrice = function() {

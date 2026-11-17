@@ -47,7 +47,7 @@
       '<div class="aks-wrap"><table class="aks-table">' +
       '<thead><tr><th>Producto</th><th>Cant.</th>' +
       '<th>Costo unit. ($)</th><th>Costo anterior</th>' +
-      '<th>Precio venta ($)</th><th>Margen</th>' +
+      '<th>Ganancia (%)</th><th>Precio venta ($)</th>' +
       '<th>Total línea</th><th></th></tr></thead>' +
       '<tbody id="aksC-body"></tbody></table></div>' +
       '<div id="aksC-empty" class="aks-muted" ' +
@@ -89,9 +89,10 @@
     return (price - cost) / price * 100;
   }
 
-  function suggestedPrice(it) {
-    var m = it.prevMargin;
-    if (!(m >= 0 && m < 99)) m = 30;
+  // Precio = costo / (1 - ganancia%/100). La ganancia la escribe el dueño.
+  function priceFrom(it) {
+    var m = it.margin;
+    if (!(m >= 0 && m < 100)) return 0;
     return AKS.r2(it.unitCost / (1 - m / 100));
   }
 
@@ -116,12 +117,12 @@
         '<td><input type="number" min="0" step="0.01" ' +
         'data-f="cost" value="' + (it.unitCost || '') + '"></td>' +
         '<td>' + AKS.usd(it.prevCost) + '</td>' +
-        '<td><input type="number" min="0" step="0.01" ' +
-        'data-f="price" id="aksC-price-' + i + '" value="' +
-        (it.newPrice || '') + '"><br>' +
-        '<span class="aks-muted">antes: ' + AKS.usd(it.prevPrice) +
-        '</span></td>' +
-        '<td id="aksC-margin-' + i + '"></td>' +
+        '<td><input type="number" min="0" max="99.99" step="0.1" ' +
+        'data-f="margin" value="' + it.margin + '"></td>' +
+        '<td><strong id="aksC-price-' + i + '">' + AKS.usd(it.newPrice) +
+        '</strong><br><span class="aks-muted">antes: ' +
+        AKS.usd(it.prevPrice) + '</span>' +
+        '<span id="aksC-margin-' + i + '"></span></td>' +
         '<td id="aksC-line-' + i + '"></td>' +
         '<td><button class="btn btn-danger btn-small" ' +
         'data-act="remove">Quitar</button></td></tr>';
@@ -135,12 +136,12 @@
   function refreshRow(i) {
     var it = items[i];
     if (!it) return;
-    var m = marginOf(it.newPrice, it.unitCost);
+    var pr = $('aksC-price-' + i);
+    if (pr) pr.textContent = AKS.usd(it.newPrice);
     var cell = $('aksC-margin-' + i);
     if (cell) {
-      cell.innerHTML = '<span class="' + (m < 0 ? 'aks-bad' : '') + '">' +
-        m.toFixed(1) + '%</span>' +
-        (m < 0 ? '<br><span class="aks-bad">bajo el costo</span>' : '');
+      cell.innerHTML = it.newPrice < it.unitCost
+        ? '<br><span class="aks-bad">bajo el costo</span>' : '';
     }
     var l = $('aksC-line-' + i);
     if (l) l.textContent = AKS.usd(lineTotal(it));
@@ -185,9 +186,10 @@
       productId: p.id, code: p.code, name: p.name, stock: p.stock,
       qty: 1, unitCost: prevCost, prevCost: prevCost,
       prevPrice: p.price, prevMargin: prevMargin,
-      newPrice: p.price, priceTouched: false
+      margin: AKS.r2(prevMargin >= 0 && prevMargin < 100 ? prevMargin : 30),
+      newPrice: p.price
     };
-    if (!(it.unitCost > 0)) it.newPrice = p.price;
+    if (it.unitCost > 0) it.newPrice = priceFrom(it);
     items.push(it);
     renderItems();
   }
@@ -251,8 +253,8 @@
       if (!(it.unitCost > 0)) {
         alert('Costo inválido en "' + it.name + '"'); return;
       }
-      if (!(it.newPrice > 0)) {
-        alert('Precio de venta inválido en "' + it.name + '"'); return;
+      if (!(it.margin >= 0 && it.margin < 100) || !(it.newPrice > 0)) {
+        alert('Ganancia (%) inválida en "' + it.name + '"'); return;
       }
       if (it.newPrice < it.unitCost) below.push(it.name);
     }
@@ -317,8 +319,7 @@
           var costBefore = costSnaps[k].exists
             ? (Number(costSnaps[k].data().costPrice) || 0) : 0;
           var priceBefore = Number(pd.price) || 0;
-          var margin = AKS.r2(Math.max(0, Math.min(99.99,
-            marginOf(x.newPrice, x.unitCost))));
+          var margin = AKS.r2(Math.max(0, Math.min(99.99, x.margin)));
 
           tx.update(db.collection('products').doc(x.productId), {
             stock: stockAfter,
@@ -625,14 +626,10 @@
         it.qty = parseInt(t.value, 10) || 0;
       } else if (f === 'cost') {
         it.unitCost = AKS.num(t.value);
-        if (!it.priceTouched) {
-          it.newPrice = suggestedPrice(it);
-          var pi = $('aksC-price-' + i);
-          if (pi) pi.value = it.newPrice || '';
-        }
-      } else if (f === 'price') {
-        it.newPrice = AKS.num(t.value);
-        it.priceTouched = true;
+        it.newPrice = priceFrom(it);
+      } else if (f === 'margin') {
+        it.margin = AKS.num(t.value);
+        it.newPrice = priceFrom(it);
       }
       refreshRow(i);
       refreshTotals();
