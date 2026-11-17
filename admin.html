@@ -2223,13 +2223,20 @@ Venta = Costo / (1 - Margen/100)
 <div class="form-section">
 <h3>Imágenes</h3>
 <div class="alert-info">
-Máximo 5 imágenes. La primera será la principal.
-La foto grande solo se carga en el detalle. En
-los listados se usa una miniatura comprimida.
+Máximo 4 imágenes. La primera será la principal.
+Las fotos se guardan como enlace (URL): sube el archivo
+(se envía a Cloudinary, configúralo en Ajustes) o pega
+el enlace de una imagen ya publicada (https://...).
 </div>
 <input type="file" id="productImageInput"
   accept="image/*" multiple
   onchange="addProductImages(event)">
+<div style="display:flex;gap:.4rem;margin-top:.5rem;">
+<input type="url" id="productImageUrl" style="flex:1"
+  placeholder="o pega aquí el enlace de la imagen (https://...)">
+<button type="button" class="btn btn-small btn-secondary"
+  onclick="addProductImageUrl()">Agregar enlace</button>
+</div>
 <div id="productImagesContainer"
   style="display:flex;gap:0.5rem;flex-wrap:wrap;
   margin-top:0.5rem;"></div>
@@ -3282,42 +3289,111 @@ function renderProductImages() {
   c.innerHTML = html;
 }
 
+// ---- Imágenes por URL (Cloudinary o enlace pegado) ----
+var cloudCfg = null;
+async function getCloudCfg() {
+  if (cloudCfg) return cloudCfg;
+  try {
+    var s = await db.collection('settings').doc('adminSettings').get();
+    var c = s.exists ? (s.data().cloudinary || {}) : {};
+    if (c.cloudName && c.preset) cloudCfg = c;
+  } catch(e) { console.error('cloudinary cfg:', e); }
+  return cloudCfg;
+}
+window.resetCloudCfg = function() { cloudCfg = null; };
+
+// Versión grande (1000 px) y miniatura (400 px) a partir de una URL
+function imgBig(u) {
+  if (/res\.cloudinary\.com\/.+\/image\/upload\//.test(u) &&
+      u.indexOf('/upload/c_') === -1 && u.indexOf('/upload/w_') === -1) {
+    return u.replace('/upload/', '/upload/c_limit,w_1000,q_auto,f_auto/');
+  }
+  return u;
+}
+function imgThumb(u) {
+  if (u.indexOf('/upload/c_limit,w_1000,') !== -1) {
+    return u.replace('/upload/c_limit,w_1000,', '/upload/c_limit,w_400,');
+  }
+  if (/res\.cloudinary\.com\/.+\/image\/upload\//.test(u) &&
+      u.indexOf('/upload/c_') === -1 && u.indexOf('/upload/w_') === -1) {
+    return u.replace('/upload/', '/upload/c_limit,w_400,q_auto,f_auto/');
+  }
+  return u;
+}
+function refreshThumbFromImages() {
+  currentProductThumb = currentProductImages.length > 0
+    ? imgThumb(currentProductImages[0]) : '';
+}
+
+async function uploadToCloudinary(file, cfg) {
+  var data = await comprimirImagen(file, 1600, 0.85);
+  var fd = new FormData();
+  fd.append('file', data);
+  fd.append('upload_preset', cfg.preset);
+  fd.append('folder', 'akira/productos');
+  var r = await fetch('https://api.cloudinary.com/v1_1/' +
+    encodeURIComponent(cfg.cloudName) + '/image/upload',
+    { method: 'POST', body: fd });
+  var j = await r.json();
+  if (!r.ok || !j.secure_url) {
+    throw new Error((j.error && j.error.message) || 'Error de Cloudinary');
+  }
+  return j.secure_url;
+}
+
 window.addProductImages = async function(event) {
   var files = Array.from(event.target.files);
   event.target.value = '';
+  var cfg = await getCloudCfg();
+  if (!cfg) {
+    alert('Para subir archivos configura Cloudinary en Ajustes. ' +
+      'Mientras tanto puedes pegar el enlace de una imagen.');
+    return;
+  }
   for (var i = 0; i < files.length; i++) {
     var file = files[i];
-    if (currentProductImages.length >= 5) {
-      alert('Máximo 5 imágenes');
+    if (currentProductImages.length >= 4) {
+      alert('Máximo 4 imágenes');
       break;
     }
-    if (file.size > 3 * 1024 * 1024) {
-      alert(file.name + ' supera 3MB');
+    if (file.size > 8 * 1024 * 1024) {
+      alert(file.name + ' supera 8MB');
       continue;
     }
     try {
-      var thumbData = await comprimirImagen(file, 400, 0.7);
-      var bigData = await comprimirImagen(file, 1000, 0.75);
-
-      if (i === 0 && !currentProductThumb) {
-        currentProductThumb = thumbData;
-      }
-      currentProductImages.push(thumbData);
-      currentProductImagesBig.push(bigData);
+      var url = await uploadToCloudinary(file, cfg);
+      currentProductImages.push(imgBig(url));
+      currentProductImagesBig.push(imgBig(url));
+      renderProductImages();
     } catch(e) {
-      console.error('Error comprimiendo:', e);
-      alert('No se pudo procesar ' + file.name);
+      console.error('Error subiendo:', e);
+      alert('No se pudo subir ' + file.name + ': ' + e.message);
     }
   }
+  refreshThumbFromImages();
+  renderProductImages();
+};
+
+window.addProductImageUrl = function() {
+  var inp = document.getElementById('productImageUrl');
+  var u = inp.value.trim();
+  if (!/^https:\/\/[^\s"'<>]+$/i.test(u)) {
+    alert('Pega un enlace que empiece con https://'); return;
+  }
+  if (currentProductImages.length >= 4) {
+    alert('Máximo 4 imágenes'); return;
+  }
+  currentProductImages.push(imgBig(u));
+  currentProductImagesBig.push(imgBig(u));
+  inp.value = '';
+  refreshThumbFromImages();
   renderProductImages();
 };
 
 window.removeProductImage = function(i) {
   currentProductImages.splice(i, 1);
   currentProductImagesBig.splice(i, 1);
-  if (i === 0 && currentProductImages.length > 0) {
-    currentProductThumb = currentProductImages[0];
-  }
+  refreshThumbFromImages();
   renderProductImages();
 };
 
@@ -3456,7 +3532,9 @@ window.saveProduct = async function(event) {
       }
     } catch(he) { console.error('Historial:', he); }
 
-    if (currentProductImagesBig.length > 0) {
+    if (currentProductImagesBig.some(function(x) {
+      return String(x).indexOf('data:') === 0;
+    })) {
       await db.collection('productImages').doc(productId).set({
         images: currentProductImagesBig,
         updatedAt: new Date().toISOString()
@@ -6392,6 +6470,7 @@ document.addEventListener('visibilitychange', function() {
 <script src="assets/js/admin/conteo.js"></script>
 <script src="assets/js/admin/gastos.js"></script>
 <script src="assets/js/admin/importar.js"></script>
+<script src="assets/js/admin/cloudinary.js"></script>
 <script src="assets/js/admin/roles.js"></script>
 
 <script type="module">

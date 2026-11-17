@@ -6,6 +6,11 @@ module.exports = async (req, res) => {
   try {
     const p = id ? await getDoc('products/' + id) : null;
     const src = p && (p.thumbnail || (p.images && p.images[0]) || p.image);
+    if (typeof src === 'string' && /^https:\/\//.test(src)) {
+      res.setHeader('Cache-Control', 'public, s-maxage=3600');
+      res.redirect(302, src.replace('/upload/c_limit,w_1000,', '/upload/c_limit,w_800,'));
+      return;
+    }
     const m = typeof src === 'string' && src.match(/^data:(image\/(?:png|jpeg|webp|gif));base64,(.+)$/);
     if (!m) { res.status(404).end(); return; }
     res.setHeader('Content-Type', m[1]);
