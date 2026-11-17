@@ -62,6 +62,7 @@ service cloud.firestore {
     match /purchases/{id} { allow read, write: if isOwner(); }
     match /costHistory/{id} { allow read, write: if isOwner(); }
     match /bcvHistory/{id} { allow read, write: if isOwner(); }
+    match /expenses/{id} { allow read, write: if isOwner(); }
 
     match /stockMovements/{id} {
       allow read: if isOwner();
