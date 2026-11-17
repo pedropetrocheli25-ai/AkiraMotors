@@ -269,13 +269,18 @@
   }
 
   async function collect(d1, d2) {
-    var db = AKS.db(), out = { sales: [], purchases: [], orders: [] };
+    var db = AKS.db(), out = { sales: [], purchases: [], orders: [], expenses: [] };
     var s = await db.collection('sales').where('dateKey', '>=', d1)
       .where('dateKey', '<=', d2).get();
     s.forEach(function (d) { out.sales.push(d.data()); });
     var p = await db.collection('purchases').where('invoiceDate', '>=', d1)
       .where('invoiceDate', '<=', d2).get();
     p.forEach(function (d) { out.purchases.push(d.data()); });
+    try {
+      var ex = await db.collection('expenses').where('dateKey', '>=', d1).where('dateKey', '<=', d2).get();
+      ex.forEach(function (d) { out.expenses.push(d.data()); });
+      out.expenses.sort(function (a, b) { return String(a.dateKey).localeCompare(String(b.dateKey)); });
+    } catch (e) { console.error('expenses:', e); }
     try {
       var o = await db.collection('orders').get();
       o.forEach(function (d) {
@@ -312,6 +317,8 @@
     });
     var purchTot = 0, purchOk = data.purchases.filter(function (p) { return p.status !== 'voided'; });
     purchOk.forEach(function (p) { purchTot += p.totalUsd; });
+    var expTot = 0, expPend = 0;
+    data.expenses.forEach(function (x) { expTot += x.amountUsd; if (x.status === 'pending') expPend += x.amountUsd; });
     var webTot = 0;
     data.orders.forEach(function (o) { webTot += Number(o.total) || 0; });
 
@@ -336,6 +343,11 @@
         K('COMPRAS A PROVEEDORES', ''),
         K('Facturas de compra', purchOk.length, 'int'),
         K('Total comprado $', r2(purchTot), 'usd'),
+        [],
+        K('GASTOS DEL PERIODO', ''),
+        K('Total gastos $', r2(expTot), 'usd'),
+        K('De los cuales por pagar $', r2(expPend), 'usd'),
+        K('Resultado estimado $ (ganancia - gastos)', r2(T.profit - expTot), 'usd'),
         [],
         K('PEDIDOS WEB CONFIRMADOS', ''),
         K('Cantidad', data.orders.length, 'int'),
@@ -433,6 +445,13 @@
       });
     });
 
+    var gas = { name: 'Gastos', cols: [
+      { h: 'Fecha', w: 12, fmt: 'date' }, { h: 'Categoría', w: 28 }, { h: 'Descripción', w: 40 },
+      { h: 'Monto $', w: 13, fmt: 'usd', sum: true }, { h: 'Estado', w: 12 }, { h: 'Vence', w: 12 }],
+      rows: data.expenses.map(function (x) {
+        return [x.dateKey, x.category, x.description || '', r2(x.amountUsd), x.status === 'paid' ? 'Pagado' : 'Pendiente', x.dueDate || ''];
+      }) };
+
     var web = { name: 'Pedidos web', cols: [
       { h: 'Fecha', w: 12, fmt: 'date' }, { h: 'Código pedido', w: 16 },
       { h: 'Cliente', w: 26 }, { h: 'Teléfono', w: 14 },
@@ -455,7 +474,7 @@
           r2(x.stock * x.cost), r2(x.stock * x.price)];
       }) };
 
-    return [resumen, ventas, lineas, prod, dia, pago, comp, web, inv];
+    return [resumen, ventas, lineas, prod, dia, pago, comp, gas, web, inv];
   }
 
   // ============================================================

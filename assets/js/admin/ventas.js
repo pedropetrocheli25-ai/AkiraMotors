@@ -108,6 +108,11 @@
       var p1 = await db.collection('purchases').where('invoiceDate', '>=', rg[0]).where('invoiceDate', '<=', rg[1]).get();
       p1.forEach(function (d) { var p = d.data(); if (p.status !== 'voided') { purchTot += p.totalUsd; purchN++; } });
 
+      var expTot = 0, expPend = 0;
+      try {
+        var e1 = await db.collection('expenses').where('dateKey', '>=', rg[0]).where('dateKey', '<=', rg[1]).get();
+        e1.forEach(function (d) { var x = d.data(); expTot += x.amountUsd; if (x.status === 'pending') expPend += x.amountUsd; });
+      } catch (e) { /* sin permiso */ }
       await AKS.loadProducts(true);
       var costs = {};
       var cs = await db.collection('productCosts').get();
@@ -158,6 +163,7 @@
         '</div><div class="aks-kpis">' +
         kpi('Compras a proveedores', AKS.usd(purchTot), purchN + ' facturas') +
         kpi('Inventario al costo', AKS.usd(invCost), 'A precio de venta: ' + AKS.usd(invPrice)) +
+        kpi('Gastos del periodo', AKS.usd(expTot), 'Por pagar: ' + AKS.usd(expPend) + ' · Resultado: ' + AKS.usd(profit - expTot)) +
         kpi('Productos con stock bajo', low.length, 'Quedan 3 o menos') +
         kpi('Clientes registrados', clientsN, '') + '</div>';
 
