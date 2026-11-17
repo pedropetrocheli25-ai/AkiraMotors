@@ -1,140 +1,84 @@
 rules_version = '2';
-// ============================================================
-// AKIRA MOTORS — Reglas de Firestore (archivo de referencia)
-// Estas reglas NO se publican solas desde GitHub:
-// copia TODO este contenido en Firebase Console >
-// Firestore Database > Reglas > Publicar.
-// ============================================================
+// Copia TODO este contenido en Firebase Console > Firestore Database > Reglas > Publicar.
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // =========================================================
-    // HELPERS
-    // =========================================================
-    function isSignedIn() {
-      return request.auth != null;
-    }
+    function isSignedIn() { return request.auth != null; }
 
-
+    // Cualquier personal autorizado (dueño o cajero)
     function isAdmin() {
       return isSignedIn()
         && exists(/databases/$(database)/documents/admins/$(request.auth.uid))
         && get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.isAdmin == true;
     }
-
-
-    // =========================================================
-    // TIENDA = SOLO CATALOGO. No hay registro de clientes, ni
-    // pedidos, ni resenas, ni cupones en la base de datos.
-    // Todo lo de abajo es SOLO administrador (datos historicos).
-    // =========================================================
-    match /users/{uid} {
-      allow read, write: if isAdmin();
-    }
-    match /phones/{phone} {
-      allow read, write: if isAdmin();
-    }
-    match /reviews/{reviewId} {
-      allow read, write: if isAdmin();
-    }
-    match /coupons/{couponId} {
-      allow read, write: if isAdmin();
-    }
-    match /orders/{orderId} {
-      allow read, write: if isAdmin();
+    // Solo el dueño (admins sin role, o con role distinto de 'cajero')
+    function isOwner() {
+      return isAdmin()
+        && get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.get('role', 'dueno') != 'cajero';
     }
 
-    // =========================================================
-    // ADMINS
-    // =========================================================
+    // Datos históricos de la tienda anterior: solo dueño
+    match /users/{id} { allow read, write: if isOwner(); }
+    match /phones/{id} { allow read, write: if isOwner(); }
+    match /reviews/{id} { allow read, write: if isOwner(); }
+    match /coupons/{id} { allow read, write: if isOwner(); }
+    match /orders/{id} { allow read, write: if isOwner(); }
+    match /deliveryZones/{id} { allow read, write: if isOwner(); }
+    match /drivers/{id} { allow read, write: if isOwner(); }
+    match /customers/{id} { allow read, write: if isOwner(); }
+
     match /admins/{adminId} {
       allow get: if isSignedIn() && (request.auth.uid == adminId || isAdmin());
-      allow list: if isAdmin();
-      allow write: if isAdmin();
+      allow list: if isOwner();
+      allow write: if isOwner();
     }
 
-    // =========================================================
-    // SETTINGS
-    //  - Público: la tienda lee tasa, IVA, envío, etc.
-    //  - messagesConfig y adminSettings: SOLO admin
-    // =========================================================
     match /settings/{docId} {
-      // Publico: SOLO lo que la tienda necesita para mostrar el catalogo
-      allow read: if docId in ['bcvRate', 'logo', 'pickupMaps',
-                               'siteConfig', 'whatsapp', 'catalogo',
-                               'deliveryConfig', 'appSettings',
-                               'flashSales', 'aboutUs']
+      allow read: if docId in ['bcvRate', 'logo', 'pickupMaps', 'siteConfig', 'whatsapp',
+                               'catalogo', 'deliveryConfig', 'appSettings', 'flashSales', 'aboutUs']
                   || isAdmin();
-      allow write: if isAdmin();
+      allow write: if isOwner();
+      // El cajero solo puede avanzar el contador de facturas
+      allow create, update: if isAdmin() && docId == 'adminSettings'
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['saleCounter']);
     }
 
-    // =========================================================
-    // CATÁLOGO
-    // =========================================================
-    match /products/{productId} {
+    match /products/{id} {
       allow read: if true;
-      allow write: if isAdmin();
+      allow write: if isOwner();
+      // El cajero solo puede descontar stock al vender
+      allow update: if isAdmin()
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['stock', 'updatedAt']);
     }
+    // El cajero necesita leer el costo para registrar la ganancia de la venta
+    match /productCosts/{id} {
+      allow read: if isAdmin();
+      allow write: if isOwner();
+    }
+    match /productImages/{id} { allow read, write: if isOwner(); }
+    match /brands/{id} { allow read: if true; allow write: if isOwner(); }
+    match /carouselSlides/{id} { allow read: if true; allow write: if isOwner(); }
 
-    // Costos y márgenes: PRIVADOS
-    match /productCosts/{productId} {
-      allow read, write: if isAdmin();
-    }
+    match /purchases/{id} { allow read, write: if isOwner(); }
+    match /costHistory/{id} { allow read, write: if isOwner(); }
+    match /bcvHistory/{id} { allow read, write: if isOwner(); }
 
-    match /productImages/{productId} {
-      allow read, write: if isAdmin();
-    }
-
-    match /brands/{brandId} {
-      allow read: if true;
-      allow write: if isAdmin();
-    }
-
-    match /carouselSlides/{slideId} {
-      allow read: if true;
-      allow write: if isAdmin();
-    }
-
-    match /deliveryZones/{zoneId} {
-      allow read, write: if isAdmin();
-    }
-
-    match /drivers/{driverId} {
-      allow read, write: if isAdmin();
-    }
-
-    match /customers/{customerId} {
-      allow read, write: if isAdmin();
-    }
-
-    // =========================================================
-    // SISTEMA INTERNO: INVENTARIO, COMPRAS Y CAJA (POS)
-    // Todo SOLO para administrador.
-    //  - purchases: facturas de compra a proveedores
-    //  - costHistory: historial de costo/precio por producto
-    //  - stockMovements: kárdex (quién cambió qué stock y cuándo)
-    //  - sales: ventas de caja (mostrador)
-    // =========================================================
-    match /purchases/{id} {
-      allow read, write: if isAdmin();
-    }
-    match /costHistory/{id} {
-      allow read, write: if isAdmin();
-    }
     match /stockMovements/{id} {
-      allow read, write: if isAdmin();
+      allow read: if isOwner();
+      allow create: if isAdmin();
+      allow update, delete: if isOwner();
     }
     match /sales/{id} {
-      allow read, write: if isAdmin();
+      allow read, create: if isAdmin();
+      allow update, delete: if isOwner();
     }
     match /clients/{id} {
-      allow read, write: if isAdmin();
-    }
-    match /bcvHistory/{id} {
-      allow read, write: if isAdmin();
+      allow read, create, update: if isAdmin();
+      allow delete: if isOwner();
     }
     match /cashCloses/{id} {
-      allow read, write: if isAdmin();
+      allow read, create: if isAdmin();
+      allow update, delete: if isOwner();
     }
   }
 }
