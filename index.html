@@ -3745,7 +3745,7 @@ window.pedirProducto = function(productId) {
 };
 
 window.copiarEnlaceProducto = function(productId) {
-  var url = location.origin + location.pathname + '?p=' +
+  var url = location.origin + '/p/' +
     encodeURIComponent(productId);
   function ok() { showToast('Enlace copiado', 'success'); }
   function fallback() {
@@ -3778,7 +3778,7 @@ window.compartirProducto = function(productId) {
     if (s && s.key && s.value) msg += s.key + ': ' + s.value + '\n';
   });
   msg += '\nVer en Akira Motors: ' + location.origin +
-    location.pathname + '?p=' + encodeURIComponent(p.id);
+    '/p/' + encodeURIComponent(p.id);
   abrirWhatsApp('https://wa.me/?text=' + encodeURIComponent(msg));
 };
 
