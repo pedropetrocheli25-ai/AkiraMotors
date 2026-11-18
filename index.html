@@ -2680,6 +2680,11 @@ window.filterByModel = function(ev, catIdx, brandIdx, modelIdx) {
 };
 
 window.showAllProductsFromMenu = function() {
+  showAllProducts();
+  toggleSidebar();
+};
+
+window.showAllProducts = function() {
   searchQuery = '';
   activeCategory = null;
   activeBrand = null;
@@ -2694,7 +2699,7 @@ window.showAllProductsFromMenu = function() {
   if (title) title.textContent = 'Todos los productos';
   currentPage = 1;
   renderSearchResults(products);
-  toggleSidebar();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 };
 
 var searchInputEl = document.getElementById('searchInput');
@@ -2949,6 +2954,17 @@ function renderRecommended() {
   var recommended = products.filter(function(p) {
     return p.recommended;
   });
+  // Si hay pocos recomendados, se completa con los productos más nuevos
+  if (recommended.length < 8) {
+    products.filter(function(p) {
+      return !p.recommended;
+    }).sort(function(a, b) {
+      return String(b.createdAt || '').localeCompare(
+        String(a.createdAt || ''));
+    }).slice(0, 8 - recommended.length).forEach(function(p) {
+      recommended.push(p);
+    });
+  }
   if (recommended.length === 0) {
     container.innerHTML = '<div class="no-results">' +
       '<strong>Próximamente más productos</strong>' +
@@ -2961,6 +2977,15 @@ function renderRecommended() {
     html += renderProductCard(p);
   });
   container.innerHTML = html;
+  if (products.length > recommended.length &&
+      !document.getElementById('seeAllBtn')) {
+    var wrap = document.createElement('div');
+    wrap.style.cssText = 'text-align:center;margin:1.2rem 0';
+    wrap.innerHTML = '<button id="seeAllBtn" class="detail-add-btn dark" ' +
+      'style="max-width:320px" onclick="showAllProducts()">' +
+      'Ver todos los productos (' + products.length + ')</button>';
+    container.parentNode.insertBefore(wrap, container.nextSibling);
+  }
 }
 
 function renderOffers() {

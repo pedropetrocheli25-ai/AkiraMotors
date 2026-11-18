@@ -18,7 +18,9 @@
       'Cada venta guarda la tasa del momento en que se hizo.</div>' +
       '<div class="aks-inline"><input type="number" id="aksT-new" min="0" step="0.01" ' +
       'placeholder="Nueva tasa. Ej: 36.50" style="max-width:220px">' +
-      '<button class="btn btn-primary" id="aksT-save">Actualizar tasa</button></div></div>' +
+      '<button class="btn btn-secondary" id="aksT-fetch">Consultar tasa oficial</button>' +
+      '<button class="btn btn-primary" id="aksT-save">Actualizar tasa</button></div>' +
+      '<div id="aksT-src" class="aks-muted" style="margin-top:.4rem"></div></div>' +
       '<div class="admin-card"><h3>Historial de tasas</h3><div id="aksT-hist" class="aks-muted">' +
       'Cargando...</div></div>';
   }
@@ -57,6 +59,19 @@
     }
   }
 
+  async function fetchRate() {
+    var src = $('aksT-src');
+    src.textContent = 'Consultando...';
+    try {
+      var r = await fetch('/api/bcv');
+      var j = await r.json();
+      if (!r.ok || !j.value) throw new Error(j.error || 'sin respuesta');
+      $('aksT-new').value = j.value;
+      src.textContent = 'Sugerida: ' + j.value.toFixed(2) + ' · ' + j.source +
+        (j.date ? ' · ' + j.date.slice(0, 10) : '') + '. Revísala y pulsa "Actualizar tasa" para aplicarla.';
+    } catch (e) { src.innerHTML = '<span class="aks-bad">No se pudo consultar (' + AKS.esc(e.message) + '). Escríbela a mano.</span>'; }
+  }
+
   async function save() {
     var v = AKS.num($('aksT-new').value);
     if (!(v > 0) || v > 100000) { alert('Tasa inválida'); return; }
@@ -83,6 +98,7 @@
     root = AKS.addSection('tasa', html());
     if (!root) return;
     $('aksT-save').addEventListener('click', save);
+    $('aksT-fetch').addEventListener('click', fetchRate);
     AKS.addMenuItem('Tasa BCV', 'tasa', refresh, 'config');
   });
   AKS.tasa = { refresh: refresh };
