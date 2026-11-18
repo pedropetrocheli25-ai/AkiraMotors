@@ -2152,16 +2152,6 @@ Esta información es solo para ti.
 <button type="button" class="btn btn-small btn-secondary"
   style="margin-top:.3rem" onclick="quickAddModel()">+ Nuevo modelo</button>
 </div>
-<div class="form-group">
-<label>Años</label>
-<input type="text" id="compatYears"
-  placeholder="Ej: 1990-2008">
-</div>
-<div class="form-group">
-<label>Motor</label>
-<input type="text" id="compatEngine"
-  placeholder="Ej: 1.6L">
-</div>
 </div>
 <button type="button"
   class="btn btn-small btn-primary"
@@ -3717,8 +3707,6 @@ document.addEventListener('change', function(e) {
 window.addCompatibility = function() {
   var marca = document.getElementById('compatBrandSelect').value;
   var modelo = document.getElementById('compatModelSelect').value;
-  var years = document.getElementById('compatYears').value.trim();
-  var engine = document.getElementById('compatEngine').value.trim();
   if (!marca || !modelo) {
     alert('Selecciona marca y modelo'); return;
   }
@@ -3729,12 +3717,8 @@ window.addCompatibility = function() {
   currentCompatibility.push({
     brand: marca,
     model: modelo,
-    years: years,
-    engine: engine,
     notes: ''
   });
-  document.getElementById('compatYears').value = '';
-  document.getElementById('compatEngine').value = '';
   renderCompatibility();
 };
 
@@ -3754,8 +3738,6 @@ function renderCompatibility() {
       'justify-content:space-between;align-items:center;">';
     html += '<div><strong>' + escapeHTML(x.brand) + ' ' +
       escapeHTML(x.model) + '</strong>';
-    if (x.years) html += ' · ' + escapeHTML(x.years);
-    if (x.engine) html += ' · ' + escapeHTML(x.engine);
     html += '</div>';
     html += '<button type="button" class="btn btn-small"';
     html += ' onclick="removeCompatibility(' + i + ')"';

@@ -2908,14 +2908,7 @@ function renderProductCard(p) {
     fp.finalPrice.toFixed(2) + '</span>';
   priceHtml += '<span class="product-price-bs">Bs. ' +
     fp.priceBs.toFixed(2) + '</span>';
-  var stockClass = 'in';
-  var stockText = 'Disponible';
   var stockUrgent = '';
-  // El cliente nunca ve cantidades: solo Disponible / No disponible
-  if (!(p.stock > 0)) {
-    stockClass = 'out';
-    stockText = 'No disponible';
-  }
   var tags = '';
   if (fp.hasDiscount) {
     tags = '<div class="product-offer-tag">-' +
@@ -2935,15 +2928,11 @@ function renderProductCard(p) {
   html += '<div class="product-name">' +
     escapeHTML(p.name) + '</div>';
   html += '<div class="product-prices">' + priceHtml + '</div>';
-  html += '<div class="product-stock ' + stockClass + '">';
-  html += '<span class="product-stock-dot"></span>';
-  html += stockText + '</div>';
   html += '<button class="product-add-btn" ';
   html += 'onclick="event.stopPropagation();';
   html += 'addToCart(\'' + p.id + '\')"';
-  if (!(p.stock > 0)) html += ' disabled';
   html += '>';
-  html += !(p.stock > 0) ? 'No disponible' : 'Agregar';
+  html += 'Agregar';
   html += '</button></div></div>';
   return html;
 }
@@ -3049,9 +3038,8 @@ function renderOffers() {
     html += '<button class="offer-card-btn" ';
     html += 'onclick="event.stopPropagation();';
     html += 'addToCart(\'' + p.id + '\')"';
-    if (!(p.stock > 0)) html += ' disabled';
     html += '>';
-    html += !(p.stock > 0) ? 'No disponible' : 'Agregar al carrito';
+    html += 'Agregar al carrito';
     html += '</button></div></div>';
   });
   container.innerHTML = html;
@@ -3454,15 +3442,12 @@ function generateTechSheetHTML(product) {
     html += '<h3>Compatibilidad Vehicular</h3>';
     html += '<table class="compatibility-table">';
     html += '<thead><tr><th>Marca</th>';
-    html += '<th>Modelo</th><th>Años</th>';
-    html += '<th>Motor</th></tr></thead><tbody>';
+    html += '<th>Modelo</th></tr></thead><tbody>';
     compatibility.forEach(function(c) {
       if (c.brand || c.model) {
         html += '<tr><td>' + escapeHTML(c.brand || '-') +
           '</td>';
-        html += '<td>' + escapeHTML(c.model || '-') + '</td>';
-        html += '<td>' + escapeHTML(c.years || '-') + '</td>';
-        html += '<td>' + escapeHTML(c.engine || '-') +
+        html += '<td>' + escapeHTML(c.model || '-') +
           '</td></tr>';
       }
     });
@@ -3522,13 +3507,6 @@ window.openProductDetail = async function(productId) {
   }
   var techSheetHtml = generateTechSheetHTML(product);
 
-  var stockClass = 'in';
-  var stockLabel = 'Disponible';
-  if (!(product.stock > 0)) {
-    stockClass = 'out';
-    stockLabel = 'No disponible';
-  }
-
   var detailHtml = '';
   detailHtml += '<button class="modal-close" ';
   detailHtml += 'onclick="closeModal(\'';
@@ -3544,8 +3522,6 @@ window.openProductDetail = async function(productId) {
   }
   detailHtml += '<h2>' + escapeHTML(product.name) + '</h2>';
   detailHtml += priceBox;
-  detailHtml += '<div class="detail-stock ' + stockClass +
-    '">' + stockLabel + '</div>';
   if (product.description) {
     detailHtml += '<div class="detail-section-title">' +
       'Descripción</div>';
@@ -3558,10 +3534,8 @@ window.openProductDetail = async function(productId) {
   detailHtml += '<button class="detail-add-btn" ';
   detailHtml += 'onclick="addToCart(\'' + product.id +
     '\');closeModal(\'productDetailModal\')"';
-  if (!(product.stock > 0)) detailHtml += ' disabled';
   detailHtml += '>';
-  detailHtml += !(product.stock > 0) ?
-    'No disponible' : 'Agregar al carrito';
+  detailHtml += 'Agregar al carrito';
   detailHtml += '</button>';
   detailHtml += '<button class="detail-add-btn wa" ';
   detailHtml += 'onclick="pedirProducto(\'' + product.id +
@@ -3587,8 +3561,8 @@ window.addToCart = function(productId) {
   var product = products.find(function(p) {
     return p.id === productId;
   });
-  if (!product || product.stock <= 0) {
-    showError('Producto no disponible');
+  if (!product) {
+    showError('Producto no encontrado');
     return;
   }
   var fp = formatPrices(product.price, product.discount);
@@ -3596,12 +3570,8 @@ window.addToCart = function(productId) {
     return item.id === productId;
   });
   if (existing) {
-    if (existing.quantity < product.stock) {
-      existing.quantity++;
-    } else {
-      showError('No hay más stock disponible');
-      return;
-    }
+    // Sin límite: la disponibilidad se confirma por WhatsApp
+    existing.quantity++;
   } else {
     var img = product.thumbnail ||
       (product.images && product.images[0]) ||
@@ -3643,12 +3613,6 @@ window.updateQuantity = function(productId, change) {
   }
   if (!product) {
     removeFromCart(productId);
-    return;
-  }
-  if (item.quantity > product.stock) {
-    item.quantity = product.stock;
-    showError('No hay más stock');
-    updateCartUI();
     return;
   }
   updateCartUI();
@@ -3763,7 +3727,7 @@ window.pedirPorWhatsApp = function() {
   msg += '\nTotal: $' + total.toFixed(2) +
     ' / Bs. ' + (total * bcvRate).toFixed(2) +
     ' (BCV ' + bcvRate + ')';
-  msg += '\n\n¿Me confirman disponibilidad y forma de pago?';
+  msg += '\n\nPor favor confírmenme disponibilidad y forma de pago.';
   abrirWhatsApp('https://wa.me/' + waNumber() +
     '?text=' + encodeURIComponent(msg));
 };
