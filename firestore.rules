@@ -77,6 +77,10 @@ service cloud.firestore {
       allow read, create, update: if isAdmin();
       allow delete: if isOwner();
     }
+    match /quotes/{id} {
+      allow read, create: if isAdmin();
+      allow update, delete: if isOwner();
+    }
     match /cashCloses/{id} {
       allow read, create: if isAdmin();
       allow update, delete: if isOwner();
