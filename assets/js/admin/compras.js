@@ -174,7 +174,14 @@
     var existing = items.filter(function (x) {
       return x.productId === p.id;
     })[0];
-    if (existing) { existing.qty += 1; renderItems(); return; }
+    if (existing) {
+      // Sube al primer lugar para verlo y editarlo sin bajar
+      existing.qty += 1;
+      items.splice(items.indexOf(existing), 1);
+      items.unshift(existing);
+      renderItems();
+      return;
+    }
     if (items.length >= MAX_ITEMS) {
       alert('Máximo ' + MAX_ITEMS + ' productos por factura. ' +
         'Divide la factura en dos.');
@@ -201,7 +208,7 @@
       newPrice: p.price
     };
     if (it.unitCost > 0) it.newPrice = priceFrom(it);
-    items.push(it);
+    items.unshift(it); // el último agregado aparece de primero
     renderItems();
   }
 
