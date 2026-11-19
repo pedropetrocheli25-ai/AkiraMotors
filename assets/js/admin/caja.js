@@ -154,7 +154,11 @@
     var pay = METHODS.map(function (m) {
       return '<div><label>' + m.label + '</label>' +
         '<input type="number" min="0" step="0.01" data-pay="' + m.k +
-        '" placeholder="0.00"></div>';
+        '" placeholder="0.00">' +
+        (m.k.indexOf('efectivo') === 0 ? '' :
+          '<input type="text" maxlength="20" data-ref="' + m.k +
+          '" placeholder="Referencia (últimos dígitos)" style="margin-top:3px">') +
+        '</div>';
     }).join('');
     return '<h2 class="section-title">Caja</h2>' +
       '<div class="kpos">' +
@@ -223,8 +227,9 @@
       var v = AKS.num(el.value);
       if (v > 0) {
         var usd = m.cur === 'USD' ? v : v / rate;
+        var rf = root.querySelector('[data-ref="' + m.k + '"]');
         out.push({ method: m.k, currency: m.cur, amount: AKS.r2(v),
-          amountUsd: AKS.r2(usd) });
+          amountUsd: AKS.r2(usd), ref: rf ? rf.value.trim() : '' });
         paidUsd += usd;
       }
     });
@@ -393,7 +398,7 @@
   async function openPay() {
     if (!validateTicket()) return;
     try { rate = await AKS.getRate(true); } catch (e) { alert(e.message); return; }
-    root.querySelectorAll('[data-pay]').forEach(function (e) { e.value = ''; });
+    root.querySelectorAll('[data-pay],[data-ref]').forEach(function (e) { e.value = ''; });
     renderTicket();
     renderPaySummary();
     $('aksK-paymodal').classList.add('on');

@@ -111,7 +111,17 @@
       var expTot = 0, expPend = 0;
       try {
         var e1 = await db.collection('expenses').where('dateKey', '>=', rg[0]).where('dateKey', '<=', rg[1]).get();
-        e1.forEach(function (d) { var x = d.data(); expTot += x.amountUsd; if (x.status === 'pending') expPend += x.amountUsd; });
+        e1.forEach(function (d) { var x = d.data(); if (!x.purchaseId) expTot += x.amountUsd; if (x.status === 'pending') expPend += x.amountUsd; });
+      } catch (e) { /* sin permiso */ }
+      var overdue = 0, overdueN = 0, dueSoon = 0;
+      try {
+        var pq = await db.collection('expenses').where('status', '==', 'pending').get();
+        var today = AKS.dateKey(), soon = new Date(Date.now() + 7 * 86400000).toISOString().slice(0, 10);
+        pq.forEach(function (d) {
+          var x = d.data();
+          if (x.dueDate && x.dueDate < today) { overdue += x.amountUsd; overdueN++; }
+          else if (x.dueDate && x.dueDate <= soon) dueSoon += x.amountUsd;
+        });
       } catch (e) { /* sin permiso */ }
       await AKS.loadProducts(true);
       var costs = {};
@@ -163,6 +173,7 @@
         '</div><div class="aks-kpis">' +
         kpi('Compras a proveedores', AKS.usd(purchTot), purchN + ' facturas') +
         kpi('Inventario al costo', AKS.usd(invCost), 'A precio de venta: ' + AKS.usd(invPrice)) +
+        kpi('Deudas vencidas', AKS.usd(overdue), overdueN + ' factura(s)/gasto(s) vencidos · por vencer en 7 días: ' + AKS.usd(dueSoon)) +
         kpi('Gastos del periodo', AKS.usd(expTot), 'Por pagar: ' + AKS.usd(expPend) + ' · Resultado: ' + AKS.usd(profit - expTot)) +
         kpi('Productos con stock bajo', low.length, 'En su mínimo o por debajo') +
         kpi('Clientes registrados', clientsN, '') + '</div>';

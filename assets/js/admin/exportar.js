@@ -318,7 +318,7 @@
     var purchTot = 0, purchOk = data.purchases.filter(function (p) { return p.status !== 'voided'; });
     purchOk.forEach(function (p) { purchTot += p.totalUsd; });
     var expTot = 0, expPend = 0;
-    data.expenses.forEach(function (x) { expTot += x.amountUsd; if (x.status === 'pending') expPend += x.amountUsd; });
+    data.expenses.forEach(function (x) { if (!x.purchaseId) expTot += x.amountUsd; if (x.status === 'pending') expPend += x.amountUsd; });
     var webTot = 0;
     data.orders.forEach(function (o) { webTot += Number(o.total) || 0; });
 

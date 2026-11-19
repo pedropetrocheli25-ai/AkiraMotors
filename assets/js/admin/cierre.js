@@ -14,7 +14,7 @@
     { k: 'punto', label: 'Punto de venta Bs', cur: 'VES' },
     { k: 'transferencia', label: 'Transferencia Bs', cur: 'VES' }
   ];
-  var root = null, expected = {}, nSales = 0, totalUsd = 0, changeUsd = 0;
+  var root = null, expected = {}, nSales = 0, totalUsd = 0, changeUsd = 0, outflows = 0, outList = [], elec = [];
   function $(id) { return document.getElementById(id); }
   function fmt(m, v) { return m.cur === 'USD' ? AKS.usd(v) : AKS.bs(v); }
 
@@ -25,6 +25,7 @@
       '<div id="aksQ-info" class="aks-muted" style="margin:.6rem 0"></div>' +
       '<div class="aks-wrap"><table class="aks-table"><thead><tr><th>Método</th><th>Fondo inicial</th>' +
       '<th>Esperado según facturas</th><th>Contado</th><th>Diferencia</th></tr></thead><tbody id="aksQ-body"></tbody></table></div>' +
+      '<div id="aksQ-elec"></div>' +
       '<div class="alert-info" style="margin-top:.6rem">El vuelto se descuenta del Efectivo $. El fondo inicial es el efectivo con el que abriste la caja.</div>' +
       '<div class="form-group"><label>Notas</label><input type="text" id="aksQ-notes" maxlength="200"></div>' +
       '<button class="btn btn-primary" id="aksQ-save">Guardar cierre</button></div>' +
@@ -59,21 +60,58 @@
   async function calc() {
     var date = $('aksQ-date').value;
     if (!date) { alert('Elige la fecha'); return; }
-    expected = {}; nSales = 0; totalUsd = 0; changeUsd = 0;
+    expected = {}; nSales = 0; totalUsd = 0; changeUsd = 0; outflows = 0; outList = []; elec = [];
     try {
       var snap = await AKS.db().collection('sales').where('dateKey', '==', date).get();
       snap.forEach(function (d) {
         var s = d.data();
         if (s.status !== 'completed') return;
         nSales++; totalUsd += s.totalUsd; changeUsd += s.changeUsd || 0;
-        (s.payments || []).forEach(function (p) { expected[p.method] = (expected[p.method] || 0) + p.amount; });
+        (s.payments || []).forEach(function (p, k) {
+          expected[p.method] = (expected[p.method] || 0) + p.amount;
+          if (p.method.indexOf('efectivo') !== 0) {
+            elec.push({ key: d.id + ':' + k, sale: s.saleNumber, method: p.method, currency: p.currency, amount: p.amount, ref: p.ref || '' });
+          }
+        });
         (s.refunds || []).forEach(function (r) { expected[r.method] = (expected[r.method] || 0) - r.amount; });
       });
+      // Salidas del día: gastos y compras pagadas, por método de pago
+      var ex = await AKS.db().collection('expenses').where('paidDateKey', '==', date).get();
+      ex.forEach(function (d) {
+        var x = d.data();
+        if (x.status !== 'paid' || !x.paidMethod) return;
+        expected[x.paidMethod] = (expected[x.paidMethod] || 0) - x.paidAmount; outflows += x.amountUsd;
+        outList.push((x.description || x.category) + ' (' + x.paidMethod + ')');
+      });
+      var pu = await AKS.db().collection('purchases').where('paidDateKey', '==', date).get();
+      pu.forEach(function (d) {
+        var x = d.data();
+        if (x.status !== 'active' || x.paymentStatus !== 'paid' || !x.paymentMethod) return;
+        expected[x.paymentMethod] = (expected[x.paymentMethod] || 0) - x.paidAmount; outflows += x.totalUsd;
+        outList.push('Compra ' + x.invoiceNumber + ' ' + x.supplier + ' (' + x.paymentMethod + ')');
+      });
+      $('aksQ-elec').innerHTML = elec.length ? '<h4 style="margin:1rem 0 .4rem">Verificación de pagos electrónicos</h4>' +
+        '<div class="aks-muted">Marca cada pago cuando lo veas en tu banco o en el punto de venta.</div>' +
+        '<div class="aks-wrap"><table class="aks-table"><thead><tr><th>✓</th><th>Factura</th><th>Método</th><th>Monto</th><th>Referencia</th></tr></thead><tbody>' +
+        elec.map(function (e, i) {
+          return '<tr><td><input type="checkbox" data-ver="' + i + '"></td><td>' + AKS.esc(e.sale) + '</td><td>' + AKS.esc(e.method) +
+            '</td><td>' + (e.currency === 'USD' ? AKS.usd(e.amount) : AKS.bs(e.amount)) + '</td><td>' +
+            (e.ref ? AKS.esc(e.ref) : '<span class="aks-bad">sin referencia</span>') + '</td></tr>';
+        }).join('') + '</tbody></table></div><div id="aksQ-verSum" class="aks-muted"></div>' : '';
+      verSum();
       $('aksQ-info').innerHTML = 'Facturas completadas: <strong>' + nSales + '</strong> · Total vendido: <strong>' +
-        AKS.usd(totalUsd) + '</strong> · Vuelto entregado: ' + AKS.usd(changeUsd);
+        AKS.usd(totalUsd) + '</strong> · Vuelto entregado: ' + AKS.usd(changeUsd) +
+        (outflows ? ' · Pagos de gastos/compras: <strong>' + AKS.usd(outflows) + '</strong> (' + AKS.esc(outList.join('; ')) + ')' : '');
       $('aksQ-body').innerHTML = METHODS.map(inputRow).join('');
       recalc();
     } catch (e) { alert('No se pudo calcular: ' + e.message); }
+  }
+
+  function verSum() {
+    var s = $('aksQ-verSum'); if (!s) return;
+    var n = root.querySelectorAll('[data-ver]:checked').length;
+    s.innerHTML = 'Verificados: <strong>' + n + '</strong> de ' + elec.length +
+      (n < elec.length ? ' · <span class="aks-bad">faltan ' + (elec.length - n) + ' por verificar</span>' : ' · <span class="aks-ok">todos verificados</span>');
   }
 
   async function save() {
@@ -93,7 +131,8 @@
     try {
       await AKS.db().collection('cashCloses').add({ dateKey: date, nSales: nSales, totalUsd: AKS.r2(totalUsd),
         changeUsd: AKS.r2(changeUsd), opening: open, expected: exp, counted: counted, diff: diff,
-        notes: $('aksQ-notes').value.trim(), user: AKS.userLabel(), createdAt: new Date().toISOString() });
+        notes: $('aksQ-notes').value.trim(), outflowsUsd: AKS.r2(outflows),
+        electronic: elec.length, verified: root.querySelectorAll('[data-ver]:checked').length, user: AKS.userLabel(), createdAt: new Date().toISOString() });
       alert('Cierre guardado');
       $('aksQ-body').innerHTML = ''; $('aksQ-notes').value = '';
       await loadHist();
@@ -106,7 +145,7 @@
       var snap = await AKS.db().collection('cashCloses').orderBy('createdAt', 'desc').limit(30).get();
       if (snap.empty) { box.innerHTML = 'Aún no hay cierres guardados.'; return; }
       var h = '<div class="aks-wrap"><table class="aks-table"><thead><tr><th>Fecha</th><th>Facturas</th><th>Vendido</th>' +
-        '<th>Diferencias</th><th>Responsable</th></tr></thead><tbody>';
+        '<th>Diferencias</th><th>Verificados</th><th>Responsable</th></tr></thead><tbody>';
       snap.forEach(function (d) {
         var c = d.data();
         var difs = METHODS.filter(function (m) { return c.diff && c.diff[m.k] !== undefined; }).map(function (m) {
@@ -116,7 +155,7 @@
         }).join('<br>');
         h += '<tr><td>' + AKS.esc(AKS.fmtDate(c.dateKey)) + '</td><td>' + c.nSales + '</td><td>' + AKS.usd(c.totalUsd) +
           '</td><td>' + difs + (c.notes ? '<br><span class="aks-muted">' + AKS.esc(c.notes) + '</span>' : '') +
-          '</td><td>' + AKS.esc(c.user || '') + '</td></tr>';
+          '</td><td>' + (c.electronic ? c.verified + '/' + c.electronic : '-') + '</td><td>' + AKS.esc(c.user || '') + '</td></tr>';
       });
       box.innerHTML = h + '</tbody></table></div>';
     } catch (e) { box.innerHTML = '<span class="aks-bad">' + AKS.esc(e.message) + '</span>'; }
@@ -128,6 +167,7 @@
     $('aksQ-load').addEventListener('click', calc);
     $('aksQ-save').addEventListener('click', save);
     root.addEventListener('input', function (ev) { if (ev.target.hasAttribute('data-cnt') || ev.target.hasAttribute('data-open')) recalc(); });
+    root.addEventListener('change', function (ev) { if (ev.target.hasAttribute('data-ver')) verSum(); });
     AKS.addMenuItem('Cierre de caja', 'cierres', function () {
       if (!$('aksQ-date').value) $('aksQ-date').value = AKS.dateKey();
       calc(); loadHist();

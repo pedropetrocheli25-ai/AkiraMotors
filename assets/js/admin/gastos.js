@@ -6,7 +6,16 @@
   if (!AKS) { console.error('gastos.js: falta sistema-core.js'); return; }
   var CATS = ['Alquiler', 'Servicios (luz, agua, internet)', 'Sueldos', 'Transporte / flete', 'Impuestos y tasas',
     'Mantenimiento', 'Publicidad', 'Proveedor (deuda)', 'Otros'];
-  var rows = [], root = null;
+  var rows = [], root = null, pendingCache = [];
+  var PM = [['efectivo_usd', 'Efectivo $', 'USD'], ['zelle', 'Zelle $', 'USD'], ['efectivo_bs', 'Efectivo Bs', 'VES'],
+    ['pago_movil', 'Pago móvil Bs', 'VES'], ['punto', 'Punto de venta Bs', 'VES'], ['transferencia', 'Transferencia Bs', 'VES']];
+  function pmOptions(attr) {
+    return '<select ' + attr + '>' + PM.map(function (m) { return '<option value="' + m[0] + '">' + m[1] + '</option>'; }).join('') + '</select>';
+  }
+  async function payInfo(method, usd) {
+    var cur = PM.filter(function (m) { return m[0] === method; })[0][2];
+    return { cur: cur, amount: cur === 'USD' ? usd : AKS.r2(usd * await AKS.getRate()) };
+  }
   function $(id) { return document.getElementById(id); }
 
   function html() {
@@ -20,6 +29,7 @@
       '<div class="form-group"><label>Estado</label><select id="aksG-st"><option value="paid">Pagado</option>' +
       '<option value="pending">Pendiente (por pagar)</option></select></div>' +
       '<div class="form-group"><label>Vence (si está pendiente)</label><input type="date" id="aksG-due"></div></div>' +
+      '<div class="form-group"><label>Método de pago (si ya está pagado)</label>' + pmOptions('id="aksG-pm"') + '</div>' +
       '<button class="btn btn-primary" id="aksG-save">Guardar gasto</button></div>' +
       '<div class="admin-card"><div class="aks-inline"><label class="aks-muted">Desde <input type="date" id="aksG-from"></label>' +
       '<label class="aks-muted">Hasta <input type="date" id="aksG-to"></label>' +
@@ -32,9 +42,14 @@
     if (!date) { alert('Elige la fecha'); return; }
     if (!(amt > 0)) { alert('Escribe un monto mayor a 0'); return; }
     try {
-      await AKS.db().collection('expenses').add({ dateKey: date, category: $('aksG-cat').value,
+      var rec = { dateKey: date, category: $('aksG-cat').value,
         description: $('aksG-desc').value.trim(), amountUsd: amt, status: st, dueDate: st === 'pending' ? due : '',
-        paidAt: st === 'paid' ? new Date().toISOString() : '', user: AKS.userLabel(), createdAt: new Date().toISOString() });
+        paidAt: st === 'paid' ? new Date().toISOString() : '', user: AKS.userLabel(), createdAt: new Date().toISOString() };
+      if (st === 'paid') {
+        var pi = await payInfo($('aksG-pm').value, amt);
+        rec.paidMethod = $('aksG-pm').value; rec.paidAmount = pi.amount; rec.paidDateKey = date;
+      }
+      await AKS.db().collection('expenses').add(rec);
       $('aksG-amt').value = ''; $('aksG-desc').value = ''; $('aksG-due').value = '';
       await search();
     } catch (e) { alert('No se pudo guardar: ' + e.message); }
@@ -50,13 +65,14 @@
       // Pendientes de cualquier fecha
       var pend = await AKS.db().collection('expenses').where('status', '==', 'pending').get();
       var pr = []; pend.forEach(function (d) { var x = d.data(); x._id = d.id; pr.push(x); });
+      pendingCache = pr;
       render(pr);
     } catch (e) { $('aksG-out').innerHTML = '<span class="aks-bad">' + AKS.esc(e.message) + '</span>'; }
   }
 
   function render(pending) {
     var tot = 0, byCat = {};
-    rows.forEach(function (x) { tot += x.amountUsd; byCat[x.category] = (byCat[x.category] || 0) + x.amountUsd; });
+    rows.forEach(function (x) { if (x.purchaseId) return; tot += x.amountUsd; byCat[x.category] = (byCat[x.category] || 0) + x.amountUsd; });
     var pt = 0; pending.forEach(function (x) { pt += x.amountUsd; });
     var h = '<div class="aks-kpis"><div class="aks-kpi"><div class="aks-muted">Gastos del rango</div><div style="font-size:1.5rem;font-weight:800">' + AKS.usd(tot) +
       '</div></div><div class="aks-kpi"><div class="aks-muted">Por pagar (total pendiente)</div><div style="font-size:1.5rem;font-weight:800">' + AKS.usd(pt) + '</div></div></div>';
@@ -73,8 +89,8 @@
       keep.map(function (x) {
         return '<tr><td>' + AKS.esc(AKS.fmtDate(x.dateKey)) + '</td><td>' + AKS.esc(x.category) + '</td><td>' + AKS.esc(x.description || '') +
           '</td><td>' + AKS.usd(x.amountUsd) + '</td><td>' + (x.status === 'paid' ? '<span class="aks-ok">Pagado</span>' :
-          '<span class="aks-bad">Pendiente' + (x.dueDate ? ' · vence ' + AKS.esc(AKS.fmtDate(x.dueDate)) : '') + '</span>') + '</td><td>' +
-          (x.status === 'pending' ? '<button class="btn btn-secondary btn-small" data-act="pay" data-id="' + AKS.esc(x._id) + '">Marcar pagado</button> ' : '') +
+          '<span class="aks-bad">Pendiente' + (x.dueDate ? ' · vence ' + AKS.esc(AKS.fmtDate(x.dueDate)) + (x.dueDate < AKS.dateKey() ? ' (VENCIDA)' : '') : '') + '</span>') + '</td><td>' +
+          (x.status === 'pending' ? pmOptions('data-pm="' + AKS.esc(x._id) + '"') + ' <button class="btn btn-secondary btn-small" data-act="pay" data-id="' + AKS.esc(x._id) + '">Marcar pagado</button> ' : '') +
           '<button class="btn btn-danger btn-small" data-act="del" data-id="' + AKS.esc(x._id) + '">Eliminar</button></td></tr>';
       }).join('') + '</tbody></table></div>';
   }
@@ -95,7 +111,13 @@
       if (!act || (act !== 'pay' && act !== 'del')) return;
       var id = ev.target.getAttribute('data-id');
       try {
-        if (act === 'pay') await AKS.db().collection('expenses').doc(id).update({ status: 'paid', paidAt: new Date().toISOString() });
+        if (act === 'pay') {
+          var sel = root.querySelector('[data-pm="' + id + '"]'), m = sel ? sel.value : 'efectivo_usd';
+          var ex = rows.concat(pendingCache).filter(function (z) { return z._id === id; })[0];
+          var pi2 = await payInfo(m, ex.amountUsd);
+          await AKS.db().collection('expenses').doc(id).update({ status: 'paid', paidAt: new Date().toISOString(),
+            paidMethod: m, paidAmount: pi2.amount, paidDateKey: AKS.dateKey() });
+        }
         else { if (!confirm('¿Eliminar este gasto?')) return; await AKS.db().collection('expenses').doc(id).delete(); }
         await search();
       } catch (e) { alert('Error: ' + e.message); }

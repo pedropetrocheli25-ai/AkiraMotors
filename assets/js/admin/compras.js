@@ -37,6 +37,17 @@
       '<div class="form-group"><label>Fecha de la factura *</label>' +
       '<input type="date" id="aksC-date"></div>' +
       '</div>' +
+      '<div class="form-row-3">' +
+      '<div class="form-group"><label>Condición de pago *</label>' +
+      '<select id="aksC-cond"><option value="paid">Pagada (contado)</option>' +
+      '<option value="credit">A crédito (queda por pagar)</option></select></div>' +
+      '<div class="form-group" id="aksC-methodBox"><label>Método de pago</label>' +
+      '<select id="aksC-method"><option value="efectivo_usd">Efectivo $</option><option value="zelle">Zelle $</option>' +
+      '<option value="efectivo_bs">Efectivo Bs</option><option value="pago_movil">Pago móvil Bs</option>' +
+      '<option value="punto">Punto de venta Bs</option><option value="transferencia">Transferencia Bs</option></select></div>' +
+      '<div class="form-group" id="aksC-dueBox" style="display:none"><label>Vence el</label>' +
+      '<input type="date" id="aksC-due"></div>' +
+      '</div>' +
 
       '<div class="form-group"><label>Agregar producto (nombre, ' +
       'código, marca o N° de parte)</label>' +
@@ -243,6 +254,10 @@
       alert('Elige la fecha de la factura'); return;
     }
     if (!items.length) { alert('Agrega al menos un producto'); return; }
+    var cond = $('aksC-cond').value, method = $('aksC-method').value, due = $('aksC-due').value;
+    if (cond === 'credit' && !/^\d{4}-\d{2}-\d{2}$/.test(due)) {
+      alert('Elige la fecha de vencimiento de la deuda'); return;
+    }
 
     var below = [];
     for (var i = 0; i < items.length; i++) {
@@ -290,6 +305,10 @@
       items.forEach(function (x) { total += lineTotal(x); });
       total = AKS.r2(total);
       var user = AKS.userLabel();
+      var payAmount = total;
+      if (cond === 'paid' && /^(efectivo_bs|pago_movil|punto|transferencia)$/.test(method)) {
+        payAmount = AKS.r2(total * await AKS.getRate());
+      }
 
       await db.runTransaction(async function (tx) {
         // ---- LECTURAS ----
@@ -358,11 +377,23 @@
           invoiceNumber: invoice, invoiceDate: date,
           items: lines, itemCount: lines.length,
           totalUsd: total, notes: notes, status: 'active',
+          paymentStatus: cond === 'paid' ? 'paid' : 'pending',
+          paymentMethod: cond === 'paid' ? method : '',
+          paidAmount: cond === 'paid' ? payAmount : 0,
+          paidDateKey: cond === 'paid' ? AKS.dateKey() : '',
+          dueDate: cond === 'credit' ? due : '',
           user: user, createdAt: nowIso
         });
+        if (cond === 'credit') {
+          tx.set(db.collection('expenses').doc(), {
+            dateKey: date, category: 'Proveedor (deuda)',
+            description: 'Factura ' + invoice + ' - ' + supplier,
+            amountUsd: total, status: 'pending', dueDate: due, paidAt: '',
+            purchaseId: purchaseRef.id, user: user, createdAt: nowIso });
+        }
       });
 
-      alert('Factura guardada. Inventario y costos actualizados.');
+      alert(cond === 'credit' ? 'Factura guardada. Quedó en "Gastos / por pagar".' : 'Factura guardada. Inventario y costos actualizados.');
       items = [];
       $('aksC-supplier').value = '';
       $('aksC-invoice').value = '';
@@ -475,6 +506,13 @@
           voidedBy: AKS.userLabel(),
           voidedAt: new Date().toISOString() });
       });
+      // Si la factura estaba a crédito y sin pagar, se quita la deuda
+      try {
+        var dq = await db.collection('expenses').where('purchaseId', '==', id).get();
+        for (var di = 0; di < dq.docs.length; di++) {
+          if (dq.docs[di].data().status === 'pending') await dq.docs[di].ref.delete();
+        }
+      } catch (e2) { console.error('deuda:', e2); }
       AKS.refreshAdminProducts();
       await loadList();
     } catch (e) {
@@ -681,6 +719,15 @@
     root = AKS.addSection('compras', html());
     if (!root) return;
     bind();
+    root.addEventListener('change', function (ev) {
+      if (ev.target.id !== 'aksC-cond') return;
+      var credit = ev.target.value === 'credit';
+      $('aksC-methodBox').style.display = credit ? 'none' : '';
+      $('aksC-dueBox').style.display = credit ? '' : 'none';
+      if (credit && !$('aksC-due').value) {
+        $('aksC-due').value = new Date(Date.now() + 15 * 86400000).toISOString().slice(0, 10);
+      }
+    });
     AKS.addMenuItem('Compras / Facturas', 'compras', open, 'inventario');
   });
 
