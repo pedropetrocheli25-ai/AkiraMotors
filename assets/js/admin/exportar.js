@@ -435,13 +435,16 @@
       { h: 'Fecha factura', w: 13, fmt: 'date' }, { h: 'Proveedor', w: 26 },
       { h: 'N° factura', w: 14 }, { h: 'Código', w: 14 }, { h: 'Producto', w: 40 },
       { h: 'Cant.', w: 8, fmt: 'int', sum: true }, { h: 'Costo unit. $', w: 14, fmt: 'usd' },
-      { h: 'Total línea $', w: 14, fmt: 'usd', sum: true }, { h: 'Estado', w: 11 }], rows: [] };
+      { h: 'Total línea $', w: 14, fmt: 'usd', sum: true }, { h: 'Estado', w: 11 },
+      { h: 'Condición', w: 14 }, { h: 'Método de pago', w: 18 }, { h: 'Vence', w: 12 }], rows: [] };
     data.purchases.forEach(function (p) {
       var live = p.status !== 'voided';
       (p.items || []).forEach(function (it) {
         comp.rows.push([p.invoiceDate, p.supplier, p.invoiceNumber, it.code, it.name,
           live ? it.qty : 0, r2(it.unitCost), live ? r2(it.lineTotal) : 0,
-          live ? 'Activa' : 'Anulada']);
+          live ? 'Activa' : 'Anulada',
+          p.paymentStatus === 'pending' ? 'A crédito' : (p.paymentStatus === 'paid' ? 'Contado' : ''),
+          p.paymentMethod || '', p.dueDate || '']);
       });
     });
 
