@@ -123,7 +123,7 @@
         '<td><strong>' + AKS.esc(it.name) + '</strong><br>' +
         '<span class="aks-muted">' + AKS.esc(it.code) +
         ' · stock actual: ' + it.stock + '</span></td>' +
-        '<td><input type="number" class="qty" min="1" step="1" ' +
+        '<td><input type="number" class="qty" min="0.001" step="any" ' +
         'data-f="qty" value="' + it.qty + '"></td>' +
         '<td><input type="number" min="0" step="0.01" ' +
         'data-f="cost" value="' + (it.unitCost || '') + '"></td>' +
@@ -341,7 +341,7 @@
           var x = items[k];
           var pd = prodSnaps[k].data();
           var stockBefore = Number(pd.stock) || 0;
-          var stockAfter = stockBefore + x.qty;
+          var stockAfter = AKS.q(stockBefore + x.qty);
           var costBefore = costSnaps[k].exists
             ? (Number(costSnaps[k].data().costPrice) || 0) : 0;
           var priceBefore = Number(pd.price) || 0;
@@ -500,7 +500,7 @@
         for (var k = 0; k < its.length; k++) {
           if (!snaps[k].exists) continue;
           var before = Number(snaps[k].data().stock) || 0;
-          var after = before - its[k].qty;
+          var after = AKS.q(before - its[k].qty);
           tx.update(db.collection('products').doc(its[k].productId), {
             stock: after, updatedAt: new Date().toISOString() });
           AKS.movement(tx, { productId: its[k].productId,
@@ -668,7 +668,7 @@
       var it = items[i];
       if (!it) return;
       if (f === 'qty') {
-        it.qty = parseInt(t.value, 10) || 0;
+        it.qty = AKS.q(parseFloat(String(t.value).replace(',', '.')));
       } else if (f === 'cost') {
         it.unitCost = AKS.num(t.value);
         it.newPrice = priceFrom(it);

@@ -34,7 +34,7 @@
         var v = root.__keep[p.id];
         var d = (v !== undefined && v !== '') ? Number(v) - p.stock : null;
         return '<tr><td>' + AKS.esc(p.code) + '</td><td>' + AKS.esc(p.name) + '</td><td>' + p.stock +
-          '</td><td><input type="number" min="0" step="1" style="width:90px" data-cnt="' + AKS.esc(p.id) + '" value="' +
+          '</td><td><input type="number" min="0" step="any" style="width:90px" data-cnt="' + AKS.esc(p.id) + '" value="' +
           (v === undefined ? '' : AKS.esc(v)) + '"></td><td data-dif="' + AKS.esc(p.id) + '">' + difHtml(d) + '</td></tr>';
       }).join('') + '</tbody></table></div>' + (AKS.products.length > 300 ? '<div class="aks-muted">Mostrando 300; usa el filtro.</div>' : '');
   }
@@ -48,7 +48,7 @@
     AKS.products.forEach(function (p) {
       var v = keep[p.id];
       if (v === undefined || v === '') return;
-      var n = Math.floor(Number(v));
+      var n = AKS.q(Number(String(v).replace(',', '.')));
       if (!isFinite(n) || n < 0) return;
       if (n !== p.stock) todo.push({ p: p, n: n });
     });
@@ -97,7 +97,7 @@
       root.__keep[id] = ev.target.value;
       var p = AKS.products.filter(function (x) { return x.id === id; })[0];
       $('aksN-list').querySelector('[data-dif="' + id + '"]').innerHTML =
-        ev.target.value === '' ? '' : difHtml(Math.floor(Number(ev.target.value)) - p.stock);
+        ev.target.value === '' ? '' : difHtml(AKS.q(Number(String(ev.target.value).replace(',', '.')) - p.stock));
     });
     AKS.addMenuItem('Conteo físico', 'conteo', open, 'inventario');
   });

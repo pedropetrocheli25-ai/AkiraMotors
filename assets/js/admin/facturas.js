@@ -104,7 +104,7 @@
         '<strong>Devolución parcial</strong> <span class="aks-muted">(cantidad a devolver por producto)</span><br>' +
         (s.items || []).map(function (x, k) {
           return '<label style="display:inline-block;margin:.3rem .8rem .3rem 0">' + AKS.esc(x.name) + ' (máx. ' + x.qty +
-            ') <input type="number" min="0" max="' + x.qty + '" step="1" value="0" data-rq="' + k + '" style="width:70px"></label>';
+            ') <input type="number" min="0" max="' + x.qty + '" step="any" value="0" data-rq="' + k + '" style="width:70px"></label>';
         }).join('') + '<div class="aks-inline" style="margin-top:.4rem"><select data-rm>' +
         Object.keys(METHOD).map(function (m) { return '<option value="' + m + '">Reembolso: ' + METHOD[m] + '</option>'; }).join('') +
         '</select><input type="text" data-rr placeholder="Motivo" style="min-width:200px">' +
@@ -120,7 +120,7 @@
     var box = btn.closest('[data-ret]'), id = btn.getAttribute('data-id');
     var qtys = {}, any = false;
     box.querySelectorAll('[data-rq]').forEach(function (i) {
-      var q = Math.floor(AKS.num(i.value));
+      var q = AKS.q(AKS.num(i.value));
       if (q > 0) { qtys[i.getAttribute('data-rq')] = q; any = true; }
     });
     if (!any) { alert('Escribe la cantidad a devolver'); return; }
@@ -148,7 +148,7 @@
           it.qty -= q; it.lineTotal = AKS.r2(it.qty * it.unitPrice); costBack += (it.unitCost || 0) * q;
           var sn = snaps[it.productId];
           if (sn.exists) {
-            var before = (Number(sn.data().stock) || 0) + (added[it.productId] || 0), after = before + q;
+            var before = (Number(sn.data().stock) || 0) + (added[it.productId] || 0), after = AKS.q(before + q);
             added[it.productId] = (added[it.productId] || 0) + q;
             tx.update(db.collection('products').doc(it.productId), { stock: after, updatedAt: now });
             AKS.movement(tx, { productId: it.productId, code: it.code, name: it.name, type: 'devolucion', qty: q,

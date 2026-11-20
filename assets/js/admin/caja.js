@@ -274,7 +274,7 @@
     var list;
     if (q.trim() && mode === 'search') list = AKS.searchProducts(q, 200);
     else if (q.trim()) list = AKS.searchProducts(q, 12);
-    else list = AKS.products.slice();
+    else list = AKS.products.filter(function (p) { return p.stock > 0; });
     if (!q.trim()) {
       list.sort(function (a, b) {
         return (favs[b.id] ? 1 : 0) - (favs[a.id] ? 1 : 0) ||
@@ -293,7 +293,8 @@
         (favs[p.id] ? '★' : '☆') + '</button>' +
         '<div class="kpos-img">' + (p.thumb && /^(data:image|https:)/.test(p.thumb)
           ? '<img alt="" src="' + AKS.esc(p.thumb) + '">' : '&#9881;') + '</div>' +
-        '<div class="kpos-inv' + (p.stock <= p.minStock ? ' low' : '') + '">Inv. ' + p.stock + '</div>' +
+        (off ? '<div class="kpos-inv low">No disponible</div>'
+          : '<div class="kpos-inv' + (p.stock <= p.minStock ? ' low' : '') + '">Inv. ' + p.stock + '</div>') +
         '<div class="kpos-name">' + AKS.esc(p.name) + '</div>' +
         '<div class="kpos-price">' + AKS.usd(price) +
         '<small>' + AKS.bs(price * rate) + '</small></div></div>';
@@ -320,7 +321,7 @@
         return '<div class="kpos-line" data-i="' + i + '"><div><strong>' +
           AKS.esc(l.name) + '</strong><div class="aks-muted">' + AKS.esc(l.code) +
           ' · stock ' + l.stock + (l.override ? ' · precio editado' : '') + '</div>' +
-          '<div class="ctl"><input type="number" class="qty" min="1" step="1" ' +
+          '<div class="ctl"><input type="number" class="qty" min="0.001" step="any" ' +
           'data-f="qty" value="' + l.qty + '"> x $ <input type="number" min="0" ' +
           'step="0.01" data-f="price" value="' + l.unitPrice + '"></div></div>' +
           '<div style="text-align:right"><button class="rm" data-act="rm" title="Quitar">&times;</button>' +
@@ -341,6 +342,7 @@
       ? '<div class="r"><span>Subtotal</span><span>' + AKS.usd(t.sub) + '</span></div>' +
         (t.disc ? '<div class="r"><span>Descuento ' + t.pct + '%</span><span>-' +
           AKS.usd(t.disc) + '</span></div>' : '') +
+        (usdtRate > 0 ? '<div class="r"><span>USDT</span><span>' + (t.totalBs / usdtRate).toFixed(2) + ' USDT</span></div>' : '') +
         '<div class="r"><strong>Total Bs</strong><strong>' + AKS.bs(t.totalBs) +
         '</strong></div>' : '';
     $('aksK-sellamt').innerHTML = AKS.usd(t.total) +
@@ -369,7 +371,7 @@
     if (p.stock <= 0) { alert('"' + p.name + '" no tiene existencia.'); return; }
     var cart = T().cart;
     var ex = cart.filter(function (l) { return l.productId === p.id; })[0];
-    if (ex) { ex.qty += 1; }
+    if (ex) { ex.qty = AKS.q(ex.qty + 1); }
     else {
       if (cart.length >= MAX_LINES) { alert('Máximo ' + MAX_LINES + ' líneas.'); return; }
       var price = AKS.effectivePrice(p);
@@ -387,7 +389,7 @@
     if (!cart.length) { alert('El ticket está vacío'); return false; }
     for (var i = 0; i < cart.length; i++) {
       var l = cart[i];
-      if (!(Number.isInteger(l.qty) && l.qty >= 1)) { alert('Cantidad inválida: ' + l.name); return false; }
+      if (!(l.qty > 0)) { alert('Cantidad inválida: ' + l.name); return false; }
       if (!(l.unitPrice > 0)) { alert('Precio inválido: ' + l.name); return false; }
       if (l.qty > l.stock && !confirm('"' + l.name + '" tiene stock ' + l.stock +
         ' y vas a vender ' + l.qty + '. El sistema lo bloqueará si el stock real ' +
@@ -495,7 +497,7 @@
         for (var k = 0; k < cart.length; k++) {
           var x = cart[k];
           var before = Number(prodSnaps[k].data().stock) || 0;
-          var after = before - x.qty;
+          var after = AKS.q(before - x.qty);
           tx.update(db.collection('products').doc(x.productId), { stock: after, updatedAt: nowIso });
           var cost = costSnaps[k].exists ? (Number(costSnaps[k].data().costPrice) || 0) : 0;
           costTotal += cost * x.qty;
@@ -745,7 +747,7 @@
           if (!snaps[k].exists) continue;
           var base = Number(snaps[k].data().stock) || 0;
           var before = base + (added[it.productId] || 0);
-          var after = before + it.qty;
+          var after = AKS.q(before + it.qty);
           added[it.productId] = (added[it.productId] || 0) + it.qty;
           tx.update(db.collection('products').doc(it.productId), { stock: after, updatedAt: new Date().toISOString() });
           AKS.movement(tx, { productId: it.productId, code: it.code, name: it.name,
@@ -789,7 +791,7 @@
         var i = parseInt(t.closest('.kpos-line').getAttribute('data-i'), 10);
         var l = tk.cart[i];
         if (!l) return;
-        if (f === 'qty') l.qty = parseInt(t.value, 10) || 0;
+        if (f === 'qty') l.qty = AKS.q(parseFloat(String(t.value).replace(',', '.')));
         else { l.unitPrice = AKS.num(t.value); l.override = l.unitPrice !== l.basePrice; }
         renderTotals();
       }
@@ -898,6 +900,10 @@
       settings = await AKS.getSettings(true);
       if (AKS.clientes) await AKS.clientes.load(true);
     } catch (e) { alert(e.message); return; }
+    try {
+      var us0 = await AKS.db().collection('settings').doc('usdtRate').get();
+      usdtRate = us0.exists ? (Number(us0.data().value) || 0) : 0;
+    } catch (e) { usdtRate = 0; }
     renderAll();
     loadToday();
     var s = $('aksK-search'); if (s) s.focus();

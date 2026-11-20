@@ -342,6 +342,9 @@
   };
 
   // Después de cambiar productos, refrescar también las listas del admin
+  // Cantidades con decimales (hasta 3) sin errores de coma flotante
+  AKS.q = function (n) { return Math.round((Number(n) || 0) * 1000) / 1000; };
+
   AKS.refreshAdminProducts = function () {
     AKS.packSync().catch(function (e) { console.error(e); }).then(function () {
       AKS.loadProducts(true).catch(function (e) { console.error(e); });
@@ -382,7 +385,7 @@
       var u = await tx.get(uref);
       if (!u.exists) return;
       var ud = u.data(), us = Number(ud.stock) || 0, bs = Number(bd.stock) || 0, last = bd.packSynced;
-      var newU = last ? us + (bs - Number(last.b || 0)) * q : us;
+      var newU = last ? AKS.q(us + (bs - Number(last.b || 0)) * q) : us;
       var newB = Math.floor(newU / q);
       if (last && newU === us && newB === bs && last.u === newU && last.b === newB) return;
       var now = new Date().toISOString();

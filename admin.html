@@ -2208,12 +2208,12 @@ Venta = Costo / (1 - Margen/100)
 </div>
 <div class="form-group">
 <label>Stock disponible *</label>
-<input type="number" id="productStock"
+<input type="number" id="productStock" step="any" min="0"
   required>
 </div>
 <div class="form-group">
 <label>Stock mínimo (alerta)</label>
-<input type="number" id="productMinStock" min="0"
+<input type="number" id="productMinStock" min="0" step="any"
   placeholder="4 si lo dejas vacío">
 </div>
 <div class="form-group">
@@ -3427,8 +3427,8 @@ window.saveProduct = async function(event) {
     'productPrice').value);
   var discount = parseFloat(document.getElementById(
     'productDiscount').value) || 0;
-  var stock = parseInt(document.getElementById(
-    'productStock').value);
+  var stock = parseFloat(String(document.getElementById(
+    'productStock').value).replace(',', '.'));
 
   if (!code) { alert('El código es obligatorio'); return; }
   if (!name) { alert('El nombre es obligatorio'); return; }
@@ -3479,7 +3479,7 @@ window.saveProduct = async function(event) {
     discount: discount,
     stock: stock,
     minStock: (function() {
-      var m = parseInt(document.getElementById('productMinStock').value);
+      var m = parseFloat(String(document.getElementById('productMinStock').value).replace(',', '.'));
       return isNaN(m) || m < 0 ? null : m;
     })(),
     category: category,

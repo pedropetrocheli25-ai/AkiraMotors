@@ -81,7 +81,7 @@
       else if (!(price > 0)) why = 'precio inválido';
       else if (isNaN(cost) || cost < 0) why = 'costo inválido';
       else if (price < cost) why = 'precio menor que el costo';
-      else if (!(stock >= 0) || stock !== Math.floor(stock)) why = 'stock inválido';
+      else if (!(stock >= 0) ) why = 'stock inválido';
       else if (!(disc >= 0 && disc <= 100)) why = 'descuento inválido';
       if (why) { errs.push('Fila ' + (r + 1) + ' (' + AKS.esc(code || '?') + '): ' + why); continue; }
       seen[AKS.norm(code)] = 1;

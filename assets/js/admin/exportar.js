@@ -17,7 +17,8 @@
   // Mini escritor de .xlsx
   // ============================================================
   var STYLE = { text: 0, head: 1, usd: 2, num: 3, date: 4, int: 5,
-    bold: 6, boldusd: 7, boldnum: 8, boldint: 9, title: 10 };
+    bold: 6, boldusd: 7, boldnum: 8, boldint: 9, title: 10,
+    ihead: 11, itext: 12, iusd: 13, ititle: 14 };
 
   var crcTable = (function () {
     var t = [], c, n, k;
@@ -110,9 +111,9 @@
       headerRow = r;
       var hc = '';
       sh.cols.forEach(function (c, i) {
-        hc += cellXml(colLetter(i) + r, { v: c.h, s: 'head' }, null);
+        hc += cellXml(colLetter(i) + r, { v: c.h, s: sh.headStyle || 'head' }, null);
       });
-      rows.push('<row r="' + r + '" ht="30" customHeight="1">' + hc + '</row>');
+      rows.push('<row r="' + r + '" ht="' + (sh.headStyle ? 26 : 30) + '" customHeight="1">' + hc + '</row>');
       r++;
       var first = r;
       (sh.rows || []).forEach(function (row) {
@@ -120,7 +121,7 @@
         row.forEach(function (c, i) {
           cells += cellXml(colLetter(i) + r, c, sh.cols[i] && sh.cols[i].fmt);
         });
-        rows.push('<row r="' + r + '">' + cells + '</row>');
+        rows.push('<row r="' + r + '"' + (sh.rowHt ? ' ht="' + sh.rowHt + '" customHeight="1"' : '') + '>' + cells + '</row>');
         r++;
       });
       var last = r - 1;
@@ -155,9 +156,14 @@
     var af = (headerRow && sh.rows && sh.rows.length)
       ? '<autoFilter ref="A' + headerRow + ':' + colLetter(sh.cols.length - 1) +
         (headerRow + sh.rows.length) + '"/>' : '';
+    var merge = sh.merge ? '<mergeCells count="1"><mergeCell ref="' + sh.merge + '"/></mergeCells>' : '';
+    var pg = sh.fit ? '<pageMargins left="0.4" right="0.4" top="0.6" bottom="0.6" header="0.3" footer="0.3"/>' +
+      '<pageSetup paperSize="9" orientation="portrait" fitToWidth="1" fitToHeight="0"/>' +
+      '<headerFooter><oddFooter>&amp;CPágina &amp;P de &amp;N</oddFooter></headerFooter>' : '';
     return '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' +
       '<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">' +
-      view + cols + '<sheetData>' + rows.join('') + '</sheetData>' + af + '</worksheet>';
+      (sh.fit ? '<sheetPr><pageSetUpPr fitToPage="1"/></sheetPr>' : '') +
+      view + cols + '<sheetData>' + rows.join('') + '</sheetData>' + af + merge + pg + '</worksheet>';
   }
 
   var STYLES_XML = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' +
@@ -165,17 +171,22 @@
     '<numFmts count="3"><numFmt numFmtId="164" formatCode="&quot;$&quot;#,##0.00"/>' +
     '<numFmt numFmtId="165" formatCode="#,##0.00"/>' +
     '<numFmt numFmtId="166" formatCode="dd/mm/yyyy"/></numFmts>' +
-    '<fonts count="4"><font><sz val="11"/><name val="Calibri"/></font>' +
+    '<fonts count="7"><font><sz val="11"/><name val="Calibri"/></font>' +
     '<font><b/><sz val="11"/><name val="Calibri"/></font>' +
     '<font><b/><sz val="11"/><color rgb="FFFFFFFF"/><name val="Calibri"/></font>' +
-    '<font><b/><sz val="14"/><name val="Calibri"/></font></fonts>' +
+    '<font><b/><sz val="14"/><name val="Calibri"/></font>' +
+    '<font><sz val="12"/><name val="Arial"/></font>' +
+    '<font><b/><sz val="12"/><name val="Arial"/></font>' +
+    '<font><b/><sz val="14"/><name val="Arial"/></font></fonts>' +
     '<fills count="4"><fill><patternFill patternType="none"/></fill>' +
     '<fill><patternFill patternType="gray125"/></fill>' +
     '<fill><patternFill patternType="solid"><fgColor rgb="FFFF6B1A"/><bgColor indexed="64"/></patternFill></fill>' +
     '<fill><patternFill patternType="solid"><fgColor rgb="FFEEEEEE"/><bgColor indexed="64"/></patternFill></fill></fills>' +
-    '<borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders>' +
+    '<borders count="2"><border><left/><right/><top/><bottom/><diagonal/></border>' +
+    '<border><left style="thin"><color auto="1"/></left><right style="thin"><color auto="1"/></right>' +
+    '<top style="thin"><color auto="1"/></top><bottom style="thin"><color auto="1"/></bottom><diagonal/></border></borders>' +
     '<cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs>' +
-    '<cellXfs count="11">' +
+    '<cellXfs count="15">' +
     '<xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/>' +
     '<xf numFmtId="0" fontId="2" fillId="2" borderId="0" xfId="0" applyFont="1" applyFill="1" applyAlignment="1"><alignment horizontal="center" vertical="center" wrapText="1"/></xf>' +
     '<xf numFmtId="164" fontId="0" fillId="0" borderId="0" xfId="0" applyNumberFormat="1"/>' +
@@ -187,6 +198,10 @@
     '<xf numFmtId="165" fontId="1" fillId="3" borderId="0" xfId="0" applyNumberFormat="1" applyFont="1" applyFill="1"/>' +
     '<xf numFmtId="1" fontId="1" fillId="3" borderId="0" xfId="0" applyNumberFormat="1" applyFont="1" applyFill="1"/>' +
     '<xf numFmtId="0" fontId="3" fillId="0" borderId="0" xfId="0" applyFont="1"/>' +
+    '<xf numFmtId="0" fontId="5" fillId="3" borderId="1" xfId="0" applyFont="1" applyFill="1" applyBorder="1" applyAlignment="1"><alignment horizontal="center" vertical="center" wrapText="1"/></xf>' +
+    '<xf numFmtId="0" fontId="4" fillId="0" borderId="1" xfId="0" applyFont="1" applyBorder="1" applyAlignment="1"><alignment horizontal="center" vertical="center"/></xf>' +
+    '<xf numFmtId="164" fontId="4" fillId="0" borderId="1" xfId="0" applyNumberFormat="1" applyFont="1" applyBorder="1" applyAlignment="1"><alignment horizontal="center" vertical="center"/></xf>' +
+    '<xf numFmtId="0" fontId="6" fillId="0" borderId="0" xfId="0" applyFont="1" applyAlignment="1"><alignment horizontal="center" vertical="center"/></xf>' +
     '</cellXfs></styleSheet>';
 
   function buildXlsx(sheets) {
@@ -213,7 +228,12 @@
       sheets.map(function (s, i) {
         var nm = xesc(s.name.replace(/[\[\]:*?\/\\]/g, ' ').slice(0, 31));
         return '<sheet name="' + nm + '" sheetId="' + (i + 1) + '" r:id="rId' + (i + 1) + '"/>';
-      }).join('') + '</sheets></workbook>');
+      }).join('') + '</sheets>' +
+      sheets.map(function (s, i) {
+        return s.titleRow ? '<definedNames><definedName name="_xlnm.Print_Titles" localSheetId="' + i + '">\'' +
+          xesc(s.name.replace(/[\[\]:*?\/\\]/g, ' ').slice(0, 31)) + '\'!$' + s.titleRow + ':$' + s.titleRow +
+          '</definedName></definedNames>' : '';
+      }).join('') + '</workbook>');
     add('xl/_rels/workbook.xml.rels', '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' +
       '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">' +
       sheets.map(function (s, i) {
@@ -516,6 +536,41 @@
     setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 1500);
   }
 
+  // Inventario detallado para imprimir: Código, Nombre, Costo, Precio de venta (Arial 12, centrado, con bordes)
+  async function exportarInventario() {
+    var btn = $('aksX-inv');
+    btn.disabled = true; btn.textContent = 'Generando...';
+    try {
+      var db = AKS.db();
+      var prods = await db.collection('products').get(), costs = {};
+      var cs = await db.collection('productCosts').get();
+      cs.forEach(function (d) { costs[d.id] = Number(d.data().costPrice) || 0; });
+      var list = [];
+      prods.forEach(function (d) {
+        var x = d.data();
+        list.push([String(x.code || ''), String(x.name || ''), r2(costs[d.id] || 0), r2(Number(x.price) || 0)]);
+      });
+      list.sort(function (a, b) { return a[1].localeCompare(b[1], 'es'); });
+      var settings = await AKS.getSettings(true);
+      var hdr = ['Código', 'Nombre del producto', 'Precio costo ($)', 'Precio de venta ($)'];
+      var w = hdr.map(function (h, i) {
+        var m = h.length;
+        list.forEach(function (r) { var l = String(i > 1 ? r[i].toFixed(2) : r[i]).length + (i > 1 ? 1 : 0); if (l > m) m = l; });
+        return Math.min(70, Math.ceil(m * 1.35) + 3);
+      });
+      var sh = { name: 'Inventario', cols: hdr.map(function (h, i) { return { h: h, w: w[i], fmt: i > 1 ? 'iusd' : 'itext' }; }),
+        rows: list, headStyle: 'ihead', rowHt: 21, fit: true, titleRow: 3, merge: 'A1:D1',
+        pre: [[{ v: (settings.companyName || 'Akira Motors') + ' - Inventario detallado', s: 'ititle' }], [{ v: 'Fecha: ' + AKS.fmtDate(AKS.dateKey()) + ' · ' + list.length + ' productos', s: 'itext' }]] };
+      // la fila de fecha no lleva borde: usa estilo de texto simple centrado
+      sh.pre[1][0].s = 'ititle'; 
+      var bytes = buildXlsx([sh]);
+      download(bytes, 'Inventario_' + AKS.dateKey() + '.xlsx');
+      AKS.lastInventory = { bytes: bytes, rows: list };
+    } catch (e) {
+      console.error(e); alert('No se pudo generar el inventario: ' + e.message);
+    } finally { btn.disabled = false; btn.textContent = 'Descargar inventario (Excel)'; }
+  }
+
   async function exportar() {
     var rg = rangeFromUi();
     if (!rg) return;
@@ -566,6 +621,12 @@
       $(id).addEventListener('change', updateLabel);
     });
     $('aksX-go').addEventListener('click', exportar);
+    var inv = document.createElement('div');
+    inv.className = 'aks-inline'; inv.style.marginTop = '.8rem';
+    inv.innerHTML = '<button class="btn btn-secondary" id="aksX-inv">Descargar inventario (Excel)</button>' +
+      '<span class="aks-muted">Código, nombre, precio costo y precio de venta en $, listo para imprimir.</span>';
+    card.appendChild(inv);
+    $('aksX-inv').addEventListener('click', exportarInventario);
     updateLabel();
   });
 
