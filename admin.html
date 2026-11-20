@@ -818,29 +818,6 @@ body {
 }
 .sound-toggle.off { border-color: #999; opacity: 0.6; }
 @media (max-width: 768px) {
-  body { flex-direction: column; }
-  .admin-sidebar {
-    width: 100%;
-    height: auto;
-    position: relative;
-  }
-  .admin-menu {
-    display: flex;
-    overflow-x: auto;
-    padding: 0.5rem;
-  }
-  .admin-menu-group { display: none; }
-  .admin-menu-item {
-    white-space: nowrap;
-    border-left: none;
-    border-bottom: 3px solid transparent;
-    flex-direction: column;
-    gap: 0.2rem;
-  }
-  .admin-menu-item.active {
-    border-left: none;
-    border-bottom-color: white;
-  }
   .form-row, .form-row-3, .form-row-4 {
     grid-template-columns: 1fr;
   }
@@ -854,6 +831,20 @@ body {
   table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
   .modal-content, .modal > div { max-width: 100%; }
 }
+/* Menú lateral oculto: aparece al tocar las 3 rayitas */
+.admin-sidebar {
+  position: fixed; top: 0; left: 0; z-index: 2000;
+  width: 280px; max-width: 85vw; height: 100vh; height: 100dvh;
+  transform: translateX(-105%); transition: transform .25s ease;
+  box-shadow: none;
+}
+.admin-sidebar.open { transform: translateX(0); box-shadow: 4px 0 24px rgba(0,0,0,.4); }
+.admin-content { width: 100%; padding-top: 4rem; }
+#menuBtn { position: fixed; top: 10px; left: 10px; z-index: 1500; width: 46px; height: 46px;
+  border: 0; border-radius: 10px; background: #111; color: #fff; font-size: 1.6rem; line-height: 1;
+  cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,.3); }
+#menuOverlay { display: none; position: fixed; inset: 0; z-index: 1999; background: rgba(0,0,0,.5); }
+#menuOverlay.open { display: block; }
 #pwaInstall { display: none; position: fixed; left: 12px; bottom: 12px; z-index: 1000;
   background: #FF6B1A; color: #fff; border: 0; border-radius: 24px; padding: .7rem 1.1rem;
   font-weight: 700; box-shadow: 0 4px 12px rgba(0,0,0,.3); cursor: pointer; }
@@ -870,6 +861,21 @@ body {
 window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();ev=e;if(b())b().style.display='block';});
 window.addEventListener('DOMContentLoaded',function(){if(b())b().addEventListener('click',function(){if(!ev)return;ev.prompt();ev.userChoice.then(function(){ev=null;b().style.display='none';});});});
 window.addEventListener('appinstalled',function(){if(b())b().style.display='none';});})();
+</script>
+<script>
+(function(){
+  function sb(){return document.getElementById('adminSidebar');}
+  function set(o){var s=sb();if(!s)return;s.classList.toggle('open',o);
+    document.getElementById('menuOverlay').classList.toggle('open',o);
+    document.getElementById('menuBtn').setAttribute('aria-expanded',o?'true':'false');}
+  document.addEventListener('click',function(e){
+    var t=e.target;
+    if(t.closest&&t.closest('#menuBtn')){set(!sb().classList.contains('open'));return;}
+    if(t.id==='menuOverlay'){set(false);return;}
+    if(t.closest&&t.closest('.admin-menu-item')){setTimeout(function(){set(false);},0);}
+  });
+  document.addEventListener('keydown',function(e){if(e.key==='Escape')set(false);});
+})();
 </script>
 <script>if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('/sw.js').catch(function(){});});}</script>
 </head>
@@ -906,7 +912,9 @@ Volver a la tienda</a>
 <div id="adminPanel" class="hidden"
   style="display:flex;width:100%;">
 
-<aside class="admin-sidebar">
+<button id="menuBtn" type="button" aria-label="Abrir menú" aria-expanded="false">&#9776;</button>
+<div id="menuOverlay"></div>
+<aside class="admin-sidebar" id="adminSidebar">
 <div class="admin-sidebar-header">
 <h2>AKIRA MOTORS</h2>
 <small>Panel de Administración</small>
