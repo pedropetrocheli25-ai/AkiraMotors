@@ -11,7 +11,7 @@
   var WEB_OK = ['confirmed', 'shipped', 'ready', 'delivered'];
   var METHOD = { efectivo_usd: 'Efectivo $', zelle: 'Zelle $',
     efectivo_bs: 'Efectivo Bs', pago_movil: 'Pago móvil',
-    punto: 'Punto de venta', transferencia: 'Transferencia' };
+    punto: 'Punto de venta', transferencia: 'Transferencia', usdt: 'USDT' };
 
   // ============================================================
   // Mini escritor de .xlsx
@@ -428,7 +428,7 @@
       { h: 'Equivalente $', w: 15, fmt: 'usd', sum: true }],
       rows: Object.keys(byPay).map(function (k) {
         var b = byPay[k];
-        return [METHOD[k] || k, b.n, b.cur === 'USD' ? 'USD' : 'Bs', r2(b.amt), r2(b.usd)];
+        return [METHOD[k] || k, b.n, b.cur === 'USD' ? 'USD' : (b.cur === 'USDT' ? 'USDT' : 'Bs'), r2(b.amt), r2(b.usd)];
       }) };
 
     var comp = { name: 'Compras', cols: [

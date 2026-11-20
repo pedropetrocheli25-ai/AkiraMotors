@@ -21,11 +21,36 @@
       '<button class="btn btn-secondary" id="aksT-fetch">Consultar tasa oficial</button>' +
       '<button class="btn btn-primary" id="aksT-save">Actualizar tasa</button></div>' +
       '<div id="aksT-src" class="aks-muted" style="margin-top:.4rem"></div></div>' +
+      '<div class="admin-card"><h3>Tasa USDT</h3>' +
+      '<div class="alert-info">Se usa en la Caja cuando el cliente paga en USDT: el total de la factura en Bs ' +
+      'se divide entre esta tasa y el cliente paga menos $; la diferencia cuenta como descuento. ' +
+      'Déjala en blanco o en 0 para ocultar el pago en USDT.</div>' +
+      '<div class="aks-kpi" style="margin-bottom:.6rem"><div class="aks-muted">Tasa USDT actual (Bs por USDT)</div>' +
+      '<div style="font-size:1.6rem;font-weight:800" id="aksT-ucur">-</div><div class="aks-muted" id="aksT-uwhen"></div></div>' +
+      '<div class="aks-inline"><input type="number" id="aksT-unew" min="0" step="0.01" placeholder="Ej: 45.00" style="max-width:220px">' +
+      '<button class="btn btn-primary" id="aksT-usave">Guardar tasa USDT</button></div></div>' +
       '<div class="admin-card"><h3>Historial de tasas</h3><div id="aksT-hist" class="aks-muted">' +
       'Cargando...</div></div>';
   }
 
+  async function saveUsdt() {
+    var v = AKS.num($('aksT-unew').value);
+    if (!(v >= 0) || v > 100000) { alert('Tasa inválida'); return; }
+    try {
+      await AKS.db().collection('settings').doc('usdtRate').set({ value: v, updatedAt: new Date().toISOString() });
+      $('aksT-unew').value = '';
+      await refresh();
+      alert(v > 0 ? 'Tasa USDT guardada' : 'Pago en USDT desactivado');
+    } catch (e) { alert('No se pudo guardar: ' + e.message); }
+  }
+
   async function refresh() {
+    try {
+      var us = await AKS.db().collection('settings').doc('usdtRate').get();
+      var uv = us.exists ? Number(us.data().value) || 0 : 0;
+      $('aksT-ucur').textContent = uv > 0 ? uv.toFixed(2) : 'Sin configurar';
+      $('aksT-uwhen').textContent = us.exists && us.data().updatedAt ? 'Actualizada: ' + AKS.fmtDateTime(us.data().updatedAt) : '';
+    } catch (e) { console.error(e); }
     try {
       var snap = await AKS.db().collection('settings').doc('bcvRate').get();
       if (snap.exists) {
@@ -99,6 +124,7 @@
     if (!root) return;
     $('aksT-save').addEventListener('click', save);
     $('aksT-fetch').addEventListener('click', fetchRate);
+    $('aksT-usave').addEventListener('click', saveUsdt);
     AKS.addMenuItem('Tasa BCV', 'tasa', refresh, 'config');
   });
   AKS.tasa = { refresh: refresh };

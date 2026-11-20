@@ -12,11 +12,14 @@
     { k: 'efectivo_bs', label: 'Efectivo Bs', cur: 'VES' },
     { k: 'pago_movil', label: 'Pago móvil Bs', cur: 'VES' },
     { k: 'punto', label: 'Punto de venta Bs', cur: 'VES' },
-    { k: 'transferencia', label: 'Transferencia Bs', cur: 'VES' }
+    { k: 'transferencia', label: 'Transferencia Bs', cur: 'VES' },
+    { k: 'usdt', label: 'USDT', cur: 'USDT' }
   ];
   var root = null, expected = {}, nSales = 0, totalUsd = 0, changeUsd = 0, outflows = 0, outList = [], elec = [];
   function $(id) { return document.getElementById(id); }
-  function fmt(m, v) { return m.cur === 'USD' ? AKS.usd(v) : AKS.bs(v); }
+  function fmt(m, v) {
+    return m.cur === 'USD' ? AKS.usd(v) : (m.cur === 'USDT' ? Number(v).toFixed(2) + ' USDT' : AKS.bs(v));
+  }
 
   function html() {
     return '<h2 class="section-title">Cierre de caja</h2>' +
@@ -95,7 +98,7 @@
         '<div class="aks-wrap"><table class="aks-table"><thead><tr><th>✓</th><th>Factura</th><th>Método</th><th>Monto</th><th>Referencia</th></tr></thead><tbody>' +
         elec.map(function (e, i) {
           return '<tr><td><input type="checkbox" data-ver="' + i + '"></td><td>' + AKS.esc(e.sale) + '</td><td>' + AKS.esc(e.method) +
-            '</td><td>' + (e.currency === 'USD' ? AKS.usd(e.amount) : AKS.bs(e.amount)) + '</td><td>' +
+            '</td><td>' + (e.currency === 'USD' ? AKS.usd(e.amount) : (e.currency === 'USDT' ? Number(e.amount).toFixed(2) + ' USDT' : AKS.bs(e.amount))) + '</td><td>' +
             (e.ref ? AKS.esc(e.ref) : '<span class="aks-bad">sin referencia</span>') + '</td></tr>';
         }).join('') + '</tbody></table></div><div id="aksQ-verSum" class="aks-muted"></div>' : '';
       verSum();

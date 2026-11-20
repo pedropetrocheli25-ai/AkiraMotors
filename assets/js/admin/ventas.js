@@ -7,7 +7,7 @@
   if (!AKS) { console.error('ventas.js: falta sistema-core.js'); return; }
 
   var LABEL = { efectivo_usd: 'Efectivo $', zelle: 'Zelle $', efectivo_bs: 'Efectivo Bs',
-    pago_movil: 'Pago móvil', punto: 'Punto de venta', transferencia: 'Transferencia' };
+    pago_movil: 'Pago móvil', punto: 'Punto de venta', transferencia: 'Transferencia', usdt: 'USDT' };
   var root = null;
   var running = false;
 

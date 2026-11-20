@@ -17,8 +17,10 @@
     { k: 'efectivo_bs', label: 'Efectivo Bs', cur: 'VES' },
     { k: 'pago_movil', label: 'Pago móvil Bs', cur: 'VES' },
     { k: 'punto', label: 'Punto de venta Bs', cur: 'VES' },
-    { k: 'transferencia', label: 'Transferencia Bs', cur: 'VES' }
+    { k: 'transferencia', label: 'Transferencia Bs', cur: 'VES' },
+    { k: 'usdt', label: 'USDT', cur: 'USDT' }
   ];
+  var usdtRate = 0;
 
   var tickets = [newTicket('A')];
   var cur = 0;
@@ -137,10 +139,17 @@
     '.kpos-box{background:#fff;border-radius:14px;padding:1.2rem;' +
     'width:100%;max-width:460px;max-height:92vh;overflow-y:auto}' +
     '.kpos-box h3{margin:0 0 .6rem}' +
-    '.kpos-pay{display:grid;grid-template-columns:1fr 1fr;gap:.5rem}' +
-    '.kpos-pay label{font-size:.78rem;color:#555;display:block}' +
-    '.kpos-pay input{width:100%;padding:.55rem;border:1px solid #ddd;' +
-    'border-radius:6px}';
+    '.kpos-box{position:relative}' +
+    '.kpos-paytop{position:sticky;top:-1.2rem;z-index:2;background:#fff;' +
+    'margin:-1.2rem -1.2rem .6rem;padding:1.2rem 1.2rem .6rem;' +
+    'border-bottom:2px solid #FF6B1A}' +
+    '.kpos-pay{display:flex;flex-direction:column;gap:.55rem}' +
+    '.kpos-pm{display:grid;grid-template-columns:1fr auto 1fr;gap:.4rem;align-items:end}' +
+    '.kpos-pm label{grid-column:1 / -1;font-size:.78rem;color:#555;font-weight:600}' +
+    '.kpos-pm input{width:100%;padding:.55rem;border:1px solid #ddd;border-radius:6px;box-sizing:border-box}' +
+    '.kpos-pm .all{padding:.5rem .7rem;border:1px solid #FF6B1A;background:#fff;' +
+    'color:#FF6B1A;border-radius:6px;font-weight:700;cursor:pointer}' +
+    '.kpos-pm .all:hover{background:#FF6B1A;color:#fff}';
 
   function injectCss() {
     if ($('aks-caja-style')) return;
@@ -152,12 +161,12 @@
 
   function html() {
     var pay = METHODS.map(function (m) {
-      return '<div><label>' + m.label + '</label>' +
-        '<input type="number" min="0" step="0.01" data-pay="' + m.k +
-        '" placeholder="0.00">' +
-        (m.k.indexOf('efectivo') === 0 ? '' :
-          '<input type="text" maxlength="20" data-ref="' + m.k +
-          '" placeholder="Referencia (últimos dígitos)" style="margin-top:3px">') +
+      return '<div class="kpos-pm" data-row="' + m.k + '"' + (m.k === 'usdt' ? ' style="display:none"' : '') + '>' +
+        '<label>' + m.label + '</label>' +
+        '<input type="number" min="0" step="0.01" data-pay="' + m.k + '" placeholder="Monto">' +
+        '<button type="button" class="all" data-all="' + m.k + '" title="Poner todo lo que falta">Todo</button>' +
+        (m.k.indexOf('efectivo') === 0 ? '<span></span>' :
+          '<input type="text" maxlength="20" data-ref="' + m.k + '" placeholder="Referencia">') +
         '</div>';
     }).join('');
     return '<h2 class="section-title">Caja</h2>' +
@@ -193,9 +202,9 @@
       '<a id="aksK-cancel">Cancelar</a></div></div></div></div>' +
 
       '<div class="kpos-modal" id="aksK-paymodal"><div class="kpos-box">' +
-      '<h3>Cobrar</h3><div id="aksK-paytotals" class="aks-total"></div>' +
-      '<div class="kpos-pay">' + pay + '</div>' +
-      '<div id="aksK-paysum" style="margin:.7rem 0"></div>' +
+      '<div class="kpos-paytop"><h3>Cobrar</h3><div id="aksK-paytotals" class="aks-total"></div>' +
+      '<div id="aksK-paysum" style="margin-top:.4rem"></div></div>' +
+      '<div class="kpos-pay">' + pay + '</div><div style="height:.7rem"></div>' +
       '<div class="aks-inline"><button class="btn btn-primary" id="aksK-charge">' +
       'Confirmar venta</button>' +
       '<button class="btn btn-secondary" id="aksK-payback">Volver</button></div>' +
@@ -221,19 +230,26 @@
   }
 
   function payments() {
-    var out = [], paidUsd = 0;
+    // credit = lo que el pago cubre de la factura (en $ a tasa BCV).
+    // usdt: paga menos $ reales que lo que cubre: la diferencia es descuento.
+    var out = [], paidUsd = 0, credit = 0, usdtDisc = 0;
     METHODS.forEach(function (m) {
       var el = root.querySelector('[data-pay="' + m.k + '"]');
       var v = AKS.num(el.value);
       if (v > 0) {
-        var usd = m.cur === 'USD' ? v : v / rate;
+        var usd = m.cur === 'USD' ? v : (m.cur === 'USDT' ? v : v / rate);
+        var cov = m.cur === 'USDT' ? v * usdtRate / rate : usd;
         var rf = root.querySelector('[data-ref="' + m.k + '"]');
-        out.push({ method: m.k, currency: m.cur, amount: AKS.r2(v),
-          amountUsd: AKS.r2(usd), ref: rf ? rf.value.trim() : '' });
-        paidUsd += usd;
+        var rec = { method: m.k, currency: m.cur, amount: AKS.r2(v),
+          amountUsd: AKS.r2(usd), ref: rf ? rf.value.trim() : '' };
+        if (m.cur === 'USDT') rec.usdtRate = usdtRate;
+        out.push(rec);
+        paidUsd += usd; credit += cov;
+        if (m.cur === 'USDT') usdtDisc += cov - usd;
       }
     });
-    return { list: out, paidUsd: AKS.r2(paidUsd) };
+    return { list: out, paidUsd: AKS.r2(paidUsd), credit: AKS.r2(credit),
+      usdtDisc: AKS.r2(usdtDisc) };
   }
 
   // ------------------------------------------------------------
@@ -387,18 +403,27 @@
     $('aksK-paytotals').innerHTML =
       '<div class="aks-row"><span>TOTAL $</span><span class="big">' + AKS.usd(t.total) + '</span></div>' +
       '<div class="aks-row"><span>TOTAL Bs (tasa ' + rate.toFixed(2) + ')</span>' +
-      '<span class="big">' + AKS.bs(t.totalBs) + '</span></div>';
-    var diff = AKS.r2(p.paidUsd - t.total);
-    $('aksK-paysum').innerHTML = 'Recibido: ' + AKS.usd(p.paidUsd) + ' (' +
-      AKS.bs(p.paidUsd * rate) + ') · ' + (diff >= 0
-        ? '<span class="aks-ok">Vuelto: ' + AKS.usd(diff) + ' / ' + AKS.bs(diff * rate) + '</span>'
-        : '<span class="aks-bad">Falta: ' + AKS.usd(-diff) + ' / ' + AKS.bs(-diff * rate) + '</span>');
+      '<span class="big">' + AKS.bs(t.totalBs) + '</span></div>' +
+      (usdtRate > 0 ? '<div class="aks-row"><span>Equivale a (USDT a ' + usdtRate.toFixed(2) + ')</span>' +
+        '<span class="big">' + (t.totalBs / usdtRate).toFixed(2) + ' USDT</span></div>' : '');
+    var diff = AKS.r2(p.credit - t.total);
+    $('aksK-paysum').innerHTML = (diff >= 0
+        ? '<span class="aks-ok" style="font-size:1.05rem"><strong>Vuelto: ' + AKS.usd(diff) + ' / ' + AKS.bs(diff * rate) + '</strong></span>'
+        : '<span class="aks-bad" style="font-size:1.05rem"><strong>Falta: ' + AKS.usd(-diff) + ' / ' + AKS.bs(-diff * rate) +
+          (usdtRate > 0 ? ' / ' + (-diff * rate / usdtRate).toFixed(2) + ' USDT' : '') + '</strong></span>') +
+      (p.usdtDisc > 0 ? '<br><span class="aks-muted">Descuento por pagar en USDT: ' + AKS.usd(p.usdtDisc) + '</span>' : '');
   }
 
   async function openPay() {
     if (!validateTicket()) return;
     try { rate = await AKS.getRate(true); } catch (e) { alert(e.message); return; }
     root.querySelectorAll('[data-pay],[data-ref]').forEach(function (e) { e.value = ''; });
+    try {
+      var us = await AKS.db().collection('settings').doc('usdtRate').get();
+      usdtRate = us.exists ? (Number(us.data().value) || 0) : 0;
+    } catch (e) { usdtRate = 0; }
+    var urow = root.querySelector('[data-row="usdt"]');
+    if (urow) urow.style.display = usdtRate > 0 ? '' : 'none';
     renderTicket();
     renderPaySummary();
     $('aksK-paymodal').classList.add('on');
@@ -422,10 +447,13 @@
       }
       var tk = T(), cart = tk.cart;
       var t = calc(), p = payments();
-      if (p.paidUsd + 0.005 < t.total) {
-        alert('El pago no cubre el total. Falta ' + AKS.usd(t.total - p.paidUsd));
+      if (p.credit + 0.005 < t.total) {
+        alert('El pago no cubre el total. Falta ' + AKS.usd(t.total - p.credit));
         return;
       }
+      // El descuento por pagar en USDT baja el total de la factura
+      var usdtDisc = p.usdtDisc > 0 ? p.usdtDisc : 0;
+      var totalFinal = AKS.r2(t.total - usdtDisc);
       var clientId = tk.clientId || '';
       if (!clientId && AKS.clientes) {
         try {
@@ -478,13 +506,14 @@
             unitPrice: x.unitPrice, basePrice: x.basePrice, priceOverride: !!x.override,
             unitCost: cost, lineTotal: AKS.r2(x.qty * x.unitPrice) });
         }
-        var profit = AKS.r2(t.sub - t.disc - costTotal);
+        var profit = AKS.r2(t.sub - t.disc - usdtDisc - costTotal);
         tx.set(counterRef, { saleCounter: n }, { merge: true });
         result = {
           saleNumber: number, items: lines, subtotal: t.sub, discountPct: t.pct,
-          discount: t.disc, iva: 0, totalUsd: t.total, rate: rate, totalBs: t.totalBs,
+          discount: AKS.r2(t.disc + usdtDisc), usdtDiscount: usdtDisc, iva: 0,
+          totalUsd: totalFinal, rate: rate, totalBs: AKS.r2(totalFinal * rate),
           costUsd: AKS.r2(costTotal), profitUsd: profit, payments: p.list,
-          paidUsd: p.paidUsd, changeUsd: AKS.r2(Math.max(0, p.paidUsd - t.total)),
+          paidUsd: p.paidUsd, changeUsd: AKS.r2(Math.max(0, p.paidUsd - totalFinal)),
           customerName: tk.cname.trim(), customerPhone: tk.cphone.trim(),
           customerDoc: tk.cdoc.trim(), clientId: (clientSnap && clientSnap.exists) ? clientId : '',
           channel: 'mostrador', dateKey: AKS.dateKey(),
@@ -494,7 +523,7 @@
         if (clientSnap && clientSnap.exists) {
           var cd = clientSnap.data();
           tx.update(clientRef, { purchases: (Number(cd.purchases) || 0) + 1,
-            totalSpentUsd: AKS.r2((Number(cd.totalSpentUsd) || 0) + t.total),
+            totalSpentUsd: AKS.r2((Number(cd.totalSpentUsd) || 0) + totalFinal),
             lastPurchaseAt: nowIso });
         }
       });
@@ -521,36 +550,71 @@
   // ------------------------------------------------------------
   // Factura interna (impresión)
   // ------------------------------------------------------------
+  function payLine(p) {
+    var m = METHODS.filter(function (z) { return z.k === p.method; })[0];
+    var amt = p.currency === 'USD' ? AKS.usd(p.amount)
+      : (p.currency === 'USDT' ? Number(p.amount).toFixed(2) + ' USDT' : AKS.bs(p.amount));
+    return (m ? m.label : p.method) + ': ' + amt + (p.ref ? ' (ref ' + p.ref + ')' : '');
+  }
+
+  // Texto de la factura para enviar por WhatsApp
+  function waText(s) {
+    var name = s.customerName ? s.customerName : 'Consumidor final';
+    var t = '*Factura N° ' + s.saleNumber + ' - ' + name + '*\n' + settings.companyName +
+      '\n' + AKS.fmtDateTime(s.createdAt) + '\n';
+    if (s.customerDoc) t += 'RIF/C.I.: ' + s.customerDoc + '\n';
+    t += '\n' + (s.items || []).map(function (x) {
+      return x.qty + ' x ' + x.name + ' = ' + AKS.usd(x.lineTotal);
+    }).join('\n') + '\n';
+    if (s.discount) t += '\nDescuento: -' + AKS.usd(s.discount);
+    t += '\n*TOTAL: ' + AKS.usd(s.totalUsd) + ' / ' + AKS.bs(s.totalBs) + '*\nTasa BCV: ' + Number(s.rate).toFixed(2) + '\n\n' +
+      (s.payments || []).map(payLine).join('\n') +
+      (s.changeUsd ? '\nVuelto: ' + AKS.usd(s.changeUsd) : '') +
+      '\n\nGracias por su compra. Documento de control, no es factura fiscal.';
+    return t;
+  }
+
+  function waUrl(s) {
+    var ph = String(s.customerPhone || '').replace(/\D/g, '');
+    if (/^0\d{10}$/.test(ph)) ph = '58' + ph.slice(1);
+    if (ph.length < 11) ph = '';
+    return 'https://wa.me/' + ph + '?text=' + encodeURIComponent(waText(s));
+  }
+
+  function sendWhatsApp(s) { window.open(waUrl(s), '_blank', 'noopener'); }
+
   function printReceipt(s) {
     var w = window.open('', '_blank', 'width=380,height=640');
     if (!w) { alert('Permite ventanas emergentes para imprimir la factura.'); return; }
     var rows = (s.items || []).map(function (x) {
-      return '<tr><td>' + AKS.esc(x.qty) + ' x ' + AKS.esc(x.name) +
-        '</td><td style="text-align:right">' + AKS.usd(x.lineTotal) + '</td></tr>';
+      return '<div class="it"><div>' + AKS.esc(x.name) + '</div><div>' + AKS.esc(x.qty) + ' x ' +
+        AKS.usd(x.unitPrice) + ' = <strong>' + AKS.usd(x.lineTotal) + '</strong></div></div>';
     }).join('');
-    var pays = (s.payments || []).map(function (p) {
-      var m = METHODS.filter(function (z) { return z.k === p.method; })[0];
-      return '<div>' + AKS.esc(m ? m.label : p.method) + ': ' +
-        (p.currency === 'USD' ? AKS.usd(p.amount) : AKS.bs(p.amount)) + '</div>';
-    }).join('');
+    var pays = (s.payments || []).map(function (p) { return '<div>' + AKS.esc(payLine(p)) + '</div>'; }).join('');
     w.document.write('<!doctype html><html><head><meta charset="utf-8"><title>Factura ' +
-      AKS.esc(s.saleNumber) + '</title><style>body{font:13px monospace;margin:10px;' +
-      'max-width:340px}table{width:100%}hr{border:0;border-top:1px dashed #000}</style>' +
-      '</head><body><h3 style="text-align:center;margin:0">' + AKS.esc(settings.companyName) +
-      '</h3><div style="text-align:center"><strong>FACTURA INTERNA N° ' +
-      AKS.esc(s.saleNumber) + '</strong><br>Documento de control · no es factura fiscal</div>' +
-      '<hr><div>' + AKS.esc(AKS.fmtDateTime(s.createdAt)) + '</div>' +
+      AKS.esc(s.saleNumber) + '</title><style>@page{margin:2mm}' +
+      'body{font:12px monospace;margin:0 auto;padding:3mm;width:70mm;max-width:100%;' +
+      'text-align:center;box-sizing:border-box}hr{border:0;border-top:1px dashed #000;margin:6px 0}' +
+      '.it{margin:5px 0}.big{font-size:15px;font-weight:bold}' +
+      '.np{margin-top:10px}.np button,.np a{display:inline-block;margin:3px;padding:7px 10px;border:1px solid #333;' +
+      'background:#fff;color:#000;border-radius:6px;font:13px Arial;text-decoration:none;cursor:pointer}' +
+      '@media print{.np{display:none}}</style></head><body>' +
+      '<div class="big">' + AKS.esc(settings.companyName) + '</div>' +
+      '<div><strong>FACTURA INTERNA N° ' + AKS.esc(s.saleNumber) + '</strong></div>' +
+      '<div>Documento de control · no es factura fiscal</div><hr>' +
+      '<div>' + AKS.esc(AKS.fmtDateTime(s.createdAt)) + '</div>' +
       (s.customerName ? '<div>Cliente: ' + AKS.esc(s.customerName) + '</div>' : '') +
       (s.customerDoc ? '<div>RIF/C.I.: ' + AKS.esc(s.customerDoc) + '</div>' : '') +
-      '<hr><table>' + rows + '</table><hr><table>' +
-      '<tr><td>Subtotal</td><td style="text-align:right">' + AKS.usd(s.subtotal) + '</td></tr>' +
-      (s.discount ? '<tr><td>Descuento</td><td style="text-align:right">-' + AKS.usd(s.discount) + '</td></tr>' : '') +
-      '<tr><td><strong>TOTAL $</strong></td><td style="text-align:right"><strong>' +
-      AKS.usd(s.totalUsd) + '</strong></td></tr><tr><td><strong>TOTAL Bs</strong></td>' +
-      '<td style="text-align:right"><strong>' + AKS.bs(s.totalBs) + '</strong></td></tr></table>' +
-      '<div>Tasa BCV: ' + s.rate.toFixed(2) + '</div><hr>' + pays +
+      '<hr>' + rows + '<hr>' +
+      '<div>Subtotal: ' + AKS.usd(s.subtotal) + '</div>' +
+      (s.discount ? '<div>Descuento: -' + AKS.usd(s.discount) + (s.usdtDiscount ? ' (incl. pago USDT)' : '') + '</div>' : '') +
+      '<div class="big">TOTAL $: ' + AKS.usd(s.totalUsd) + '</div>' +
+      '<div class="big">TOTAL Bs: ' + AKS.bs(s.totalBs) + '</div>' +
+      '<div>Tasa BCV: ' + Number(s.rate).toFixed(2) + '</div><hr>' + pays +
       (s.changeUsd ? '<div>Vuelto: ' + AKS.usd(s.changeUsd) + '</div>' : '') +
-      '<hr><div style="text-align:center">¡Gracias por su compra!</div>' +
+      '<hr><div>¡Gracias por su compra!</div>' +
+      '<div class="np"><button onclick="window.print()">Imprimir</button>' +
+      '<a href="' + AKS.esc(waUrl(s)) + '" target="_blank" rel="noopener">Enviar por WhatsApp</a></div>' +
       '<script>window.onload=function(){window.print()}<\/script></body></html>');
     w.document.close();
   }
@@ -591,7 +655,8 @@
             '</td><td>' + AKS.usd(s.totalUsd) + '<br><span class="aks-muted">' + AKS.bs(s.totalBs) +
             '</span></td><td>' + (ok ? '<span class="aks-ok">Completada</span>' : '<span class="aks-bad">Anulada</span>') +
             '</td><td><button class="btn btn-secondary btn-small" data-act="print" data-i="' + i +
-            '">Factura</button> ' + (ok ? '<button class="btn btn-danger btn-small" data-act="void" data-i="' +
+            '">Factura</button> <button class="btn btn-secondary btn-small" data-act="wa" data-i="' + i +
+            '">WhatsApp</button> ' + (ok ? '<button class="btn btn-danger btn-small" data-act="void" data-i="' +
             i + '">Anular</button>' : '') + '</td></tr>';
         }).join('') + '</tbody></table></div>';
     } catch (e) {
@@ -683,6 +748,16 @@
     });
     root.addEventListener('click', function (ev) {
       var t = ev.target;
+      var all = t.getAttribute && t.getAttribute('data-all');
+      if (all) {
+        var inp = root.querySelector('[data-pay="' + all + '"]');
+        inp.value = '';
+        var rem = Math.max(0, calc().total - payments().credit), mm = METHODS.filter(function (z) { return z.k === all; })[0];
+        var v = mm.cur === 'USD' ? rem : (mm.cur === 'USDT' ? rem * rate / usdtRate : rem * rate);
+        inp.value = rem > 0 ? AKS.r2(v) : '';
+        renderPaySummary();
+        return;
+      }
       var fav = t.getAttribute && t.getAttribute('data-fav');
       if (fav) {
         favs[fav] = !favs[fav];
@@ -735,6 +810,8 @@
         renderTicket();
       } else if (act === 'print') {
         printReceipt(todaySales[parseInt(t.getAttribute('data-i'), 10)]);
+      } else if (act === 'wa') {
+        sendWhatsApp(todaySales[parseInt(t.getAttribute('data-i'), 10)]);
       } else if (act === 'void') {
         voidSale(todaySales[parseInt(t.getAttribute('data-i'), 10)]);
       } else if (t.id === 'aksK-sell' || (t.closest && t.closest('#aksK-sell'))) {
@@ -774,6 +851,6 @@
     AKS.addMenuItem('Caja (POS)', 'caja', open, 'caja');
   });
 
-  AKS.caja = { printReceipt: printReceipt, voidSale: voidSale, open: open, charge: charge, addProduct: addProduct, openPay: openPay,
+  AKS.caja = { printReceipt: printReceipt, sendWhatsApp: sendWhatsApp, voidSale: voidSale, open: open, charge: charge, addProduct: addProduct, openPay: openPay,
     getCart: function () { return T().cart; } };
 })();
