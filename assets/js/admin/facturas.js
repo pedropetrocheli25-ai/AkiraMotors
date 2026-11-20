@@ -76,6 +76,7 @@
           (ok ? '<span class="aks-ok">Completada</span>' : '<span class="aks-bad">Anulada</span>') + '</td><td>' +
           '<button class="btn btn-secondary btn-small" data-act="view" data-i="' + i + '">Ver</button> ' +
           '<button class="btn btn-secondary btn-small" data-act="print" data-i="' + i + '">Imprimir</button> ' +
+          '<button class="btn btn-secondary btn-small" data-act="pdf" data-i="' + i + '">PDF</button> ' +
           '<button class="btn btn-secondary btn-small" data-act="wa" data-i="' + i + '">WhatsApp</button> ' +
           (ok ? '<button class="btn btn-danger btn-small" data-act="void" data-i="' + i + '">Anular</button>' : '') +
           '</td></tr><tr id="aksF-d-' + i + '" style="display:none"><td colspan="9">' + detail(s) + '</td></tr>';
@@ -192,6 +193,8 @@
         r.style.display = r.style.display === 'none' ? '' : 'none';
       } else if (act === 'print') {
         if (AKS.caja) AKS.caja.printReceipt(s);
+      } else if (act === 'pdf') {
+        if (AKS.caja) AKS.caja.downloadPdf(s);
       } else if (act === 'wa') {
         if (AKS.caja) AKS.caja.sendWhatsApp(s);
       } else if (act === 'void') {

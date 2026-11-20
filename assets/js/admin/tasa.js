@@ -20,46 +20,25 @@
       'placeholder="Nueva tasa. Ej: 36.50" style="max-width:220px">' +
       '<button class="btn btn-secondary" id="aksT-fetch">Consultar tasa oficial</button>' +
       '<button class="btn btn-primary" id="aksT-save">Actualizar tasa</button></div>' +
+      '<label style="display:block;margin-top:.6rem"><input type="checkbox" id="aksT-auto"> ' +
+      'Actualizar automáticamente con la tasa oficial (al abrir el panel, sin preguntar)</label>' +
       '<div id="aksT-src" class="aks-muted" style="margin-top:.4rem"></div></div>' +
-      '<div class="admin-card"><h3>Tasa USDT</h3>' +
-      '<div class="alert-info">Se usa en la Caja cuando el cliente paga en USDT: el total de la factura en Bs ' +
-      'se divide entre esta tasa y el cliente paga menos $; la diferencia cuenta como descuento. ' +
-      'Déjala en blanco o en 0 para ocultar el pago en USDT.</div>' +
-      '<div class="aks-kpi" style="margin-bottom:.6rem"><div class="aks-muted">Tasa USDT actual (Bs por USDT)</div>' +
-      '<div style="font-size:1.6rem;font-weight:800" id="aksT-ucur">-</div><div class="aks-muted" id="aksT-uwhen"></div></div>' +
-      '<div class="aks-inline"><input type="number" id="aksT-unew" min="0" step="0.01" placeholder="Ej: 45.00" style="max-width:220px">' +
-      '<button class="btn btn-primary" id="aksT-usave">Guardar tasa USDT</button></div></div>' +
       '<div class="admin-card"><h3>Historial de tasas</h3><div id="aksT-hist" class="aks-muted">' +
       'Cargando...</div></div>';
   }
 
-  async function saveUsdt() {
-    var v = AKS.num($('aksT-unew').value);
-    if (!(v >= 0) || v > 100000) { alert('Tasa inválida'); return; }
-    try {
-      await AKS.db().collection('settings').doc('usdtRate').set({ value: v, updatedAt: new Date().toISOString() });
-      $('aksT-unew').value = '';
-      await refresh();
-      alert(v > 0 ? 'Tasa USDT guardada' : 'Pago en USDT desactivado');
-    } catch (e) { alert('No se pudo guardar: ' + e.message); }
-  }
-
   async function refresh() {
-    try {
-      var us = await AKS.db().collection('settings').doc('usdtRate').get();
-      var uv = us.exists ? Number(us.data().value) || 0 : 0;
-      $('aksT-ucur').textContent = uv > 0 ? uv.toFixed(2) : 'Sin configurar';
-      $('aksT-uwhen').textContent = us.exists && us.data().updatedAt ? 'Actualizada: ' + AKS.fmtDateTime(us.data().updatedAt) : '';
-    } catch (e) { console.error(e); }
     try {
       var snap = await AKS.db().collection('settings').doc('bcvRate').get();
       if (snap.exists) {
         var d = snap.data();
+        $('aksT-auto').checked = d.auto !== false;
         $('aksT-cur').textContent = Number(d.value).toFixed(2);
         $('aksT-when').textContent = d.updatedAt
           ? 'Actualizada: ' + AKS.fmtDateTime(d.updatedAt) : '';
       } else {
         $('aksT-cur').textContent = 'Sin configurar';
+        $('aksT-auto').checked = true;
       }
     } catch (e) { console.error(e); }
     try {
@@ -100,12 +79,11 @@
   async function save() {
     var v = AKS.num($('aksT-new').value);
     if (!(v > 0) || v > 100000) { alert('Tasa inválida'); return; }
-    if (!confirm('¿Cambiar la tasa BCV a ' + v.toFixed(2) + ' Bs por $?')) return;
     var btn = $('aksT-save');
     btn.disabled = true;
     try {
       var now = new Date().toISOString();
-      await AKS.db().collection('settings').doc('bcvRate').set({ value: v, updatedAt: now });
+      await AKS.db().collection('settings').doc('bcvRate').set({ value: v, updatedAt: now, auto: $('aksT-auto').checked });
       await AKS.db().collection('bcvHistory').add({ value: v, dateKey: AKS.dateKey(),
         createdAt: now, user: AKS.userLabel() });
       try { bcvRate = v; } catch (e) { /* variable del admin */ }
@@ -119,12 +97,41 @@
     } finally { btn.disabled = false; }
   }
 
+  async function saveAuto() {
+    try {
+      await AKS.db().collection('settings').doc('bcvRate').set({ auto: $('aksT-auto').checked }, { merge: true });
+    } catch (e) { alert('No se pudo guardar: ' + e.message); }
+  }
+
+  // Actualización automática de la tasa oficial (solo dueño, sin preguntar).
+  async function autoUpdate() {
+    if (AKS.role === 'cajero') return;
+    try {
+      var ref = AKS.db().collection('settings').doc('bcvRate');
+      var snap = await ref.get();
+      var cur = snap.exists ? Number(snap.data().value) || 0 : 0;
+      if (snap.exists && snap.data().auto === false) return;
+      var r = await fetch('/api/bcv');
+      var j = await r.json();
+      var v = Math.round(Number(j.value) * 100) / 100;
+      if (!r.ok || !(v > 0) || v > 100000) return;
+      if (cur > 0 && Math.abs(v - cur) / cur > 0.25) return; // cambio sospechoso: no se aplica solo
+      if (cur > 0 && Math.abs(v - cur) < 0.005) return;
+      var now = new Date().toISOString();
+      await ref.set({ value: v, updatedAt: now, auto: true });
+      await AKS.db().collection('bcvHistory').add({ value: v, dateKey: AKS.dateKey(), createdAt: now, user: 'Automático' });
+      await AKS.getRate(true);
+      if (root && $('aksT-cur')) refresh();
+    } catch (e) { console.warn('Tasa automática:', e.message); }
+  }
+
   AKS.init(function () {
     root = AKS.addSection('tasa', html());
     if (!root) return;
     $('aksT-save').addEventListener('click', save);
     $('aksT-fetch').addEventListener('click', fetchRate);
-    $('aksT-usave').addEventListener('click', saveUsdt);
+    $('aksT-auto').addEventListener('change', saveAuto);
+    setTimeout(autoUpdate, 3000);
     AKS.addMenuItem('Tasa BCV', 'tasa', refresh, 'config');
   });
   AKS.tasa = { refresh: refresh };

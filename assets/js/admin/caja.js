@@ -581,7 +581,60 @@
     return 'https://wa.me/' + ph + '?text=' + encodeURIComponent(waText(s));
   }
 
-  function sendWhatsApp(s) { window.open(waUrl(s), '_blank', 'noopener'); }
+  // ---- Factura en PDF ----
+  function pdfName(s) {
+    var n = String(s.customerName || 'Consumidor final').replace(/[^A-Za-z0-9\u00C0-\u00FF]+/g, '_').replace(/^_|_$/g, '');
+    return 'Factura_' + String(s.saleNumber).replace(/[^A-Za-z0-9-]/g, '') + '_' + (n || 'Cliente') + '.pdf';
+  }
+  function pdfBlob(s) {
+    var L = [], name = s.customerName || 'Consumidor final';
+    L.push({ t: settings.companyName || 'Akira Motors', b: true, s: 12 });
+    L.push({ t: 'FACTURA N° ' + s.saleNumber, b: true, s: 11 });
+    L.push({ t: name, b: true, s: 10 });
+    L.push({ t: 'Documento de control - no es factura fiscal', s: 7 });
+    L.push({ t: '---' });
+    L.push({ t: AKS.fmtDateTime(s.createdAt) });
+    if (s.customerDoc) L.push({ t: 'RIF/C.I.: ' + s.customerDoc });
+    L.push({ t: '---' });
+    (s.items || []).forEach(function (x) {
+      L.push({ t: x.name, b: true });
+      L.push({ t: x.qty + ' x ' + AKS.usd(x.unitPrice) + ' = ' + AKS.usd(x.lineTotal) });
+    });
+    L.push({ t: '---' });
+    L.push({ t: 'Subtotal: ' + AKS.usd(s.subtotal) });
+    if (s.discount) L.push({ t: 'Descuento: -' + AKS.usd(s.discount) + (s.usdtDiscount ? ' (incl. pago USDT)' : '') });
+    L.push({ t: 'TOTAL $: ' + AKS.usd(s.totalUsd), b: true, s: 11 });
+    L.push({ t: 'TOTAL Bs: ' + AKS.bs(s.totalBs), b: true, s: 11 });
+    L.push({ t: 'Tasa BCV: ' + Number(s.rate).toFixed(2) });
+    L.push({ t: '---' });
+    (s.payments || []).forEach(function (p) { L.push({ t: payLine(p) }); });
+    if (s.changeUsd) L.push({ t: 'Vuelto: ' + AKS.usd(s.changeUsd) });
+    L.push({ t: '---' });
+    L.push({ t: 'Gracias por su compra!' });
+    return AKS.pdf.ticket(L);
+  }
+  function downloadPdf(s) {
+    var blob = pdfBlob(s), a = document.createElement('a');
+    a.href = URL.createObjectURL(blob); a.download = pdfName(s);
+    document.body.appendChild(a); a.click();
+    setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 2000);
+    return blob;
+  }
+
+  // WhatsApp: si el dispositivo permite compartir archivos, se envía el PDF;
+  // si no, se descarga el PDF y se abre WhatsApp con el texto para adjuntarlo.
+  async function sendWhatsApp(s) {
+    try {
+      var file = new File([pdfBlob(s)], pdfName(s), { type: 'application/pdf' });
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        await navigator.share({ files: [file], title: 'Factura N° ' + s.saleNumber + ' - ' + (s.customerName || ''), text: waText(s) });
+        return;
+      }
+    } catch (e) { if (e && e.name === 'AbortError') return; }
+    downloadPdf(s);
+    window.open(waUrl(s), '_blank', 'noopener');
+    alert('Se descargó el PDF de la factura. Adjúntalo en el chat de WhatsApp que se abrió.');
+  }
 
   function printReceipt(s) {
     var w = window.open('', '_blank', 'width=380,height=640');
@@ -614,9 +667,14 @@
       (s.changeUsd ? '<div>Vuelto: ' + AKS.usd(s.changeUsd) + '</div>' : '') +
       '<hr><div>¡Gracias por su compra!</div>' +
       '<div class="np"><button onclick="window.print()">Imprimir</button>' +
-      '<a href="' + AKS.esc(waUrl(s)) + '" target="_blank" rel="noopener">Enviar por WhatsApp</a></div>' +
+      '<button id="rcPdf">Descargar PDF</button><button id="rcWa">Enviar por WhatsApp</button></div>' +
       '<script>window.onload=function(){window.print()}<\/script></body></html>');
     w.document.close();
+    try {
+      var bp = w.document.getElementById('rcPdf'), bw = w.document.getElementById('rcWa');
+      if (bp) bp.onclick = function () { downloadPdf(s); };
+      if (bw) bw.onclick = function () { sendWhatsApp(s); };
+    } catch (e) { console.warn(e); }
   }
 
   // ------------------------------------------------------------
@@ -655,7 +713,8 @@
             '</td><td>' + AKS.usd(s.totalUsd) + '<br><span class="aks-muted">' + AKS.bs(s.totalBs) +
             '</span></td><td>' + (ok ? '<span class="aks-ok">Completada</span>' : '<span class="aks-bad">Anulada</span>') +
             '</td><td><button class="btn btn-secondary btn-small" data-act="print" data-i="' + i +
-            '">Factura</button> <button class="btn btn-secondary btn-small" data-act="wa" data-i="' + i +
+            '">Factura</button> <button class="btn btn-secondary btn-small" data-act="pdf" data-i="' + i +
+            '">PDF</button> <button class="btn btn-secondary btn-small" data-act="wa" data-i="' + i +
             '">WhatsApp</button> ' + (ok ? '<button class="btn btn-danger btn-small" data-act="void" data-i="' +
             i + '">Anular</button>' : '') + '</td></tr>';
         }).join('') + '</tbody></table></div>';
@@ -810,6 +869,8 @@
         renderTicket();
       } else if (act === 'print') {
         printReceipt(todaySales[parseInt(t.getAttribute('data-i'), 10)]);
+      } else if (act === 'pdf') {
+        downloadPdf(todaySales[parseInt(t.getAttribute('data-i'), 10)]);
       } else if (act === 'wa') {
         sendWhatsApp(todaySales[parseInt(t.getAttribute('data-i'), 10)]);
       } else if (act === 'void') {
@@ -851,6 +912,6 @@
     AKS.addMenuItem('Caja (POS)', 'caja', open, 'caja');
   });
 
-  AKS.caja = { printReceipt: printReceipt, sendWhatsApp: sendWhatsApp, voidSale: voidSale, open: open, charge: charge, addProduct: addProduct, openPay: openPay,
+  AKS.caja = { downloadPdf: downloadPdf, pdfBlob: pdfBlob, printReceipt: printReceipt, sendWhatsApp: sendWhatsApp, voidSale: voidSale, open: open, charge: charge, addProduct: addProduct, openPay: openPay,
     getCart: function () { return T().cart; } };
 })();
