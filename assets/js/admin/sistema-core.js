@@ -343,9 +343,60 @@
 
   // Después de cambiar productos, refrescar también las listas del admin
   AKS.refreshAdminProducts = function () {
-    AKS.loadProducts(true).catch(function (e) { console.error(e); });
-    if (typeof window.loadProducts === 'function') {
-      try { window.loadProducts(); } catch (e) { /* ignorar */ }
-    }
+    AKS.packSync().catch(function (e) { console.error(e); }).then(function () {
+      AKS.loadProducts(true).catch(function (e) { console.error(e); });
+      if (typeof window.loadProducts === 'function') {
+        try { window.loadProducts(); } catch (e) { /* ignorar */ }
+      }
+    });
   };
+
+  // Cajas y unidades: el producto "caja" (packOf = id de la unidad, packQty = unidades por caja)
+  // comparte inventario con la unidad. Unidades = total de piezas; cajas = piezas / packQty (completas).
+  // packSynced guarda lo último sincronizado para saber qué lado cambió (venta, compra, ajuste).
+  var packBusy = false, packAgain = false;
+  AKS.packSync = async function () {
+    if (packBusy) { packAgain = true; return; }
+    packBusy = true;
+    try {
+      do {
+        packAgain = false;
+        var snap = await db().collection('products').where('packQty', '>', 0).get();
+        var boxes = [];
+        snap.forEach(function (d) { var x = d.data(); if (x.packOf) boxes.push({ id: d.id }); });
+        for (var i = 0; i < boxes.length; i++) {
+          try { await syncOne(boxes[i].id); } catch (e) { console.warn('Sincronizar caja:', e.message); }
+        }
+      } while (packAgain);
+    } finally { packBusy = false; }
+  };
+  async function syncOne(boxId) {
+    var d = db();
+    await d.runTransaction(async function (tx) {
+      var bref = d.collection('products').doc(boxId);
+      var b = await tx.get(bref);
+      if (!b.exists) return;
+      var bd = b.data(), q = Number(bd.packQty);
+      if (!bd.packOf || !(q > 0)) return;
+      var uref = d.collection('products').doc(bd.packOf);
+      var u = await tx.get(uref);
+      if (!u.exists) return;
+      var ud = u.data(), us = Number(ud.stock) || 0, bs = Number(bd.stock) || 0, last = bd.packSynced;
+      var newU = last ? us + (bs - Number(last.b || 0)) * q : us;
+      var newB = Math.floor(newU / q);
+      if (last && newU === us && newB === bs && last.u === newU && last.b === newB) return;
+      var now = new Date().toISOString();
+      if (newU !== us) {
+        tx.update(uref, { stock: newU, updatedAt: now });
+        AKS.movement(tx, { productId: u.id, code: ud.code, name: ud.name, type: 'ajuste_caja',
+          qty: newU - us, stockBefore: us, stockAfter: newU, refType: 'caja', refId: boxId });
+      }
+      if (newB !== bs) {
+        AKS.movement(tx, { productId: boxId, code: bd.code, name: bd.name, type: 'ajuste_caja',
+          qty: newB - bs, stockBefore: bs, stockAfter: newB, refType: 'caja', refId: bd.packOf });
+      }
+      tx.update(bref, { stock: newB, packSynced: { u: newU, b: newB }, updatedAt: now });
+    });
+  }
+  AKS.init(function () { setTimeout(function () { AKS.packSync().catch(function () {}); }, 4000); });
 })();

@@ -48,7 +48,7 @@ service cloud.firestore {
       allow write: if isOwner();
       // El cajero solo puede descontar stock al vender
       allow update: if isAdmin()
-        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['stock', 'updatedAt']);
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['stock', 'updatedAt', 'packSynced']);
     }
     // El cajero necesita leer el costo para registrar la ganancia de la venta
     match /productCosts/{id} {

@@ -73,6 +73,7 @@
     }
     $('aksN-apply').disabled = false;
     root.__keep = {};
+    try { await AKS.packSync(); } catch (e) { console.error(e); }
     await AKS.loadProducts(true);
     render();
     alert('Ajustados: ' + ok + (fail ? ' · con error: ' + fail : ''));

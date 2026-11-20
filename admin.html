@@ -2216,6 +2216,15 @@ Venta = Costo / (1 - Margen/100)
 <input type="number" id="productMinStock" min="0"
   placeholder="4 si lo dejas vacío">
 </div>
+<div class="form-group">
+<label>¿Este producto es una CAJA de otro producto?</label>
+<select id="productPackOf" onchange="onPackChange()"></select>
+<div class="aks-muted" style="font-size:.85rem">Ej: "Bujía (Caja)" de "Bujía (Unidad)". El inventario de la caja se calcula solo con el de las unidades, y al revés.</div>
+</div>
+<div class="form-group" id="productPackQtyWrap" style="display:none">
+<label>Unidades por caja</label>
+<input type="number" id="productPackQty" min="2" placeholder="Ej: 4">
+</div>
 </div>
 
 <div class="form-section">
@@ -3169,6 +3178,7 @@ window.openAddProductModal = function() {
   document.getElementById('productDiscount').value = '';
   document.getElementById('productStock').value = '';
   document.getElementById('productMinStock').value = '';
+  fillPackOptions(null, null, null);
   document.getElementById('productCategory').value = '';
   document.getElementById('productSubcategory').innerHTML =
     '<option value="">(Sin subcategoría)</option>';
@@ -3245,6 +3255,7 @@ window.editProduct = async function(productId) {
   document.getElementById('productStock').value = product.stock || '';
   document.getElementById('productMinStock').value =
     (product.minStock === undefined || product.minStock === null) ? '' : product.minStock;
+  fillPackOptions(product.id, product.packOf, product.packQty);
   document.getElementById('productCategory').value =
     product.category || '';
   onProductCategoryChange();
@@ -3482,8 +3493,15 @@ window.saveProduct = async function(event) {
     image: currentProductThumb || null,
     images: currentProductImages.length > 0
       ? currentProductImages : null,
+    packOf: document.getElementById('productPackOf').value || null,
+    packQty: document.getElementById('productPackOf').value
+      ? (parseInt(document.getElementById('productPackQty').value) || 0) : null,
     updatedAt: new Date().toISOString()
   };
+  if (productData.packOf && !(productData.packQty >= 2)) {
+    alert('Indica cuántas unidades trae la caja (2 o más).');
+    return;
+  }
 
   try {
     var productId = editId;
@@ -3498,6 +3516,10 @@ window.saveProduct = async function(event) {
       } catch(e) { console.error('costo anterior:', e); }
     }
     if (editId) {
+      if (oldProd && (oldProd.packOf || null) !== productData.packOf ||
+          oldProd && (oldProd.packQty || null) !== productData.packQty) {
+        productData.packSynced = null; // vínculo nuevo o cambiado: se parte del inventario de unidades
+      }
       await db.collection('products').doc(editId).update(productData);
     } else {
       productData.createdAt = new Date().toISOString();
@@ -3548,6 +3570,7 @@ window.saveProduct = async function(event) {
       });
     }
 
+    if (window.AKS && AKS.packSync) { try { await AKS.packSync(); } catch (pe) { console.error(pe); } }
     await loadProducts();
     await loadDashboard();
     closeModal('productModal');
@@ -3556,6 +3579,25 @@ window.saveProduct = async function(event) {
     console.error('Error guardando producto:', e);
     alert('Error al guardar: ' + e.message);
   }
+};
+
+function fillPackOptions(selfId, packOf, packQty) {
+  var sel = document.getElementById('productPackOf');
+  var list = (typeof products !== 'undefined' ? products : []).filter(function(x) {
+    return x.id !== selfId && !x.packOf;
+  }).sort(function(a, b) { return String(a.name).localeCompare(String(b.name), 'es'); });
+  sel.innerHTML = '<option value="">No, es un producto normal</option>' + list.map(function(x) {
+    return '<option value="' + x.id + '">Caja de: ' + String(x.name).replace(/</g, '&lt;') +
+      ' (' + String(x.code || '').replace(/</g, '&lt;') + ')</option>';
+  }).join('');
+  sel.value = packOf || '';
+  if (sel.value !== (packOf || '')) sel.value = '';
+  document.getElementById('productPackQty').value = packOf && packQty ? packQty : '';
+  onPackChange();
+}
+window.onPackChange = function() {
+  document.getElementById('productPackQtyWrap').style.display =
+    document.getElementById('productPackOf').value ? '' : 'none';
 };
 
 window.deleteProduct = async function(id) {
