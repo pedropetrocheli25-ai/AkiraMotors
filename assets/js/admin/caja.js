@@ -150,7 +150,20 @@
     '.kpos-pm input{width:100%;padding:.55rem;border:1px solid #ddd;border-radius:6px;box-sizing:border-box}' +
     '.kpos-pm .all{padding:.5rem .7rem;border:1px solid #FF6B1A;background:#fff;' +
     'color:#FF6B1A;border-radius:6px;font-weight:700;cursor:pointer}' +
-    '.kpos-pm .all:hover{background:#FF6B1A;color:#fff}';
+    '.kpos-pm .all:hover{background:#FF6B1A;color:#fff}' +
+    '@media(max-width:700px){.kpos{min-height:0}' +
+    '.kpos-bar{flex-wrap:wrap}' +
+    '.kpos-search{flex:1 1 100%;flex-wrap:wrap}' +
+    '.kpos-search input{order:-1;flex:1 1 100%;width:100%;min-width:0;box-sizing:border-box;' +
+    'font-size:16px;padding:.85rem .9rem;border-bottom:1px solid #e5e9ee}' +
+    '.kpos-mode{flex:1 1 50%;padding:.7rem .4rem;font-size:.85rem}' +
+    '.kpos-new{flex:1 1 100%;padding:.7rem}' +
+    '.kpos-grid{grid-template-columns:repeat(2,minmax(0,1fr));max-height:70vh;gap:.6rem}' +
+    '.kpos-right{min-width:0}' +
+    '.kpos-jump{display:block}}' +
+    '.kpos-jump{display:none;position:fixed;left:12px;right:12px;bottom:12px;z-index:900;' +
+    'background:#FF6B1A;color:#fff;border:0;border-radius:12px;padding:.9rem;font-size:1rem;' +
+    'font-weight:700;box-shadow:0 4px 14px rgba(0,0,0,.35)}';
 
   function injectCss() {
     if ($('aks-caja-style')) return;
@@ -170,19 +183,20 @@
           '<input type="text" maxlength="20" data-ref="' + m.k + '" placeholder="Referencia">') +
         '</div>';
     }).join('');
-    return '<h2 class="section-title">Caja</h2>' +
+    return '<button type="button" id="aksK-jump" class="kpos-jump" style="visibility:hidden"></button>' +
+      '<h2 class="section-title">Caja</h2>' +
       '<div class="kpos">' +
       '<div class="kpos-tabs" id="aksK-tabs"></div>' +
       '<div class="kpos-left">' +
       '<div class="kpos-bar"><div class="kpos-search">' +
       '<button class="kpos-mode on" data-mode="search" title="Buscar por nombre">Buscar</button>' +
       '<button class="kpos-mode" data-mode="barcode" title="Lector de código de barras: Enter agrega el código exacto">||| Código</button>' +
-      '<input type="text" id="aksK-search" placeholder="Buscar: nombre, código, OEM, marca (ej: MIT)" ' +
+      '<input type="text" id="aksK-search" placeholder="Buscar nombre, código, OEM, marca" ' +
       'autocomplete="off"></div>' +
       '<button class="kpos-new" id="aksK-new">+ Nuevo producto</button></div>' +
       '<div class="kpos-grid" id="aksK-grid"></div>' +
       '<div class="aks-muted" id="aksK-more" style="margin-top:.5rem"></div></div>' +
-      '<div class="kpos-right">' +
+      '<div class="kpos-right" id="aksK-right">' +
       '<div class="kpos-head"><h3>Factura <span class="aks-muted" id="aksK-tname"></span></h3>' +
       '<div class="aks-muted" id="aksK-rate"></div></div>' +
       '<div class="kpos-fields">' +
@@ -356,6 +370,12 @@
     $('aksK-sellamt').innerHTML = AKS.usd(t.total) +
       (T().cart.length ? '<small>' + AKS.bs(t.totalBs) + '</small>' : '');
     $('aksK-sell').disabled = !T().cart.length || busy;
+    var jb = $('aksK-jump');
+    if (jb) {
+      var rp = $('aksK-right'), seen = rp && rp.getBoundingClientRect().top < window.innerHeight * 0.45;
+      jb.style.visibility = (T().cart.length && !seen) ? 'visible' : 'hidden';
+      jb.textContent = 'Ver factura · ' + n + ' · ' + AKS.usd(t.total);
+    }
     $('aksK-count').textContent = n + (n === 1 ? ' producto' : ' productos');
     if ($('aksK-paymodal').classList.contains('on')) renderPaySummary();
   }
@@ -786,6 +806,7 @@
   // Eventos
   // ------------------------------------------------------------
   function bind() {
+    window.addEventListener('scroll', function () { if (root && root.offsetParent) renderTotals(); }, { passive: true });
     root.addEventListener('input', function (ev) {
       var t = ev.target, tk = T();
       if (t.id === 'aksK-search') { if (mode === 'search') renderGrid(); return; }
@@ -850,7 +871,7 @@
         root.querySelectorAll('.kpos-mode').forEach(function (b) {
           b.classList.toggle('on', b.getAttribute('data-mode') === mode);
         });
-        $('aksK-search').placeholder = mode === 'barcode' ? 'Escanea el código y pulsa Enter' : 'Buscar: nombre, código, OEM, marca (ej: MIT)';
+        $('aksK-search').placeholder = mode === 'barcode' ? 'Escanea el código y pulsa Enter' : 'Buscar nombre, código, OEM, marca';
         $('aksK-search').value = '';
         renderGrid();
         $('aksK-search').focus();
@@ -885,6 +906,8 @@
         sendWhatsApp(todaySales[parseInt(t.getAttribute('data-i'), 10)]);
       } else if (act === 'void') {
         voidSale(todaySales[parseInt(t.getAttribute('data-i'), 10)]);
+      } else if (t.id === 'aksK-jump') {
+        var rr = $('aksK-right'); if (rr) rr.scrollIntoView({ behavior: 'smooth', block: 'start' });
       } else if (t.id === 'aksK-sell' || (t.closest && t.closest('#aksK-sell'))) {
         openPay();
       } else if (t.id === 'aksK-charge') charge();
