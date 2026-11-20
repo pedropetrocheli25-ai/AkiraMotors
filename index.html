@@ -254,6 +254,9 @@ button:focus:not(:focus-visible) { outline: none; }
   justify-content: center;
 }
 .sidebar-close:hover { background: var(--naranja); }
+.top-search { background: var(--negro); padding: 0 .8rem .7rem; }
+.top-search input { width: 100%; box-sizing: border-box; padding: .75rem 1rem;
+  border: 0; border-radius: 24px; font-size: 16px; background: #fff; color: #111; }
 .sidebar-search {
   padding: 1rem;
   border-bottom: 1px solid var(--gris-borde);
@@ -2227,6 +2230,12 @@ footer {
 </div>
 </div>
 
+<div class="top-search">
+<input type="search" id="searchInputTop" enterkeyhint="search"
+  placeholder="Buscar repuesto por nombre o código..."
+  aria-label="Buscar repuesto" autocomplete="off">
+</div>
+
 <div class="sidebar-overlay" id="sidebarOverlay"
   onclick="toggleSidebar()"></div>
 <aside class="category-sidebar" id="categorySidebar"
@@ -2711,6 +2720,28 @@ window.showAllProducts = function() {
 };
 
 var searchInputEl = document.getElementById('searchInput');
+(function() {
+  var top = document.getElementById('searchInputTop');
+  if (!top || !searchInputEl) return;
+  function goResults() {
+    var sb = document.getElementById('categorySidebar');
+    if (sb && sb.classList.contains('open')) toggleSidebar();
+    setTimeout(function() {
+      var r = document.getElementById('searchResultsContainer');
+      if (r && r.style.display !== 'none') r.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 350);
+  }
+  top.addEventListener('input', function() {
+    searchInputEl.value = top.value;
+    searchInputEl.dispatchEvent(new Event('input'));
+  });
+  searchInputEl.addEventListener('input', function() { top.value = searchInputEl.value; });
+  [top, searchInputEl].forEach(function(el) {
+    el.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') { e.preventDefault(); el.blur(); setTimeout(goResults, 300); }
+    });
+  });
+})();
 if (searchInputEl) {
   var searchDebounce;
   searchInputEl.addEventListener('input', function(e) {
