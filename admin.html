@@ -1073,7 +1073,7 @@ categoría tiene sus subcategorías y los vehículos
 <div class="form-group" style="margin:0;">
 <label>Buscar</label>
 <input type="text" id="adminProductSearch"
-  placeholder="Nombre o código...">
+  placeholder="Nombre, código, OEM, marca o vehículo (ej: MIT)...">
 </div>
 <div class="form-group" style="margin:0;">
 <label>Categoría</label>
@@ -2064,7 +2064,7 @@ Tasa de cambio del dólar según el BCV.
 <div class="form-group">
 <label>Nombre del producto *</label>
 <input type="text" id="productName" required
-  placeholder="Ej: Rótula inferior Corolla">
+  placeholder="Códigos internos o palabras para encontrarlo. Ej: Rótula inferior Corolla, RT-05">
 </div>
 <div class="form-group">
 <label>Descripción *</label>
@@ -2197,7 +2197,7 @@ Esta información es solo para ti.
 <div class="form-group">
 <label>Búsquedas frecuentes</label>
 <textarea id="productSearchTerms"
-  placeholder="Ej: Rótula inferior Corolla"></textarea>
+  placeholder="Códigos internos o palabras para encontrarlo. Ej: Rótula inferior Corolla, RT-05"></textarea>
 </div>
 </div>
 
@@ -2995,11 +2995,17 @@ window.applyProductFilters = function(resetPage) {
 
   filteredProductsCache = products.filter(function(p) {
     if (q) {
-      var byName = (p.name || '').toLowerCase()
-        .includes(q);
-      var byCode = (p.code || '').toLowerCase()
-        .includes(q);
-      if (!byName && !byCode) return false;
+      var nz = function(s) {
+        return String(s || '').toLowerCase()
+          .normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+      };
+      var hay = nz([p.code, p.name, p.brand, p.category,
+        (p.attributes || {}).partNumber, p.searchTerms,
+        (p.compatibility || []).map(function(x) {
+          return (x.brand || '') + ' ' + (x.model || '');
+        }).join(' ')].join(' '));
+      var toks = nz(q).split(/\s+/).filter(Boolean);
+      if (!toks.every(function(t) { return hay.indexOf(t) !== -1; })) return false;
     }
     if (cat && p.category !== cat) return false;
     if (brand) {

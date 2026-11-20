@@ -137,6 +137,7 @@
         category: p.category || '',
         partNumber: attrs.partNumber || '',
         searchTerms: p.searchTerms || '',
+        compat: (p.compatibility || []).map(function (x) { return (x.brand || '') + ' ' + (x.model || ''); }).join(' '),
         price: Number(p.price) || 0,
         discount: Number(p.discount) || 0,
         stock: Number(p.stock) || 0,
@@ -169,7 +170,7 @@
       var code = AKS.norm(p.code);
       var hay = AKS.norm([
         p.code, p.name, p.brand, p.partNumber,
-        p.searchTerms, p.category
+        p.searchTerms, p.category, p.compat
       ].join(' '));
       var ok = tokens.every(function (t) { return hay.indexOf(t) !== -1; });
       if (!ok) return;

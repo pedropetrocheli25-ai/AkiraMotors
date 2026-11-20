@@ -176,7 +176,7 @@
       '<div class="kpos-bar"><div class="kpos-search">' +
       '<button class="kpos-mode on" data-mode="search" title="Buscar por nombre">Buscar</button>' +
       '<button class="kpos-mode" data-mode="barcode" title="Lector de código de barras: Enter agrega el código exacto">||| Código</button>' +
-      '<input type="text" id="aksK-search" placeholder="Buscar productos" ' +
+      '<input type="text" id="aksK-search" placeholder="Buscar: nombre, código, OEM, marca (ej: MIT)" ' +
       'autocomplete="off"></div>' +
       '<button class="kpos-new" id="aksK-new">+ Nuevo producto</button></div>' +
       '<div class="kpos-grid" id="aksK-grid"></div>' +
@@ -842,7 +842,7 @@
         root.querySelectorAll('.kpos-mode').forEach(function (b) {
           b.classList.toggle('on', b.getAttribute('data-mode') === mode);
         });
-        $('aksK-search').placeholder = mode === 'barcode' ? 'Escanea el código y pulsa Enter' : 'Buscar productos';
+        $('aksK-search').placeholder = mode === 'barcode' ? 'Escanea el código y pulsa Enter' : 'Buscar: nombre, código, OEM, marca (ej: MIT)';
         $('aksK-search').value = '';
         renderGrid();
         $('aksK-search').focus();
