@@ -91,6 +91,7 @@
     '.kpos-img img{width:100%;height:100%;object-fit:contain}' +
     '.kpos-inv{color:#0f8f7e;font-size:.72rem}' +
     '.kpos-inv.low{color:#dc3545}' +
+    '.kpos-oem{font-size:.72rem;color:#c2410c;font-weight:700;margin-top:.1rem;word-break:break-all}' +
     '.kpos-name{font-size:.85rem;color:#333;line-height:1.2;' +
     'max-height:2.4em;overflow:hidden}' +
     '.kpos-price{font-weight:800;color:#111}' +
@@ -296,12 +297,18 @@
         (off ? '<div class="kpos-inv low">No disponible</div>'
           : '<div class="kpos-inv' + (p.stock <= p.minStock ? ' low' : '') + '">Inv. ' + p.stock + '</div>') +
         '<div class="kpos-name">' + AKS.esc(p.name) + '</div>' +
+        (p.partNumber ? '<div class="kpos-oem">OEM: ' + AKS.esc(p.partNumber) + '</div>' : '') +
         '<div class="kpos-price">' + AKS.usd(price) +
         '<small>' + AKS.bs(price * rate) + '</small></div></div>';
     }).join('') : '<div class="aks-muted" style="grid-column:1/-1;padding:2rem;text-align:center">' +
       'Sin productos' + (q ? ' para "' + AKS.esc(q) + '"' : '') + '</div>';
     $('aksK-more').textContent = total > GRID_LIMIT
       ? 'Mostrando ' + GRID_LIMIT + ' de ' + total + ' productos. Escribe para filtrar.' : '';
+  }
+
+  function oemOf(id) {
+    var p = AKS.products.filter(function (x) { return x.id === id; })[0];
+    return p ? p.partNumber : '';
   }
 
   function renderTicket() {
@@ -320,6 +327,7 @@
       box.innerHTML = t.cart.map(function (l, i) {
         return '<div class="kpos-line" data-i="' + i + '"><div><strong>' +
           AKS.esc(l.name) + '</strong><div class="aks-muted">' + AKS.esc(l.code) +
+          (oemOf(l.productId) ? ' · OEM ' + AKS.esc(oemOf(l.productId)) : '') +
           ' · stock ' + l.stock + (l.override ? ' · precio editado' : '') + '</div>' +
           '<div class="ctl"><input type="number" class="qty" min="0.001" step="any" ' +
           'data-f="qty" value="' + l.qty + '"> x $ <input type="number" min="0" ' +
