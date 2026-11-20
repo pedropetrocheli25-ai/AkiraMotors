@@ -128,7 +128,7 @@
         '<td><input type="number" min="0" step="0.01" ' +
         'data-f="cost" value="' + (it.unitCost || '') + '"></td>' +
         '<td>' + AKS.usd(it.prevCost) + '</td>' +
-        '<td><input type="number" min="0" max="99.99" step="0.1" ' +
+        '<td><input type="number" min="0" max="99.99" step="any" ' +
         'data-f="margin" value="' + it.margin + '"></td>' +
         '<td><strong id="aksC-price-' + i + '">' + AKS.usd(it.newPrice) +
         '</strong><br><span class="aks-muted">antes: ' +

@@ -2189,7 +2189,7 @@ Venta = Costo / (1 - Margen/100)
 <div class="form-group">
 <label>Margen (%) *</label>
 <input type="number" id="productMargin"
-  step="1" required
+  step="any" required
   oninput="calculateSalePrice()">
 </div>
 </div>
@@ -2197,8 +2197,9 @@ Venta = Costo / (1 - Margen/100)
 <div class="form-group">
 <label>Precio de venta ($)</label>
 <input type="number" id="productPrice"
-  step="0.01" required readonly
-  style="background:#f0f0f0;">
+  step="0.01" required
+  oninput="calculateMargin()">
+<div class="aks-muted" style="font-size:.8rem">Puedes escribir el margen (acepta decimales, ej. 51,17) o el precio exacto, y el otro se calcula solo.</div>
 </div>
 <div class="form-group">
 <label>Descuento (%)</label>
@@ -3847,11 +3848,19 @@ window.unlockCost = function() {
       'compra. ¿Corregirlo manualmente?')) lockCost(false);
 };
 
+window.calculateMargin = function() {
+  var cost = parseFloat(document.getElementById('productCostPrice').value) || 0;
+  var price = parseFloat(document.getElementById('productPrice').value) || 0;
+  if (!(price > 0)) return;
+  var m = (1 - cost / price) * 100;
+  document.getElementById('productMargin').value = (isFinite(m) && m >= 0 && m < 100) ? (Math.round(m * 100) / 100) : '';
+};
+
 window.calculateSalePrice = function() {
   var cost = parseFloat(document.getElementById(
     'productCostPrice').value) || 0;
-  var margin = parseFloat(document.getElementById(
-    'productMargin').value) || 0;
+  var margin = parseFloat(String(document.getElementById(
+    'productMargin').value).replace(',', '.')) || 0;
   if (margin >= 100) {
     document.getElementById('productPrice').value = '0';
     return;
