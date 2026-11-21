@@ -177,7 +177,7 @@
     var pay = METHODS.map(function (m) {
       return '<div class="kpos-pm" data-row="' + m.k + '"' + (m.k === 'usdt' ? ' style="display:none"' : '') + '>' +
         '<label>' + m.label + '</label>' +
-        '<input type="number" min="0" step="0.01" data-pay="' + m.k + '" placeholder="Monto">' +
+        '<input type="number" min="0" step="0.01" data-pay="' + m.k + '" data-money placeholder="Monto">' +
         '<button type="button" class="all" data-all="' + m.k + '" title="Poner todo lo que falta">Todo</button>' +
         (m.k.indexOf('efectivo') === 0 ? '<span></span>' :
           '<input type="text" maxlength="20" data-ref="' + m.k + '" placeholder="Referencia">') +
@@ -250,7 +250,7 @@
     var out = [], paidUsd = 0, credit = 0, usdtDisc = 0;
     METHODS.forEach(function (m) {
       var el = root.querySelector('[data-pay="' + m.k + '"]');
-      var v = AKS.num(el.value);
+      var v = AKS.r2(AKS.num(el.value));
       if (v > 0) {
         var usd = m.cur === 'USD' ? v : (m.cur === 'USDT' ? v : v / rate);
         var cov = m.cur === 'USDT' ? v * usdtRate / rate : usd;
@@ -481,6 +481,21 @@
         alert('El pago no cubre el total. Falta ' + AKS.usd(t.total - p.credit));
         return;
       }
+      // Control interno: el cajero no puede pasarse del tope de descuento ni cambiar precios sin autorización de un dueño
+      var authBy = '';
+      if (AKS.role === 'cajero') {
+        var cap = 10;
+        try {
+          var as = await AKS.db().collection('settings').doc('adminSettings').get();
+          if (as.exists && as.data().maxDiscountCashier !== undefined) cap = Number(as.data().maxDiscountCashier) || 0;
+        } catch (e) { /* tope por defecto */ }
+        var over = cart.some(function (l) { return l.override && l.unitPrice < l.basePrice; });
+        if (t.pct > cap || over) {
+          authBy = await AKS.authorizeOwner((t.pct > cap ? 'Descuento de ' + t.pct + '% (tope del cajero: ' + cap + '%). ' : '') +
+            (over ? 'Precio modificado en la venta. ' : '') + 'Un dueño debe autorizar.');
+          if (!authBy) { return; }
+        }
+      }
       // El descuento por pagar en USDT baja el total de la factura
       var usdtDisc = p.usdtDisc > 0 ? p.usdtDisc : 0;
       var totalFinal = AKS.r2(t.total - usdtDisc);
@@ -558,6 +573,12 @@
         }
       });
       if (AKS.clientes) AKS.clientes.load(true).catch(function () {});
+      var rebajados = cart.filter(function (l) { return l.override && l.unitPrice !== l.basePrice; });
+      if (t.pct > 0 || usdtDisc > 0 || rebajados.length) {
+        AKS.log(authBy ? 'descuento_autorizado' : 'descuento', result.saleNumber + ': ' + (t.pct > 0 ? t.pct + '% ($' + t.disc + ') ' : '') +
+          (usdtDisc > 0 ? 'USDT -$' + usdtDisc + ' ' : '') + (rebajados.length ? rebajados.length + ' precio(s) modificado(s) ' : '') +
+          (authBy ? 'Autorizó: ' + authBy : ''), { saleNumber: result.saleNumber, pct: t.pct, authBy: authBy });
+      }
 
       printReceipt(result);
       tickets[cur] = newTicket(tk.name);
@@ -790,6 +811,7 @@
             totalSpentUsd: Math.max(0, AKS.r2((Number(cc.totalSpentUsd) || 0) - s.totalUsd)) });
         }
       });
+      AKS.log('venta_anulada', s.saleNumber + ' por $' + s.totalUsd + '. Motivo: ' + reason.trim(), { saleNumber: s.saleNumber, totalUsd: s.totalUsd });
       if (AKS.clientes) AKS.clientes.load(true).catch(function () {});
       AKS.refreshAdminProducts();
       await AKS.loadProducts(true);
@@ -831,7 +853,9 @@
       var q = ev.target.value.trim();
       if (!q) return;
       var nq = AKS.norm(q);
-      var exact = AKS.products.filter(function (p) { return AKS.norm(p.code) === nq; })[0];
+      var exact = AKS.products.filter(function (p) {
+        return AKS.norm(p.code) === nq || String(p.altCodes || '').split(',').some(function (c) { return AKS.norm(c) === nq; });
+      })[0];
       var p = exact || (mode === 'search' ? AKS.searchProducts(q, 1)[0] : null);
       if (p) { addProduct(p); ev.target.value = ''; renderGrid(); }
       else if (mode === 'barcode') { alert('No existe un producto con el código "' + q + '"'); ev.target.select(); }

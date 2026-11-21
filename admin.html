@@ -2021,7 +2021,7 @@ Este número se usa en toda la tienda.
 <div class="alert-info">
 Tasa de cambio del dólar según el BCV.
 </div>
-<input type="number" id="bcvRateInput"
+<input type="number" id="bcvRateInput" data-money
   step="0.01" placeholder="Ej: 36.50"
   style="margin-bottom:1rem;width:100%;
   padding:0.7rem;border:1px solid #ddd;
@@ -2054,6 +2054,11 @@ Tasa de cambio del dólar según el BCV.
 <label>Código *</label>
 <input type="text" id="productCode" required
   placeholder="Ej: SB-3642">
+</div>
+<div class="form-group">
+<label>Otros códigos de barras (opcional)</label>
+<input type="text" id="productAltCodes"
+  placeholder="Separados por coma. Ej: 7591234567890, NGK-4567">
 </div>
 <div class="form-group">
 <label>Marca del repuesto</label>
@@ -2211,7 +2216,7 @@ Venta = Costo / (1 - Margen/100)
 <div class="form-group">
 <label>Costo ($) * <span id="costHint"
   style="font-weight:400;color:#888;font-size:.75rem;"></span></label>
-<input type="number" id="productCostPrice"
+<input type="number" id="productCostPrice" data-money
   step="0.01" required
   oninput="calculateSalePrice()">
 <a href="#" id="costUnlock" style="display:none;font-size:.75rem;"
@@ -2227,7 +2232,7 @@ Venta = Costo / (1 - Margen/100)
 <div class="form-row">
 <div class="form-group">
 <label>Precio de venta ($)</label>
-<input type="number" id="productPrice"
+<input type="number" id="productPrice" data-money
   step="0.01" required
   oninput="calculateMargin()">
 <div class="aks-muted" style="font-size:.8rem">Puedes escribir el margen (acepta decimales, ej. 51,17) o el precio exacto, y el otro se calcula solo.</div>
@@ -3000,7 +3005,7 @@ window.applyProductFilters = function(resetPage) {
           .normalize('NFD').replace(/[\u0300-\u036f]/g, '');
       };
       var hay = nz([p.code, p.name, p.brand, p.category,
-        (p.attributes || {}).partNumber, p.searchTerms,
+        (p.attributes || {}).partNumber, p.searchTerms, p.altCodes,
         (p.compatibility || []).map(function(x) {
           return (x.brand || '') + ' ' + (x.model || '');
         }).join(' ')].join(' '));
@@ -3206,6 +3211,7 @@ window.openAddProductModal = function() {
     .textContent = 'Agregar Producto';
   document.getElementById('editProductId').value = '';
   document.getElementById('productCode').value = '';
+  document.getElementById('productAltCodes').value = '';
   document.getElementById('productBrand').value = '';
   document.getElementById('productName').value = '';
   document.getElementById('productDescription').value = '';
@@ -3280,6 +3286,7 @@ window.editProduct = async function(productId) {
     .textContent = 'Editar Producto';
   document.getElementById('editProductId').value = product.id;
   document.getElementById('productCode').value = product.code || '';
+  document.getElementById('productAltCodes').value = product.altCodes || '';
   document.getElementById('productBrand').value = product.brand || '';
   document.getElementById('productName').value = product.name || '';
   document.getElementById('productDescription').value =
@@ -3527,6 +3534,7 @@ window.saveProduct = async function(event) {
     specifications: currentSpecifications,
     compatibility: currentCompatibility,
     searchTerms: document.getElementById('productSearchTerms').value,
+    altCodes: document.getElementById('productAltCodes').value.split(',').map(function(s) { return s.trim(); }).filter(Boolean).join(', '),
     thumbnail: currentProductThumb || null,
     image: currentProductThumb || null,
     images: currentProductImages.length > 0
@@ -3597,6 +3605,14 @@ window.saveProduct = async function(event) {
           user: (firebase.auth().currentUser || {}).email || 'admin'
         });
       }
+      if (window.AKS && AKS.log) {
+        if (!editId) AKS.log('producto_creado', code + ' - ' + name, { price: salePrice, cost: costPrice, stock: stock });
+        else {
+          if (oldPrice !== salePrice) AKS.log('precio_modificado', code + ' - ' + name + ': $' + oldPrice + ' -> $' + salePrice, { before: oldPrice, after: salePrice });
+          if (costChanged) AKS.log('costo_modificado', code + ' - ' + name + ': $' + (oldCost || 0) + ' -> $' + costPrice, { before: oldCost || 0, after: costPrice });
+          if (oldStock !== stock) AKS.log('stock_modificado_manual', code + ' - ' + name + ': ' + oldStock + ' -> ' + stock, { before: oldStock, after: stock });
+        }
+      }
     } catch(he) { console.error('Historial:', he); }
 
     if (currentProductImagesBig.some(function(x) {
@@ -3641,6 +3657,8 @@ window.onPackChange = function() {
 window.deleteProduct = async function(id) {
   if (!confirm('¿Eliminar este producto?')) return;
   try {
+    var delP = products.find(function(x) { return x.id === id; });
+    if (window.AKS && AKS.log) AKS.log('producto_eliminado', delP ? (delP.code + ' - ' + delP.name) : id, { id: id, stock: delP ? delP.stock : null });
     await db.collection('products').doc(id).delete();
     try {
       await db.collection('productCosts').doc(id).delete();
@@ -6573,6 +6591,8 @@ document.addEventListener('visibilitychange', function() {
 <script src="assets/js/admin/tasa.js"></script>
 <script src="assets/js/admin/pdf.js"></script>
 <script src="assets/js/admin/usdt.js"></script>
+<script src="assets/js/admin/auditoria.js"></script>
+<script src="assets/js/admin/alertas.js"></script>
 <script src="assets/js/admin/clientes.js"></script>
 <script src="assets/js/admin/facturas.js"></script>
 <script src="assets/js/admin/logo.js"></script>

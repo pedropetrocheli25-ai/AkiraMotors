@@ -84,6 +84,7 @@
     try {
       var now = new Date().toISOString();
       await AKS.db().collection('settings').doc('bcvRate').set({ value: v, updatedAt: now, auto: $('aksT-auto').checked });
+      AKS.log('tasa_bcv_manual', 'Tasa BCV a ' + v.toFixed(2), { value: v });
       await AKS.db().collection('bcvHistory').add({ value: v, dateKey: AKS.dateKey(),
         createdAt: now, user: AKS.userLabel() });
       try { bcvRate = v; } catch (e) { /* variable del admin */ }

@@ -136,6 +136,7 @@
         changeUsd: AKS.r2(changeUsd), opening: open, expected: exp, counted: counted, diff: diff,
         notes: $('aksQ-notes').value.trim(), outflowsUsd: AKS.r2(outflows),
         electronic: elec.length, verified: root.querySelectorAll('[data-ver]:checked').length, user: AKS.userLabel(), createdAt: new Date().toISOString() });
+      AKS.log('cierre_caja', 'Cierre del ' + date + ' (' + nSales + ' ventas)', { diff: diff });
       alert('Cierre guardado');
       $('aksQ-body').innerHTML = ''; $('aksQ-notes').value = '';
       await loadHist();

@@ -68,6 +68,7 @@
             type: 'ajuste_conteo', qty: after - before, stockBefore: before, stockAfter: after,
             refType: 'conteo', refId: '' });
         });
+        if (todo[i].n !== todo[i].p.stock) AKS.log('ajuste_conteo', todo[i].p.code + ' - ' + todo[i].p.name + ': ' + todo[i].p.stock + ' -> ' + todo[i].n, { before: todo[i].p.stock, after: todo[i].n });
         ok++;
       } catch (e) { console.error(e); fail++; }
     }

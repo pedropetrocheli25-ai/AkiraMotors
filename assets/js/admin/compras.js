@@ -513,6 +513,7 @@
           voidedBy: AKS.userLabel(),
           voidedAt: new Date().toISOString() });
       });
+      AKS.log('compra_anulada', 'Compra ' + id + '. Motivo: ' + reason.trim());
       // Si la factura estaba a crédito y sin pagar, se quita la deuda
       try {
         var dq = await db.collection('expenses').where('purchaseId', '==', id).get();
@@ -670,7 +671,7 @@
       if (f === 'qty') {
         it.qty = AKS.q(parseFloat(String(t.value).replace(',', '.')));
       } else if (f === 'cost') {
-        it.unitCost = AKS.num(t.value);
+        it.unitCost = AKS.r2(AKS.num(t.value));
         it.newPrice = priceFrom(it);
       } else if (f === 'margin') {
         it.margin = AKS.num(t.value);

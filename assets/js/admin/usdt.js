@@ -30,6 +30,7 @@
     var v = AKS.num($('aksU-new').value);
     if (!(v >= 0) || v > 100000) { alert('Tasa inválida'); return; }
     try {
+      AKS.log('tasa_usdt', 'Tasa USDT a ' + v.toFixed(2), { value: v });
       await AKS.db().collection('settings').doc('usdtRate').set({ value: v, updatedAt: new Date().toISOString() });
       $('aksU-new').value = '';
       await refresh();

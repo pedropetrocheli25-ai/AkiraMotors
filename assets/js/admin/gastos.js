@@ -118,7 +118,7 @@
           await AKS.db().collection('expenses').doc(id).update({ status: 'paid', paidAt: new Date().toISOString(),
             paidMethod: m, paidAmount: pi2.amount, paidDateKey: AKS.dateKey() });
         }
-        else { if (!confirm('¿Eliminar este gasto?')) return; await AKS.db().collection('expenses').doc(id).delete(); }
+        else { if (!confirm('¿Eliminar este gasto?')) return; AKS.log('gasto_eliminado', 'Gasto ' + id); await AKS.db().collection('expenses').doc(id).delete(); }
         await search();
       } catch (e) { alert('Error: ' + e.message); }
     });

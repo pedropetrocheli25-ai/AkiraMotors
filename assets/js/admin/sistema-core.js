@@ -27,9 +27,28 @@
     return isFinite(n) ? n : 0;
   };
 
+  // Redondeo a 2 decimales sin errores de coma flotante: 4550.989 -> 4550.99 ; 1.005 -> 1.01
   AKS.r2 = function (n) {
-    return Math.round(((Number(n) || 0) + Number.EPSILON) * 100) / 100;
+    n = Number(n) || 0;
+    var a = Math.abs(n), s = String(a);
+    if (s.indexOf('e') !== -1) return Math.round(n * 100) / 100;
+    var r = Number(Math.round(Number(s + 'e2')) + 'e-2');
+    return n < 0 ? -r : r;
   };
+
+  // Todo campo de dinero (precios, costos, pagos, montos, tasas) se redondea a 2 decimales al terminar de escribir
+  var MONEY_ID = /price|cost|amt|amount|monto|rate|discountamount/i;
+  document.addEventListener('change', function (e) {
+    var el = e.target;
+    if (!el || el.tagName !== 'INPUT' || el.type !== 'number' || el.value === '') return;
+    var money = el.getAttribute('step') === '0.01' || el.hasAttribute('data-pay') || el.hasAttribute('data-money') ||
+      el.getAttribute('data-f') === 'price' || el.getAttribute('data-f') === 'cost' || MONEY_ID.test(el.id || '');
+    if (!money) return;
+    var v = parseFloat(String(el.value).replace(',', '.'));
+    if (!isFinite(v)) return;
+    var r = AKS.r2(v);
+    if (r !== v) { el.value = r; el.dispatchEvent(new Event('input', { bubbles: true })); }
+  }, true);
 
   AKS.usd = function (n) {
     return '$' + (Number(n) || 0).toFixed(2);
@@ -68,6 +87,58 @@
   AKS.userLabel = function () {
     var u = firebase.auth().currentUser;
     return u ? (u.email || u.uid) : '';
+  };
+
+  // Registro de actividad: solo se puede AGREGAR (las reglas de Firebase impiden editar o borrar).
+  AKS.log = function (action, detail, data) {
+    try {
+      var u = firebase.auth().currentUser;
+      if (!u) return Promise.resolve();
+      return db().collection('auditLog').add({
+        action: String(action), detail: String(detail || '').slice(0, 300),
+        data: data || null, user: u.email || u.uid, uid: u.uid,
+        dateKey: AKS.dateKey(), createdAt: new Date().toISOString()
+      }).catch(function (e) { console.warn('auditLog:', e.message); });
+    } catch (e) { return Promise.resolve(); }
+  };
+
+  // Pide credenciales de un DUEÑO para autorizar una acción (ej: descuento mayor al tope del cajero).
+  // Verifica con una sesión secundaria, sin cerrar la del cajero. Devuelve el correo del dueño o null.
+  AKS.authorizeOwner = function (motivo) {
+    return new Promise(function (resolve) {
+      var m = document.createElement('div');
+      m.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:100000;display:flex;align-items:center;justify-content:center;padding:1rem';
+      m.innerHTML = '<div style="background:#fff;border-radius:12px;padding:1.2rem;max-width:380px;width:100%;font-family:Arial,sans-serif">' +
+        '<h3 style="margin:0 0 .4rem">Autorización del dueño</h3>' +
+        '<p style="margin:0 0 .8rem;color:#555;font-size:.95rem">' + AKS.esc(motivo) + '</p>' +
+        '<input type="email" id="aksAuE" placeholder="Correo del dueño" autocomplete="off" style="width:100%;box-sizing:border-box;padding:.7rem;margin-bottom:.5rem;font-size:16px">' +
+        '<input type="password" id="aksAuP" placeholder="Contraseña" autocomplete="off" style="width:100%;box-sizing:border-box;padding:.7rem;margin-bottom:.5rem;font-size:16px">' +
+        '<div id="aksAuM" style="color:#c0392b;min-height:1.2rem;font-size:.9rem"></div>' +
+        '<div style="display:flex;gap:.5rem"><button id="aksAuX" style="flex:1;padding:.7rem">Cancelar</button>' +
+        '<button id="aksAuO" style="flex:1;padding:.7rem;background:#FF6B1A;color:#fff;border:0;font-weight:700">Autorizar</button></div></div>';
+      document.body.appendChild(m);
+      function close(v) { m.remove(); resolve(v); }
+      m.querySelector('#aksAuX').onclick = function () { close(null); };
+      m.querySelector('#aksAuO').onclick = async function () {
+        var em = m.querySelector('#aksAuE').value.trim(), pw = m.querySelector('#aksAuP').value;
+        var msg = m.querySelector('#aksAuM'), btn = this;
+        if (!em || !pw) { msg.textContent = 'Escribe correo y contraseña.'; return; }
+        btn.disabled = true; msg.textContent = 'Verificando...';
+        var app;
+        try {
+          try { app = firebase.app('aks-auth2'); } catch (e) { app = firebase.initializeApp(firebase.app().options, 'aks-auth2'); }
+          var cred = await app.auth().signInWithEmailAndPassword(em, pw);
+          var ad = await app.firestore().collection('admins').doc(cred.user.uid).get();
+          var ok = ad.exists && ad.data().isAdmin === true && ad.data().role !== 'cajero';
+          await app.auth().signOut();
+          if (!ok) { msg.textContent = 'Ese usuario no es dueño.'; btn.disabled = false; return; }
+          close(em);
+        } catch (e) {
+          try { await app.auth().signOut(); } catch (e2) { /* ignorar */ }
+          msg.textContent = 'Credenciales incorrectas.'; btn.disabled = false;
+        }
+      };
+    });
   };
 
   AKS.norm = function (s) {
@@ -137,6 +208,7 @@
         category: p.category || '',
         partNumber: attrs.partNumber || '',
         searchTerms: p.searchTerms || '',
+        altCodes: p.altCodes || '',
         compat: (p.compatibility || []).map(function (x) { return (x.brand || '') + ' ' + (x.model || ''); }).join(' '),
         price: Number(p.price) || 0,
         discount: Number(p.discount) || 0,
@@ -170,7 +242,7 @@
       var code = AKS.norm(p.code);
       var hay = AKS.norm([
         p.code, p.name, p.brand, p.partNumber,
-        p.searchTerms, p.category, p.compat
+        p.searchTerms, p.category, p.compat, p.altCodes
       ].join(' '));
       var ok = tokens.every(function (t) { return hay.indexOf(t) !== -1; });
       if (!ok) return;
@@ -402,5 +474,15 @@
       tx.update(bref, { stock: newB, packSynced: { u: newU, b: newB }, updatedAt: now });
     });
   }
+  AKS.init(function () {
+    var tries = 0;
+    (function tryLog() {
+      try {
+        if (sessionStorage.getItem('aksLogged')) return;
+        if (firebase.auth().currentUser) { sessionStorage.setItem('aksLogged', '1'); AKS.log('ingreso', 'Inició sesión en el panel'); return; }
+      } catch (e) { return; }
+      if (++tries < 8) setTimeout(tryLog, 3000);
+    })();
+  });
   AKS.init(function () { setTimeout(function () { AKS.packSync().catch(function () {}); }, 4000); });
 })();

@@ -171,6 +171,7 @@
         }
         res = { refund: refund, amount: amount, cur: cur2 };
       });
+      AKS.log('devolucion', (s.saleNumber || '') + ' devolución $' + res.refund + '. ' + reason, { saleNumber: s.saleNumber, refund: res.refund });
       alert('Devolución registrada. Devuelve al cliente ' + (res.cur === 'USD' ? AKS.usd(res.amount) : AKS.bs(res.amount)) + '.');
       AKS.refreshAdminProducts();
       if (AKS.clientes) AKS.clientes.load(true).catch(function () {});
