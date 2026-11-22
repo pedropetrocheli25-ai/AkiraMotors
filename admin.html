@@ -2056,6 +2056,10 @@ Tasa de cambio del dólar según el BCV.
   placeholder="Ej: SB-3642">
 </div>
 <div class="form-group">
+<label>Garantía (días, opcional)</label>
+<input type="number" id="productWarranty" min="0" step="1" placeholder="Ej: 30">
+</div>
+<div class="form-group">
 <label>Otros códigos de barras (opcional)</label>
 <input type="text" id="productAltCodes"
   placeholder="Separados por coma. Ej: 7591234567890, NGK-4567">
@@ -3212,6 +3216,7 @@ window.openAddProductModal = function() {
   document.getElementById('editProductId').value = '';
   document.getElementById('productCode').value = '';
   document.getElementById('productAltCodes').value = '';
+  document.getElementById('productWarranty').value = '';
   document.getElementById('productBrand').value = '';
   document.getElementById('productName').value = '';
   document.getElementById('productDescription').value = '';
@@ -3287,6 +3292,7 @@ window.editProduct = async function(productId) {
   document.getElementById('editProductId').value = product.id;
   document.getElementById('productCode').value = product.code || '';
   document.getElementById('productAltCodes').value = product.altCodes || '';
+  document.getElementById('productWarranty').value = product.warrantyDays || '';
   document.getElementById('productBrand').value = product.brand || '';
   document.getElementById('productName').value = product.name || '';
   document.getElementById('productDescription').value =
@@ -3534,6 +3540,7 @@ window.saveProduct = async function(event) {
     specifications: currentSpecifications,
     compatibility: currentCompatibility,
     searchTerms: document.getElementById('productSearchTerms').value,
+    warrantyDays: parseInt(document.getElementById('productWarranty').value) || 0,
     altCodes: document.getElementById('productAltCodes').value.split(',').map(function(s) { return s.trim(); }).filter(Boolean).join(', '),
     thumbnail: currentProductThumb || null,
     image: currentProductThumb || null,

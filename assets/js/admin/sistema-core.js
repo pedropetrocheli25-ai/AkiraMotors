@@ -209,6 +209,7 @@
         partNumber: attrs.partNumber || '',
         searchTerms: p.searchTerms || '',
         altCodes: p.altCodes || '',
+        warrantyDays: Number(p.warrantyDays) || 0,
         compat: (p.compatibility || []).map(function (x) { return (x.brand || '') + ' ' + (x.model || ''); }).join(' '),
         price: Number(p.price) || 0,
         discount: Number(p.discount) || 0,

@@ -35,7 +35,8 @@
   catch (e) { favs = {}; }
 
   function newTicket(name) {
-    return { name: name, cart: [], disc: '', cname: '', cphone: '', cdoc: '', clientId: '' };
+    return { name: name, cart: [], disc: '', cname: '', cphone: '', cdoc: '', clientId: '',
+      paper: { on: false, dt: '', rate: '', note: '' } };
   }
   function T() { return tickets[cur]; }
   function $(id) { return document.getElementById(id); }
@@ -208,7 +209,14 @@
       '<div><label>Teléfono</label><input type="tel" id="aksK-cphone" maxlength="11" ' +
       'placeholder="0412XXXXXXX"></div>' +
       '<div><label>Descuento %</label><input type="number" id="aksK-disc" ' +
-      'min="0" max="100" step="0.5" placeholder="0"></div></div>' +
+      'min="0" max="100" step="0.5" placeholder="0"></div>' +
+      '<div class="full" style="display:flex;gap:.4rem;flex-wrap:wrap;align-items:center">' +
+      '<button type="button" class="btn btn-secondary btn-small" id="aksK-waorder">Cargar pedido de WhatsApp</button>' +
+      '<label style="font-size:.85rem"><input type="checkbox" id="aksK-paper"> Venta anotada en papel</label></div>' +
+      '<div class="full" id="aksK-paperbox" style="display:none;gap:.4rem;flex-wrap:wrap">' +
+      '<input type="datetime-local" id="aksK-pdt" style="flex:1 1 170px">' +
+      '<input type="number" id="aksK-prate" step="any" data-money placeholder="Tasa BCV de ese momento" style="flex:1 1 150px">' +
+      '<input type="text" id="aksK-pnote" maxlength="20" placeholder="N° de nota (opcional)" style="flex:1 1 150px"></div></div>' +
       '<div class="kpos-lines" id="aksK-lines"></div>' +
       '<div class="kpos-tot" id="aksK-tot"></div>' +
       '<div class="kpos-foot"><button class="kpos-sell" id="aksK-sell" disabled>' +
@@ -219,7 +227,12 @@
       '<div class="kpos-modal" id="aksK-paymodal"><div class="kpos-box">' +
       '<div class="kpos-paytop"><h3>Cobrar</h3><div id="aksK-paytotals" class="aks-total"></div>' +
       '<div id="aksK-paysum" style="margin-top:.4rem"></div></div>' +
-      '<div class="kpos-pay">' + pay + '</div><div style="height:.7rem"></div>' +
+      '<div class="kpos-pay">' + pay + '</div>' +
+      '<div style="margin:.6rem 0"><label><input type="checkbox" id="aksK-credit"> Dejar el saldo pendiente (crédito)</label>' +
+      '<div id="aksK-credbox" style="display:none;margin-top:.4rem;gap:.4rem;flex-wrap:wrap">' +
+      '<select id="aksK-ctype"><option value="fiado">Fiado (paga después)</option>' +
+      '<option value="apartado">Apartado (retira cuando termine de pagar)</option></select>' +
+      '<input type="date" id="aksK-cdue" title="Fecha límite de pago (opcional)"></div></div>' +
       '<div class="aks-inline"><button class="btn btn-primary" id="aksK-charge">' +
       'Confirmar venta</button>' +
       '<button class="btn btn-secondary" id="aksK-payback">Volver</button></div>' +
@@ -326,6 +339,7 @@
   }
 
   function renderTicket() {
+    setTimeout(function () { try { syncExtras(); } catch (e) { /* ignorar */ } }, 0);
     var t = T();
     $('aksK-tname').textContent = '(' + t.name + ')';
     $('aksK-rate').textContent = rate ? 'Tasa BCV ' + rate.toFixed(2) : '';
@@ -404,7 +418,7 @@
       if (cart.length >= MAX_LINES) { alert('Máximo ' + MAX_LINES + ' líneas.'); return; }
       var price = AKS.effectivePrice(p);
       cart.push({ productId: p.id, code: p.code, name: p.name, stock: p.stock,
-        qty: 1, unitPrice: price, basePrice: price, override: false });
+        qty: 1, unitPrice: price, basePrice: price, override: false, warrantyDays: Number(p.warrantyDays) || 0 });
     }
     renderTicket();
   }
@@ -439,15 +453,20 @@
     var diff = AKS.r2(p.credit - t.total);
     $('aksK-paysum').innerHTML = (diff >= 0
         ? '<span class="aks-ok" style="font-size:1.05rem"><strong>Vuelto: ' + AKS.usd(diff) + ' / ' + AKS.bs(diff * rate) + '</strong></span>'
-        : '<span class="aks-bad" style="font-size:1.05rem"><strong>Falta: ' + AKS.usd(-diff) + ' / ' + AKS.bs(-diff * rate) +
-          (usdtRate > 0 ? ' / ' + (-diff * rate / usdtRate).toFixed(2) + ' USDT' : '') + '</strong></span>') +
+        : ($('aksK-credit') && $('aksK-credit').checked
+          ? '<span class="aks-bad" style="font-size:1.05rem"><strong>Queda a crédito: ' + AKS.usd(-diff) + ' / ' + AKS.bs(-diff * rate) + '</strong></span>'
+          : '<span class="aks-bad" style="font-size:1.05rem"><strong>Falta: ' + AKS.usd(-diff) + ' / ' + AKS.bs(-diff * rate) +
+          (usdtRate > 0 ? ' / ' + (-diff * rate / usdtRate).toFixed(2) + ' USDT' : '') + '</strong></span>')) +
       (p.usdtDisc > 0 ? '<br><span class="aks-muted">Descuento por pagar en USDT: ' + AKS.usd(p.usdtDisc) + '</span>' : '');
   }
 
   async function openPay() {
     if (!validateTicket()) return;
     try { rate = await AKS.getRate(true); } catch (e) { alert(e.message); return; }
+    var pp = T().paper;
+    if (pp.on && AKS.num(pp.rate) > 0) rate = AKS.r2(AKS.num(pp.rate));
     root.querySelectorAll('[data-pay],[data-ref]').forEach(function (e) { e.value = ''; });
+    $('aksK-credit').checked = false; $('aksK-credbox').style.display = 'none';
     try {
       var us = await AKS.db().collection('settings').doc('usdtRate').get();
       usdtRate = us.exists ? (Number(us.data().value) || 0) : 0;
@@ -468,18 +487,53 @@
     btn.disabled = true;
     btn.textContent = 'Procesando...';
     try {
-      rate = await AKS.getRate(true);
-      if (rate !== shown) {
-        renderTicket(); renderPaySummary();
-        alert('La tasa BCV cambió de ' + shown + ' a ' + rate +
-          '. Revisa el total en Bs y confirma de nuevo.');
-        return;
+      var pap = T().paper, isPaper = !!pap.on;
+      if (isPaper) {
+        if (!pap.dt || !(AKS.num(pap.rate) > 0)) { alert('Indica la fecha, la hora y la tasa de la venta anotada en papel.'); return; }
+        if (new Date(pap.dt).getTime() > Date.now() + 60000) { alert('La fecha de la venta anotada no puede ser futura.'); return; }
+        rate = AKS.r2(AKS.num(pap.rate));
+      } else {
+        rate = await AKS.getRate(true);
+        if (rate !== shown) {
+          renderTicket(); renderPaySummary();
+          alert('La tasa BCV cambió de ' + shown + ' a ' + rate +
+            '. Revisa el total en Bs y confirma de nuevo.');
+          return;
+        }
       }
       var tk = T(), cart = tk.cart;
       var t = calc(), p = payments();
-      if (p.credit + 0.005 < t.total) {
-        alert('El pago no cubre el total. Falta ' + AKS.usd(t.total - p.credit));
-        return;
+      var balance = AKS.r2(t.total - p.credit);
+      var onCredit = false, ctype = 'fiado', cdue = '';
+      if (balance > 0.004) {
+        if (!$('aksK-credit').checked) {
+          alert('El pago no cubre el total. Falta ' + AKS.usd(balance) + '. Si el cliente deja saldo pendiente, marca "Dejar el saldo pendiente (crédito)".');
+          return;
+        }
+        var phd = String(tk.cphone || '').replace(/\D/g, '');
+        if (!tk.cname.trim() || /^consumidor/i.test(tk.cname.trim()) || phd.length < 10 || !String(tk.cdoc || '').trim()) {
+          alert('Para vender a crédito o apartar, escribe el nombre, la cédula/RIF y el teléfono del cliente.');
+          return;
+        }
+        onCredit = true; ctype = $('aksK-ctype').value; cdue = $('aksK-cdue').value || '';
+        if (AKS.role === 'cajero') {
+          var okc = await AKS.authorizeOwner('Venta a crédito/apartado por ' + AKS.usd(balance) + '. Un dueño debe autorizar.');
+          if (!okc) { return; }
+        }
+      }
+      // Referencia de pago ya usada antes (evita que cuelen el mismo comprobante dos veces)
+      var refKeys = p.list.filter(function (x) { return x.ref; }).map(function (x) { return x.method + ':' + String(x.ref).toUpperCase().replace(/\s+/g, ''); });
+      for (var rk = 0; rk < refKeys.length; rk++) {
+        try {
+          var dup = await AKS.db().collection('sales').where('payRefs', 'array-contains', refKeys[rk]).limit(3).get();
+          var hit = null;
+          dup.forEach(function (d) { if (!hit && d.data().status === 'completed') hit = d.data(); });
+          if (hit) {
+            if (!confirm('La referencia "' + refKeys[rk].split(':')[1] + '" ya se usó en la factura ' + hit.saleNumber + ' (' + AKS.fmtDate(hit.dateKey) +
+              '). ¿Es otro pago y quieres continuar?')) return;
+            AKS.log('referencia_repetida', refKeys[rk] + ' ya usada en ' + hit.saleNumber);
+          }
+        } catch (e) { console.warn('ref:', e.message); }
       }
       // Control interno: el cajero no puede pasarse del tope de descuento ni cambiar precios sin autorización de un dueño
       var authBy = '';
@@ -505,11 +559,13 @@
           clientId = await AKS.clientes.ensure({ name: tk.cname, doc: tk.cdoc, phone: tk.cphone }) || '';
         } catch (e) { console.error('cliente:', e); }
       }
+      if (onCredit && !clientId) { alert('No se pudo registrar al cliente. Revisa nombre y teléfono para vender a crédito.'); return; }
       var db = AKS.db();
       var clientRef = clientId ? db.collection('clients').doc(clientId) : null;
       var saleRef = db.collection('sales').doc();
       var counterRef = db.collection('settings').doc('adminSettings');
-      var nowIso = new Date().toISOString();
+      var realNow = new Date().toISOString();
+      var nowIso = isPaper ? new Date(pap.dt).toISOString() : realNow;
       var user = AKS.userLabel();
       var result = null;
 
@@ -549,7 +605,7 @@
             refType: 'sale', refId: saleRef.id });
           lines.push({ productId: x.productId, code: x.code, name: x.name, qty: x.qty,
             unitPrice: x.unitPrice, basePrice: x.basePrice, priceOverride: !!x.override,
-            unitCost: cost, lineTotal: AKS.r2(x.qty * x.unitPrice) });
+            unitCost: cost, lineTotal: AKS.r2(x.qty * x.unitPrice), warrantyDays: Number(x.warrantyDays) || 0 });
         }
         var profit = AKS.r2(t.sub - t.disc - usdtDisc - costTotal);
         tx.set(counterRef, { saleCounter: n }, { merge: true });
@@ -558,13 +614,22 @@
           discount: AKS.r2(t.disc + usdtDisc), usdtDiscount: usdtDisc, iva: 0,
           totalUsd: totalFinal, rate: rate, totalBs: AKS.r2(totalFinal * rate),
           costUsd: AKS.r2(costTotal), profitUsd: profit, payments: p.list,
-          paidUsd: p.paidUsd, changeUsd: AKS.r2(Math.max(0, p.paidUsd - totalFinal)),
+          paidUsd: p.paidUsd, changeUsd: onCredit ? 0 : AKS.r2(Math.max(0, p.paidUsd - totalFinal)),
+          onCredit: onCredit, balanceUsd: onCredit ? balance : 0, creditType: onCredit ? ctype : '',
+          payRefs: refKeys, fromPaper: isPaper, paperNote: isPaper ? String(pap.note || '') : '', enteredAt: realNow,
           customerName: tk.cname.trim(), customerPhone: tk.cphone.trim(),
           customerDoc: tk.cdoc.trim(), clientId: (clientSnap && clientSnap.exists) ? clientId : '',
-          channel: 'mostrador', dateKey: AKS.dateKey(),
+          channel: 'mostrador', dateKey: AKS.dateKey(isPaper ? new Date(pap.dt) : undefined),
           status: 'completed', seller: user, createdAt: nowIso
         };
         tx.set(saleRef, result);
+        if (onCredit && clientId) {
+          tx.set(db.collection('receivables').doc(saleRef.id), {
+            saleId: saleRef.id, saleNumber: number, clientId: clientId, clientName: tk.cname.trim(),
+            clientPhone: tk.cphone.trim(), type: ctype, totalUsd: totalFinal, paidUsd: AKS.r2(totalFinal - balance),
+            balanceUsd: balance, status: 'open', delivered: ctype !== 'apartado', dueDate: cdue,
+            dateKey: result.dateKey, createdAt: nowIso, user: user });
+        }
         if (clientSnap && clientSnap.exists) {
           var cd = clientSnap.data();
           tx.update(clientRef, { purchases: (Number(cd.purchases) || 0) + 1,
@@ -574,6 +639,8 @@
       });
       if (AKS.clientes) AKS.clientes.load(true).catch(function () {});
       var rebajados = cart.filter(function (l) { return l.override && l.unitPrice !== l.basePrice; });
+      if (isPaper) AKS.log('venta_en_papel', result.saleNumber + ' anotada el ' + AKS.fmtDateTime(nowIso) + ' con tasa ' + rate, { saleNumber: result.saleNumber });
+      if (onCredit) AKS.log('venta_a_credito', result.saleNumber + ' ' + ctype + ' saldo $' + balance + ' a ' + tk.cname.trim(), { saleNumber: result.saleNumber, balance: balance });
       if (t.pct > 0 || usdtDisc > 0 || rebajados.length) {
         AKS.log(authBy ? 'descuento_autorizado' : 'descuento', result.saleNumber + ': ' + (t.pct > 0 ? t.pct + '% ($' + t.disc + ') ' : '') +
           (usdtDisc > 0 ? 'USDT -$' + usdtDisc + ' ' : '') + (rebajados.length ? rebajados.length + ' precio(s) modificado(s) ' : '') +
@@ -601,6 +668,19 @@
   // ------------------------------------------------------------
   // Factura interna (impresión)
   // ------------------------------------------------------------
+  // Garantía por producto: "Garantía: Bujía 30 días (hasta 21/12/2026)"
+  function warrText(s) {
+    var base = new Date(s.createdAt), out = [];
+    (s.items || []).forEach(function (x) {
+      var d = Number(x.warrantyDays) || 0;
+      if (d > 0) {
+        var u = new Date(base.getTime() + d * 86400000);
+        out.push('Garantía ' + x.name + ': ' + d + ' días (hasta ' + AKS.fmtDate(AKS.dateKey(u)) + ')');
+      }
+    });
+    return out.length ? '\n' + out.join('\n') : '';
+  }
+
   function payLine(p) {
     var m = METHODS.filter(function (z) { return z.k === p.method; })[0];
     var amt = p.currency === 'USD' ? AKS.usd(p.amount)
@@ -621,6 +701,8 @@
     t += '\n*TOTAL: ' + AKS.usd(s.totalUsd) + ' / ' + AKS.bs(s.totalBs) + '*\nTasa BCV: ' + Number(s.rate).toFixed(2) + '\n\n' +
       (s.payments || []).map(payLine).join('\n') +
       (s.changeUsd ? '\nVuelto: ' + AKS.usd(s.changeUsd) : '') +
+      (s.onCredit ? '\n*SALDO PENDIENTE: ' + AKS.usd(s.balanceUsd) + (s.creditType === 'apartado' ? ' (apartado)' : '') + '*' : '') +
+      warrText(s) +
       '\n\nGracias por su compra. Documento de control, no es factura fiscal.';
     return t;
   }
@@ -660,6 +742,8 @@
     L.push({ t: '---' });
     (s.payments || []).forEach(function (p) { L.push({ t: payLine(p) }); });
     if (s.changeUsd) L.push({ t: 'Vuelto: ' + AKS.usd(s.changeUsd) });
+    if (s.onCredit) L.push({ t: 'SALDO PENDIENTE: ' + AKS.usd(s.balanceUsd) + (s.creditType === 'apartado' ? ' (apartado)' : ''), b: true, s: 10 });
+    warrText(s).split('\n').filter(Boolean).forEach(function (w) { L.push({ t: w, s: 8 }); });
     L.push({ t: '---' });
     L.push({ t: 'Gracias por su compra!' });
     return AKS.pdf.ticket(L);
@@ -716,6 +800,8 @@
       '<div class="big">TOTAL Bs: ' + AKS.bs(s.totalBs) + '</div>' +
       '<div>Tasa BCV: ' + Number(s.rate).toFixed(2) + '</div><hr>' + pays +
       (s.changeUsd ? '<div>Vuelto: ' + AKS.usd(s.changeUsd) + '</div>' : '') +
+      (s.onCredit ? '<div class="big">SALDO PENDIENTE: ' + AKS.usd(s.balanceUsd) + (s.creditType === 'apartado' ? ' (apartado)' : '') + '</div>' : '') +
+      (warrText(s) ? '<hr><div>' + AKS.esc(warrText(s)).replace(/\n/g, '<br>') + '</div>' : '') +
       '<hr><div>¡Gracias por su compra!</div>' +
       '<div class="np"><button onclick="window.print()">Imprimir</button>' +
       '<button id="rcPdf">Descargar PDF</button><button id="rcWa">Enviar por WhatsApp</button></div>' +
@@ -827,7 +913,105 @@
   // ------------------------------------------------------------
   // Eventos
   // ------------------------------------------------------------
+  // ------------------------------------------------------------
+  // Extras: venta anotada en papel, crédito y pedido pegado de WhatsApp
+  // ------------------------------------------------------------
+  function syncExtras() {
+    var pp = T().paper, on = $('aksK-paper');
+    if (!on) return;
+    on.checked = !!pp.on;
+    $('aksK-paperbox').style.display = pp.on ? 'flex' : 'none';
+    if ($('aksK-pdt').value !== pp.dt) $('aksK-pdt').value = pp.dt;
+    if ($('aksK-prate').value !== String(pp.rate)) $('aksK-prate').value = pp.rate;
+    if ($('aksK-pnote').value !== pp.note) $('aksK-pnote').value = pp.note;
+  }
+
+  function nowLocalInput() {
+    var d = new Date(Date.now() - new Date().getTimezoneOffset() * 60000);
+    return d.toISOString().slice(0, 16);
+  }
+
+  async function applyRate() {
+    var pp = T().paper;
+    if (pp.on && AKS.num(pp.rate) > 0) rate = AKS.r2(AKS.num(pp.rate));
+    else { try { rate = await AKS.getRate(false); } catch (e) { /* mantener */ } }
+    renderTicket();
+  }
+
+  function parseWaOrder(text) {
+    var items = [];
+    String(text || '').split(/\r?\n/).forEach(function (ln) {
+      ln = ln.trim();
+      var m = ln.match(/^[-•*]\s*(.+?)\s+x\s*(\d+(?:[.,]\d+)?)\s*(?:=.*)?$/i);
+      if (m) { items.push({ q: m[1], qty: AKS.q(parseFloat(m[2].replace(',', '.'))) }); return; }
+      var s = ln.match(/^(.+?)\s*\(C[oó]digo\s+(.+?)\)\s*$/i);
+      if (s) items.push({ q: s[2], name: s[1], qty: 1 });
+    });
+    return items;
+  }
+
+  function loadWaOrder() {
+    var m = document.createElement('div');
+    m.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:100000;display:flex;align-items:center;justify-content:center;padding:1rem';
+    m.innerHTML = '<div style="background:#fff;border-radius:12px;padding:1.1rem;max-width:460px;width:100%;font-family:Arial,sans-serif">' +
+      '<h3 style="margin:0 0 .4rem">Pedido de WhatsApp</h3>' +
+      '<p style="margin:0 0 .6rem;color:#555;font-size:.9rem">Pega aquí el mensaje que te llegó de la tienda ("Hola, quisiera pedir estos repuestos...").</p>' +
+      '<textarea id="aksWaT" rows="8" style="width:100%;box-sizing:border-box;font-size:16px"></textarea>' +
+      '<div style="display:flex;gap:.5rem;margin-top:.6rem"><button id="aksWaX" style="flex:1;padding:.7rem">Cancelar</button>' +
+      '<button id="aksWaO" style="flex:1;padding:.7rem;background:#FF6B1A;color:#fff;border:0;font-weight:700">Cargar a la factura</button></div></div>';
+    document.body.appendChild(m);
+    m.querySelector('#aksWaX').onclick = function () { m.remove(); };
+    m.querySelector('#aksWaO').onclick = function () {
+      var items = parseWaOrder(m.querySelector('#aksWaT').value);
+      if (!items.length) { alert('No encontré productos en ese mensaje.'); return; }
+      var miss = [], added = 0;
+      items.forEach(function (it) {
+        var nq = AKS.norm(it.q);
+        var p = AKS.products.filter(function (x) { return AKS.norm(x.name) === nq || AKS.norm(x.code) === nq; })[0] ||
+          AKS.searchProducts(it.q, 1)[0];
+        if (!p) { miss.push(it.q); return; }
+        if (p.stock < it.qty) { miss.push(p.name + ' (solo hay ' + p.stock + ')'); return; }
+        addProduct(p);
+        var l = T().cart.filter(function (z) { return z.productId === p.id; })[0];
+        if (l) l.qty = AKS.q(it.qty);
+        added++;
+      });
+      renderTicket();
+      m.remove();
+      if (miss.length) alert('Cargados: ' + added + '.\nNo se pudieron cargar:\n- ' + miss.join('\n- '));
+    };
+  }
+
+  function bindExtras() {
+    root.addEventListener('change', function (ev) {
+      var t = ev.target, pp = T().paper;
+      if (t.id === 'aksK-paper') {
+        pp.on = t.checked;
+        if (pp.on && !pp.dt) pp.dt = nowLocalInput();
+        if (pp.on && !pp.rate) pp.rate = rate ? String(rate) : '';
+        if (!pp.on) { pp.dt = ''; pp.rate = ''; pp.note = ''; }
+        syncExtras(); applyRate();
+      } else if (t.id === 'aksK-pdt') { pp.dt = t.value; }
+      else if (t.id === 'aksK-prate') { pp.rate = t.value; applyRate(); }
+      else if (t.id === 'aksK-pnote') { pp.note = t.value; }
+      else if (t.id === 'aksK-credit') {
+        $('aksK-credbox').style.display = t.checked ? 'flex' : 'none';
+        renderPaySummary();
+      }
+    });
+    root.addEventListener('input', function (ev) {
+      var t = ev.target, pp = T().paper;
+      if (t.id === 'aksK-pdt') pp.dt = t.value;
+      else if (t.id === 'aksK-prate') pp.rate = t.value;
+      else if (t.id === 'aksK-pnote') pp.note = t.value;
+    });
+    root.addEventListener('click', function (ev) {
+      if (ev.target.id === 'aksK-waorder') loadWaOrder();
+    });
+  }
+
   function bind() {
+    bindExtras();
     window.addEventListener('scroll', function () { if (root && root.offsetParent) renderTotals(); }, { passive: true });
     root.addEventListener('input', function (ev) {
       var t = ev.target, tk = T();
