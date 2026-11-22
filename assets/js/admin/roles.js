@@ -6,7 +6,7 @@
   'use strict';
   var AKS = window.AKS;
   if (!AKS) { console.error('roles.js: falta sistema-core.js'); return; }
-  var ALLOWED = ['caja', 'facturas', 'clientes', 'cierres', 'cotizaciones'];
+  var ALLOWED = ['caja', 'facturas', 'clientes', 'cierres', 'cotizaciones', 'cxc'];
   AKS.role = 'dueno';
 
   function apply() {

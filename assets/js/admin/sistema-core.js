@@ -141,6 +141,27 @@
     });
   };
 
+  // Avisos fijos arriba del panel (tasa vieja, respaldo, apertura de caja...). Se pueden cerrar.
+  AKS.alertBar = function (key, htmlText) {
+    try { if (sessionStorage.getItem('aksBar_' + key)) return; } catch (e) { /* ignorar */ }
+    var box = document.getElementById('aksBars');
+    if (!box) {
+      box = document.createElement('div'); box.id = 'aksBars';
+      box.style.cssText = 'position:fixed;top:8px;left:64px;right:8px;z-index:1400;display:flex;flex-direction:column;gap:6px;pointer-events:none';
+      document.body.appendChild(box);
+    }
+    if (box.querySelector('[data-bar="' + key + '"]')) return;
+    var b = document.createElement('div');
+    b.setAttribute('data-bar', key);
+    b.style.cssText = 'pointer-events:auto;background:#fff3cd;border:1px solid #e0a800;color:#533f03;border-radius:10px;padding:.55rem .8rem;font:14px Arial;display:flex;gap:.6rem;align-items:center;box-shadow:0 2px 8px rgba(0,0,0,.2)';
+    b.innerHTML = '<div style="flex:1">' + htmlText + '</div><button type="button" style="border:0;background:transparent;font-size:1.2rem;cursor:pointer">&times;</button>';
+    b.querySelector('button').onclick = function () {
+      try { sessionStorage.setItem('aksBar_' + key, '1'); } catch (e) { /* ignorar */ }
+      b.remove();
+    };
+    box.appendChild(b);
+  };
+
   AKS.norm = function (s) {
     return String(s === null || s === undefined ? '' : s)
       .toLowerCase()

@@ -1140,6 +1140,11 @@
       if (AKS.clientes) await AKS.clientes.load(true);
     } catch (e) { alert(e.message); return; }
     try {
+      var ao = await AKS.db().collection('cashOpenings').where('dateKey', '==', AKS.dateKey()).get();
+      var hasOpen = false; ao.forEach(function () { hasOpen = true; });
+      if (!hasOpen) AKS.alertBar('apertura', '<strong>Falta la apertura de caja de hoy.</strong> Regístrala en "Apertura y cierre de caja" para que el cierre cuadre con el fondo inicial.');
+    } catch (e) { /* ignorar */ }
+    try {
       var us0 = await AKS.db().collection('settings').doc('usdtRate').get();
       usdtRate = us0.exists ? (Number(us0.data().value) || 0) : 0;
     } catch (e) { usdtRate = 0; }

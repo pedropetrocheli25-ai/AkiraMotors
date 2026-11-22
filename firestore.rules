@@ -98,6 +98,21 @@ service cloud.firestore {
       allow read, create: if isAdmin();
       allow update, delete: if isOwner();
     }
+    // Cuentas por cobrar (fiado/apartado) y sus abonos
+    match /receivables/{id} {
+      allow read, create: if isAdmin();
+      allow update: if isAdmin()
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['paidUsd', 'balanceUsd', 'status', 'lastPaymentAt', 'delivered', 'deliveredAt']);
+      allow delete: if false;
+    }
+    match /receivablePayments/{id} {
+      allow read, create: if isAdmin();
+      allow update, delete: if false;
+    }
+    match /cashOpenings/{id} {
+      allow read, create: if isAdmin();
+      allow update, delete: if false;
+    }
     match /cashCloses/{id} {
       allow read, create: if isAdmin();
       allow update, delete: if false;

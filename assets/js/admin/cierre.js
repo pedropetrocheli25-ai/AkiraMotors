@@ -15,6 +15,7 @@
     { k: 'transferencia', label: 'Transferencia Bs', cur: 'VES' },
     { k: 'usdt', label: 'USDT', cur: 'USDT' }
   ];
+  var abonosUsd = 0, openings = {};
   var root = null, expected = {}, nSales = 0, totalUsd = 0, changeUsd = 0, outflows = 0, outList = [], elec = [];
   function $(id) { return document.getElementById(id); }
   function fmt(m, v) {
@@ -22,8 +23,16 @@
   }
 
   function html() {
-    return '<h2 class="section-title">Cierre de caja</h2>' +
-      '<div class="admin-card"><div class="aks-inline"><label class="aks-muted">Fecha ' +
+    return '<h2 class="section-title">Apertura y cierre de caja</h2>' +
+      '<div class="admin-card"><h3>Apertura de caja</h3>' +
+      '<div class="alert-info">Registra con cuánto efectivo empiezas el turno. El cierre lo toma solo como fondo inicial.</div>' +
+      '<div class="aks-inline"><label class="aks-muted">Efectivo $ <input type="number" id="aksQ-ou" min="0" step="0.01" data-money value="0" style="width:110px"></label>' +
+      '<label class="aks-muted">Efectivo Bs <input type="number" id="aksQ-ob" min="0" step="0.01" data-money value="0" style="width:130px"></label>' +
+      '<button class="btn btn-primary" id="aksQ-osave">Registrar apertura</button></div>' +
+      '<div id="aksQ-olist" class="aks-muted" style="margin-top:.5rem"></div></div>' +
+      '<div class="admin-card"><h3>Cierre de caja</h3>' + 
+
+      '<div class="aks-inline"><label class="aks-muted">Fecha ' +
       '<input type="date" id="aksQ-date"></label><button class="btn btn-secondary" id="aksQ-load">Calcular</button></div>' +
       '<div id="aksQ-info" class="aks-muted" style="margin:.6rem 0"></div>' +
       '<div class="aks-wrap"><table class="aks-table"><thead><tr><th>Método</th><th>Fondo inicial</th>' +
@@ -63,7 +72,7 @@
   async function calc() {
     var date = $('aksQ-date').value;
     if (!date) { alert('Elige la fecha'); return; }
-    expected = {}; nSales = 0; totalUsd = 0; changeUsd = 0; outflows = 0; outList = []; elec = [];
+    abonosUsd = 0; expected = {}; nSales = 0; totalUsd = 0; changeUsd = 0; outflows = 0; outList = []; elec = [];
     try {
       var snap = await AKS.db().collection('sales').where('dateKey', '==', date).get();
       snap.forEach(function (d) {
@@ -77,6 +86,23 @@
           }
         });
         (s.refunds || []).forEach(function (r) { expected[r.method] = (expected[r.method] || 0) - r.amount; });
+      });
+      // Abonos de cuentas por cobrar recibidos ese día
+      var ab = await AKS.db().collection('receivablePayments').where('dateKey', '==', date).get();
+      ab.forEach(function (d) {
+        var x = d.data();
+        expected[x.method] = (expected[x.method] || 0) + x.amount; abonosUsd += x.creditUsd || x.amountUsd || 0;
+        if (x.method.indexOf('efectivo') !== 0) {
+          elec.push({ key: d.id, sale: 'Abono ' + (x.saleNumber || ''), method: x.method, currency: x.currency, amount: x.amount, ref: x.ref || '' });
+        }
+      });
+      // Apertura(s) de caja del día
+      openings = {};
+      var op = await AKS.db().collection('cashOpenings').where('dateKey', '==', date).get();
+      op.forEach(function (d) {
+        var x = d.data();
+        openings.efectivo_usd = (openings.efectivo_usd || 0) + (Number(x.efectivo_usd) || 0);
+        openings.efectivo_bs = (openings.efectivo_bs || 0) + (Number(x.efectivo_bs) || 0);
       });
       // Salidas del día: gastos y compras pagadas, por método de pago
       var ex = await AKS.db().collection('expenses').where('paidDateKey', '==', date).get();
@@ -104,10 +130,39 @@
       verSum();
       $('aksQ-info').innerHTML = 'Facturas completadas: <strong>' + nSales + '</strong> · Total vendido: <strong>' +
         AKS.usd(totalUsd) + '</strong> · Vuelto entregado: ' + AKS.usd(changeUsd) +
+        (abonosUsd ? ' · Abonos recibidos: <strong>' + AKS.usd(abonosUsd) + '</strong>' : '') +
         (outflows ? ' · Pagos de gastos/compras: <strong>' + AKS.usd(outflows) + '</strong> (' + AKS.esc(outList.join('; ')) + ')' : '');
       $('aksQ-body').innerHTML = METHODS.map(inputRow).join('');
+      ['efectivo_usd', 'efectivo_bs'].forEach(function (k) {
+        var oi = root.querySelector('[data-open="' + k + '"]');
+        if (oi && openings[k]) oi.value = AKS.r2(openings[k]);
+      });
       recalc();
     } catch (e) { alert('No se pudo calcular: ' + e.message); }
+  }
+
+  async function loadOpenings() {
+    try {
+      var snap = await AKS.db().collection('cashOpenings').where('dateKey', '==', AKS.dateKey()).get();
+      var rows = [];
+      snap.forEach(function (d) { rows.push(d.data()); });
+      rows.sort(function (a, b) { return String(a.createdAt).localeCompare(String(b.createdAt)); });
+      $('aksQ-olist').innerHTML = rows.length ? 'Aperturas de hoy: ' + rows.map(function (r) {
+        return AKS.esc(AKS.fmtDateTime(r.createdAt)) + ' · ' + AKS.usd(r.efectivo_usd) + ' + ' + AKS.bs(r.efectivo_bs) + ' (' + AKS.esc(r.user) + ')';
+      }).join(' | ') : '<span class="aks-bad">Todavía no registras la apertura de hoy.</span>';
+    } catch (e) { $('aksQ-olist').textContent = ''; }
+  }
+
+  async function saveOpening() {
+    var u = AKS.r2(AKS.num($('aksQ-ou').value)), b = AKS.r2(AKS.num($('aksQ-ob').value));
+    if (u < 0 || b < 0) { alert('Los montos no pueden ser negativos'); return; }
+    try {
+      await AKS.db().collection('cashOpenings').add({ dateKey: AKS.dateKey(), efectivo_usd: u, efectivo_bs: b,
+        user: AKS.userLabel(), createdAt: new Date().toISOString() });
+      AKS.log('apertura_caja', 'Apertura: ' + AKS.usd(u) + ' y ' + AKS.bs(b), { usd: u, bs: b });
+      alert('Apertura registrada');
+      await loadOpenings();
+    } catch (e) { alert('No se pudo guardar: ' + e.message); }
   }
 
   function verSum() {
@@ -170,11 +225,12 @@
     if (!root) return;
     $('aksQ-load').addEventListener('click', calc);
     $('aksQ-save').addEventListener('click', save);
+    $('aksQ-osave').addEventListener('click', saveOpening);
     root.addEventListener('input', function (ev) { if (ev.target.hasAttribute('data-cnt') || ev.target.hasAttribute('data-open')) recalc(); });
     root.addEventListener('change', function (ev) { if (ev.target.hasAttribute('data-ver')) verSum(); });
-    AKS.addMenuItem('Cierre de caja', 'cierres', function () {
+    AKS.addMenuItem('Apertura y cierre', 'cierres', function () {
       if (!$('aksQ-date').value) $('aksQ-date').value = AKS.dateKey();
-      calc(); loadHist();
+      calc(); loadHist(); loadOpenings();
     }, 'caja');
   });
   AKS.cierre = { calc: calc, save: save };
