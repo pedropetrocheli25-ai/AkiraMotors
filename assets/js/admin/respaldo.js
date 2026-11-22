@@ -12,7 +12,8 @@
     ['costHistory', 'Historial de costos'], ['stockMovements', 'Movimientos de stock'],
     ['bcvHistory', 'Historial de tasa'], ['cashCloses', 'Cierres de caja'],
     ['settings', 'Ajustes'], ['brands', 'Marcas'], ['carouselSlides', 'Carrusel'],
-    ['orders', 'Pedidos web (antiguos)']
+    ['orders', 'Pedidos web (antiguos)'], ['receivables', 'Cuentas por cobrar'],
+    ['receivablePayments', 'Abonos'], ['cashOpenings', 'Aperturas de caja'], ['auditLog', 'Registro de control']
   ];
   function $(id) { return document.getElementById(id); }
 

@@ -2773,7 +2773,11 @@ function applyFilters() {
         p.code.toLowerCase().includes(searchQuery);
       var byTerms = p.searchTerms &&
         p.searchTerms.toLowerCase().includes(searchQuery);
-      return byName || byCode || byTerms;
+      var extra = [p.altCodes, p.brand, p.attributes && p.attributes.partNumber]
+        .concat((p.compatibility || []).map(function(c) {
+          return (c.brand || '') + ' ' + (c.model || '');
+        })).join(' ').toLowerCase();
+      return byName || byCode || byTerms || extra.includes(searchQuery);
     });
   }
   if (activeCategory) {
