@@ -12,8 +12,16 @@
 
   function $(id) { return document.getElementById(id); }
 
+  // Para comparar y buscar: sin puntos, guiones ni espacios (V-12.123.123 = V12123123 = 12123123 con V)
   function normDoc(s) {
-    return String(s || '').toUpperCase().replace(/[\s.]/g, '');
+    return String(s || '').toUpperCase().replace(/[\s.\-]/g, '');
+  }
+  // Formato guardado: si solo escribe números es cédula venezolana (V). Ej: 12.123.123 -> V-12123123
+  function fmtDoc(s) {
+    var d = normDoc(s);
+    if (!d) return '';
+    if (/^\d/.test(d)) d = 'V' + d;
+    return d.replace(/^([A-Z])/, '$1-');
   }
 
   // ------------------------------------------------------------
@@ -41,7 +49,7 @@
   }
 
   function findByDoc(doc) {
-    var d = normDoc(doc);
+    var d = normDoc(fmtDoc(doc));
     if (!d) return null;
     return list.filter(function (c) { return normDoc(c.doc) === d; })[0] || null;
   }
@@ -49,7 +57,7 @@
   // Crea el cliente si hay RIF/Cédula y nombre y todavía no existe
   async function ensure(data) {
     var name = String(data.name || '').trim();
-    var doc = normDoc(data.doc);
+    var doc = fmtDoc(data.doc);
     if (!name || !doc) return null;
     await load(false);
     var ex = findByDoc(doc);
@@ -76,7 +84,7 @@
       '<div class="form-group"><label>Nombre o razón social *</label>' +
       '<input type="text" id="aksCl-name" maxlength="100"></div>' +
       '<div class="form-group"><label>RIF / Cédula *</label>' +
-      '<input type="text" id="aksCl-doc" maxlength="20" placeholder="V-12345678 o J-12345678-9"></div>' +
+      '<input type="text" id="aksCl-doc" maxlength="20" placeholder="12.123.123 (si es RIF: J123456789)"></div>' +
       '<div class="form-group"><label>Teléfono</label>' +
       '<input type="tel" id="aksCl-phone" maxlength="11" placeholder="0412XXXXXXX"></div></div>' +
       '<div class="form-row-3">' +
@@ -126,12 +134,12 @@
 
   async function save() {
     var name = $('aksCl-name').value.trim();
-    var doc = normDoc($('aksCl-doc').value);
+    var doc = fmtDoc($('aksCl-doc').value);
     var phone = $('aksCl-phone').value.trim();
     var email = $('aksCl-email').value.trim();
     if (name.length < 2) { alert('Escribe el nombre del cliente'); return; }
-    if (!/^[VEJGPC]-?[0-9]{5,10}(-?[0-9])?$/.test(doc)) {
-      alert('RIF / Cédula inválido. Ejemplos: V-12345678, J-123456789'); return;
+    if (!/^[VEJGPC]-[0-9]{5,10}$/.test(doc)) {
+      alert('RIF / Cédula inválido. Escribe solo los números de la cédula (12.123.123) o con letra para RIF (J123456789)'); return;
     }
     if (phone && !/^04\d{9}$/.test(phone)) { alert('Teléfono: formato 0412XXXXXXX'); return; }
     if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { alert('Correo inválido'); return; }
@@ -226,5 +234,5 @@
   });
 
   AKS.clientes = { load: load, search: search, findByDoc: findByDoc, ensure: ensure,
-    normDoc: normDoc, getList: function () { return list; } };
+    normDoc: normDoc, fmtDoc: fmtDoc, getList: function () { return list; } };
 })();

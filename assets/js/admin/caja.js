@@ -618,7 +618,7 @@
           onCredit: onCredit, balanceUsd: onCredit ? balance : 0, creditType: onCredit ? ctype : '',
           payRefs: refKeys, fromPaper: isPaper, paperNote: isPaper ? String(pap.note || '') : '', enteredAt: realNow,
           customerName: tk.cname.trim(), customerPhone: tk.cphone.trim(),
-          customerDoc: tk.cdoc.trim(), clientId: (clientSnap && clientSnap.exists) ? clientId : '',
+          customerDoc: (AKS.clientes && AKS.clientes.fmtDoc ? AKS.clientes.fmtDoc(tk.cdoc) : tk.cdoc.trim()), clientId: (clientSnap && clientSnap.exists) ? clientId : '',
           channel: 'mostrador', dateKey: AKS.dateKey(isPaper ? new Date(pap.dt) : undefined),
           status: 'completed', seller: user, createdAt: nowIso
         };
@@ -1013,6 +1013,11 @@
   function bind() {
     bindExtras();
     window.addEventListener('scroll', function () { if (root && root.offsetParent) renderTotals(); }, { passive: true });
+    root.addEventListener('change', function (ev) {
+      if (ev.target.id === 'aksK-cdoc' && AKS.clientes && AKS.clientes.fmtDoc) {
+        var f = AKS.clientes.fmtDoc(ev.target.value); ev.target.value = f; T().cdoc = f;
+      }
+    });
     root.addEventListener('input', function (ev) {
       var t = ev.target, tk = T();
       if (t.id === 'aksK-search') { if (mode === 'search') renderGrid(); return; }
