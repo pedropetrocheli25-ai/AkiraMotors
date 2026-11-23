@@ -3526,11 +3526,6 @@ function generateTechSheetHTML(product) {
     });
     html += '</div></div>';
   }
-  if (terms) {
-    html += '<div class="search-terms">';
-    html += '<strong>Búsquedas frecuentes:</strong> ';
-    html += escapeHTML(terms) + '</div>';
-  }
   return html;
 }
 
