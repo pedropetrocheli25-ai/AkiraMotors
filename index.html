@@ -1259,6 +1259,31 @@ button:focus:not(:focus-visible) { outline: none; }
   color: var(--gris-texto);
   padding: 1rem 0;
 }
+
+/* ===== Ficha de producto: visual moderna con la paleta de la tienda ===== */
+.product-detail-info .product-detail-code{display:inline-block;align-self:flex-start;background:var(--gris-claro);border:1px solid var(--gris-borde);padding:.2rem .6rem;border-radius:20px;font-size:.72rem;letter-spacing:.3px}
+.detail-price-box{background:linear-gradient(135deg,var(--naranja-claro),#fff);border:1px solid #FFD9BD;border-left:4px solid var(--naranja);box-shadow:var(--sombra-sm)}
+.detail-price-usd{color:var(--negro)}
+.detail-description{background:#fff;border:1px solid var(--gris-borde);color:#3a3a3a}
+.tech-sheet{background:#fff;border:1px solid var(--gris-borde);border-radius:16px;box-shadow:var(--sombra-sm);padding:1rem 1.1rem}
+.tech-sheet h3{color:var(--negro);display:flex;align-items:center;gap:.5rem;font-size:.95rem;font-weight:800;margin-bottom:.8rem}
+.tech-sheet h3::before{content:"";width:4px;height:1.05em;background:var(--naranja);border-radius:2px}
+.tech-specs-table tr{border-bottom:1px solid var(--gris-borde)}
+.tech-specs-table td:first-child{color:var(--naranja-texto)}
+.compat-list{display:flex;flex-direction:column;gap:.7rem}
+.compat-row{display:flex;flex-direction:column;gap:.35rem}
+.compat-brand{font-size:.72rem;font-weight:800;color:var(--gris-texto);text-transform:uppercase;letter-spacing:.8px}
+.compat-models{display:flex;flex-wrap:wrap;gap:.4rem}
+.compat-chip{background:var(--naranja-claro);color:var(--naranja-texto);border:1px solid #FFD9BD;padding:.35rem .8rem;border-radius:20px;font-size:.82rem;font-weight:700}
+.search-terms{background:var(--gris-claro);border:1px dashed var(--gris-borde);border-radius:12px}
+.detail-actions{display:flex;flex-direction:column;gap:.6rem;background:#fff}
+.detail-actions .detail-add-btn{border-radius:14px;margin:0;min-height:52px;font-size:1.02rem;letter-spacing:.2px}
+.detail-secondary{display:grid;grid-template-columns:1fr 1fr;gap:.6rem}
+.detail-secondary .detail-add-btn{min-height:46px;font-size:.9rem;font-weight:700;margin:0;box-shadow:none}
+.detail-secondary .detail-add-btn.dark{background:var(--negro);color:#fff}
+.detail-secondary .detail-add-btn.dark:hover{background:#2a2a2a}
+.detail-secondary .detail-add-btn.copy{background:#fff;color:var(--negro);border:2px solid var(--gris-borde)}
+.detail-secondary .detail-add-btn.copy:hover{background:var(--gris-claro);border-color:var(--naranja)}
 </style>
 <style>
 .cart-sidebar {
@@ -3482,19 +3507,24 @@ function generateTechSheetHTML(product) {
   }
   if (compatibility.length > 0) {
     html += '<div class="tech-sheet">';
-    html += '<h3>Compatibilidad Vehicular</h3>';
-    html += '<table class="compatibility-table">';
-    html += '<thead><tr><th>Marca</th>';
-    html += '<th>Modelo</th></tr></thead><tbody>';
+    html += '<h3>Compatibilidad vehicular</h3>';
+    var groups = {}, order = [];
     compatibility.forEach(function(c) {
-      if (c.brand || c.model) {
-        html += '<tr><td>' + escapeHTML(c.brand || '-') +
-          '</td>';
-        html += '<td>' + escapeHTML(c.model || '-') +
-          '</td></tr>';
-      }
+      if (!(c.brand || c.model)) return;
+      var b = c.brand || 'Otros';
+      if (!groups[b]) { groups[b] = []; order.push(b); }
+      if (c.model) groups[b].push(c.model);
     });
-    html += '</tbody></table></div>';
+    html += '<div class="compat-list">';
+    order.forEach(function(b) {
+      html += '<div class="compat-row"><span class="compat-brand">' +
+        escapeHTML(b) + '</span><div class="compat-models">';
+      groups[b].forEach(function(m) {
+        html += '<span class="compat-chip">' + escapeHTML(m) + '</span>';
+      });
+      html += '</div></div>';
+    });
+    html += '</div></div>';
   }
   if (terms) {
     html += '<div class="search-terms">';
@@ -3580,16 +3610,14 @@ window.openProductDetail = async function(productId) {
   detailHtml += '>';
   detailHtml += 'Agregar al carrito';
   detailHtml += '</button>';
-  detailHtml += '<button class="detail-add-btn wa" ';
-  detailHtml += 'onclick="pedirProducto(\'' + product.id +
-    '\')">Pedir por WhatsApp</button>';
+  detailHtml += '<div class="detail-secondary">';
   detailHtml += '<button class="detail-add-btn dark" ';
   detailHtml += 'onclick="compartirProducto(\'' + product.id +
     '\')">Compartir por WhatsApp</button>';
   detailHtml += '<button class="detail-add-btn copy" ';
   detailHtml += 'onclick="copiarEnlaceProducto(\'' + product.id +
     '\')">Copiar enlace</button>';
-  detailHtml += '</div>';
+  detailHtml += '</div></div>';
 
   var content = document.getElementById('productDetailContent');
   var modal = document.getElementById('productDetailModal');
