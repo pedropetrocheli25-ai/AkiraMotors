@@ -13,6 +13,8 @@
 <meta property="og:type" content="website">
 <link rel="icon"
   href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='45' fill='%23FF6B1A'/><text x='50' y='68' font-size='60' text-anchor='middle' fill='white' font-family='Arial' font-weight='bold'>A</text></svg>">
+<link rel="preconnect" href="https://firestore.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://www.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect"
   href="https://fonts.gstatic.com" crossorigin>
@@ -3242,20 +3244,28 @@ function restartCarouselTimer() {
 // LOAD DATA
 // ============================================================
 async function loadData() {
+  // Todas las lecturas salen a la vez (antes se pedían una tras otra)
+  var P = {};
+  ['bcvRate','logo','pickupMaps','siteConfig','whatsapp','catalogo',
+   'deliveryConfig','appSettings','flashSales','aboutUs'].forEach(function(n) {
+    P[n] = getDoc(doc(db, 'settings', n));
+    P[n].catch(function() {});
+  });
+  ['carouselSlides','products','brands'].forEach(function(n) {
+    P['c_' + n] = getDocs(collection(db, n));
+    P['c_' + n].catch(function() {});
+  });
+
   try {
     try {
-      var rateDoc = await getDoc(
-        doc(db, 'settings', 'bcvRate')
-      );
+      var rateDoc = await P.bcvRate;
       if (rateDoc.exists()) {
         bcvRate = rateDoc.data().value || 36.5;
       }
     } catch(e) { console.error('BCV:', e); }
 
     try {
-      var logoDoc = await getDoc(
-        doc(db, 'settings', 'logo')
-      );
+      var logoDoc = await P.logo;
       if (logoDoc.exists() && logoDoc.data().image) {
         var logoEl = document.getElementById('headerLogoImg');
         if (logoEl) {
@@ -3267,18 +3277,14 @@ async function loadData() {
     } catch(e) { console.error('Logo:', e); }
 
     try {
-      var pickupDoc = await getDoc(
-        doc(db, 'settings', 'pickupMaps')
-      );
+      var pickupDoc = await P.pickupMaps;
       if (pickupDoc.exists()) {
         pickupMapsUrl = pickupDoc.data().url || '';
       }
     } catch(e) { console.error('Pickup:', e); }
 
     try {
-      var cfgDoc = await getDoc(
-        doc(db, 'settings', 'siteConfig')
-      );
+      var cfgDoc = await P.siteConfig;
       if (cfgDoc.exists()) {
         var data = cfgDoc.data();
         for (var k in data) {
@@ -3290,18 +3296,14 @@ async function loadData() {
     } catch(e) { console.error('SiteConfig:', e); }
 
     try {
-      var waDoc = await getDoc(
-        doc(db, 'settings', 'whatsapp')
-      );
+      var waDoc = await P.whatsapp;
       if (waDoc.exists() && waDoc.data().number) {
         whatsappNumber = waDoc.data().number;
       }
     } catch(e) { console.error('WhatsApp:', e); }
 
     try {
-      var catalogoDoc = await getDoc(
-        doc(db, 'settings', 'catalogo')
-      );
+      var catalogoDoc = await P.catalogo;
       if (catalogoDoc.exists()) {
         catalogo = catalogoDoc.data();
         if (!catalogo.categorias) {
@@ -3311,9 +3313,7 @@ async function loadData() {
     } catch(e) { console.error('Catálogo:', e); }
 
     try {
-      var deliveryDoc = await getDoc(
-        doc(db, 'settings', 'deliveryConfig')
-      );
+      var deliveryDoc = await P.deliveryConfig;
       if (deliveryDoc.exists()) {
         deliveryConfig = Object.assign(
           {}, deliveryConfig, deliveryDoc.data()
@@ -3323,9 +3323,7 @@ async function loadData() {
 
     // appSettings manda sobre deliveryConfig
     try {
-      var appSetDoc = await getDoc(
-        doc(db, 'settings', 'appSettings')
-      );
+      var appSetDoc = await P.appSettings;
       if (appSetDoc.exists()) {
         var as = appSetDoc.data();
         if (typeof as.ivaEnabled === 'boolean') {
@@ -3342,9 +3340,7 @@ async function loadData() {
     } catch(e) { console.error('appSettings:', e); }
 
     try {
-      var slidesSnap = await getDocs(
-        collection(db, 'carouselSlides')
-      );
+      var slidesSnap = await P.c_carouselSlides;
       carouselSlides = [];
       slidesSnap.forEach(function(d) {
         var obj = d.data();
@@ -3357,27 +3353,21 @@ async function loadData() {
     } catch(e) { console.error('Carrusel:', e); }
 
     try {
-      var flashDoc = await getDoc(
-        doc(db, 'settings', 'flashSales')
-      );
+      var flashDoc = await P.flashSales;
       if (flashDoc.exists() && flashDoc.data().ids) {
         flashSalesIds = flashDoc.data().ids || [];
       }
     } catch(e) { console.error('Flash:', e); }
 
     try {
-      var aboutDoc = await getDoc(
-        doc(db, 'settings', 'aboutUs')
-      );
+      var aboutDoc = await P.aboutUs;
       if (aboutDoc.exists()) {
         aboutUsData = aboutDoc.data();
       }
     } catch(e) { console.error('AboutUs:', e); }
 
     try {
-      var snapshot = await getDocs(
-        collection(db, 'products')
-      );
+      var snapshot = await P.c_products;
       products = [];
       snapshot.forEach(function(d) {
         var obj = d.data();
@@ -3387,9 +3377,7 @@ async function loadData() {
     } catch(e) { console.error('Products:', e); }
 
     try {
-      var brandsSnap = await getDocs(
-        collection(db, 'brands')
-      );
+      var brandsSnap = await P.c_brands;
       var brands = [];
       brandsSnap.forEach(function(d) {
         var obj = d.data();
